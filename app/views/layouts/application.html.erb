@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>OctopiWebapp</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= csrf_meta_tags %>
+<title><%= full_title(yield(:title)) %></title>
+<%= stylesheet_link_tag "application", media: "all",
+                      "data-turbolinks-track" => true %>
+<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+<%= csrf_meta_tags %>
+<%= render 'layouts/shim' %>
 </head>
 <body>
-
-<%= yield %>
-
+<%= render 'layouts/header' %>
+<div class="container">
+  <% flash.each do |key, value| %>
+      <% if key == 'alert' %>
+          <%= content_tag(:div, value, class: "alert alert-danger") %>
+      <% elsif key == 'notice' %>
+          <%= content_tag(:div, value, class: "alert alert-warning") %>
+      <% else %>
+          <%= content_tag(:div, value, class: "alert alert-#{key}") %>
+      <% end %>
+  <% end %>
+  <%= yield %>
+  <%= render 'layouts/footer' %>
+  <%= debug(params) if Rails.env.development? %>
+</div>
 </body>
 </html>

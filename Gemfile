@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.4'
+gem 'rails', '~> 4.1'
 
 # Use bcrypt for password hashing
 gem 'bcrypt', '~> 3.1.5'
@@ -32,6 +32,9 @@ gem 'pg', '~> 0.17.1'
 
 # Use devise for auth
 gem 'devise', '~> 3.2.4'
+
+gem 'simple_form', '~> 3.0.0', github: 'plataformatec/simple_form', branch: 'master'
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

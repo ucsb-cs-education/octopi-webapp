@@ -9,4 +9,19 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-OctopiWebapp::Application.config.secret_key_base = 'ac495da1cebe5dc4d508495ea093370491d8399ea7aa262d2ccdddbe48be137ea1f52d8997264f940e5014e7e2c6541f62117c9da9bccb50f2fb4ad19b80dca4'
+require 'securerandom'
+
+def secure_token
+  token_file = Rails.root.join('.secret')
+  if File.exist?(token_file)
+    # Use the existing token.
+    File.read(token_file).chomp
+  else
+    # Generate a new token and store it in token_file.
+    token = SecureRandom.hex(64)
+    File.write(token_file, token)
+    token
+  end
+end
+
+OctopiWebapp::Application.config.secret_key_base = secure_token

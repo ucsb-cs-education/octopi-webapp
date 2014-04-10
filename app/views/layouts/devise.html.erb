@@ -1,0 +1,9 @@
+<%= inside_layout "application" do %>
+<h1><%= yield(:header) %></h1>
+<div class="row">
+  <div class="col-xs-12 col-sm-6 col-md-4 col-sm-offset-3 col-md-offset-4">
+    <%= yield %>
+  </div>
+</div>
+<% end %>
+
