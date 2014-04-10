@@ -30,6 +30,9 @@ gem 'jbuilder', '~> 1.2'
 # Use postgres as the database for Active Record
 gem 'pg', '~> 0.17.1'
 
+# Use devise for auth
+gem 'devise', '~> 3.2.4'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
@@ -38,6 +41,20 @@ end
 group :production do
 # If running on Heroku
 #  gem 'rails_12factor', group: :production
+end
+
+group :test do
+  gem 'factory_girl_rails', '4.2.1'
+  gem 'selenium-webdriver', '2.35.1'
+  gem 'capybara', '2.1.0'
+end
+
+group :development do
+  gem 'rspec-rails', '~> 2.14'
+  gem 'spork-rails', '~> 4.0.0'
+  gem 'guard-rspec', '~> 4.2.8'
+  gem 'guard-spork', '~> 1.5.1'
+  gem 'childprocess', '~> 0.5.2'
 end
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
@@ -51,5 +68,4 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-
 
