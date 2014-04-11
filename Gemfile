@@ -47,12 +47,13 @@ group :production do
 end
 
 group :test do
-  gem 'factory_girl_rails', '4.2.1'
   gem 'selenium-webdriver', '2.35.1'
   gem 'capybara', '2.1.0'
 end
 
 group :development, :test do
+  gem 'factory_girl_rails', '4.2.1'
+  gem 'faker', '~> 1.3.0'
   gem 'rspec-rails', '~> 2.14'
   gem 'spork-rails', '~> 4.0.0'
   gem 'guard-rspec', '~> 4.2.8'

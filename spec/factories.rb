@@ -8,9 +8,9 @@ FactoryGirl.define do
     password_confirmation 'foobarbaz'
 
     factory :user do
-      sequence(:first_name) { |n| 'Person #{n}' }
-      sequence(:last_name) { |n| 'Last #{n}' }
-      sequence(:email) { |n| 'person_#{n}@example.com' }
+      sequence(:first_name) { |n| "Person #{n}" }
+      sequence(:last_name) { |n| "Last #{n}" }
+      sequence(:email) { |n| "person_#{n}@example.com" }
     end
     after(:create) { |user| user.confirm! }
   end
