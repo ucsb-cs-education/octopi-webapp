@@ -33,7 +33,7 @@ gem 'pg', '~> 0.17.1'
 # Use devise for auth
 gem 'devise', '~> 3.2.4'
 
-gem 'simple_form', '~> 3.0.0', github: 'plataformatec/simple_form', branch: 'master'
+gem 'simple_form', github: 'plataformatec/simple_form', branch: 'master'
 
 
 group :doc do
@@ -52,7 +52,7 @@ group :test do
   gem 'capybara', '2.1.0'
 end
 
-group :development do
+group :development, :test do
   gem 'rspec-rails', '~> 2.14'
   gem 'spork-rails', '~> 4.0.0'
   gem 'guard-rspec', '~> 4.2.8'

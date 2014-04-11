@@ -7,7 +7,9 @@ class User < ActiveRecord::Base
 
   validates :first_name, presence: true, length: { maximum: 50 }
   validates :last_name, presence: true, length: { maximum: 50 }
-  validates :email, uniqueness: true, length: {maximum: 254 } #Max possible email length
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
+  validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX },
+            uniqueness: { case_sensitive: false }, length: {maximum: 254 } #Max possible email length
 
   # Taken from https://github.com/plataformatec/devise/wiki/How-To%3a-Require-admin-to-activate-account-before-sign_in
   # Uncomment here and change initial migration when ready to test
@@ -26,4 +28,8 @@ class User < ActiveRecord::Base
   #def send_admin_mail
   #  AdminMailer.new_user_waiting_for_approval(self).deliver
   #end
+  def self.authenticate(email, password)
+    user = User.find_for_authentication(:email => email)
+    user.valid_password?(password) ? user : nil
+  end
 end
