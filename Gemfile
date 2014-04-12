@@ -33,6 +33,18 @@ gem 'pg', '~> 0.17.1'
 # Use devise for auth
 gem 'devise', '~> 3.2.4'
 
+# Allows us to specify roles for users, allowing things like admin for all schools, or just admin for one/a list
+# Rolify currently has a bug with 4.1 (Maybe 4.0 as well) where it doesn't add '.rb' to migration files
+# I've implemented an easy fix, follow https://github.com/EppO/rolify/pull/239 to determine if we should go back to
+# rubygems version
+gem 'rolify', github: 'jhenkens/rolify'
+
+# Allows us to specify what a user 'can' do based on their roles
+gem 'cancancan', '~> 1.7.1'
+
+
+# We need this from Github because stable doesn't support bootstrap 3 yet. When it does we can move back to
+# numbered released
 gem 'simple_form', github: 'plataformatec/simple_form', branch: 'master'
 
 
