@@ -1,0 +1,3 @@
+<%= f.input :name, required: true, autofocus: true %>
+<%= f.association :school, include_blank: false, collection: School.with_role(:school_admin, current_user).to_a %>
+

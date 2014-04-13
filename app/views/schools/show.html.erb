@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @school.name %>
+</p>
+
+<p>
+  <strong>Ip range:</strong>
+  <%= @school.ip_range %>
+</p>
+
+<p>
+  <strong>Student remote access allowed:</strong>
+  <%= @school.student_remote_access_allowed %>
+</p>
+
+<%= link_to 'Edit', edit_school_path(@school) %> |
+<%= link_to 'Back', schools_path %>

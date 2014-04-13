@@ -18,6 +18,11 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
 
+# Allows for easily paginating lists
+gem 'will_paginate', '~> 3.0.5'
+gem 'bootstrap-will_paginate', '~> 0.0.10'
+
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
@@ -32,6 +37,7 @@ gem 'pg', '~> 0.17.1'
 
 # Use devise for auth
 gem 'devise', '~> 3.2.4'
+
 
 # Allows us to specify roles for users, allowing things like admin for all schools, or just admin for one/a list
 # Rolify currently has a bug with 4.1 (Maybe 4.0 as well) where it doesn't add '.rb' to migration files

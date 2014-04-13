@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20140412152713) do
   create_table "students", force: true do |t|
     t.string   "name",            default: "", null: false
     t.string   "password_digest"
+    t.string   "remember_token"
     t.integer  "school_id"
     t.datetime "created_at"
     t.datetime "updated_at"

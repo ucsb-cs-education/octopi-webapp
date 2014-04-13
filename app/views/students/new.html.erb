@@ -1,0 +1,17 @@
+<% provide(:title, 'Create a new student') %>
+<h1>Create a new user</h1>
+
+
+<%= simple_form_for @student do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-inputs">
+      <%= render 'basic_info_form', f: f %>
+      <%= f.input :password, required: true %>
+      <%= f.input :password_confirmation, required: true %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, "Create user" %>
+    </div>
+<% end %>
