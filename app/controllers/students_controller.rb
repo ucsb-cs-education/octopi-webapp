@@ -2,6 +2,7 @@
 class StudentsController < ApplicationController
   #check_authorization
   #load_resource
+  load_and_authorize_resource :school
   load_and_authorize_resource
   skip_authorize_resource :only => :new
   before_filter :load_school
