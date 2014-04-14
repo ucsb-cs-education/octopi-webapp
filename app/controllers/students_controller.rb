@@ -4,7 +4,6 @@ class StudentsController < ApplicationController
   #load_resource
   load_and_authorize_resource :school
   load_and_authorize_resource
-  skip_authorize_resource :only => :new
   before_filter :load_school
 
   def index
@@ -19,6 +18,7 @@ class StudentsController < ApplicationController
   end
 
   def create
+    student_params[:school_id] = @school.id
     @student = Student.new(student_params)
     #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
     if @student.save
@@ -31,7 +31,7 @@ class StudentsController < ApplicationController
 
   private
     def student_params
-      params.require(:student).permit(:name, :password, :password_confirmation, :school_id)
+      params.require(:student).permit(:name, :password, :password_confirmation)
     end
 
     def load_school

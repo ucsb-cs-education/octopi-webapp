@@ -2,7 +2,7 @@
 <h1>Create a new user</h1>
 
 
-<%= simple_form_for @student do |f| %>
+<%= simple_form_for @student, url: school_students_path do |f| %>
     <%= f.error_notification %>
 
     <div class="form-inputs">

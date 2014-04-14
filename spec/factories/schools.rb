@@ -2,8 +2,7 @@
 
 FactoryGirl.define do
   factory :school do
-    string ""
-    string ""
-    boolean ""
+    sequence(:name)  { |n| "School #{n}" }
+    student_remote_access_allowed false
   end
 end

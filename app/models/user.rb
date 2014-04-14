@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   rolify
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -30,6 +31,23 @@ class User < ActiveRecord::Base
   #def send_admin_mail
   #  AdminMailer.new_user_waiting_for_approval(self).deliver
   #end
+
+  def teacher?
+    has_role? :teacher, :any
+  end
+
+  def school_admin?
+    has_role? :school_admin, :any
+  end
+
+  def global_admin?
+    has_role? :global_admin, :any
+  end
+
+  def name
+    first_name + ' ' + last_name
+  end
+
   def self.authenticate(email, password)
     user = User.find_for_authentication(:email => email)
     user.valid_password?(password) ? user : nil

@@ -38,7 +38,6 @@ class CreateSchools < ActiveRecord::Migration
     # This should not be validated, we just want this reference here so that for administrators and teachers
     # that are associated with a single school, we can display that as part of their profile.
     # Additionally, this allows us to get all the teachers and administrators unique to just a school
-    add_reference(:users, :school)
   end
 end
 
