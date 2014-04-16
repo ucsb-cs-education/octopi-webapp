@@ -13,6 +13,7 @@ describe User do
     # Basic attributes
     it { should respond_to(:first_name) }
     it { should respond_to(:last_name) }
+    it { should respond_to(:name) }
     it { should respond_to(:email) }
     it { should respond_to(:encrypted_password) }
     #Non-database attributes
@@ -170,11 +171,15 @@ describe User do
       @school_admin = FactoryGirl.create(:user, :school_admin)
     end
 
-    subject { @school_admin}
+    subject { @school_admin }
 
     it { should_not be_a_teacher }
     it { should be_a_school_admin }
     it { should_not be_a_global_admin }
+    it 'shouldn\'t be a global :school_admin' do
+      expect(@school_admin.has_role?(:school_admin)).to be_false
+      expect(@school_admin.has_role?(:school_admin, School)).to be_false
+    end
 
   end
 
@@ -189,6 +194,10 @@ describe User do
     it { should be_a_teacher }
     it { should_not be_a_school_admin }
     it { should_not be_a_global_admin }
+    it 'shouldn\'t be a global :teacher' do
+      expect(@teacher.has_role?(:teacher)).to be_false
+      expect(@teacher.has_role?(:teacher, School)).to be_false
+    end
 
   end
 

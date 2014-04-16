@@ -30,6 +30,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :global_admin do
+      after(:create) do |user|
+        user.add_role :global_admin
+      end
+    end
+
     after(:create) { |user| user.confirm! }
   end
 end

@@ -1,5 +1,6 @@
 class School < ActiveRecord::Base
   has_many :students, dependent: :destroy
+  validates :name, presence: true, length: { maximum: 100 }, uniqueness: true
   resourcify
 
   def teachers
