@@ -1,0 +1,14 @@
+<% provide(:title, 'Student sign in') %>
+<h2>Student sign in</h2>
+
+<%= simple_form_for :session, url: student_portal_sessions_path do |f| %>
+    <div class="form-inputs">
+      <%= f.input :school, include_blank: false, collection: School.all.to_a %>
+      <%= f.input :login_name, required: false, autofocus: true %>
+      <%= f.input :password, required: false %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, "Sign in" %>
+    </div>
+<% end %>

@@ -1,15 +1,10 @@
-
 class StudentsController < ApplicationController
-  #check_authorization
-  #load_resource
   load_and_authorize_resource :school
   load_and_authorize_resource
   before_filter :load_school
 
   def index
-    #@students = Student.all
     @students = @school.students
-
   end
 
   def new
@@ -22,7 +17,7 @@ class StudentsController < ApplicationController
     @student = Student.new(student_params)
     #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
     if @student.save
-      flash[:success] = "Student saved successfully."
+      flash[:success] = 'Student saved successfully.'
       redirect_to students_path
     else
       render 'new'

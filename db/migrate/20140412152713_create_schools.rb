@@ -16,6 +16,7 @@ class CreateSchools < ActiveRecord::Migration
 
     create_table :students do |t|
       t.string :name,                   null: false, default: ""
+      t.string :login_name,                   null: false, default: ""
       t.string :password_digest
       t.string :remember_token
       t.references :school

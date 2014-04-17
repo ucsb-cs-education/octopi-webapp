@@ -1,13 +1,26 @@
 OctopiWebapp::Application.routes.draw do
 
+  namespace :student_portal do
+    resources :sessions, only: [:create ]#, :destroy]
+    root 'static_pages#home'
+    match '/help',    to: 'static_pages#help',    via: 'get'
+    match '/about',   to: 'static_pages#about',   via: 'get'
+    match '/contact', to: 'static_pages#contact', via: 'get'
+    match '/home',    to: redirect('/'),          via: 'get'
+    match '/signin',  to: 'sessions#new',         via: 'get'
+    match '/signout', to: 'sessions#destroy',     via: 'delete'
+  end
+
   resources :schools do
     resources :students
   end
 
   root  'static_pages#home'
-  match '/home',    to: 'static_pages#home',        via: 'get'
-  match '/help',    to: 'static_pages#help',        via: 'get'
-  devise_for :users, :controllers => {:registrations => 'users/registrations'}
+  match '/home',    to: 'static_pages#home',                    via: 'get'
+  match '/help',    to: 'static_pages#help',                    via: 'get'
+  match '/sign_in', to: redirect('/student_portal/signin'),     via: 'get'
+  match '/signin',  to: redirect('/student_portal/signin'),     via: 'get'
+  devise_for :users
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -104,6 +104,7 @@ footer {
   a {
     color: $gray;
     &:hover {
+      background-color: transparent;
       color: $gray-darker;
     }
   }

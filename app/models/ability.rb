@@ -29,16 +29,21 @@ class Ability
     # See the wiki for details:
     # https://github.com/bryanrite/cancancan/wiki/Defining-Abilities
 
-    user ||= User.new # guest user (not logged in)
-    if user.has_role? :global_admin
-      can :manage, :all
-    else
-      if user.has_role? :school_admin, :any
-        can :manage, School, :id => School.with_role(:school_admin, user).pluck(:id)
-        can :manage, Student, :id => School.with_role(:school_admin, user).to_a.map { |f| f.students.pluck(:id) }.flatten(1)
+    #A student (thus, any user) must be able to access all the schools to select his/her to login
+    can :index, School
+
+    if user
+      can :manage, User, :id => user
+
+      if user.has_role? :global_admin
+        can :manage, :all
+      else
+        if user.has_role? :school_admin, :any
+          can :manage, School, :id => School.with_role(:school_admin, user).pluck(:id)
+          can :manage, Student, :id => School.with_role(:school_admin, user).to_a.map { |f| f.students.pluck(:id) }.flatten(1)
+        end
+
       end
-
     end
-
   end
 end

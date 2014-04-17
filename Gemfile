@@ -79,6 +79,9 @@ group :development, :test do
   gem 'childprocess', '~> 0.5.2'
 end
 
+group :development do
+end
+
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 

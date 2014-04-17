@@ -10,6 +10,7 @@ describe Student do
 
     # Basic attributes
     it { should respond_to(:name) }
+    it { should respond_to(:login_name) }
     it { should respond_to(:password_digest) }
     #Non-database attributes
     it { should respond_to(:password) }
@@ -29,14 +30,24 @@ describe Student do
       it { should_not be_valid }
     end
 
-    describe 'when name is already taken' do
-      let(:student_with_same_name) { @student.dup }
-      let(:student_with_same_name_but_different_school) { @student.dup }
+    describe 'when login_name is not present' do
+      before { @student.login_name = ' ' }
+      it { should_not be_valid }
+    end
+
+    describe 'when login_name is too long' do
+      before { @student.login_name = 'a' * 51 }
+      it { should_not be_valid }
+    end
+
+    describe 'when login_name is already taken' do
+      let(:student_with_same_login_name) { @student.dup }
+      let(:student_with_same_login_name_but_different_school) { @student.dup }
       before do
-        student_with_same_name.name = @student.name.upcase
-        student_with_same_name.save
-        student_with_same_name_but_different_school.school = FactoryGirl.create(:school)
-        student_with_same_name_but_different_school.save
+        student_with_same_login_name.login_name = @student.login_name.upcase
+        student_with_same_login_name.save
+        student_with_same_login_name_but_different_school.school = FactoryGirl.create(:school)
+        student_with_same_login_name_but_different_school.save
       end
 
       describe 'original student' do
@@ -45,15 +56,15 @@ describe Student do
         end
       end
 
-      describe 'student with same name but at a different school' do
+      describe 'student with same login_name but at a different school' do
         it 'should be valid' do
-          expect(student_with_same_name_but_different_school).to be_valid
+          expect(student_with_same_login_name_but_different_school).to be_valid
         end
       end
 
-      describe 'student with same name at same school' do
+      describe 'student with same login_name at same school' do
         it 'should be invalid' do
-          expect(student_with_same_name).not_to be_valid
+          expect(student_with_same_login_name).not_to be_valid
         end
       end
     end
@@ -89,7 +100,7 @@ describe Student do
 
     describe 'return value of authenticate method' do
       before { @student.save }
-      let(:found_student) { Student.find_by(:school_id => @student.school_id, :name => @student.name) }
+      let(:found_student) { Student.find_by(:school_id => @student.school_id, :login_name => @student.login_name) }
 
       describe 'with valid password' do
         it { should eq found_student.authenticate(@student.password) }

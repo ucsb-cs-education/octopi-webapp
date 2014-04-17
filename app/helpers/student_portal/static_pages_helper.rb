@@ -1,0 +1,2 @@
+module StudentPortal::StaticPagesHelper
+end

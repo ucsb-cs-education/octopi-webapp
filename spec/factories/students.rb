@@ -6,6 +6,7 @@ FactoryGirl.define do
     end
 
     sequence(:name) { |n| "First #{n} Student" }
+    sequence(:login_name) { |n| "student_#{n}_login" }
     password 'foobarbaz'
     password_confirmation { |u| u.password }
 

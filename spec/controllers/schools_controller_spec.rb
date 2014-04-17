@@ -20,19 +20,15 @@ require 'spec_helper'
 
 describe SchoolsController do
 
-  # This should return the minimal set of attributes required to create a valid
-  # School. As you add validations to School, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) { { "name" => "School Name" } }
-
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # SchoolsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  before(:each) do
+    @request.env['devise.mapping'] = Devise.mappings[:user]
+    @school =  FactoryGirl.create(:school)
+    @user = FactoryGirl.create(:user, school: @school)
+    sign_in @user
+  end
 
   describe "GET index" do
-    it "assigns all schools as @schools" do
-      school = School.create! valid_attributes
+    it "assigns all schools for the  as @schools" do
       get :index, {}, valid_session
       assigns(:schools).should eq([school])
     end

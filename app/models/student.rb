@@ -1,8 +1,11 @@
 class Student < ActiveRecord::Base
   belongs_to :school
   has_and_belongs_to_many :school_classes
-  validates :name, presence: true, length: { maximum: 50 } , :uniqueness => {:scope => :school_id, :case_sensitive => false}
+  validates :name, presence: true, length: { maximum: 50 }
+  validates :login_name, presence: true, length: { maximum: 50 } , :uniqueness => {:scope => :school_id, :case_sensitive => false}
   validates :school, presence: true
+  before_save { login_name.downcase! }
+  before_create :create_remember_token
 
   resourcify
 
@@ -17,8 +20,8 @@ class Student < ActiveRecord::Base
   end
 
   private
-  def create_remember_token
-    self.remember_token = Student.hash(User.new_remember_token)
-  end
+    def create_remember_token
+      self.remember_token = Student.hash(Student.new_remember_token)
+    end
 
 end
