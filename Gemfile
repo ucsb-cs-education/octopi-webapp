@@ -61,7 +61,7 @@ end
 
 group :production do
 # If running on Heroku
-#  gem 'rails_12factor', group: :production
+  gem 'rails_12factor'
 end
 
 group :test do
