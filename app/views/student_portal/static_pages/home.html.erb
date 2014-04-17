@@ -1,2 +1,11 @@
-<h1>StudentPortal::StaticPages#home</h1>
-<p>Find me in app/views/student_portal/static_pages/home.html.erb</p>
+<% provide(:title, 'Students home') %>
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Octopi - Students homepage</h1>
+<p>
+  Welcome <%= current_student.name %>! <br />
+  We hope <%= current_student.school.name %> is treating you right!
+</p>
+</body>
+</html>
