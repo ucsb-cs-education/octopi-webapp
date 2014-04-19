@@ -2,7 +2,7 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :name %>
+    <%= f.input :name, :readonly => (not can? :change_school_name, @school )%>
     <%= f.input :ip_range %>
     <%= f.input :student_remote_access_allowed %>
   </div>

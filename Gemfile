@@ -32,6 +32,9 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 #gem 'jbuilder', '~> 1.2'
 
+#Easy hook to strip whitespace before validations
+gem "auto_strip_attributes", "~> 2.0"
+
 # Use postgres as the database for Active Record
 gem 'pg', '~> 0.17.1'
 

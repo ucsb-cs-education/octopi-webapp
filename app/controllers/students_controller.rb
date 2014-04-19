@@ -12,21 +12,35 @@ class StudentsController < ApplicationController
     @student = Student.new
   end
 
+  def show
+
+  end
+
+  # DELETE /schools/1
+  def destroy
+    $stderr.puts "@@@@@@@@@@@@@@@#{@student.name}@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    @student.destroy
+    respond_to do |format|
+      format.html { redirect_to school_students_path(@school.id) }
+    end
+  end
+
   def create
-    student_params[:school_id] = @school.id
     @student = Student.new(student_params)
+    @student.school = @school
     #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
     if @student.save
       flash[:success] = 'Student saved successfully.'
-      redirect_to students_path
+      redirect_to school_students_path
     else
-      render 'new'
+      render 'new', :layout => 'layouts/devise'
+      $stderr.puts @student.errors.messages
     end
   end
 
   private
     def student_params
-      params.require(:student).permit(:name, :password, :password_confirmation)
+      params.require(:student).permit(:name, :login_name, :password, :password_confirmation)
     end
 
     def load_school

@@ -16,14 +16,17 @@
 </p>
 
 <p>
-  <strong>Ip range:</strong>
-  <%= @school.ip_range %>
-</p>
-
-<p>
   <strong>Student remote access allowed:</strong>
   <%= @school.student_remote_access_allowed %>
 </p>
 
-<%= link_to 'Edit', edit_school_path(@school) %> |
-<%= link_to 'Back', schools_path %>
+<% if can? :update, @school %>
+<p>
+  <strong>Ip range:</strong>
+  <%= @school.ip_range %>
+</p><p>
+<%= link_to 'Change school settings', edit_school_path(@school) %></p>
+<% end %>
+<p>
+<%= link_to 'View school\'s students', school_students_path(@school) %>
+</p>

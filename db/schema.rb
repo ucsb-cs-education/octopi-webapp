@@ -27,14 +27,6 @@ ActiveRecord::Schema.define(version: 20140412152713) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
-  create_table "school_class_students", id: false, force: true do |t|
-    t.integer "student_id"
-    t.integer "school_class_id"
-  end
-
-  add_index "school_class_students", ["school_class_id"], name: "index_school_class_students_on_school_class_id", using: :btree
-  add_index "school_class_students", ["student_id"], name: "index_school_class_students_on_student_id", using: :btree
-
   create_table "school_classes", force: true do |t|
     t.integer  "school_id"
     t.boolean  "student_remote_access_allowed", default: false
@@ -42,9 +34,18 @@ ActiveRecord::Schema.define(version: 20140412152713) do
     t.datetime "updated_at"
   end
 
+  create_table "school_classes_students", id: false, force: true do |t|
+    t.integer "student_id"
+    t.integer "school_class_id"
+  end
+
+  add_index "school_classes_students", ["school_class_id"], name: "index_school_classes_students_on_school_class_id", using: :btree
+  add_index "school_classes_students", ["student_id"], name: "index_school_classes_students_on_student_id", using: :btree
+
   create_table "schools", force: true do |t|
     t.string   "name",                          default: "",    null: false
     t.string   "ip_range"
+    t.integer  "students_count",                default: 0,     null: false
     t.boolean  "student_remote_access_allowed", default: false
     t.datetime "created_at"
     t.datetime "updated_at"

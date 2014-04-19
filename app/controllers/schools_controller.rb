@@ -1,5 +1,5 @@
 class SchoolsController < ApplicationController
-  before_action :set_school, only: [:show, :edit, :update, :destroy]
+  after_action :set_school_cookie, only: [:show, :edit, :update]
   load_and_authorize_resource
 
   # GET /schools
@@ -37,6 +37,7 @@ class SchoolsController < ApplicationController
 
   # GET /schools/1/edit
   def edit
+    render(:layout => 'layouts/devise')
   end
 
   # POST /schools
@@ -46,10 +47,8 @@ class SchoolsController < ApplicationController
     respond_to do |format|
       if @school.save
         format.html { redirect_to @school, notice: 'School was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @school }
       else
         format.html { render action: 'new' }
-        format.json { render json: @school.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -59,10 +58,8 @@ class SchoolsController < ApplicationController
     respond_to do |format|
       if @school.update(school_params)
         format.html { redirect_to @school, notice: 'School was successfully updated.' }
-        format.json { head :no_content }
       else
         format.html { render action: 'edit' }
-        format.json { render json: @school.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -72,22 +69,26 @@ class SchoolsController < ApplicationController
     @school.destroy
     respond_to do |format|
       format.html { redirect_to schools_url }
-      format.json { head :no_content }
     end
   end
 
   private
   # Use callbacks to share common setup or constraints between actions.
-  def set_school
-    @school = School.find(params[:id])
+  def set_school_cookie
     if @school != nil
       cookies.permanent.signed[:admin_last_school] = @school.id
     end
   end
 
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def school_params
-    params.require(:school).permit(:name, :ip_range, :student_remote_access_allowed)
+    #Only global_admins should be able to change the name of a school
+    if can? :change_school_name
+      params.require(:school).permit(:name, :ip_range, :student_remote_access_allowed)
+    else
+      params.require(:school).permit(:ip_range, :student_remote_access_allowed)
+    end
   end
 
 end

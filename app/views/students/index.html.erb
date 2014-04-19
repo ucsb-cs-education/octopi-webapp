@@ -1,7 +1,11 @@
 <% provide(:title, 'All students') %>
-<h1>Students at <%= @school.name %></h1>
+<h1>Students at <%= link_to @school.name, @school %></h1>
 
 <ul class="students">
   <%= render @students %>
 </ul>
+
+<p>
+  <%= link_to 'Add a new student', new_school_student_path(@school) %>
+</p>
 

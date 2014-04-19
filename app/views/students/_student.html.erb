@@ -1,4 +1,4 @@
 <li>
-  <%= link_to student.school.name, school_path(student.school) %> --
-  <%= link_to student.name, school_student_path(:id => student.id) %>
+  <%= student.school.name %> --
+  <%= link_to "#{student.name} (#{student.login_name})", school_student_path(:id => student.id) %>
 </li>

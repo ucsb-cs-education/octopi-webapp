@@ -1,5 +1,5 @@
 class Student < ActiveRecord::Base
-  belongs_to :school
+  belongs_to :school, counter_cache: true
   has_and_belongs_to_many :school_classes
   validates :name, presence: true, length: { maximum: 50 }
   validates :login_name, presence: true, length: { maximum: 50 } , :uniqueness => {:scope => :school_id, :case_sensitive => false}
