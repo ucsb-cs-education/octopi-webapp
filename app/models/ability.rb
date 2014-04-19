@@ -32,8 +32,6 @@ class Ability
     #A student (thus, any user) must be able to access all the school's names to select his/her to login
     can :index, School
     alias_action :create, :read, :update, :destroy, :to => :crud
-
-    cannot :change_school_name, :all
     if user
       can :crud, User, :id => user
 
@@ -47,6 +45,10 @@ class Ability
           can :crud, School, :id => School.with_role(:school_admin, user).pluck(:id)
           can :crud, Student, :id => School.with_role(:school_admin, user).to_a.map { |f| f.students.pluck(:id) }.flatten(1)
           can :create, Student
+          elsif user.has_role? :teacher, :any
+            can :manage, School, :id => School.with_role(:teacher, user).pluck(:id)
+            can :manage, Student, :id => School.with_role(:teacher, user).to_a.map { |f| f.students.pluck(:id) }.flatten(1)
+            can :create, Student
         end
 
       end

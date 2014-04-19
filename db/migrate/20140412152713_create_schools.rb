@@ -11,6 +11,7 @@ class CreateSchools < ActiveRecord::Migration
 
     create_table :school_classes do |t|
       t.references :school
+      t.string :name,                     null: false, default: ""
       t.boolean :student_remote_access_allowed,      default: false
       t.timestamps
     end

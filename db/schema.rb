@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20140412152713) do
 
   create_table "school_classes", force: true do |t|
     t.integer  "school_id"
+    t.string   "name",                          default: "",    null: false
     t.boolean  "student_remote_access_allowed", default: false
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -14,6 +14,7 @@ OctopiWebapp::Application.routes.draw do
 
   resources :schools do
     resources :students
+    resources :school_classes
   end
 
   root  'static_pages#home'
