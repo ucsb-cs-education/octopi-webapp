@@ -27,6 +27,9 @@
 </p><p>
 <%= link_to 'Change school settings', edit_school_path(@school) %></p>
 <% end %>
+
 <p>
-<%= link_to 'View school\'s students', school_students_path(@school) %>
+  <%= link_to 'View school\'s classes', school_school_classes_path(@school) %><br>
+
+  <%= link_to 'View school\'s students', school_students_path(@school) %>
 </p>

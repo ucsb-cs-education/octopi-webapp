@@ -1,1 +1,13 @@
-<h1>Listing classes</h1>
+<% provide(:title, 'All classes') %>
+<h1>Classes in <%= link_to @school.name, @school %></h1>
+
+<ul class="school_classes">
+  <%= render @school_classes %>
+</ul>
+<p>
+  <%= link_to 'Add a new class', new_school_school_class_path(@school) %>
+</p>
+
+<p>
+<%= link_to 'Back to '+@school.name, schools_path %>
+</p>

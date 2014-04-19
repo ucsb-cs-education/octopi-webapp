@@ -1,5 +1,6 @@
 class School < ActiveRecord::Base
   has_many :students, dependent: :destroy
+  has_many :school_classes, dependent: :destroy
   validates :name, presence: true, length: { maximum: 100 }, uniqueness: true
   auto_strip_attributes :ip_range, :nullify => false
   ip_range_regex = /\A\z/ #Figure out IP_Range later. Just require it to be empty right now

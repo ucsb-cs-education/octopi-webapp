@@ -1,0 +1,15 @@
+<% provide(:title, 'Create a new class') %>
+<h1>Create a new class at <%=@school.name%></h1>
+
+
+<%= simple_form_for @school_class, url: school_school_classes_path do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-inputs">
+      <%= f.input :name, required: true, autofocus: true %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, "Create class" %>
+    </div>
+<% end %>
