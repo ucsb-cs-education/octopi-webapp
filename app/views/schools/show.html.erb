@@ -1,4 +1,14 @@
-<p id="notice"><%= notice %></p>
+<div class="col-xs-12 col-sm-6 col-md-4 col-sm-offset-6 col-md-offset-8">
+  <%= simple_form_for :school, url: schools_path, method: 'get' do |f| %>
+      <div class="form-inputs">
+        <%= f.input :id, include_blank: false, collection: School.accessible_by(current_ability, :show), selected: @school.id, label: 'Select a different school to administer' %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.button :submit, 'Switch schools' %>
+      </div>
+  <% end %>
+</div>
 
 <p>
   <strong>Name:</strong>

@@ -3,13 +3,31 @@ class SchoolsController < ApplicationController
   load_and_authorize_resource
 
   # GET /schools
-  # GET /schools.json
   def index
+    #Grab the school_id from the signed cookies
+    redirect_school = School.find_by(:id => params[:school][:id]) if params[:school]
+    authorize! :show, redirect_school if redirect_school
+    redirect_school ||= School.find_by(:id => cookies.permanent.signed[:admin_last_school])
+    #Check if the current user is authorized to view that school
+    begin
+      authorize! :show, redirect_school
+    rescue CanCan::AccessDenied
+      #If not, catch the exception and set the redirect_school to nil
+      redirect_school = nil
+    end
+    #If redirect_school is not nil, grab the first accesible school for the user
+    redirect_school ||= School.accessible_by(current_ability, :show).first
+    #If the user has any accessible schools, go there. Otherwise, throw an access error
+    if redirect_school != nil
+      redirect_to redirect_school
+    else
+      raise CanCan::AccessDenied.new('You are not authorized to access this page.')
+    end
   end
 
   # GET /schools/1
-  # GET /schools/1.json
   def show
+
   end
 
   # GET /schools/new
@@ -22,7 +40,6 @@ class SchoolsController < ApplicationController
   end
 
   # POST /schools
-  # POST /schools.json
   def create
     @school = School.new(school_params)
 
@@ -38,7 +55,6 @@ class SchoolsController < ApplicationController
   end
 
   # PATCH/PUT /schools/1
-  # PATCH/PUT /schools/1.json
   def update
     respond_to do |format|
       if @school.update(school_params)
@@ -52,7 +68,6 @@ class SchoolsController < ApplicationController
   end
 
   # DELETE /schools/1
-  # DELETE /schools/1.json
   def destroy
     @school.destroy
     respond_to do |format|
@@ -62,13 +77,17 @@ class SchoolsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_school
-      @school = School.find(params[:id])
+  # Use callbacks to share common setup or constraints between actions.
+  def set_school
+    @school = School.find(params[:id])
+    if @school != nil
+      cookies.permanent.signed[:admin_last_school] = @school.id
     end
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def school_params
-      params.require(:school).permit(:name, :ip_range, :student_remote_access_allowed)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def school_params
+    params.require(:school).permit(:name, :ip_range, :student_remote_access_allowed)
+  end
+
 end
