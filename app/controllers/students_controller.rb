@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
   load_and_authorize_resource :school
   load_and_authorize_resource
-  before_filter :load_school
+  before_action :check_school, only: [:edit, :show, :update, :destroy]
 
   def index
     @students = @school.students
@@ -43,8 +43,12 @@ class StudentsController < ApplicationController
       params.require(:student).permit(:name, :login_name, :password, :password_confirmation)
     end
 
-    def load_school
-      @school = School.find(params[:school_id])
+
+    def check_school
+      if not @student.school.eql? @school
+        raise CanCan::AccessDenied.new('Student does not belong to specified school', )
+      end
+
     end
 
 end
