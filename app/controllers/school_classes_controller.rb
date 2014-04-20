@@ -38,7 +38,7 @@ class SchoolClassesController < ApplicationController
     #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
     if @school_class.save
       flash[:success] = 'Class saved successfully.'
-      redirect_to school_school_class_path
+      redirect_to [@school,@school_class]
     else
       render 'new', :layout => 'layouts/devise'
     end
