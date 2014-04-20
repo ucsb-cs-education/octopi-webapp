@@ -15,11 +15,13 @@ FactoryGirl.define do
 
     ignore do
       school { School.first || FactoryGirl.create(:school) }
+      school_class { SchoolClass.first || FactoryGirl.create(:school_class) }
     end
 
     trait :teacher do
       after(:create) do |user, evaluator|
         user.add_role :teacher, evaluator.school
+        user.add_role :teacher, evaluator.school_class
       end
     end
 
