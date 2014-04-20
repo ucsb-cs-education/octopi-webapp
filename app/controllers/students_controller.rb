@@ -9,7 +9,6 @@ class StudentsController < ApplicationController
 
   def new
     render(:layout => 'layouts/devise')
-    @student = Student.new
   end
 
   def show
@@ -18,11 +17,8 @@ class StudentsController < ApplicationController
 
   # DELETE /schools/1
   def destroy
-    $stderr.puts "@@@@@@@@@@@@@@@#{@student.name}@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     @student.destroy
-    respond_to do |format|
-      format.html { redirect_to school_students_path(@school.id) }
-    end
+    redirect_to school_students_path(@school.id)
   end
 
   def create
@@ -34,7 +30,6 @@ class StudentsController < ApplicationController
       redirect_to school_students_path
     else
       render 'new', :layout => 'layouts/devise'
-      $stderr.puts @student.errors.messages
     end
   end
 
@@ -43,12 +38,10 @@ class StudentsController < ApplicationController
       params.require(:student).permit(:name, :login_name, :password, :password_confirmation)
     end
 
-
     def check_school
       if not @student.school.eql? @school
         raise CanCan::AccessDenied.new('Student does not belong to specified school', )
       end
-
     end
 
 end

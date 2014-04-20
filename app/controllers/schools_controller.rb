@@ -44,32 +44,26 @@ class SchoolsController < ApplicationController
   def create
     @school = School.new(school_params)
 
-    respond_to do |format|
-      if @school.save
-        format.html { redirect_to @school, notice: 'School was successfully created.' }
-      else
-        format.html { render action: 'new' }
-      end
+    if @school.save
+      redirect_to @school, notice: 'School was successfully created.'
+    else
+      render action: 'new'
     end
   end
 
   # PATCH/PUT /schools/1
   def update
-    respond_to do |format|
-      if @school.update(school_params)
-        format.html { redirect_to @school, notice: 'School was successfully updated.' }
-      else
-        format.html { render action: 'edit' }
-      end
+    if @school.update(school_params)
+      redirect_to @school, notice: 'School was successfully updated.'
+    else
+      render action: 'edit'
     end
   end
 
   # DELETE /schools/1
   def destroy
     @school.destroy
-    respond_to do |format|
-      format.html { redirect_to schools_url }
-    end
+    redirect_to schools_url
   end
 
   private
@@ -84,7 +78,7 @@ class SchoolsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def school_params
     #Only global_admins should be able to change the name of a school
-    if can? :change_school_name
+    if can? :change_school_name, @school
       params.require(:school).permit(:name, :ip_range, :student_remote_access_allowed)
     else
       params.require(:school).permit(:ip_range, :student_remote_access_allowed)
