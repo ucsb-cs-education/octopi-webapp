@@ -4,4 +4,9 @@ class SchoolClass < ActiveRecord::Base
   validates :school, presence: true
   validates :name, presence: true, length: { maximum: 100 }, uniqueness: true
   resourcify
+
+  def teachers
+    User.with_role(:teacher, self)
+  end
+
 end

@@ -3,6 +3,7 @@ FactoryGirl.define do
   factory :student do
     ignore do
       school { School.first || FactoryGirl.create(:school) }
+      school_class { SchoolClass.first || FactoryGirl.create(:school_class) }
     end
 
     sequence(:name) { |n| "First #{n} Student" }
