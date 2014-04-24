@@ -26,7 +26,10 @@ module StudentPortal::BaseHelper
   def signed_in_student
     unless signed_in_student?
       store_location
-      redirect_to student_portal_signin_path, notice: 'Please sign in.'
+      flash.keep #Keep old flashes - since student_portal doesn't have a globally accessible home, if we redirect home,
+      # as a logged out user, then we will redirect again, so we want to keep old warnings.
+      flash[:notice] = 'Please sign in.'
+      redirect_to student_portal_signin_path
     end
   end
 

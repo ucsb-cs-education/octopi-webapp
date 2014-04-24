@@ -31,6 +31,13 @@ class CreateSchools < ActiveRecord::Migration
       t.references :school_class
     end
 
+    create_table :snap_files do |t|
+      t.binary :xml,        limit: 10.megabytes
+      t.boolean :sample_file, default: false
+
+      t.timestamps
+    end
+
     add_index(:school_classes_students, :student_id)
     add_index(:school_classes_students, :school_class_id)
 

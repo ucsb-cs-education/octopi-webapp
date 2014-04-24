@@ -32,26 +32,37 @@ class Ability
     #A student (thus, any user) must be able to access all the school's names to select his/her to login
     can :index, School
     alias_action :create, :read, :update, :destroy, :to => :crud
+    alias_action :read, :update, :to => :read_update
     if user
-      can :crud, User, :id => user
+      if user.class == User
+        can :crud, User, :id => user
 
-      if user.has_role? :global_admin
-        can :manage, :all
-        # The following rules are all implicit with :manage
-        # can :change_school_name, :all
-        # can :crud, :all
-      else
-        if user.has_role? :school_admin, :any
-          can :crud, School, :id => School.with_role(:school_admin, user).pluck(:id)
-          can :crud, Student, :id => School.with_role(:school_admin, user).to_a.map { |f| f.students.pluck(:id) }.flatten(1)
-          can :create, Student
-          elsif user.has_role? :teacher, :any
-            can :manage, School, :id => School.with_role(:teacher, user).pluck(:id)
-            can :manage, Student, :id => School.with_role(:teacher, user).to_a.map { |f| f.students.pluck(:id) }.flatten(1)
+        if user.has_role? :global_admin
+          can :manage, :all
+          # The following rules are all implicit with :manage
+          # can :change_school_name, :all
+          # can :crud, :all
+        else
+          if user.has_role? :school_admin, :any
+            schools = School.with_role(:school_admin, user)
+            can :read_update, School, :id => schools.pluck(:id)
+            can :crud, Student, :id => schools.to_a.map { |f| f.students.pluck(:id) }.flatten(1)
+            can :crud, SchoolClass, :id => schools.to_a.map { |f| f.school_classes.pluck(:id) }.flatten(1)
+            can :create, SchoolClass
             can :create, Student
-            can :crud, SchoolClass, :id => SchoolClass.with_role(:teacher, user).pluck(:id)
+          elsif user.has_role? :teacher, :any
+            schools = School.with_role(:teacher, user)
+            can :read, School, :id => schools.pluck(:id)
+            can :crud, Student, :id => schools.to_a.map { |f| f.students.pluck(:id) }.flatten(1)
+            can :read_update, SchoolClass, :id => SchoolClass.with_role(:teacher, user).pluck(:id)
+            can :create, Student
+          end
         end
-
+      elsif user.class == Student
+        can :crud, SnapFile, :id => SnapFile.with_role(:owner, user).pluck(:id)
+        can :read, SnapFile, sample_file: true
+        can :create, SnapFile
+        can :read, Student, :id => user
       end
     end
   end

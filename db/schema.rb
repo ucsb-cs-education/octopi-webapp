@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140412152713) do
+ActiveRecord::Schema.define(version: 20140423221419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,24 @@ ActiveRecord::Schema.define(version: 20140412152713) do
     t.datetime "updated_at"
   end
 
+  create_table "snap_files", force: true do |t|
+    t.binary   "xml"
+    t.boolean  "sample_file", default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "student_roles", force: true do |t|
+    t.string   "name"
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "student_roles", ["name", "resource_type", "resource_id"], name: "index_student_roles_on_name_and_resource_type_and_resource_id", using: :btree
+  add_index "student_roles", ["name"], name: "index_student_roles_on_name", using: :btree
+
   create_table "students", force: true do |t|
     t.string   "name",            default: "", null: false
     t.string   "login_name",      default: "", null: false
@@ -64,6 +82,13 @@ ActiveRecord::Schema.define(version: 20140412152713) do
 
   add_index "students", ["school_id", "name"], name: "index_students_on_school_id_and_name", using: :btree
   add_index "students", ["school_id"], name: "index_students_on_school_id", using: :btree
+
+  create_table "students_student_roles", id: false, force: true do |t|
+    t.integer "student_id"
+    t.integer "student_role_id"
+  end
+
+  add_index "students_student_roles", ["student_id", "student_role_id"], name: "index_students_student_roles_on_student_id_and_student_role_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "first_name",             default: "", null: false

@@ -1,4 +1,6 @@
 class Student < ActiveRecord::Base
+  resourcify :roles
+  rolify :role_cname => 'StudentRole'
   belongs_to :school, counter_cache: true
   has_and_belongs_to_many :school_classes
   validates :name, presence: true, length: { maximum: 50 }
@@ -7,7 +9,6 @@ class Student < ActiveRecord::Base
   before_save { login_name.downcase! }
   before_create :create_remember_token
 
-  resourcify
 
   has_secure_password
 

@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  rolify
+  rolify :role_cname => 'Role'
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

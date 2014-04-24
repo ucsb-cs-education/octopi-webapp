@@ -1,4 +1,5 @@
 class School < ActiveRecord::Base
+  resourcify
   has_many :students, dependent: :destroy
   has_many :school_classes, dependent: :destroy
   validates :name, presence: true, length: { maximum: 100 }, uniqueness: true
@@ -8,7 +9,6 @@ class School < ActiveRecord::Base
   #This regex sill be hard, because we need to figure out how to
   validates :ip_range, :format => {:with => ip_range_regex}
 
-  resourcify
 
   def teachers
     User.with_role(:teacher, self)

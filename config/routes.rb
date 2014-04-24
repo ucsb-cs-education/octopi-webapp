@@ -10,6 +10,12 @@ OctopiWebapp::Application.routes.draw do
     match '/home',    to: redirect('/'),          via: 'get'
     match '/signin',  to: 'sessions#new',         via: 'get'
     match '/signout', to: 'sessions#destroy',     via: 'delete'
+    namespace :snap do
+      scope '/saves/' do
+        resources :snapsave, controller: 'snap_files', only: [:show, :update, :destroy]
+      end
+
+    end
   end
 
   resources :schools do

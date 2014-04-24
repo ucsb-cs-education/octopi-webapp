@@ -2,19 +2,26 @@
   <ul class="nav navbar-nav navbar-right">
     <li><%= link_to 'Home', student_portal_root_path %></li>
     <li><%= link_to 'Help', student_portal_help_path %></li>
-    <% if signed_in_student? %>
-        <li id="fat-menu" class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Student Account <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
+    <% if user_signed_in? %>
+        <li><%= link_to 'Non-Student Portal', home_path %></li>
+    <% else %>
+        <li><%= link_to 'Non-Student Portal', new_user_session_path %></li>
+    <% end %>
+    <li id="fat-menu" class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        Student Account <b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu">
+        <% if signed_in_student? %>
             <li><%= link_to 'Profile', '#' %></li>
             <li class="divider"></li>
             <li><%= link_to 'Sign Out', student_portal_signout_path, method: 'delete' %></li>
-          </ul>
-        </li>
-    <% else %>
-        <li><%= link_to 'Sign In', student_portal_signin_path %></li>
-    <% end %>
+        <% else %>
+            <li><%= link_to 'Sign In', student_portal_signin_path %></li>
+        <% end %>
+      </ul>
+    </li>
   </ul>
 </div>
+
+
