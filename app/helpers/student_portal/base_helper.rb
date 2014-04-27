@@ -1,9 +1,13 @@
 module StudentPortal::BaseHelper
-  def sign_in(student)
+  def sign_in_student(student)
     remember_token = Student.new_remember_token
-    session[:remember_token] = remember_token
+    session[:student_remember_token] = remember_token
+    update_autosignout_time
     student.update_attribute(:remember_token, Student.create_remember_hash(remember_token))
-    self.current_student = student
+  end
+
+  def update_autosignout_time
+    session[:student_autosignout_time] = 30.minutes.from_now
   end
 
   def current_student=(student)
@@ -13,6 +17,14 @@ module StudentPortal::BaseHelper
   def current_student
     remember_token = Student.create_remember_hash(session[:remember_token])
     @current_student ||= Student.find_by(remember_token: remember_token)
+    expires_at = session[:student_autosignout_time]
+    update_autosignout_time
+    if expires_at && expires_at > Time.now
+      remember_token = Student.create_remember_hash(session[:student_remember_token])
+      @current_student ||= Student.find_by(remember_token: remember_token)
+    else
+      return nil
+    end
   end
 
   def current_student?(student)

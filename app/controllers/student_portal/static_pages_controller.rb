@@ -5,7 +5,6 @@ class StudentPortal::StaticPagesController < StudentPortal::BaseController
   before_action :signed_in_student, only: [:home]
 
   def home
-    $stderr.puts "XXXXXXXXX#{current_user}XXXXXXX"
 
   end
 

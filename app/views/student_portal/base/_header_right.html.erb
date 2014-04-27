@@ -2,8 +2,8 @@
   <ul class="nav navbar-nav navbar-right">
     <li><%= link_to 'Home', student_portal_root_path %></li>
     <li><%= link_to 'Help', student_portal_help_path %></li>
-    <% if user_signed_in? %>
-        <li><%= link_to 'Non-Student Portal', home_path %></li>
+    <% if user_signed_in?  %>
+        <li><%= link_to 'Non-Student Portal', main_app.home_path %></li>
     <% else %>
         <li><%= link_to 'Non-Student Portal', new_user_session_path %></li>
     <% end %>

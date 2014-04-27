@@ -11,7 +11,7 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
     student = Student.find_by(school_id: school_id, login_name: login_name.downcase)
 
     if student && student.authenticate(password)
-      sign_in student
+      sign_in_student student
       redirect_back_or student_portal_root_url
     else
       flash.now[:danger] = 'Invalid email/password combination'
@@ -20,7 +20,7 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
   end
 
   def destroy
-    sign_out
+    sign_out_student
     redirect_to student_portal_root_url
   end
 end
