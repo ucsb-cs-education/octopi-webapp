@@ -19,7 +19,13 @@ class SchoolClassesController < ApplicationController
   end
 
   def add_student
-
+    @school_class = SchoolClass.find(params[:school_class_id])
+    @school_class.students << Student.find(params[:student][:id])
+    #if @school_class
+      redirect_to [@school, @school_class], notice: 'Student was successfully added.'
+    #else
+     # render action: 'edit'
+    #end
   end
 
   def new

@@ -4,9 +4,9 @@
 </p>
 
 
-<%= simple_form_for :student, url:school_students_path, method:'get' do |f| %>
+<%= simple_form_for :student, url: school_school_class_add_student_path(@school.id,@school_class.id) , method:'post' do |f| %>
     <div class="form-inputs">
-      <%= f.input :name, collection:  Student.where(school:1).pluck(:name), include_blank: true, selected: 0%>
+      <%= f.input :id, collection: Student.all, include_blank: false %>
     </div>
     <div class="form-actions">
     <%= f.button :submit, 'Add student to class'%>
