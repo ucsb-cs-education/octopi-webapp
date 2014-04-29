@@ -2,6 +2,19 @@
   <strong>Name:</strong>
   <%= @school_class.name %>
 </p>
+
+
+<%= simple_form_for :student, url:school_students_path, method:'get' do |f| %>
+    <div class="form-inputs">
+      <%= f.input :name, collection:  Student.where(school:1).pluck(:name), include_blank: true, selected: 0%>
+    </div>
+    <div class="form-actions">
+    <%= f.button :submit, 'Add student to class'%>
+    </div>
+
+<% end %>
+
+
 <p>
   <%= link_to 'Add a new student to this class: TODO', new_school_student_path(@school) %>
 </p>

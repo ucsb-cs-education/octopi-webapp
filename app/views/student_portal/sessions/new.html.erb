@@ -4,7 +4,7 @@
 <%= simple_form_for :session, url: student_portal_sessions_path do |f| %>
     <div class="form-inputs">
       <%= f.input :school, include_blank: false, collection: School.all.to_a %>
-      <%= f.input :login_name, required: false, autofocus: true %>
+      <%= f.input :login_name, collection: Student.all.pluck(:login_name), include_blank: true, selected: 0%>
       <%= f.input :password, required: false %>
     </div>
 
