@@ -1,7 +1,6 @@
 require 'IdCrypt'
 class SnapFile < ActiveRecord::Base
-  #resourcify
-  resourcify :student_roles, :role_cname => 'StudentRole'
+  resourcify
   after_initialize :create_crypt
 
   # get the encoded record id

@@ -1,6 +1,8 @@
 class Student < ActiveRecord::Base
-  resourcify :roles
-  rolify :role_cname => 'StudentRole'
+  # Note (jhenkens) : I am not sure that Student needs to be resourced at all - I do not see a scenario in which a User
+  # needs to have a specific role over a User in the current scenario.
+  #resourcify :roles
+  rolify
   belongs_to :school, counter_cache: true
   has_and_belongs_to_many :school_classes
   validates :name, presence: true, length: { maximum: 50 }

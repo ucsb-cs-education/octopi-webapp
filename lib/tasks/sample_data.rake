@@ -21,7 +21,15 @@ namespace :db do
     contents = file.read
     file.close
 
-    SnapFile.create(xml: contents, sample_file: true)
+    5.times do
+      SnapFile.create(xml: contents, sample_file: true)
+    end
+
+    Student.first.add_role :owner, SnapFile.first
+    Student.first.add_role :owner, SnapFile.find(2)
+    Student.last.add_role :owner, SnapFile.first
+    User.first.add_role :owner, SnapFile.first
+    User.first.add_role :owner, SnapFile.find(3)
 
   end
 end

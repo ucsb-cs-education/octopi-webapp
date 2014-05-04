@@ -1,12 +1,12 @@
 GIT
   remote: git://github.com/jhenkens/rolify.git
-  revision: 815c9efb1fd1071448c5b2e8c49bcd401f3e2e54
+  revision: cd5b3ecff44b419661bd6ffacbed26131b0bcf3d
   specs:
     rolify (3.4.0)
 
 GIT
   remote: git://github.com/plataformatec/simple_form.git
-  revision: 3805d187a11a0919e7ba9880bf57e8d0fb866a5f
+  revision: d7306558665d38fe3a0c277ce263e99f635958de
   branch: master
   specs:
     simple_form (3.1.0.rc1)
@@ -63,7 +63,7 @@ GEM
     celluloid-io (0.15.0)
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
-    childprocess (0.5.2)
+    childprocess (0.5.3)
       ffi (~> 1.0, >= 1.0.11)
     coderay (1.1.0)
     coffee-rails (4.0.1)
@@ -113,7 +113,7 @@ GEM
       railties (>= 3.1.0)
       turbolinks
     json (1.8.1)
-    listen (2.7.1)
+    listen (2.7.4)
       celluloid (>= 0.15.2)
       celluloid-io (>= 0.15.0)
       rb-fsevent (>= 0.9.3)
@@ -126,7 +126,7 @@ GEM
     mime-types (1.25.1)
     mini_portile (0.5.3)
     minitest (5.3.3)
-    multi_json (1.9.2)
+    multi_json (1.9.3)
     nio4r (1.0.0)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
@@ -162,7 +162,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (10.3.1)
     rb-fsevent (0.9.4)
-    rb-inotify (0.9.3)
+    rb-inotify (0.9.4)
       ffi (>= 0.5.0)
     rdoc (4.1.1)
       json (~> 1.4)
