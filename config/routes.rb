@@ -14,7 +14,9 @@ OctopiWebapp::Application.routes.draw do
 
   resources :schools do
     resources :students
-    resources :school_classes
+    resources :school_classes do
+      match '/add_student', to: 'school_classes#add_student', via: 'post', as: 'add_student'
+    end
   end
 
   root  'static_pages#home'

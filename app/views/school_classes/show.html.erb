@@ -2,9 +2,21 @@
   <strong>Name:</strong>
   <%= @school_class.name %>
 </p>
-<p>
-  <%= link_to 'Add a new student to this class: TODO', new_school_student_path(@school) %>
-</p>
+
+<div class="row">
+  <div class="col-md-3"><strong>Student Name</strong>
+    </div>
+  <div class="col-md-3"><strong>Login Name</strong></div>
+</div>
+<% @school_class.students.each do |s| %>
+    <div class="row">
+        <div class="col-md-3"><%= s.name %></div>
+      <div class="col-md-3"><%= s.login_name %></div>
+    </div>
+<%end%>
+ </table>
+
+<br>
 <p>
   <%= link_to 'Back', school_school_classes_path %>
 </p>
