@@ -15,6 +15,7 @@ class SchoolClassesController < ApplicationController
 
   # GET /school_classes/1/edit
   def edit
+    @school_classes = @school.school_classes
     #@school_class = SchoolClass.find(params[:id])
   end
 
@@ -22,7 +23,8 @@ class SchoolClassesController < ApplicationController
     @school_class = SchoolClass.find(params[:school_class_id])
     @school_class.students << Student.find(params[:student][:id])
     #if @school_class
-      redirect_to [@school, @school_class], notice: 'Student was successfully added.'
+      #redirect_to [@school, @school_class], notice: 'Student was successfully added.'
+    redirect_to edit_school_school_class_url(@school,@school_class), notice: 'Student was added successfully'
     #else
      # render action: 'edit'
     #end
