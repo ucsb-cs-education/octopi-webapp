@@ -49,7 +49,7 @@ class Ability
             can :manage, School, :id => School.with_role(:teacher, user).pluck(:id)
             can :manage, Student, :id => School.with_role(:teacher, user).to_a.map { |f| f.students.pluck(:id) }.flatten(1)
             can :create, Student
-            can :manage, SchoolClass, :id => SchoolClass.with_role(:teacher, user).pluck(:id)
+            can :crud, SchoolClass, :id => SchoolClass.with_role(:teacher, user).pluck(:id)
         end
 
       end

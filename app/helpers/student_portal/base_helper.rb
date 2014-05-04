@@ -2,7 +2,7 @@ module StudentPortal::BaseHelper
   def sign_in(student)
     remember_token = Student.new_remember_token
     session[:remember_token] = remember_token
-    student.update_attribute(:remember_token, Student.hash(remember_token))
+    student.update_attribute(:remember_token, Student.create_remember_hash(remember_token))
     self.current_student = student
   end
 
@@ -11,7 +11,7 @@ module StudentPortal::BaseHelper
   end
 
   def current_student
-    remember_token = Student.hash(session[:remember_token])
+    remember_token = Student.create_remember_hash(session[:remember_token])
     @current_student ||= Student.find_by(remember_token: remember_token)
   end
 
@@ -32,7 +32,7 @@ module StudentPortal::BaseHelper
 
   def sign_out_student
     current_student.update_attribute(:remember_token,
-                                  Student.hash(Student.new_remember_token))
+                                  Student.create_remember_hash(Student.new_remember_token))
     cookies.delete(:remember_token)
     self.current_student = nil
   end
