@@ -40,6 +40,7 @@ class CreateSchools < ActiveRecord::Migration
 
     add_index(:school_classes_students, :student_id)
     add_index(:school_classes_students, :school_class_id)
+    add_index(:school_classes_students, [:student_id, :school_class_id], :unique => true)
 
 
     add_index(:students, :school_id)

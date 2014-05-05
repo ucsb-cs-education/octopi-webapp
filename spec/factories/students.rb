@@ -3,7 +3,7 @@ FactoryGirl.define do
   factory :student do
     ignore do
       school { School.first || FactoryGirl.create(:school) }
-      school_class { SchoolClass.first || FactoryGirl.create(:school_class) }
+      school_class { school.school_classes.first || FactoryGirl.create(:school_class, :school => school) }
     end
 
     sequence(:name) { |n| "First #{n} Student" }
@@ -17,6 +17,7 @@ FactoryGirl.define do
 
     after(:build) do |student, evaluator|
       student.school_id = evaluator.school.id
+      student.school_classes << evaluator.school_class
     end
   end
 end

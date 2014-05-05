@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20140412152713) do
   end
 
   add_index "school_classes_students", ["school_class_id"], name: "index_school_classes_students_on_school_class_id", using: :btree
+  add_index "school_classes_students", ["student_id", "school_class_id"], name: "index_school_classes_students_on_student_id_and_school_class_id", unique: true, using: :btree
   add_index "school_classes_students", ["student_id"], name: "index_school_classes_students_on_student_id", using: :btree
 
   create_table "schools", force: true do |t|
