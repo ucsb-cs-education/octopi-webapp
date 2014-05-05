@@ -61,7 +61,8 @@ ActiveRecord::Schema.define(version: 20140412152713) do
   end
 
   create_table "students", force: true do |t|
-    t.string   "name",            default: "", null: false
+    t.string   "first_name",      default: "", null: false
+    t.string   "last_name",       default: "", null: false
     t.string   "login_name",      default: "", null: false
     t.string   "password_digest"
     t.string   "remember_token"
@@ -70,7 +71,7 @@ ActiveRecord::Schema.define(version: 20140412152713) do
     t.datetime "updated_at"
   end
 
-  add_index "students", ["school_id", "name"], name: "index_students_on_school_id_and_name", using: :btree
+  add_index "students", ["school_id", "login_name"], name: "index_students_on_school_id_and_login_name", using: :btree
   add_index "students", ["school_id"], name: "index_students_on_school_id", using: :btree
 
   create_table "students_roles", id: false, force: true do |t|

@@ -3,8 +3,14 @@
 
 <%= simple_form_for :session, url: student_portal_sessions_path do |f| %>
     <div class="form-inputs">
-      <%= f.input :school, include_blank: false, collection: School.all.to_a %>
-      <%= f.input :login_name, collection: Student.all.pluck(:login_name), include_blank: true, selected: 0%>
+      <% selected_school_id = 1 %>
+      <%= f.input :school, include_blank: false, collection: School.all.to_a, selected: selected_school_id %>
+      <%= f.input :login_name, collection: School.find(selected_school_id).students.pluck(:login_name) , include_blank: true, selected: 0, input_html: {
+      'data-option-dependent' => true,
+      'data-option-observed' => 'session_school',
+      'data-option-url' => '/schools/:school_id:/students.json',
+      'data-option-key-method' => :login_name,
+      'data-option-value-method' => :login_name }%>
       <%= f.input :password, required: false %>
     </div>
 
@@ -12,8 +18,3 @@
       <%= f.button :submit, "Sign in" %>
     </div>
 <% end %>
-
-<script>
-
-    alert("hello world");
-</script>

@@ -5,6 +5,10 @@ class StudentsController < ApplicationController
 
   def index
     @students = @school.students
+    respond_to do |format|
+      format.json { render json: @students.select(:login_name, :school_id) }
+      format.html {}
+    end
   end
 
   def new

@@ -6,13 +6,15 @@ FactoryGirl.define do
       school_class { school.school_classes.first || FactoryGirl.create(:school_class, :school => school) }
     end
 
-    sequence(:name) { |n| "First #{n} Student" }
+    sequence(:first_name) { |n| "FirstName#{n}" }
+    sequence(:last_name)  { |n| "LastName#{n}" }
     sequence(:login_name) { |n| "student_#{n}_login" }
     password 'foobarbaz'
     password_confirmation { |u| u.password }
 
     factory :static_student do
-      name 'Static Student Name'
+      first_name 'Static Student firstname'
+      last_name 'Static Student lastname'
     end
 
     after(:build) do |student, evaluator|

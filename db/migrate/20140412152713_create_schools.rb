@@ -17,7 +17,8 @@ class CreateSchools < ActiveRecord::Migration
     end
 
     create_table :students do |t|
-      t.string :name,                   null: false, default: ""
+      t.string :first_name,                   null: false, default: ""
+      t.string :last_name,                    null: false, default: ""
       t.string :login_name,                   null: false, default: ""
       t.string :password_digest
       t.string :remember_token
@@ -44,11 +45,8 @@ class CreateSchools < ActiveRecord::Migration
 
 
     add_index(:students, :school_id)
-    add_index(:students, [ :school_id, :name ])
+    add_index(:students, [ :school_id, :login_name ])
 
-    # This should not be validated, we just want this reference here so that for administrators and teachers
-    # that are associated with a single school, we can display that as part of their profile.
-    # Additionally, this allows us to get all the teachers and administrators unique to just a school
   end
 end
 

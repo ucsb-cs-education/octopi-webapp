@@ -5,7 +5,8 @@ class Student < ActiveRecord::Base
   rolify
   belongs_to :school, counter_cache: true
   has_and_belongs_to_many :school_classes, after_add: :verify_classes
-  validates :name, presence: true, length: { maximum: 50 }
+  validates :first_name, presence: true, length: { maximum: 50 }
+  validates :last_name, presence: true, length: { maximum: 50 }
   validates :login_name, presence: true, length: { maximum: 50 } , :uniqueness => {:scope => :school_id, :case_sensitive => false}
   validates :school, presence: true
   before_save { login_name.downcase! }
@@ -19,6 +20,10 @@ class Student < ActiveRecord::Base
 
   def Student.create_remember_hash(token)
     Digest::SHA1.hexdigest(token.to_s)
+  end
+
+  def name
+    return "#{first_name} #{last_name}"
   end
 
   private
