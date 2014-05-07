@@ -78,7 +78,7 @@ class SchoolsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def school_params
     #Only global_admins should be able to change the name of a school
-    if can? :change_school_name, @school
+    if can?(:change_school_name, @school) || can?( :create, School)
       params.require(:school).permit(:name, :ip_range, :student_remote_access_allowed)
     else
       params.require(:school).permit(:ip_range, :student_remote_access_allowed)
