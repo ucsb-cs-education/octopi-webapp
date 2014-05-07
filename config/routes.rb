@@ -19,11 +19,14 @@ OctopiWebapp::Application.routes.draw do
   end
 
   resources :schools do
-    resources :students
+    match '/student_logins.json', to: 'students#list_student_logins', via: 'get'
+    resources :students do
+    end
     resources :school_classes do
       match '/add_student', to: 'school_classes#add_student', via: 'post', as: 'add_student'
     end
   end
+
 
   root  'static_pages#home'
   match '/home',    to: 'static_pages#home',                    via: 'get'

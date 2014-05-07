@@ -1,14 +1,16 @@
 class StudentsController < ApplicationController
   load_and_authorize_resource :school
   load_and_authorize_resource
+  skip_authorize_resource :school, :only => [:list_student_logins]
   before_action :check_school, only: [:edit, :show, :update, :destroy]
 
   def index
     @students = @school.students
-    respond_to do |format|
-      format.json { render json: @students.select(:login_name, :school_id) }
-      format.html {}
-    end
+  end
+
+  def list_student_logins
+    @students = @school.students
+    render json: @students.select(:login_name, :school_id, :id)
   end
 
   def new

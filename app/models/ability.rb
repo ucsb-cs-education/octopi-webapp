@@ -29,8 +29,11 @@ class Ability
     # See the wiki for details:
     # https://github.com/bryanrite/cancancan/wiki/Defining-Abilities
 
-    #A student (thus, any user) must be able to access all the school's names to select his/her to login
+    #A non-signed in student (thus, any user) must be able to access all the school's names to select his/her to login
     can :index, School
+    #A non-signed in student (thus, any user) must be able to access all student's logins to select his/her logins
+    can :list_student_logins, Student
+
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :read, :update, :to => :read_update
     if user
