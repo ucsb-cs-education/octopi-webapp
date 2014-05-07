@@ -31,5 +31,9 @@ namespace :db do
     User.first.add_role :owner, SnapFile.first
     User.first.add_role :owner, SnapFile.find(3)
 
+    SnapFile.first.update_attribute(:sample_file, false)
+    SnapFile.find(2).update_attribute(:sample_file, false)
+    SnapFile.find(3).update_attribute(:sample_file, false)
+
   end
 end

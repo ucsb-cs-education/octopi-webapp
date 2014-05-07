@@ -1,11 +1,20 @@
 class StudentPortal::Snap::SnapFilesController < StudentPortal::BaseController
-  before_filter :decode_id
+  before_filter :decode_id, only: [:show, :update, :create, :destroy]  
   load_and_authorize_resource
+
+  def index
+    respond_to do |format|
+      format.json {
+        render :json => @snap_files.map { |x| {ProjectName: x.id_encoded.to_s, Public: x.sample_file}}
+      }
+    end
+
+  end
 
   def show
     respond_to do |format|
       format.xml {
-        render :xml => SnapFile.find(params[:id]).xml
+        render :xml => @snap_file.xml
       }
     end
   end
@@ -15,11 +24,11 @@ class StudentPortal::Snap::SnapFilesController < StudentPortal::BaseController
   end
 
   def create
-    @snapfile = SnapFile.new(snapfile_params)
+    @snap_file = SnapFile.new(snapfile_params)
     #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
     status = nil
-    if @snapfile.save
-      current_user.add_role(:owner, @snapfile)
+    if @snap_file.save
+      current_user.add_role(:owner, @snap_file)
       status = :created
     else
       status = :bad_request
