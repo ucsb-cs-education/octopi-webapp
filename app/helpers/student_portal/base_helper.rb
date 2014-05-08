@@ -14,17 +14,17 @@ module StudentPortal::BaseHelper
     @current_student = student
   end
 
+
+
   def current_student
-    remember_token = Student.create_remember_hash(session[:remember_token])
-    @current_student ||= Student.find_by(remember_token: remember_token)
     expires_at = session[:student_autosignout_time]
-    update_autosignout_time
-    if expires_at && expires_at > Time.now
-      remember_token = Student.create_remember_hash(session[:student_remember_token])
-      @current_student ||= Student.find_by(remember_token: remember_token)
-    else
-      return nil
+    remember_token = Student.create_remember_hash(session[:student_remember_token])
+    @current_student ||= Student.find_by(remember_token: remember_token)
+    if expires_at && expires_at < Time.now
+      sign_out_student(@current_student) if @current_student
+      @current_student = nil
     end
+    @current_student
   end
 
   def current_student?(student)
@@ -45,8 +45,9 @@ module StudentPortal::BaseHelper
     end
   end
 
-  def sign_out_student
-    current_student.update_attribute(:remember_token,
+  def sign_out_student(student=null)
+    student ||= current_student
+    student.update_attribute(:remember_token,
                                   Student.create_remember_hash(Student.new_remember_token))
     cookies.delete(:remember_token)
     self.current_student = nil

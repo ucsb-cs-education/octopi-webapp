@@ -1,5 +1,6 @@
 class StudentPortal::BaseController < ApplicationController
   include StudentPortal::BaseHelper
+  after_action :update_autosignout_time
 
 
   rescue_from CanCan::AccessDenied do |exception|
