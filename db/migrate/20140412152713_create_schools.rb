@@ -34,7 +34,7 @@ class CreateSchools < ActiveRecord::Migration
 
     create_table :snap_files do |t|
       t.binary :xml,        limit: 10.megabytes
-      t.boolean :sample_file, default: false
+      t.boolean :public,    default: false
 
       t.timestamps
     end

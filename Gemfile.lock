@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/arikrak/obfuscate_id.git
+  revision: 79296462ad6f47c491a1b401c5c9b3e3caea207a
+  branch: patch-1
+  specs:
+    obfuscate_id (0.0.4)
+      rails (>= 3.2.15)
+      scatter_swap (~> 0.0.3)
+
+GIT
   remote: git://github.com/jhenkens/rolify.git
   revision: cd5b3ecff44b419661bd6ffacbed26131b0bcf3d
   specs:
@@ -180,6 +189,7 @@ GEM
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0)
+    scatter_swap (0.0.3)
     sdoc (0.4.0)
       json (~> 1.8)
       rdoc (~> 4.0, < 5.0)
@@ -245,6 +255,7 @@ DEPENDENCIES
   guard-spork (~> 1.5.1)
   jquery-rails
   jquery-turbolinks
+  obfuscate_id!
   pg (~> 0.17.1)
   rails (~> 4.1)
   rails_12factor

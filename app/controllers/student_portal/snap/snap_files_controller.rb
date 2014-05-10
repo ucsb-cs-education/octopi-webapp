@@ -1,58 +1,63 @@
-class StudentPortal::Snap::SnapFilesController < StudentPortal::BaseController
-  before_filter :decode_id, only: [:show, :update, :create, :destroy]  
+class StudentPortal::Snap::SnapFilesController < StudentPortal::Snap::SnapBaseController
   load_and_authorize_resource
 
   def index
     respond_to do |format|
       format.json {
-        render :json => @snap_files.map { |x| {ProjectName: x.id_encoded.to_s, Public: x.sample_file}}
+        render :json => @snap_files.map { |x| {ProjectName: x.to_param, Public: x.public}}
       }
     end
 
   end
 
   def show
-    respond_to do |format|
-      format.xml {
-        render :xml => @snap_file.xml
-      }
-    end
+    respond_with @snap_file
   end
 
   def update
+    status = :bad_request
+    respond_to do |format|
+      format.xml {
+        status = :no_content if @snap_file.update_attributes(xml: request.body.read)
+      }
+      format.json {
+        status = :no_content if @snap_file.update_attributes(snap_file_params)
+      }
+    end
 
+    head status, location: student_portal_snap_snap_file_path(@snap_file, format: :xml)
   end
 
   def create
-    @snap_file = SnapFile.new(snapfile_params)
-    #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
-    status = nil
+    status = :bad_request
+    respond_to do |format|
+      format.xml {
+        @snap_file = SnapFile.new(xml: request.body.read)
+      }
+      format.json {
+        @snap_file = SnapFile.new(snap_file_params)
+      }
+    end
     if @snap_file.save
       current_user.add_role(:owner, @snap_file)
       status = :created
-    else
-      status = :bad_request
     end
-    render :nothing => true, :status => status, :content_type => 'text/html'
+    # render :nothing => true, :status => status, :content_type => 'text/html'
+    # respond_with(, location: student_portal_snap_snap_file_path(@snap_file))
+    head status, location: student_portal_snap_snap_file_path(@snap_file, format: :xml)
   end
 
   def destroy
-
+    @snap_file.destroy
+    head :no_content
   end
 
   private
-  def snapfile_params
-    if can? :create_sample_snapfile, SnapFile
-      params.require(:snapfile).permit(:xml, :sample_file)
+  def snap_file_params
+    if can? :create_public_snapfile, SnapFile
+      params.require(:snapfile).permit(:xml, :public)
     else
       params.require(:snapfile).permit(:xml)
     end
   end
-
-  alias_method :devise_current_user, :current_user
-
-  def current_user
-    current_student || devise_current_user
-  end
-
 end

@@ -22,18 +22,18 @@ namespace :db do
     file.close
 
     5.times do
-      SnapFile.create(xml: contents, sample_file: true)
+      SnapFile.create(xml: contents, public: true)
     end
 
     Student.first.add_role :owner, SnapFile.first
-    Student.first.add_role :owner, SnapFile.find(2)
+    Student.first.add_role :owner, SnapFile.find(ObfuscateId.hide(2, SnapFile.obfuscate_id_spin))
     Student.last.add_role :owner, SnapFile.first
     User.first.add_role :owner, SnapFile.first
-    User.first.add_role :owner, SnapFile.find(3)
+    User.first.add_role :owner, SnapFile.find(ObfuscateId.hide(3,SnapFile.obfuscate_id_spin))
 
-    SnapFile.first.update_attribute(:sample_file, false)
-    SnapFile.find(2).update_attribute(:sample_file, false)
-    SnapFile.find(3).update_attribute(:sample_file, false)
+    SnapFile.first.update_attribute(:public, false)
+    SnapFile.find(ObfuscateId.hide(2,SnapFile.obfuscate_id_spin)).update_attribute(:public, false)
+    SnapFile.find(ObfuscateId.hide(3,SnapFile.obfuscate_id_spin)).update_attribute(:public, false)
 
   end
 end

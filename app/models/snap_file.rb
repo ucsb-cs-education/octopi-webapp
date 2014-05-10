@@ -1,20 +1,14 @@
-require 'IdCrypt'
 class SnapFile < ActiveRecord::Base
   resourcify
-  after_initialize :create_crypt
+  obfuscate_id
 
-  # get the encoded record id
-  def id_encoded
-    @id_crypt.encode_id( self.id )
+  def to_xml(options={})
+    self.xml
   end
 
-# override of the base class method to ensure that raw user ids are not displayed in the url
-  def to_param
-    @id_crypt.encode_id( self.id )
+  def as_json(options={})
+    options.merge!( except:  [:id] , methods: [:id_encoded, :xml_path])
+    super(options)
   end
 
-  protected
-  def create_crypt
-    @id_crypt = IdCrypt.new
-  end
 end

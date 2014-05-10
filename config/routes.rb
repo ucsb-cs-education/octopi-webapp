@@ -12,7 +12,7 @@ OctopiWebapp::Application.routes.draw do
     match '/signout', to: 'sessions#destroy',     via: 'delete'
     namespace :snap do
       scope '/saves/' do
-        resources :snapsave, controller: 'snap_files', only: [:show, :update, :destroy, :create, :index] do
+        resources :snap_files, only: [:show, :update, :destroy, :create, :index] do
         end
       end
 

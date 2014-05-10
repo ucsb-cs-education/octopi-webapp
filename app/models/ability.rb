@@ -63,7 +63,7 @@ class Ability
         end
       elsif user.class == Student
         can :crud, SnapFile, :id => SnapFile.with_role(:owner, user).pluck(:id)
-        can :read, SnapFile, sample_file: true
+        can :read, SnapFile, public: true
         can :create, SnapFile
         can :read, Student, :id => user
       end

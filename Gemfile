@@ -22,6 +22,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'will_paginate', '~> 3.0.5'
 gem 'bootstrap-will_paginate', '~> 0.0.10'
 
+gem 'obfuscate_id', github: 'arikrak/obfuscate_id', branch: 'patch-1'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
