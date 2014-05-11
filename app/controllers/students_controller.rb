@@ -3,13 +3,12 @@ class StudentsController < ApplicationController
   load_and_authorize_resource
   skip_authorize_resource :school, :only => [:list_student_logins]
   before_action :check_school, only: [:edit, :show, :update, :destroy]
+  before_action :load_students, only: [:index, :list_student_logins]
 
   def index
-    @students = @school.students
   end
 
   def list_student_logins
-    @students = @school.students
     render json: @students.select(:login_name, :school_id, :id)
   end
 
@@ -48,6 +47,10 @@ class StudentsController < ApplicationController
       if not @student.school.eql? @school
         raise CanCan::AccessDenied.new('Student does not belong to specified school', )
       end
+    end
+
+    def load_students
+      @students = @school.students
     end
 
 end

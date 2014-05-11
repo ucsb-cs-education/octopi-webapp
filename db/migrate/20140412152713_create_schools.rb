@@ -33,6 +33,7 @@ class CreateSchools < ActiveRecord::Migration
     end
 
     create_table :snap_files do |t|
+      t.string :file_name,  null: false, default: ""
       t.binary :xml,        limit: 10.megabytes
       t.boolean :public,    default: false
 

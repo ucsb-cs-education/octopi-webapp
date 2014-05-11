@@ -1,6 +1,7 @@
 class SnapFile < ActiveRecord::Base
   resourcify
   obfuscate_id
+  validates :file_name, presence: true, length: { maximum: 50 }
 
   def to_xml(options={})
     self.xml

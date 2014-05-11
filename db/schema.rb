@@ -54,8 +54,9 @@ ActiveRecord::Schema.define(version: 20140412152713) do
   end
 
   create_table "snap_files", force: true do |t|
+    t.string   "file_name",  default: "",    null: false
     t.binary   "xml"
-    t.boolean  "public",          default: false
+    t.boolean  "public",     default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

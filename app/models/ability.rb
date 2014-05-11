@@ -34,6 +34,8 @@ class Ability
     #A non-signed in student (thus, any user) must be able to access all student's logins to select his/her logins
     can :list_student_logins, Student
 
+    can :read, SnapFile, public: true
+
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :read, :update, :to => :read_update
     if user
@@ -47,25 +49,27 @@ class Ability
           # can :crud, :all
         else
           if user.has_role? :school_admin, :any
-            schools = School.with_role(:school_admin, user)
-            can :read_update, School, :id => schools.pluck(:id)
-            can :crud, Student, :id => schools.to_a.map { |f| f.students.pluck(:id) }.flatten(1)
-            can :crud, SchoolClass, :id => schools.to_a.map { |f| f.school_classes.pluck(:id) }.flatten(1)
+            schools = School.with_role(:school_admin, user).pluck(:id)
+            can :read_update, School, :id => schools
+            can :crud, Student, :id => Student.where(school_id: schools).pluck(:id)
+            can :crud, SchoolClass, :id => School.where(school_id: schools).pluck(:id)
             can :create, SchoolClass
             can :create, Student
           elsif user.has_role? :teacher, :any
-            schools = School.with_role(:teacher, user)
-            can :read, School, :id => schools.pluck(:id)
-            can :crud, Student, :id => schools.to_a.map { |f| f.students.pluck(:id) }.flatten(1)
-            can :read_update, SchoolClass, :id => SchoolClass.with_role(:teacher, user).pluck(:id)
+            schools = School.with_role(:teacher, user).pluck(:id)
+            school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
+            can :read, School, :id => schools
+            can :read, Student, :id => Student.where(school_id: schools.pluck(:id)).pluck(:id)
+            can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
+            can :read_update, SchoolClass, :id => school_classes
             can :create, Student
           end
         end
       elsif user.class == Student
-        can :crud, SnapFile, :id => SnapFile.with_role(:owner, user).pluck(:id)
-        can :read, SnapFile, public: true
+        files = SnapFile.with_role(:owner, user).pluck(:id)
+        can :crud, SnapFile, :id => files
         can :create, SnapFile
-        can :read, Student, :id => user
+        can :read, Student, id: user
       end
     end
   end

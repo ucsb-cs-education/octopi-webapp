@@ -4,7 +4,7 @@ class StudentPortal::Snap::SnapFilesController < StudentPortal::Snap::SnapBaseCo
   def index
     respond_to do |format|
       format.json {
-        render :json => @snap_files.map { |x| {ProjectName: x.to_param, Public: x.public}}
+        render :json => @snap_files.map { |x| {file_name: x.file_name, file_id: x.to_param, public: x.public, updated_at: x.updated_at}}
       }
     end
 
@@ -25,11 +25,10 @@ class StudentPortal::Snap::SnapFilesController < StudentPortal::Snap::SnapBaseCo
       }
     end
 
-    head status, location: student_portal_snap_snap_file_path(@snap_file, format: :xml)
+    head status, location: student_portal_snap_snap_file_url(@snap_file, format: :xml)
   end
 
   def create
-    status = :bad_request
     respond_to do |format|
       format.xml {
         @snap_file = SnapFile.new(xml: request.body.read)
@@ -40,11 +39,10 @@ class StudentPortal::Snap::SnapFilesController < StudentPortal::Snap::SnapBaseCo
     end
     if @snap_file.save
       current_user.add_role(:owner, @snap_file)
-      status = :created
+      create_post_success_response(:created, student_portal_snap_snap_file_url(@snap_file, format: :xml))
+    else
+      head :bad_request
     end
-    # render :nothing => true, :status => status, :content_type => 'text/html'
-    # respond_with(, location: student_portal_snap_snap_file_path(@snap_file))
-    head status, location: student_portal_snap_snap_file_path(@snap_file, format: :xml)
   end
 
   def destroy
@@ -54,10 +52,11 @@ class StudentPortal::Snap::SnapFilesController < StudentPortal::Snap::SnapBaseCo
 
   private
   def snap_file_params
-    if can? :create_public_snapfile, SnapFile
-      params.require(:snapfile).permit(:xml, :public)
-    else
-      params.require(:snapfile).permit(:xml)
+    result = params.require(:snap_file).permit(:file_name, :xml, :public)
+    if cannot? :create_public_snap_file, SnapFile
+      result.delete(:public)
     end
+    result
   end
+
 end

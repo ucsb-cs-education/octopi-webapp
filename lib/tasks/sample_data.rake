@@ -1,9 +1,6 @@
 namespace :db do
   desc "Fill database with sample data"
-  task fullResetAndPopulate: :environment do
-    Rake::Task['db:drop'].invoke
-    Rake::Task['db:create'].invoke
-    Rake::Task['db:migrate'].invoke
+  task fullResetAndPopulate: ['db:drop', 'db:create', 'db:migrate'] do
     admin = FactoryGirl.create(:user, :global_admin, email: "global_admin@example.com")
     school = FactoryGirl.create(:school)
     school_admin = FactoryGirl.create(:user, :school_admin, email: "school_admin@example.com")
@@ -17,23 +14,16 @@ namespace :db do
       FactoryGirl.create(:student, school: school2)
     end
 
-    file = File.open("#{Rails.root}/lib/assets/snap_test_files/starwars.xml", 'r')
-    contents = file.read
-    file.close
+    a = FactoryGirl.create(:snap_file, owner: Student.first)
 
-    5.times do
-      SnapFile.create(xml: contents, public: true)
-    end
+    User.first.add_role :owner, a
+    Student.last.add_role :owner, a
 
-    Student.first.add_role :owner, SnapFile.first
-    Student.first.add_role :owner, SnapFile.find(ObfuscateId.hide(2, SnapFile.obfuscate_id_spin))
-    Student.last.add_role :owner, SnapFile.first
-    User.first.add_role :owner, SnapFile.first
-    User.first.add_role :owner, SnapFile.find(ObfuscateId.hide(3,SnapFile.obfuscate_id_spin))
+    FactoryGirl.create(:snap_file, :star_wars, owner: Student.first)
+    FactoryGirl.create(:snap_file, owner: User.first)
+    FactoryGirl.create(:snap_file, owner: Student.find(2), public: true)
 
-    SnapFile.first.update_attribute(:public, false)
-    SnapFile.find(ObfuscateId.hide(2,SnapFile.obfuscate_id_spin)).update_attribute(:public, false)
-    SnapFile.find(ObfuscateId.hide(3,SnapFile.obfuscate_id_spin)).update_attribute(:public, false)
+
 
   end
 end
