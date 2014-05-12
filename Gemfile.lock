@@ -97,7 +97,7 @@ GEM
       lumberjack (~> 1.0)
       pry (>= 0.9.12)
       thor (>= 0.18.1)
-    guard-rspec (4.2.8)
+    guard-rspec (4.2.9)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
     guard-spork (1.5.1)
@@ -113,6 +113,7 @@ GEM
       railties (>= 3.1.0)
       turbolinks
     json (1.8.1)
+    libxml-ruby (2.7.0)
     listen (2.7.4)
       celluloid (>= 0.15.2)
       celluloid-io (>= 0.15.0)
@@ -255,6 +256,7 @@ DEPENDENCIES
   guard-spork (~> 1.5.1)
   jquery-rails
   jquery-turbolinks
+  libxml-ruby (~> 2.7.0)
   obfuscate_id!
   pg (~> 0.17.1)
   rails (~> 4.1)

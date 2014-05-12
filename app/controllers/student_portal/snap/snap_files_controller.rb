@@ -2,44 +2,34 @@ class StudentPortal::Snap::SnapFilesController < StudentPortal::Snap::SnapBaseCo
   load_and_authorize_resource
 
   def index
-    respond_to do |format|
-      format.json {
-        render :json => @snap_files.map { |x| {file_name: x.file_name, file_id: x.to_param, public: x.public, updated_at: x.updated_at}}
-      }
+    @snap_files = SnapFile.with_role(:owner, current_user).distinct
+    if signed_in_student?
+      render :json => @snap_files.map { |x| {file_name: x.file_name, file_id: x.to_param, public: x.public, updated_at: x.updated_at, note: x.note, thumbnail: x.thumbnail} }
+    else
+      render :json => @snap_files.map { |x| {file_name: x.file_name, file_id: x.to_param, public: x.public, note: x.note} }
     end
 
   end
 
   def show
-    respond_with @snap_file
+    render json: @snap_file, except: [:created_at, :thumbnail]
   end
 
   def update
-    status = :bad_request
-    respond_to do |format|
-      format.xml {
-        status = :no_content if @snap_file.update_attributes(xml: request.body.read)
-      }
-      format.json {
-        status = :no_content if @snap_file.update_attributes(snap_file_params)
-      }
+    params = snap_file_params
+    if params.any? && @snap_file.update_attributes(params)
+      status = :no_content
+    else
+      status = :bad_request
     end
-
-    head status, location: student_portal_snap_snap_file_url(@snap_file, format: :xml)
+    head status, location: student_portal_snap_snap_file_url(@snap_file)
   end
 
   def create
-    respond_to do |format|
-      format.xml {
-        @snap_file = SnapFile.new(xml: request.body.read)
-      }
-      format.json {
-        @snap_file = SnapFile.new(snap_file_params)
-      }
-    end
+    @snap_file = SnapFile.new(snap_file_params)
     if @snap_file.save
       current_user.add_role(:owner, @snap_file)
-      create_post_success_response(:created, student_portal_snap_snap_file_url(@snap_file, format: :xml))
+      create_post_success_response(:created, student_portal_snap_snap_file_url(@snap_file),@snap_file.file_id)
     else
       head :bad_request
     end
@@ -52,11 +42,11 @@ class StudentPortal::Snap::SnapFilesController < StudentPortal::Snap::SnapBaseCo
 
   private
   def snap_file_params
-    result = params.require(:snap_file).permit(:file_name, :xml, :public)
-    if cannot? :create_public_snap_file, SnapFile
-      result.delete(:public)
+    avail_params = [:project, :media]
+    if can? :create_public_snap_files, SnapFile
+      avail_params << :public
     end
-    result
+    params.require(:snap_file).permit(*avail_params)
   end
 
 end

@@ -39,6 +39,12 @@ class Ability
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :read, :update, :to => :read_update
     if user
+      can :create_public_snap_files, SnapFile
+
+      files = SnapFile.with_role(:owner, user).pluck(:id)
+      can :crud, SnapFile, :id => files
+      can :create, SnapFile
+
       if user.class == User
         can :crud, User, :id => user
 
@@ -51,24 +57,26 @@ class Ability
           if user.has_role? :school_admin, :any
             schools = School.with_role(:school_admin, user).pluck(:id)
             can :read_update, School, :id => schools
+
             can :crud, Student, :id => Student.where(school_id: schools).pluck(:id)
+            can :create, Student
+
             can :crud, SchoolClass, :id => School.where(school_id: schools).pluck(:id)
             can :create, SchoolClass
-            can :create, Student
+
           elsif user.has_role? :teacher, :any
             schools = School.with_role(:teacher, user).pluck(:id)
-            school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
             can :read, School, :id => schools
             can :read, Student, :id => Student.where(school_id: schools.pluck(:id)).pluck(:id)
-            can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
+
+            school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
             can :read_update, SchoolClass, :id => school_classes
+            can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
+
             can :create, Student
           end
         end
       elsif user.class == Student
-        files = SnapFile.with_role(:owner, user).pluck(:id)
-        can :crud, SnapFile, :id => files
-        can :create, SnapFile
         can :read, Student, id: user
       end
     end

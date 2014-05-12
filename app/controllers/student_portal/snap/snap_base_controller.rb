@@ -1,5 +1,5 @@
 class StudentPortal::Snap::SnapBaseController < StudentPortal::BaseController
-  respond_to :xml, :json
+  respond_to :json
 
   protect_from_forgery with: :null_session
 
@@ -18,15 +18,8 @@ class StudentPortal::Snap::SnapBaseController < StudentPortal::BaseController
       current_student || devise_current_user
     end
 
-    def create_post_success_response (status, location)
-      respond_to do |format|
-        format.xml {
-          head status, location: location
-        }
-        format.json {
-          render json: {success: true, location: location}, location: location, status: status
-        }
-      end
+    def create_post_success_response (status, location, file_id)
+        render json: {success: true, location: location, file_id: file_id}, location: location, status: status
     end
 
 end

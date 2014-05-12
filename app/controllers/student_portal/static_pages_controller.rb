@@ -2,7 +2,7 @@ class StudentPortal::StaticPagesController < StudentPortal::BaseController
   before_filter :force_trailing_slash, only: 'snap'
 
 
-  before_action :signed_in_student, only: [:home]
+  before_action :signed_in_student, only: [:home, :snap]
 
   def home
 
