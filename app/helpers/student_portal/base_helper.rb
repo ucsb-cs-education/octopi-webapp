@@ -45,7 +45,7 @@ module StudentPortal::BaseHelper
     end
   end
 
-  def sign_out_student(student=null)
+  def sign_out_student(student=nil)
     student ||= current_student
     student.update_attribute(:remember_token,
                                   Student.create_remember_hash(Student.new_remember_token))
