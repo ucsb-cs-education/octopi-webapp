@@ -19,8 +19,9 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 
 # Allows for easily paginating lists
-gem 'will_paginate', '~> 3.0.5'
-gem 'bootstrap-will_paginate', '~> 0.0.10'
+# gem 'will_paginate', '~> 3.0.5'
+#Dont use will_paginate, use kaminari, for active_admin supoort
+# gem 'bootstrap-will_paginate', '~> 0.0.10'
 
 gem 'obfuscate_id', github: 'arikrak/obfuscate_id', branch: 'patch-1'
 
@@ -55,6 +56,8 @@ gem 'simple_form', '~> 3.1.0.rc1'
 
 gem 'libxml-ruby', '~> 2.7.0'
 
+gem 'activeadmin', github: 'gregbell/active_admin'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
@@ -81,6 +84,19 @@ group :development, :test do
 end
 
 group :development do
+  #Rubymine debugging
+  gem 'ruby-debug-ide'
+  gem 'debase'
+
+  #nice debugging in your browser
+  gem 'better_errors'
+  #allows interpreted ruby while debugging in browser
+  gem 'binding_of_caller'
+  #enables RailsPanel chrome developer addon
+  gem 'meta_request'
+  gem 'rack-mini-profiler'
+
+
 end
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes

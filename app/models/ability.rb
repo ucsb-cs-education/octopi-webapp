@@ -46,7 +46,9 @@ class Ability
       can :create, SnapFile
 
       if user.class == User
+        #All users can edit themselves
         can :crud, User, :id => user
+        can :read, ActiveAdmin::Page, :name => "Dashboard"
 
         if user.has_role? :global_admin
           can :manage, :all
@@ -61,13 +63,14 @@ class Ability
             can :crud, Student, :id => Student.where(school_id: schools).pluck(:id)
             can :create, Student
 
-            can :crud, SchoolClass, :id => School.where(school_id: schools).pluck(:id)
+            can :crud, SchoolClass, :id => SchoolClass.where(school_id: schools).pluck(:id)
             can :create, SchoolClass
+          end
 
-          elsif user.has_role? :teacher, :any
+          if user.has_role? :teacher, :any
             schools = School.with_role(:teacher, user).pluck(:id)
             can :read, School, :id => schools
-            can :read, Student, :id => Student.where(school_id: schools.pluck(:id)).pluck(:id)
+            can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
 
             school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
             can :read_update, SchoolClass, :id => school_classes

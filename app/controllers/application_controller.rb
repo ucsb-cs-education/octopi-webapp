@@ -30,4 +30,5 @@ class ApplicationController < ActionController::Base
     params[:id] = IdCrypt::decode_id(params[:id]).to_s if params[:id]
   end
 
+
 end

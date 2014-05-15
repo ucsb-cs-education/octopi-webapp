@@ -34,7 +34,8 @@ OctopiWebapp::Application.routes.draw do
   match '/help',    to: 'static_pages#help',                    via: 'get'
   match '/sign_in', to: redirect('/student_portal/signin'),     via: 'get'
   match '/signin',  to: redirect('/student_portal/signin'),     via: 'get'
-  devise_for :users
+  devise_for :users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -8,8 +8,25 @@ GIT
       scatter_swap (~> 0.0.3)
 
 GIT
+  remote: git://github.com/gregbell/active_admin.git
+  revision: b9f4f2dfda0571be3ae827036559eacd62dc24e9
+  specs:
+    activeadmin (1.0.0.pre)
+      arbre (~> 1.0)
+      bourbon
+      coffee-rails
+      formtastic (~> 2.3.0.rc3)
+      inherited_resources (~> 1.3)
+      jquery-rails
+      jquery-ui-rails
+      kaminari (~> 0.15)
+      rails (>= 3.2, < 4.2)
+      ransack (~> 1.0)
+      sass-rails
+
+GIT
   remote: git://github.com/jhenkens/rolify.git
-  revision: cd5b3ecff44b419661bd6ffacbed26131b0bcf3d
+  revision: 49952e6014cdc70b61dfb9738219ddd6e451dced
   specs:
     rolify (3.4.0)
 
@@ -42,15 +59,24 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    arbre (1.0.1)
+      activesupport (>= 3.0.0)
     arel (5.0.1.20140414130214)
     auto_strip_attributes (2.0.4)
       activerecord (>= 3.0)
     bcrypt (3.1.7)
+    better_errors (1.1.0)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     bootstrap-sass (3.1.1.1)
       sass (~> 3.2)
-    bootstrap-will_paginate (0.0.10)
-      will_paginate
+    bourbon (3.2.1)
+      sass (~> 3.2)
+      thor
     builder (3.2.2)
+    callsite (0.0.11)
     cancancan (1.7.1)
     capybara (2.1.0)
       mime-types (>= 1.16)
@@ -73,6 +99,10 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    debase (0.0.9)
+      debugger-ruby_core_source
+    debug_inspector (0.0.2)
+    debugger-ruby_core_source (1.3.4)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -91,6 +121,8 @@ GEM
       i18n (~> 0.5)
     ffi (1.9.3)
     formatador (0.2.4)
+    formtastic (2.3.0.rc3)
+      actionpack (>= 3.0)
     guard (2.6.1)
       formatador (>= 0.2.4)
       listen (~> 2.7)
@@ -104,15 +136,26 @@ GEM
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
+    has_scope (0.6.0.rc)
+      actionpack (>= 3.2, < 5)
+      activesupport (>= 3.2, < 5)
     hike (1.2.3)
     i18n (0.6.9)
+    inherited_resources (1.4.1)
+      has_scope (~> 0.6.0.rc)
+      responders (~> 1.0.0.rc)
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     jquery-turbolinks (2.0.2)
       railties (>= 3.1.0)
       turbolinks
+    jquery-ui-rails (4.2.1)
+      railties (>= 3.2.16)
     json (1.8.1)
+    kaminari (0.15.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     libxml-ruby (2.7.0)
     listen (2.7.4)
       celluloid (>= 0.15.2)
@@ -123,22 +166,32 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    meta_request (0.3.0)
+      callsite
+      rack-contrib
+      railties
     method_source (0.8.2)
     mime-types (1.25.1)
-    mini_portile (0.5.3)
+    mini_portile (0.6.0)
     minitest (5.3.3)
     multi_json (1.10.0)
     nio4r (1.0.0)
-    nokogiri (1.6.1)
-      mini_portile (~> 0.5.0)
+    nokogiri (1.6.2.1)
+      mini_portile (= 0.6.0)
     orm_adapter (0.5.0)
     pg (0.17.1)
+    polyamorous (1.0.0)
+      activerecord (>= 3.0)
     polyglot (0.3.4)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
     rack (1.5.2)
+    rack-contrib (1.1.0)
+      rack (>= 0.9.1)
+    rack-mini-profiler (0.9.1)
+      rack (>= 1.1.3)
     rack-test (0.6.2)
       rack (>= 1.0)
     rails (4.1.1)
@@ -162,11 +215,19 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.3.1)
+    ransack (1.2.3)
+      actionpack (>= 3.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      i18n
+      polyamorous (~> 1.0.0)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.4)
       ffi (>= 0.5.0)
     rdoc (4.1.1)
       json (~> 1.4)
+    responders (1.0.0)
+      railties (>= 3.2, < 5)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -183,6 +244,8 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
+    ruby-debug-ide (0.4.22)
+      rake (>= 0.8.1)
     rubyzip (0.9.9)
     sass (3.2.19)
     sass-rails (4.0.3)
@@ -233,7 +296,6 @@ GEM
     warden (1.2.3)
       rack (>= 1.0)
     websocket (1.0.7)
-    will_paginate (3.0.5)
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -241,14 +303,17 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activeadmin!
   auto_strip_attributes (~> 2.0)
   bcrypt (~> 3.1.5)
+  better_errors
+  binding_of_caller
   bootstrap-sass (~> 3.1.1)
-  bootstrap-will_paginate (~> 0.0.10)
   cancancan (~> 1.7.1)
   capybara (= 2.1.0)
   childprocess (~> 0.5.2)
   coffee-rails (~> 4.0.0)
+  debase
   devise (~> 3.2.4)
   factory_girl_rails (= 4.2.1)
   faker (~> 1.3.0)
@@ -257,12 +322,15 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   libxml-ruby (~> 2.7.0)
+  meta_request
   obfuscate_id!
   pg (~> 0.17.1)
+  rack-mini-profiler
   rails (~> 4.1)
   rails_12factor
   rolify!
   rspec-rails (~> 2.14)
+  ruby-debug-ide
   sass-rails (~> 4.0.2)
   sdoc
   selenium-webdriver (= 2.35.1)
@@ -270,4 +338,3 @@ DEPENDENCIES
   spork-rails (~> 4.0.0)
   turbolinks
   uglifier (>= 1.3.0)
-  will_paginate (~> 3.0.5)
