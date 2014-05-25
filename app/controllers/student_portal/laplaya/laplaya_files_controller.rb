@@ -26,7 +26,7 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
     @laplaya_file = LaplayaFile.new(laplaya_file_params)
     if @laplaya_file.save
       current_user.add_role(:owner, @laplaya_file)
-      create_post_success_response(:created, student_portal_laplaya_laplaya_file_url(@laplaya_file),@laplaya_file.file_id)
+      create_post_success_response(:created, student_portal_laplaya_laplaya_file_url(@laplaya_file),@laplaya_file.id)
     else
       head :bad_request
     end
