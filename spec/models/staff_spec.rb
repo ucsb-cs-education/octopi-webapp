@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe User do
+describe Staff do
 
   describe 'basic user' do
 
@@ -138,15 +138,15 @@ describe User do
 
     describe 'return value of authenticate method' do
       before { @user.save }
-      let(:found_user) { User.find_by(email: @user.email) }
+      let(:found_user) { Staff.find_by(email: @user.email) }
 
       describe 'with valid password' do
-        it { should eq User.authenticate(@user.email, @user.password) }
+        it { should eq Staff.authenticate(@user.email, @user.password) }
       end
 
       describe 'with invalid password' do
-        it { should_not eq User.authenticate(@user.email, 'invalid') }
-        specify { expect(User.authenticate(@user.email, 'invalid')).to be_nil }
+        it { should_not eq Staff.authenticate(@user.email, 'invalid') }
+        specify { expect(Staff.authenticate(@user.email, 'invalid')).to be_nil }
       end
     end
 
@@ -162,7 +162,7 @@ describe User do
 
     it { should_not be_a_teacher }
     it { should_not be_a_school_admin }
-    it { should_not be_a_global_admin }
+    it { should_not be_a_super_user }
   end
 
   describe 'school_admin' do
@@ -175,7 +175,7 @@ describe User do
 
     it { should_not be_a_teacher }
     it { should be_a_school_admin }
-    it { should_not be_a_global_admin }
+    it { should_not be_a_super_user }
     it 'shouldn\'t be a global :school_admin' do
       expect(@school_admin.has_role?(:school_admin)).to be_false
       expect(@school_admin.has_role?(:school_admin, School)).to be_false
@@ -193,7 +193,7 @@ describe User do
 
     it { should be_a_teacher }
     it { should_not be_a_school_admin }
-    it { should_not be_a_global_admin }
+    it { should_not be_a_super_user }
     it 'shouldn\'t be a global :teacher' do
       expect(@teacher.has_role?(:teacher)).to be_false
       expect(@teacher.has_role?(:teacher, School)).to be_false

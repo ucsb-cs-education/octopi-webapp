@@ -31,6 +31,17 @@ ActiveRecord::Schema.define(version: 20140514235615) do
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
 
+  create_table "laplaya_files", force: true do |t|
+    t.string   "file_name",  default: "",    null: false
+    t.binary   "project"
+    t.binary   "media"
+    t.binary   "thumbnail"
+    t.text     "note",       default: "",    null: false
+    t.boolean  "public",     default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roles", force: true do |t|
     t.string   "name"
     t.integer  "resource_id"
@@ -68,42 +79,11 @@ ActiveRecord::Schema.define(version: 20140514235615) do
     t.datetime "updated_at"
   end
 
-  create_table "snap_files", force: true do |t|
-    t.string   "file_name",  default: "",    null: false
-    t.binary   "project"
-    t.binary   "media"
-    t.binary   "thumbnail"
-    t.text     "note",       default: "",    null: false
-    t.boolean  "public",     default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "students", force: true do |t|
-    t.string   "first_name",      default: "", null: false
-    t.string   "last_name",       default: "", null: false
-    t.string   "login_name",      default: "", null: false
-    t.string   "password_digest"
-    t.string   "remember_token"
-    t.integer  "school_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "students", ["school_id", "login_name"], name: "index_students_on_school_id_and_login_name", using: :btree
-  add_index "students", ["school_id"], name: "index_students_on_school_id", using: :btree
-
-  create_table "students_roles", id: false, force: true do |t|
-    t.integer "student_id"
-    t.integer "role_id"
-  end
-
-  add_index "students_roles", ["student_id", "role_id"], name: "index_students_roles_on_student_id_and_role_id", using: :btree
-
   create_table "users", force: true do |t|
+    t.string   "type"
     t.string   "first_name",             default: "", null: false
     t.string   "last_name",              default: "", null: false
-    t.string   "email",                  default: "", null: false
+    t.string   "email"
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -117,12 +97,17 @@ ActiveRecord::Schema.define(version: 20140514235615) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
+    t.string   "login_name",             default: "", null: false
+    t.string   "remember_token"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "school_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["school_id", "login_name"], name: "index_users_on_school_id_and_login_name", using: :btree
+  add_index "users", ["school_id"], name: "index_users_on_school_id", using: :btree
 
   create_table "users_roles", id: false, force: true do |t|
     t.integer "user_id"

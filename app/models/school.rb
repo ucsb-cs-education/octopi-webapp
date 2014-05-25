@@ -11,11 +11,22 @@ class School < ActiveRecord::Base
 
 
   def teachers
-    User.with_role(:teacher, self)
+    Staff.with_role(:teacher, self)
   end
 
   def school_admins
-    User.with_role(:school_admin, self)
+    Staff.with_role(:school_admin, self)
+  end
+
+  def users(pluck=nil)
+    if pluck
+      Staff.pluck(*pluck).with_any_role({name: :teacher, resource: self}, {name: :school_admin, resource: self})
+    end
+    Staff.with_any_role({name: :teacher, resource: self}, {name: :school_admin, resource: self})
+  end
+
+  def to_s
+    return self.name
   end
 
 end

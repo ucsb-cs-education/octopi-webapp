@@ -13,10 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
-//= require turbolinks
 //= require_tree .
 
-jQuery(document).ready(function () {
+var updateDropDowns = function () {
     $('select[data-option-dependent=true]').each(function (i) {
         var observer_dom_id = $(this).attr('id');
         var observed_dom_id = $(this).data('option-observed');
@@ -45,4 +44,7 @@ jQuery(document).ready(function () {
             }
         });
     });
-});
+};
+
+$(document).ready(updateDropDowns);
+$(document).on('page:load', updateDropDowns);

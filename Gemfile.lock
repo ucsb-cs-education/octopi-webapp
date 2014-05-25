@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: git://github.com/gregbell/active_admin.git
-  revision: b9f4f2dfda0571be3ae827036559eacd62dc24e9
+  revision: 12c42e60302e5d6c428bb91c1f2736ae7a0cc667
   specs:
     activeadmin (1.0.0.pre)
       arbre (~> 1.0)
@@ -46,6 +46,8 @@ GEM
       activesupport (= 4.1.1)
       builder (~> 3.1)
       erubis (~> 2.7.0)
+    active_model_serializers (0.9.0.alpha1)
+      activemodel (>= 3.2)
     activemodel (4.1.1)
       activesupport (= 4.1.1)
       builder (~> 3.1)
@@ -72,7 +74,7 @@ GEM
       debug_inspector (>= 0.0.1)
     bootstrap-sass (3.1.1.1)
       sass (~> 3.2)
-    bourbon (3.2.1)
+    bourbon (3.2.3)
       sass (~> 3.2)
       thor
     builder (3.2.2)
@@ -86,9 +88,6 @@ GEM
       xpath (~> 2.0)
     celluloid (0.15.2)
       timers (~> 1.1.0)
-    celluloid-io (0.15.0)
-      celluloid (>= 0.15.0)
-      nio4r (>= 0.5.0)
     childprocess (0.5.3)
       ffi (~> 1.0, >= 1.0.11)
     coderay (1.1.0)
@@ -102,7 +101,7 @@ GEM
     debase (0.0.9)
       debugger-ruby_core_source
     debug_inspector (0.0.2)
-    debugger-ruby_core_source (1.3.4)
+    debugger-ruby_core_source (1.3.5)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -120,7 +119,7 @@ GEM
     faker (1.3.0)
       i18n (~> 0.5)
     ffi (1.9.3)
-    formatador (0.2.4)
+    formatador (0.2.5)
     formtastic (2.3.0.rc3)
       actionpack (>= 3.0)
     guard (2.6.1)
@@ -147,9 +146,6 @@ GEM
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-turbolinks (2.0.2)
-      railties (>= 3.1.0)
-      turbolinks
     jquery-ui-rails (4.2.1)
       railties (>= 3.2.16)
     json (1.8.1)
@@ -157,9 +153,8 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     libxml-ruby (2.7.0)
-    listen (2.7.4)
+    listen (2.7.5)
       celluloid (>= 0.15.2)
-      celluloid-io (>= 0.15.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
     lumberjack (1.0.5)
@@ -173,9 +168,8 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile (0.6.0)
-    minitest (5.3.3)
-    multi_json (1.10.0)
-    nio4r (1.0.0)
+    minitest (5.3.4)
+    multi_json (1.10.1)
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
     orm_adapter (0.5.0)
@@ -214,7 +208,7 @@ GEM
       activesupport (= 4.1.1)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (10.3.1)
+    rake (10.3.2)
     ransack (1.2.3)
       actionpack (>= 3.0)
       activerecord (>= 3.0)
@@ -286,8 +280,6 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    turbolinks (2.2.2)
-      coffee-rails
     tzinfo (1.1.0)
       thread_safe (~> 0.1)
     uglifier (2.5.0)
@@ -303,6 +295,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_model_serializers (~> 0.9.0.alpha1)
   activeadmin!
   auto_strip_attributes (~> 2.0)
   bcrypt (~> 3.1.5)
@@ -320,7 +313,6 @@ DEPENDENCIES
   guard-rspec (~> 4.2.8)
   guard-spork (~> 1.5.1)
   jquery-rails
-  jquery-turbolinks
   libxml-ruby (~> 2.7.0)
   meta_request
   obfuscate_id!
@@ -336,5 +328,4 @@ DEPENDENCIES
   selenium-webdriver (= 2.35.1)
   simple_form (~> 3.1.0.rc1)
   spork-rails (~> 4.0.0)
-  turbolinks
   uglifier (>= 1.3.0)

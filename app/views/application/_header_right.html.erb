@@ -2,24 +2,24 @@
   <ul class="nav navbar-nav navbar-right">
     <li><%= link_to 'Home', root_path %></li>
     <li><%= link_to 'Help', help_path %></li>
+    <% if staff_signed_in? %>
+    <li><%= link_to 'LaPlaya', student_portal_laplaya_path %></li>
+    <% end %>
     <li><%= link_to 'Student Portal', student_portal_root_path %></li>
     <li id="fat-menu" class="dropdown">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         Admin Account<b class="caret"></b>
       </a>
       <ul class="dropdown-menu">
-        <% if user_signed_in? %>
-            <li><%= link_to 'Admin Settings (School)', schools_path %></li>
-            <% if can? :manage, User %>
-                <li><%= link_to 'Admin Settings (User)', schools_path %></li>
-            <% end %>
+        <% if staff_signed_in? %>
+            <li><%= link_to 'Administration Panel', admin_root_path %></li>
             <li class="divider"></li>
             <li><%= link_to 'Profile', '#' %></li>
-            <li><%= link_to 'Settings', edit_user_registration_path %></li>
+            <li><%= link_to 'Settings', edit_staff_registration_path %></li>
             <li class="divider"></li>
-            <li><%= link_to 'Sign Out', destroy_user_session_path, method: 'delete' %></li>
+            <li><%= link_to 'Sign Out', destroy_staff_session_path, method: 'delete' %></li>
         <% else %>
-            <li><%= link_to 'Sign In', new_user_session_path %></li>
+            <li><%= link_to 'Sign In', new_staff_session_path %></li>
         <% end %>
       </ul>
     </li>

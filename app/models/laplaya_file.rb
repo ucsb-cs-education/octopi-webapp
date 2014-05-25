@@ -1,19 +1,15 @@
 require 'xml'
-class SnapFile < ActiveRecord::Base
+class LaplayaFile < ActiveRecord::Base
   resourcify
-  obfuscate_id
   validates :file_name, presence: true, length: {maximum: 50}
   before_validation :update_thumbnail_and_note
 
-  def as_json(options={})
-    options.merge!(except: [:id], methods: [:file_id]) do |key, oldval, newval|
-      (oldval.is_a?(Array) ? (oldval + newval) : (newval << oldval)).uniq
-    end
-    super(options)
+  def to_s
+    self.file_name
   end
 
-  def file_id
-    self.to_param
+  def owners
+    User.with_role(:owner, self)
   end
 
   private

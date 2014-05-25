@@ -1,6 +1,6 @@
 FactoryGirl.define do
 
-  factory :student do
+  factory :student, class: Student do
     ignore do
       school { School.first || FactoryGirl.create(:school) }
       school_class { school.school_classes.first || FactoryGirl.create(:school_class, :school => school) }

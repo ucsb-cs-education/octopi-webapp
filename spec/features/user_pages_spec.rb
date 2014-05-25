@@ -20,7 +20,7 @@ describe 'User pages' do
 
     describe 'with invalid information' do
       it 'should not create a user' do
-        expect { click_button submit }.not_to change(User, :count)
+        expect { click_button submit }.not_to change(Staff, :count)
       end
 
       describe 'after submission' do
@@ -35,19 +35,19 @@ describe 'User pages' do
     describe 'with valid information' do
       before do
         fill_in 'First name',             with: 'Example'
-        fill_in 'Last name',             with: 'User'
+        fill_in 'Last name',             with: 'Staff'
         fill_in 'Email',            with: 'user@example.com'
         fill_in 'Password',         with: 'foobarbaz'
         fill_in 'Password confirmation', with: 'foobarbaz'
       end
 
       it 'should create a user' do
-        expect { click_button submit }.to change(User, :count).by(1)
+        expect { click_button submit }.to change(Staff, :count).by(1)
       end
 
       describe 'after saving the user' do
         before { click_button submit }
-        let(:user) { User.find_by(email: 'user@example.com') }
+        let(:user) { Staff.find_by(email: 'user@example.com') }
 
         it { should have_title(full_title('Home') ) }
         it { should have_warning_message('A message with a confirmation link has been sent to your email address. Please open the link to activate your account.') }
@@ -61,7 +61,7 @@ describe 'User pages' do
             user.password = 'foobarbaz'
             capy_sign_in user
           end
-          specify{expect(User.count).to eq(1)}
+          specify{expect(Staff.count).to eq(1)}
           it { should have_error_message('You have to confirm your account before continuing.') }
         end
 
@@ -77,8 +77,8 @@ describe 'User pages' do
     end
 
     describe 'page' do
-      it { should have_content('Edit User') }
-      it { should have_title(full_title('Edit User')) }
+      it { should have_content('Edit Staff') }
+      it { should have_title(full_title('Edit Staff')) }
       it { should have_link('Back')}
       it { should have_field('First name', with: user.first_name ) }
       it { should have_field('Last name', with: user.last_name ) }

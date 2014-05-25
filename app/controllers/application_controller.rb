@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from CanCan::AccessDenied do |exception|
-    if user_signed_in?
+    if staff_signed_in?
       redirect_to main_app.root_url, :alert => exception.message
     else
       redirect_to main_app.new_user_session_url, :alert => exception.message

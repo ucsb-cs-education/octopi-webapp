@@ -18,12 +18,5 @@ class RolifyCreateRoles < ActiveRecord::Migration
 
     add_index(:users_roles, [ :user_id, :role_id ])
 
-    create_table(:students_roles, :id => false) do |t|
-      t.references :student
-      t.references :role
-    end
-
-    add_index(:students_roles, [ :student_id, :role_id ])
-
   end
 end

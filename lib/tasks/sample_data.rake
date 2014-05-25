@@ -1,10 +1,11 @@
 namespace :db do
   desc "Fill database with sample data"
   task fullResetAndPopulate: ['db:drop', 'db:create', 'db:migrate'] do
-    admin = FactoryGirl.create(:user, :global_admin, email: "global_admin@example.com")
+    admin = FactoryGirl.create(:staff, :super_staff, email: "super_staff@example.com")
     school = FactoryGirl.create(:school)
-    school_admin = FactoryGirl.create(:user, :school_admin, email: "school_admin@example.com")
-    teacher = FactoryGirl.create(:user, :teacher, school: school, email: "teacher@example.com")
+    school_admin = FactoryGirl.create(:staff, :school_admin, email: "school_admin@example.com")
+    teacher = FactoryGirl.create(:staff, :teacher, school: school, email: "teacher@example.com")
+    curriculum_designer = FactoryGirl.create(:staff, :curriculum_designer, email: "curriculum_designer@example.com")
     5.times do
       student = FactoryGirl.create(:student, school: school)
     end
@@ -14,16 +15,17 @@ namespace :db do
       FactoryGirl.create(:student, school: school2)
     end
 
-    a = FactoryGirl.create(:snap_file, owner: Student.first)
+    a = FactoryGirl.create(:laplaya_file, owner: Student.first)
 
-    User.first.add_role :owner, a
+    Staff.first.add_role :owner, a
     Student.last.add_role :owner, a
 
-    FactoryGirl.create(:snap_file, :star_wars, owner: Student.first)
-    FactoryGirl.create(:snap_file, owner: User.first)
-    FactoryGirl.create(:snap_file, owner: Student.find(2), public: true)
+    FactoryGirl.create(:laplaya_file, :star_wars, owner: Student.first)
+    FactoryGirl.create(:laplaya_file, owner: Staff.first)
+    FactoryGirl.create(:laplaya_file, owner: Student.offset(1).first, public: true)
 
-
+    FactoryGirl.create(:laplaya_file, :star_wars, owner: curriculum_designer)
+    FactoryGirl.create(:laplaya_file, :star_wars, owner: curriculum_designer)
 
   end
 end

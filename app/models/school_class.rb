@@ -6,7 +6,11 @@ class SchoolClass < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 100 }, uniqueness: true
 
   def teachers
-    User.with_role(:teacher, self)
+    Staff.with_role(:teacher, self)
+  end
+
+  def to_s
+    self.name
   end
 
   private

@@ -9,21 +9,12 @@ class CreateSchools < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_reference :users, :school
+
     create_table :school_classes do |t|
       t.references :school
       t.string :name,                     null: false, default: ""
       t.boolean :student_remote_access_allowed,      default: false
-      t.timestamps
-    end
-
-    create_table :students do |t|
-      t.string :first_name,                   null: false, default: ""
-      t.string :last_name,                    null: false, default: ""
-      t.string :login_name,                   null: false, default: ""
-      t.string :password_digest
-      t.string :remember_token
-      t.references :school
-
       t.timestamps
     end
 
@@ -32,7 +23,7 @@ class CreateSchools < ActiveRecord::Migration
       t.references :school_class
     end
 
-    create_table :snap_files do |t|
+    create_table :laplaya_files do |t|
       t.string :file_name,  null: false, default: ""
       t.binary :project,        limit: 10.megabytes
       t.binary :media,          limit: 10.megabytes
@@ -48,8 +39,8 @@ class CreateSchools < ActiveRecord::Migration
     add_index(:school_classes_students, [:student_id, :school_class_id], :unique => true)
 
 
-    add_index(:students, :school_id)
-    add_index(:students, [ :school_id, :login_name ])
+    add_index(:users, :school_id)
+    add_index(:users, [ :school_id, :login_name ])
 
   end
 end

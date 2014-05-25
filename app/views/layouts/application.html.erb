@@ -17,7 +17,6 @@
       <% elsif key == 'notice' %>
           <%= content_tag(:div, value, class: "alert alert-warning") %>
       <% elsif ['timedout'].include? key %>
-      #do nothing
       <% else %>
           <%= content_tag(:div, value, class: "alert alert-#{key}") %>
       <% end %>

@@ -86,15 +86,15 @@ describe School do
   describe '#school_admins' do
     let(:school_admin_in_the_school) { FactoryGirl.create(:user, :school_admin, school: @school) }
     let(:school_admin_a_different_school) { FactoryGirl.create(:user, :school_admin, school: FactoryGirl.create(:school)) }
-    let(:global_admin) { FactoryGirl.create(:user, :global_admin) }
+    let(:super_user) { FactoryGirl.create(:user, :super_user) }
     it 'should contain school_admins in the school' do
       expect(@school.school_admins.include?(school_admin_in_the_school)).to be_true
     end
     it 'should not contain school_admins in a different school' do
       expect(@school.school_admins.include?(school_admin_a_different_school)).to be_false
     end
-    it 'should not contain global_admins' do
-      expect(@school.school_admins.include?(global_admin)).to be_false
+    it 'should not contain super_users' do
+      expect(@school.school_admins.include?(super_user)).to be_false
     end
   end
 

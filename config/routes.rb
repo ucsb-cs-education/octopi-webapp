@@ -6,13 +6,13 @@ OctopiWebapp::Application.routes.draw do
     match '/help',    to: 'static_pages#help',    via: 'get'
     match '/about',   to: 'static_pages#about',   via: 'get'
     match '/contact', to: 'static_pages#contact', via: 'get'
-    match '/snap',    to: 'static_pages#snap',    via: 'get'
+    match '/laplaya',    to: 'static_pages#laplaya',    via: 'get'
     match '/home',    to: redirect('/'),          via: 'get'
     match '/signin',  to: 'sessions#new',         via: 'get'
     match '/signout', to: 'sessions#destroy',     via: 'delete'
-    namespace :snap do
+    namespace :laplaya do
       scope '/saves/' do
-        resources :snap_files, only: [:show, :update, :destroy, :create, :index], format: false do
+        resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false do
         end
       end
 
@@ -34,7 +34,7 @@ OctopiWebapp::Application.routes.draw do
   match '/help',    to: 'static_pages#help',                    via: 'get'
   match '/sign_in', to: redirect('/student_portal/signin'),     via: 'get'
   match '/signin',  to: redirect('/student_portal/signin'),     via: 'get'
-  devise_for :users, ActiveAdmin::Devise.config
+  devise_for :staff
   ActiveAdmin.routes(self)
 
   # The priority is based upon order of creation: first created -> highest priority.

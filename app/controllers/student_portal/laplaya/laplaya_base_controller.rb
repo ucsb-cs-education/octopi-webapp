@@ -1,4 +1,4 @@
-class StudentPortal::Snap::SnapBaseController < StudentPortal::BaseController
+class StudentPortal::Laplaya::LaplayaBaseController < StudentPortal::BaseController
   respond_to :json
 
   protect_from_forgery with: :null_session
@@ -12,10 +12,9 @@ class StudentPortal::Snap::SnapBaseController < StudentPortal::BaseController
   end
 
   protected
-    alias_method :devise_current_user, :current_user
 
     def current_user
-      current_student || devise_current_user
+      current_student || current_staff
     end
 
     def create_post_success_response (status, location, file_id)
