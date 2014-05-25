@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/arikrak/obfuscate_id.git
-  revision: 79296462ad6f47c491a1b401c5c9b3e3caea207a
-  branch: patch-1
-  specs:
-    obfuscate_id (0.0.4)
-      rails (>= 3.2.15)
-      scatter_swap (~> 0.0.3)
-
-GIT
   remote: git://github.com/gregbell/active_admin.git
   revision: 12c42e60302e5d6c428bb91c1f2736ae7a0cc667
   specs:
@@ -247,7 +238,6 @@ GEM
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0)
-    scatter_swap (0.0.3)
     sdoc (0.4.0)
       json (~> 1.8)
       rdoc (~> 4.0, < 5.0)
@@ -315,7 +305,6 @@ DEPENDENCIES
   jquery-rails
   libxml-ruby (~> 2.7.0)
   meta_request
-  obfuscate_id!
   pg (~> 0.17.1)
   rack-mini-profiler
   rails (~> 4.1)

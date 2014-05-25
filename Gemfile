@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.1'
+
 
 # Use bcrypt for password hashing
 gem 'bcrypt', '~> 3.1.5'
@@ -22,8 +24,6 @@ gem 'coffee-rails', '~> 4.0.0'
 # gem 'will_paginate', '~> 3.0.5'
 #Dont use will_paginate, use kaminari, for active_admin supoort
 # gem 'bootstrap-will_paginate', '~> 0.0.10'
-
-gem 'obfuscate_id', github: 'arikrak/obfuscate_id', branch: 'patch-1'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
