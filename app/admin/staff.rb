@@ -12,6 +12,7 @@ ActiveAdmin.register Staff do
     column :last_name
     column :email
     column :current_sign_in_at
+    column :confirmed_at
     column :created_at
     actions
   end
@@ -45,7 +46,9 @@ ActiveAdmin.register Staff do
 # filter :current_sign_in_at
 # filter :sign_in_count
 # filter :created_at
-  filter :unconfirmed
+  scope :all, :default => true
+  scope :unconfirmed
+  scope :confirmed
 
   form do |f|
     f.inputs "Staff Details" do

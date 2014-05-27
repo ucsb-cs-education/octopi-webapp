@@ -9,7 +9,8 @@ class Staff < User
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX },
             uniqueness: { case_sensitive: false }, length: {maximum: 254 } #Max possible email length
-  # scope :unconfirmed, where(confirmed_at: nil)
+  scope :unconfirmed, -> { where(confirmed_at: nil) }
+  scope :confirmed, -> { where.not(confirmed_at: nil) }
 
 
   # Taken from https://github.com/plataformatec/devise/wiki/How-To%3a-Require-admin-to-activate-account-before-sign_in
