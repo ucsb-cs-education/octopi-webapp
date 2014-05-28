@@ -7,7 +7,7 @@ module StudentPortal::BaseHelper
   end
 
   def update_autosignout_time
-    session[:student_autosignout_time] = 30.minutes.from_now
+    session[:student_autosignout_time] = 30.days.from_now # We need a way to properly keep logins during snap sessions, so for now we don't log out
   end
 
   def current_student=(student)
