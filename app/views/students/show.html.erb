@@ -1,8 +1,8 @@
-<% provide(:title, "#{@school.name} | #{@student.name}") %>
+<% provide(:title, "#{@student.school.name} | #{@student.name}") %>
 <%= @student.name %>
 <% if can? :destroy, @student %>
     <p>
-      <%= link_to 'Delete?', school_student_path, method: :delete,
+      <%= link_to 'Delete?', student_path, method: :delete,
                   data: {confirm: "You sure?"},
                   title: @student.name %>
     </p>

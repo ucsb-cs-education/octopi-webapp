@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140514235615) do
+ActiveRecord::Schema.define(version: 20140531235053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,9 +38,24 @@ ActiveRecord::Schema.define(version: 20140514235615) do
     t.binary   "thumbnail"
     t.text     "note",       default: "",    null: false
     t.boolean  "public",     default: false
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "task_id"
+  end
+
+  create_table "pages", force: true do |t|
+    t.string   "title"
+    t.text     "teacher_body"
+    t.text     "student_body"
+    t.string   "type"
+    t.integer  "position"
+    t.integer  "page_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "pages", ["position"], name: "index_pages_on_position", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
@@ -75,6 +90,17 @@ ActiveRecord::Schema.define(version: 20140514235615) do
     t.string   "ip_range"
     t.integer  "students_count",                default: 0,     null: false
     t.boolean  "student_remote_access_allowed", default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tasks", force: true do |t|
+    t.string   "type"
+    t.string   "title"
+    t.text     "teacher_body"
+    t.text     "student_body"
+    t.integer  "position"
+    t.integer  "page_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

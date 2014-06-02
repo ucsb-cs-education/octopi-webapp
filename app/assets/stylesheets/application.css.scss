@@ -1,2 +1,4 @@
-@import "scaffolds";
+//= require jquery.ui.all
 @import "custom";
+@import "scaffolds";
+@import "pages/pages";

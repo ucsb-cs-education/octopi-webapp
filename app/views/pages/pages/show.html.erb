@@ -1,0 +1,30 @@
+<% provide(:title, @page.title) %>
+<% if @page.respond_to? :parent %>
+    <div class='parent'>
+      <%= link_to 'return to parent', @page.parent %>
+    </div>
+<% end %>
+<div class='jumbotron pages'>
+  <div class="page-header">
+    <h1 class="page-title">
+      <%= @page.title %>
+    </h1>
+  </div>
+  <div id="tabs">
+    <ul>
+      <li><a href="#teacher-body">Teacher Body</a></li>
+      <li><a href="#student-body">Student Body</a></li>
+    </ul>
+    <div id="teacher-body">
+      <%= raw(@page.teacher_body) %>
+    </div>
+    <div id="student-body">
+      <%= raw(@page.student_body) %>
+    </div>
+  </div>
+  <% if @page.respond_to? :children %>
+      <div id="child-pages">
+        <%= render partial: "children", object: @page, as: :page %>
+      </div>
+  <% end %>
+</div>

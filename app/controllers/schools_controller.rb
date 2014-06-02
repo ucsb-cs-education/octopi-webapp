@@ -30,16 +30,6 @@ class SchoolsController < ApplicationController
 
   end
 
-  # GET /schools/new
-  def new
-    @school = School.new
-  end
-
-  # GET /schools/1/edit
-  def edit
-    render(:layout => 'layouts/devise')
-  end
-
   # POST /schools
   def create
     @school = School.new(school_params)
@@ -48,15 +38,6 @@ class SchoolsController < ApplicationController
       redirect_to @school, notice: 'School was successfully created.'
     else
       render action: 'new'
-    end
-  end
-
-  # PATCH/PUT /schools/1
-  def update
-    if @school.update(school_params)
-      redirect_to @school, notice: 'School was successfully updated.'
-    else
-      render action: 'edit'
     end
   end
 
@@ -77,7 +58,7 @@ class SchoolsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def school_params
-    #Only super_users should be able to change the name of a school
+    #Only super_staffs should be able to change the name of a school
     if can?(:change_school_name, @school) || can?( :create, School)
       params.require(:school).permit(:name, :ip_range, :student_remote_access_allowed)
     else

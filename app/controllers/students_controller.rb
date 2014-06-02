@@ -1,31 +1,26 @@
 class StudentsController < ApplicationController
-  load_and_authorize_resource :school
+  load_and_authorize_resource :school, only: [:index, :new, :create, :list_student_logins]
   load_and_authorize_resource
-  skip_authorize_resource :school, :only => [:list_student_logins]
-  before_action :check_school, only: [:edit, :show, :update, :destroy]
+  skip_authorize_resource :school, only: [:list_student_logins]
   before_action :load_students, only: [:index, :list_student_logins]
 
+
+  # Deep actions
+  # GET /schools/:school_id/students
   def index
   end
 
+  # GET /schools/:school_id/student_logins.json
   def list_student_logins
     render json: @students.select(:login_name, :school_id, :id)
   end
 
+  # GET /schools/:school_id/students/new
   def new
     render(:layout => 'layouts/devise')
   end
 
-  def show
-
-  end
-
-  # DELETE /schools/1
-  def destroy
-    @student.destroy
-    redirect_to school_students_path(@school.id)
-  end
-
+  # POST /schools/:school_id/students
   def create
     @student = Student.new(student_params)
     @student.school = @school
@@ -38,15 +33,14 @@ class StudentsController < ApplicationController
     end
   end
 
+  # Shallow actions
+  # GET /students/:id
+  def show
+  end
+
   private
     def student_params
       params.require(:student).permit(:name, :login_name, :password, :password_confirmation)
-    end
-
-    def check_school
-      if not @student.school.eql? @school
-        raise CanCan::AccessDenied.new('Student does not belong to specified school', )
-      end
     end
 
     def load_students

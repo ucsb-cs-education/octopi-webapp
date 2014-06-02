@@ -12,6 +12,10 @@ class LaplayaFile < ActiveRecord::Base
     User.with_role(:owner, self)
   end
 
+  def owner
+    owners.first
+  end
+
   private
     def update_thumbnail_and_note
       if self.project_changed?

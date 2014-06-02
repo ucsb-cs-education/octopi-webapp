@@ -1,0 +1,40 @@
+// Place all the styles related to the pages/pages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body.pages {
+  .jumbotron.pages {
+    background-color: transparent;
+    h1.page-title {
+      text-align: left;
+      font-size: 32px;
+    }
+    .page-header {
+      .page-title {
+        margin-bottom: 25px;
+      }
+      margin-bottom: 0px;
+      margin-top: 0px;
+      padding-bottom: 0px;
+    }
+    #tabs {
+      margin-top: 5px;
+    }
+  }
+  #children {
+    list-style-type: none;
+    margin: 15px 0 0;
+    padding: 0;
+    width: 60%;
+    li {
+      margin: 0 3px 3px 3px;
+      padding: 0.4em 0.4em 0.4em 1.5em;
+      font-size: 1.4em;
+      height: 35px;
+      span {
+        position: absolute;
+        margin-left: -1.3em;
+      }
+    }
+  }
+}

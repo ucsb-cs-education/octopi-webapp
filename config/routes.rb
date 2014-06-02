@@ -1,41 +1,48 @@
 OctopiWebapp::Application.routes.draw do
 
   namespace :student_portal do
-    resources :sessions, only: [:create ]#, :destroy]
+    resources :sessions, only: [:create] #, :destroy]
     root 'static_pages#home'
-    match '/help',    to: 'static_pages#help',    via: 'get'
-    match '/about',   to: 'static_pages#about',   via: 'get'
+    match '/help', to: 'static_pages#help', via: 'get'
+    match '/about', to: 'static_pages#about', via: 'get'
     match '/contact', to: 'static_pages#contact', via: 'get'
-    match '/laplaya',    to: 'static_pages#laplaya',    via: 'get'
-    match '/home',    to: redirect('/'),          via: 'get'
-    match '/signin',  to: 'sessions#new',         via: 'get'
-    match '/signout', to: 'sessions#destroy',     via: 'delete'
-    namespace :laplaya do
-      scope '/saves/' do
-        resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false do
-        end
-      end
-
-    end
+    match '/laplaya', to: 'static_pages#laplaya', via: 'get'
+    match '/home', to: redirect('/'), via: 'get'
+    match '/signin', to: 'sessions#new', via: 'get'
+    match '/signout', to: 'sessions#destroy', via: 'delete'
   end
 
-  resources :schools do
-    match '/student_logins.json', to: 'students#list_student_logins', via: 'get'
-    resources :students do
-    end
+  resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, controller: 'student_portal/laplaya/laplaya_files' do
+  end
+
+  resources :schools, only: [:show, :index], shallow: true do
+    match '/student_logins.json', to: 'students#list_student_logins', format: false, via: 'get'
+    resources :students, except: [:update, :edit, :destroy]
     resources :school_classes do
       match '/add_student', to: 'school_classes#add_student', via: 'post', as: 'add_student'
     end
   end
-
-
-  root  'static_pages#home'
-  match '/home',    to: 'static_pages#home',                    via: 'get'
-  match '/help',    to: 'static_pages#help',                    via: 'get'
-  match '/sign_in', to: redirect('/student_portal/signin'),     via: 'get'
-  match '/signin',  to: redirect('/student_portal/signin'),     via: 'get'
+  root 'static_pages#home'
+  match '/home', to: 'static_pages#home', via: 'get'
+  match '/help', to: 'static_pages#help', via: 'get'
+  match '/sign_in', to: redirect('/student_portal/signin'), via: 'get'
+  match '/signin', to: redirect('/student_portal/signin'), via: 'get'
   devise_for :staff
   ActiveAdmin.routes(self)
+
+  scope module: 'pages' do
+    resources :curriculum_pages, path: 'curriculums', shallow: true do
+      member { post :sort }
+      resources :module_pages, path: 'modules', except: [:index], shallow: true do
+        member { post :sort }
+        resources :activity_pages, path: 'activities', except: [:index], shallow: true do
+          member { post :sort }
+          resources :tasks, except: [:index], shallow: true do
+          end
+        end
+      end
+    end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

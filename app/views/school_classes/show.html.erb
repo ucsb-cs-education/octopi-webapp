@@ -1,4 +1,7 @@
 <p>
+  <strong>School:</strong>
+  <%= @school_class.school.name %>
+  <br>
   <strong>Name:</strong>
   <%= @school_class.name %>
 </p>
@@ -14,10 +17,9 @@
       <div class="col-md-3"><%= s.login_name %></div>
     </div>
 <%end%>
- </table>
 
 <br>
 <p>
-  <%= link_to 'Back', school_school_classes_path %>
+  <%= link_to 'Back', school_school_classes_path(@school_class.school) %>
 </p>
 

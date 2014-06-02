@@ -51,8 +51,8 @@ class Ability
         can :crud, Staff, :id => user.id
         can :read, ActiveAdmin::Page, :name => "Dashboard"
 
-        cannot :update, Staff.with_role(:super_user).where.not(id: user)
-        cannot :destroy, Staff.with_role(:super_user).where.not(id: user)
+        cannot :update, Staff.with_role(:super_staff).where.not(id: user)
+        cannot :destroy, Staff.with_role(:super_staff).where.not(id: user)
         if user.has_role? :super_staff
           super_staff(user)
         else

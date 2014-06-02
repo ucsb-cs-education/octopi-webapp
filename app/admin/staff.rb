@@ -1,6 +1,6 @@
 ActiveAdmin.register Staff do
   remove_filter :users_roles
-  permit_params :first_name, :last_name, :email, :password, :password_confirmation, :current_password
+  permit_params :first_name, :last_name, :email, :password, :password_confirmation, :current_password, :super_staff
   menu if: proc {
     authorized?(:see_user_admin_menu)
   }
@@ -57,9 +57,12 @@ ActiveAdmin.register Staff do
       f.input :email
       f.input :password, required: false, label: "New password"
       f.input :password_confirmation, label: "New password confirmation"
-      f.input :current_password, required: true if staff == current_staff
-      # f.input :super_user, as: :boolean if can? :create_super_user, User
-      f.input :roles, :as => :select, :collection => Role.global
+      if staff == current_staff
+        f.input :current_password
+      else
+        f.input :roles, :as => :select, :collection => Role.global, label: "Global roles"
+      end
+      f.input :super_staff, as: :boolean if can? :create_super_staff, User
     end
 
     f.actions
@@ -67,8 +70,12 @@ ActiveAdmin.register Staff do
 
   controller do
     def update_resource(object, attributes)
-      update_method = attributes.first[:password].present? ? :update_attributes : :update_without_password
-      object.send(update_method, *attributes)
+      if attributes.first[:password].present? || attributes.first[:current_password].present?
+        object.update_attributes(*attributes)
+      else
+        attributes.first.delete(:current_password)
+        object.update_without_password(*attributes)
+      end
     end
   end
 

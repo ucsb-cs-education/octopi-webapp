@@ -2,9 +2,9 @@
 
 <div class="row">
   <div class="col-md-6">
-  <%= simple_form_for :student, url: school_school_class_add_student_path(@school.id,@school_class.id) , method:'post' do |f| %>
+  <%= simple_form_for :student, url: school_class_add_student_path(@school_class.id) , method:'post' do |f| %>
       <div class="form-inputs">
-        <%= f.input :id, collection: @school.students-@school_class.students, include_blank: true, selected:0, label:"Add student to class:" %>
+        <%= f.input :id, collection: @school_class.school.students-@school_class.students, include_blank: true, selected:0, label:"Add student to class:" %>
       </div>
       <div class="form-actions">
         <%= f.button :submit, 'Add student to class'%>
@@ -20,5 +20,5 @@
     </div>
 </div>
 
-<%= link_to 'Show', school_school_class_path(@school,@school_class) %> |
-<%= link_to 'Back', school_school_class_path %>
+<%= link_to 'Show', school_class_path(@school_class) %> |
+<%= link_to 'Back', school_class_path %>

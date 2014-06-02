@@ -12,4 +12,10 @@ module ApplicationHelper
     view_flow.set :layout, capture { yield }
     render template: "layouts/#{parent_layout}"
   end
+
+  def controller_classes
+    current_path = ""
+    controller_path.split('/').map{|x| (current_path.empty?) ? current_path = x : current_path += "-" + x  }.join(" ")
+  end
+
 end

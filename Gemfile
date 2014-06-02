@@ -27,6 +27,7 @@ gem 'coffee-rails', '~> 4.0.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 gem 'active_model_serializers', '~> 0.9.0.alpha1'
 
@@ -59,6 +60,11 @@ gem 'simple_form', '~> 3.1.0.rc1'
 gem 'libxml-ruby', '~> 2.7.0'
 
 gem 'activeadmin', github: 'gregbell/active_admin'
+
+gem 'acts_as_list', '~> 0.4.0'
+gem 'ckeditor', '~> 4.0.11'
+gem 'paperclip', '~> 4.1.1'
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

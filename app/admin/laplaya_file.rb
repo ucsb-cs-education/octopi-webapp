@@ -6,6 +6,7 @@ index do
   column :file_name
   column :note
   column :public
+  column :owner
   column :created_at
   column :updated_at
 end
@@ -34,5 +35,11 @@ end
   #  permitted << :other if resource.something?
   #  permitted
   # end
+
+  controller do
+    def scoped_collection
+      LaplayaFile.includes(:owner)
+    end
+  end
   
 end

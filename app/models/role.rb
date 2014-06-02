@@ -16,6 +16,6 @@ class Role < ActiveRecord::Base
   end
 
   def self.main_roles
-    [:super_user, :teacher, :school_admin, :curriculum_designer]
+    [:super_staff, :teacher, :school_admin, :curriculum_designer]
   end
 end

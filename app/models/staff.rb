@@ -41,8 +41,20 @@ class Staff < User
     has_role? :school_admin, :any
   end
 
-  def super_user?
-    has_role? :super_user, :any
+  def super_staff?
+    has_role? :super_staff, :any
+  end
+
+  def super_staff
+    super_staff?
+  end
+
+  def super_staff= bool
+    if bool == true || bool == "1"
+      add_role :super_staff unless super_staff?
+    else
+      remove_role :super_staff if super_staff?
+    end
   end
 
   def name

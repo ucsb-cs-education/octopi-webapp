@@ -19,14 +19,14 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
     else
       status = :bad_request
     end
-    head status, location: student_portal_laplaya_laplaya_file_url(@laplaya_file)
+    head status, location: laplaya_file_url(@laplaya_file)
   end
 
   def create
     @laplaya_file = LaplayaFile.new(laplaya_file_params)
     if @laplaya_file.save
       current_user.add_role(:owner, @laplaya_file)
-      create_post_success_response(:created, student_portal_laplaya_laplaya_file_url(@laplaya_file),@laplaya_file.id)
+      create_post_success_response(:created, laplaya_file_url(@laplaya_file),@laplaya_file.id)
     else
       head :bad_request
     end
