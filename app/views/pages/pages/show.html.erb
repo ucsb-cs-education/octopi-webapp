@@ -5,22 +5,27 @@
     </div>
 <% end %>
 <div class='jumbotron pages'>
-  <div class="page-header">
-    <h1 class="page-title">
-      <%= @page.title %>
-    </h1>
-  </div>
-  <div id="tabs">
-    <ul>
-      <li><a href="#teacher-body">Teacher Body</a></li>
-      <li><a href="#student-body">Student Body</a></li>
-    </ul>
-    <div id="teacher-body">
-      <%= raw(@page.teacher_body) %>
-    </div>
-    <div id="student-body">
-      <%= raw(@page.student_body) %>
-    </div>
+  <%= div_for @page, "data-update-url" => curriculum_page_url(@page) do %>
+      <div class="page-header">
+        <h1 class="page-title">
+          <%= @page.title %>
+        </h1>
+      </div>
+      <div id="tabs">
+        <ul>
+          <li><a href="#teacher-body">Teacher Body</a></li>
+          <li><a href="#student-body">Student Body</a></li>
+        </ul>
+        <div id="teacher-body" octopieditable="true">
+          <%= @page.teacher_body.html_safe %>
+        </div>
+        <div id="student-body" octopieditable="true">
+          <%= @page.student_body.html_safe %>
+        </div>
+      </div>
+  <% end %>
+  <div id="submitbutton">
+    <%= button_tag("Save Updates", :id => 'mysubmit') %>
   </div>
   <% if @page.respond_to? :children %>
       <div id="child-pages">

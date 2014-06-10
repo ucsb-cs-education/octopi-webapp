@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     if staff_signed_in?
       redirect_to main_app.root_url, :alert => exception.message
     else
-      redirect_to main_app.new_user_session_url, :alert => exception.message
+      redirect_to main_app.new_staff_session_url, :alert => exception.message
     end
   end
 

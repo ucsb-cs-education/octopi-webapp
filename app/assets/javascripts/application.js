@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery.ui.sortable
 //= require jquery.ui.tabs
+//= require ckeditor/init
 //= require bootstrap
 //= require_tree .
 

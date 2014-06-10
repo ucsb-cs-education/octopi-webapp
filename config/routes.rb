@@ -1,5 +1,6 @@
 OctopiWebapp::Application.routes.draw do
 
+  mount Ckeditor::Engine => '/ckeditor'
   namespace :student_portal do
     resources :sessions, only: [:create] #, :destroy]
     root 'static_pages#home'
@@ -31,13 +32,13 @@ OctopiWebapp::Application.routes.draw do
   ActiveAdmin.routes(self)
 
   scope module: 'pages' do
-    resources :curriculum_pages, path: 'curriculums', shallow: true do
+    resources :curriculum_pages, path: 'curriculums', except: [:edit], shallow: true do
       member { post :sort }
-      resources :module_pages, path: 'modules', except: [:index], shallow: true do
+      resources :module_pages, path: 'modules', except: [:index, :edit], shallow: true do
         member { post :sort }
-        resources :activity_pages, path: 'activities', except: [:index], shallow: true do
+        resources :activity_pages, path: 'activities', except: [:index, :edit], shallow: true do
           member { post :sort }
-          resources :tasks, except: [:index], shallow: true do
+          resources :tasks, except: [:index, :edit], shallow: true do
           end
         end
       end
