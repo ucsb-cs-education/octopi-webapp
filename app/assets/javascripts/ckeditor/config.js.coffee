@@ -5,7 +5,7 @@ CKEDITOR.editorConfig = (config) ->
     { name: 'clipboard',   items: [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
     { name: 'editing',     items: [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
     { name: 'basicstyles', items: [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-    { name: 'insert',      items: [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak' ] },
+    { name: 'insert',      items: [ 'Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak' ] },
   ]
   config.toolbar = 'Pure'
   true

@@ -34,10 +34,36 @@ class Pages::CurriculumPagesController < Pages::PagesController
     render nothing: true
   end
 
-  private
-    def set_page_variable
-      @page = @curriculum_page
-      @pages = @curriculum_pages
+  def update
+    updated = @curriculum_page.update_attributes(curriculum_params)
+    respond_to do |format|
+      format.html do
+        if updated
+          redirect_to @curriculum_page, notice: "Successfully updated"
+        else
+          render action: edit
+        end
+      end
+      format.js do
+        if updated
+          status = :no_content
+        else
+          status = :bad_request
+        end
+        head status, location: curriculum_page_url(@curriculum_page)
+      end
     end
+  end
+
+  private
+  def set_page_variable
+    @page = @curriculum_page
+    @pages = @curriculum_pages
+  end
+
+  def curriculum_params
+    params.require(:curriculum_page).permit(:title, :'teacher_body', :'student_body')
+  end
+
 
 end

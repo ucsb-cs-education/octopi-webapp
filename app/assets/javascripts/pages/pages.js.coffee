@@ -37,12 +37,12 @@ addPageViewSelectorCallback = () ->
   #  my_title = $('.')
     teacher_body = $('#teacher-body').html()
     student_body = $('#student-body').html()
-    my_data = {'id': 'test', curriculum_page: {'teacher_body': teacher_body, 'student_body': student_body}}
+    my_data = {curriculum_page: {'teacher_body': teacher_body, 'student_body': student_body}}
     $.ajax({
-      type: "POST",
+      type: 'PATCH',
       url: $(".curriculum_page").data("update-url"),
       data: my_data,
-      contentType : 'application/json'
+      dataType : 'json'
 
     })
   )
