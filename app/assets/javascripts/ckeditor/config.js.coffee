@@ -7,5 +7,5 @@ CKEDITOR.editorConfig = (config) ->
     { name: 'basicstyles', items: [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
     { name: 'insert',      items: [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak' ] },
   ]
-config.toolbar = 'Pure'
-true
+  config.toolbar = 'Pure'
+  true

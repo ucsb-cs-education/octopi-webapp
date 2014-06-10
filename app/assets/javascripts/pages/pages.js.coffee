@@ -3,12 +3,14 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 addPageViewSelectorCallback = () ->
+  CKEDITOR.disableAutoInline = true;
+
   inline = (element) ->
     CKEDITOR.inline( element, {
       toolbar:'Pure'
     });
 
-  $("div[octopieditable='true']").each( () ->
+  $("div.octopieditable").each( () ->
     $(this).attr("contenteditable", true)
     inline(this)
   )
@@ -18,9 +20,11 @@ addPageViewSelectorCallback = () ->
       if ui.newPanel.attr("contenteditable") is "false"
         for name of CKEDITOR.instances
           instance = CKEDITOR.instances[name]
-          instance.destroy  if ui.newPanel and ui.newPanel is instance.element.$
+          instance.destroy()  if ui.newPanel and ui.newPanel.is($(instance.element.$))
         ui.newPanel.attr("contenteditable", true)
-        inline(ui.newPanel)
+        ui.newPanel.each( () ->
+          editor = inline(this)
+        )
   });
   $("#children").sortable({
     placeholder: "ui-state-highlight",
