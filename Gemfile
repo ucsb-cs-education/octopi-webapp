@@ -19,6 +19,8 @@ gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
+# gem "browserify-rails", "~> 0.3"
+
 
 # Allows for easily paginating lists
 # gem 'will_paginate', '~> 3.0.5'
@@ -32,8 +34,8 @@ gem 'jquery-ui-rails'
 gem 'active_model_serializers', '~> 0.9.0.alpha1'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-# gem 'turbolinks'
-# gem 'jquery-turbolinks'
+gem 'turbolinks'
+gem 'jquery-turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 #gem 'jbuilder', '~> 1.2'
@@ -65,6 +67,8 @@ gem 'acts_as_list', '~> 0.4.0'
 gem 'ckeditor', '~> 4.0.11'
 gem 'paperclip', '~> 4.1.1'
 
+# Restrict javascript to a specific controller, within assett pipeline
+gem 'paloma', '~> 4.1.0'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

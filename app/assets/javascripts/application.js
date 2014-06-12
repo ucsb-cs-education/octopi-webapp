@@ -16,6 +16,7 @@
 //= require jquery.ui.tabs
 //= require ckeditor/init
 //= require bootstrap
+//= require paloma
 //= require_tree .
 
 var updateDropDowns = function () {
@@ -50,4 +51,3 @@ var updateDropDowns = function () {
 };
 
 $(document).ready(updateDropDowns);
-$(document).on('page:load', updateDropDowns);

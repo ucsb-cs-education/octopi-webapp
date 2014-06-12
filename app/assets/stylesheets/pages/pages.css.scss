@@ -5,12 +5,10 @@
 body.pages {
   .jumbotron.pages {
     background-color: transparent;
-    h1.page-title {
-      text-align: left;
-      font-size: 32px;
-    }
     .page-header {
-      .page-title {
+      h1 {
+        text-align: left;
+        font-size: 32px;
         margin-bottom: 25px;
       }
       margin-bottom: 0px;

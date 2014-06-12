@@ -14,8 +14,6 @@ module StudentPortal::BaseHelper
     @current_student = student
   end
 
-
-
   def current_student
     expires_at = session[:student_autosignout_time]
     remember_token = Student.create_remember_hash(session[:student_remember_token])

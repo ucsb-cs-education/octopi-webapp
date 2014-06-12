@@ -2,14 +2,11 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
   load_and_authorize_resource
 
   def index
-    if current_user
-      @laplaya_files = LaplayaFile.with_role(:owner, current_user).distinct
-    end
     render :json => @laplaya_files, each_serializer: LaplayaFileIndexSerializer
   end
 
   def show
-    render json: @laplaya_file, except: [:created_at, :thumbnail]
+    render json: @laplaya_file
   end
 
   def update

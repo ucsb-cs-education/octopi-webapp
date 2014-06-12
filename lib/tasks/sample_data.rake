@@ -26,6 +26,7 @@ namespace :db do
 
     FactoryGirl.create(:laplaya_file, :star_wars, owner: curriculum_designer)
     FactoryGirl.create(:laplaya_file, :star_wars, owner: curriculum_designer)
+    FactoryGirl.create(:laplaya_file, :star_wars, owner: admin)
 
     2.times do
       puts "Creating Curriculum Page and children..."

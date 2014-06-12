@@ -34,7 +34,7 @@ class Ability
     #A non-signed in student (thus, any user) must be able to access all student's logins to select his/her logins
     can :list_student_logins, Student
 
-    can :read, LaplayaFile, public: true
+    can :show, LaplayaFile, public: true
 
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :create, :show, :update, :destroy, :to => :csud #crud without index
@@ -60,7 +60,7 @@ class Ability
           teacher(user) if user.has_role? :teacher, :any
         end
       elsif user.class == Student
-        student(user) if user.class == Student
+        student(user)
 
       end
     end

@@ -5,10 +5,10 @@
     </div>
 <% end %>
 <div class='jumbotron pages'>
-  <%= div_for @page, "data-update-url" => curriculum_page_url(@page) do %>
+  <%= div_for @page, class: 'page', :'data-update-url' => url_for(@page) do %>
       <div class="page-header">
-        <h1 class="page-title">
-          <%= @page.title %>
+        <h1>
+          <span id="page-title" contenteditable="true"><%= @page.title %></span>
         </h1>
       </div>
       <div id="tabs">
@@ -23,13 +23,20 @@
           <%= @page.student_body.html_safe %>
         </div>
       </div>
-  <% end %>
-  <div id="submitbutton">
-    <%= button_tag("Save Updates", :id => 'mysubmit') %>
-  </div>
-  <% if @page.respond_to? :children %>
-      <div id="child-pages">
-        <%= render partial: "children", object: @page, as: :page %>
-      </div>
+      <%= simple_form_for @page, id: 'page-form', remote: true do |f| %>
+          <div class="form-inputs">
+            <%= f.hidden_field :title, class: 'title' %>
+            <%= f.hidden_field :'student_body', class: 'student_body' %>
+            <%= f.hidden_field :'teacher_body', class: 'teacher_body' %>
+          </div>
+          <div class="form-actions">
+            <%= f.button :submit, "Update #{@page.title}" %>
+          </div>
+      <% end %>
+      <% if @page.respond_to? :children %>
+          <div id="child-pages">
+            <%= render partial: "children", object: @page, as: :page %>
+          </div>
+      <% end %>
   <% end %>
 </div>

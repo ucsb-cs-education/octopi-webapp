@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :laplaya_file, :class => LaplayaFile do
     ignore do
-      file = File.open("#{Rails.root}/lib/assets/laplaya_test_files/testproj.xml", 'r')
+      file = File.open("#{Rails.root}/public/laplaya_test_files/testproj.xml", 'r')
       testproj file.read
       file.close
       owner nil
@@ -14,7 +14,7 @@ FactoryGirl.define do
 
     trait :star_wars do
       ignore do
-        file = File.open("#{Rails.root}/lib/assets/laplaya_test_files/starwars.xml", 'r')
+        file = File.open("#{Rails.root}/public/laplaya_test_files/starwars.xml", 'r')
         starwars file.read
         file.close
       end

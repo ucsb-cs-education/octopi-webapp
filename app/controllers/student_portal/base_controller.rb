@@ -1,6 +1,7 @@
 class StudentPortal::BaseController < ApplicationController
   include StudentPortal::BaseHelper
   after_action :update_autosignout_time
+  alias_method :current_user, :current_student
 
 
   rescue_from CanCan::AccessDenied do |exception|

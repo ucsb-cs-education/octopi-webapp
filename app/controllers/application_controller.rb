@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
+  alias_method :current_user, :current_staff
 
   rescue_from CanCan::AccessDenied do |exception|
     if staff_signed_in?
@@ -27,10 +28,6 @@ class ApplicationController < ActionController::Base
 
   def decode_id
     params[:id] = IdCrypt::decode_id(params[:id]).to_s if params[:id]
-  end
-
-  def current_ability
-    @current_ability ||= Ability.new(current_staff)
   end
 
 end

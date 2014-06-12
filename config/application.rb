@@ -22,6 +22,8 @@ module OctopiWebapp
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    config.browserify_rails.commandline_options = "-t coffeeify --extension=\".js.coffee\"" if config.respond_to? :browserify_rails
+
     config.generators do |g|
       g.test_framework :rspec
     end
