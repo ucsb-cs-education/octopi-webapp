@@ -29,13 +29,9 @@ class Pages::CurriculumPagesController < Pages::PagesController
   def show
   end
 
-  def sort
-    @curriculum_page.update_children_order(params[:module_page])
-    render nothing: true
-  end
-
   def update
-    updated = @curriculum_page.update_attributes(curriculum_params)
+    ids = CGI.parse(params[:children_order])['module_page[]']
+    updated = @curriculum_page.update_with_children(curriculum_params, ids)
     respond_to do |format|
       format.html do
         if updated
@@ -45,12 +41,11 @@ class Pages::CurriculumPagesController < Pages::PagesController
         end
       end
       format.js do
-        if updated
-          status = :no_content
-        else
-          status = :bad_request
+        response.location = curriculum_page_url(@curriculum_page)
+        js false
+        unless updated
+          head :bad_request, location: curriculum_page_url(@curriculum_page)
         end
-        head status, location: curriculum_page_url(@curriculum_page)
       end
     end
   end
@@ -64,6 +59,5 @@ class Pages::CurriculumPagesController < Pages::PagesController
   def curriculum_params
     params.require(:curriculum_page).permit(:title, :'teacher_body', :'student_body')
   end
-
 
 end

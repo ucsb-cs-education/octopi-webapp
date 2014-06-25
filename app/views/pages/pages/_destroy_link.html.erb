@@ -1,0 +1,5 @@
+<%= link_to "Delete #{@page.title}", @page,
+            method: :delete,
+            data: { confirm: "Are you sure you want to delete\n#{@page.title} and all of its children?" },
+            class: 'btn btn-danger btn-sm',
+            id: 'delete-page-link' %>

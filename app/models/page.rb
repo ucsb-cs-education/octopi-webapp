@@ -1,4 +1,5 @@
 class Page < ActiveRecord::Base
+  resourcify
 
   protected
   def difference_between_arrays(array1, array2)
@@ -17,4 +18,5 @@ class Page < ActiveRecord::Base
     missing_items = difference_between_arrays(array2, array1)
     extra_items.empty? & missing_items.empty?
   end
+
 end

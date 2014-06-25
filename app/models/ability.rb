@@ -58,6 +58,7 @@ class Ability
         else
           school_admin(user) if user.has_role? :school_admin, :any
           teacher(user) if user.has_role? :teacher, :any
+          curriculum_designer(user) if user.has_role? :curriculum_designer, :any
         end
       elsif user.class == Student
         student(user)
@@ -67,6 +68,8 @@ class Ability
   end
 
   def curriculum_designer(user)
+    page_ids = CurriculumPage.with_role(:curriculum_designer, user).pluck(:id)
+    can :crud, Page, :curriculum_id => page_ids
   end
 
   def super_staff(user)

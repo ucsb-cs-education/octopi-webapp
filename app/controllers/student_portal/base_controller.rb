@@ -10,5 +10,8 @@ class StudentPortal::BaseController < ApplicationController
     $stderr.puts flash.to_hash
   end
 
+  def current_user
+    current_student
+  end
 
 end

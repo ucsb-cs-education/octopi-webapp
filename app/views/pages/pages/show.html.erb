@@ -1,15 +1,15 @@
 <% provide(:title, @page.title) %>
-<% if @page.respond_to? :parent %>
-    <div class='parent'>
-      <%= link_to 'return to parent', @page.parent %>
-    </div>
-<% end %>
-<div class='jumbotron pages'>
+<div class='pages'>
   <%= div_for @page, class: 'page', :'data-update-url' => url_for(@page) do %>
       <div class="page-header">
         <h1>
           <span id="page-title" contenteditable="true"><%= @page.title %></span>
         </h1>
+        <% if @page.respond_to? :parent %>
+            <div class='parent'>
+              <%= link_to "return to parent (#{@page.parent.title})", @page.parent %>
+            </div>
+        <% end %>
       </div>
       <div id="tabs">
         <ul>
@@ -17,26 +17,28 @@
           <li><a href="#student-body">Student Body</a></li>
         </ul>
         <div id="teacher-body" class="octopieditable">
-          <%= @page.teacher_body.html_safe %>
+          <%= @page.teacher_body.html_safe if @page.teacher_body.present? %>
         </div>
         <div id="student-body" class="octopieditable">
-          <%= @page.student_body.html_safe %>
+          <%= @page.student_body.html_safe if @page.teacher_body.present? %>
         </div>
       </div>
-      <%= simple_form_for @page, id: 'page-form', remote: true do |f| %>
-          <div class="form-inputs">
-            <%= f.hidden_field :title, class: 'title' %>
-            <%= f.hidden_field :'student_body', class: 'student_body' %>
-            <%= f.hidden_field :'teacher_body', class: 'teacher_body' %>
-          </div>
-          <div class="form-actions">
-            <%= f.button :submit, "Update #{@page.title}" %>
-          </div>
-      <% end %>
       <% if @page.respond_to? :children %>
           <div id="child-pages">
             <%= render partial: "children", object: @page, as: :page %>
           </div>
       <% end %>
+      <%= simple_form_for @page, html: {class: 'page-form'}, remote: true do |f| %>
+          <div class="form-inputs">
+            <%= f.hidden_field :title, class: 'title' %>
+            <%= f.hidden_field :'student_body', class: 'student_body' %>
+            <%= f.hidden_field :'teacher_body', class: 'teacher_body' %>
+            <%= hidden_field_tag :'children_order', '', class: 'children_order' if @page.respond_to? :children %>
+          </div>
+          <div class="form-actions">
+            <%= f.submit "Update #{@page.title}", class: 'btn btn-primary', disabled: true %>
+          </div>
+      <% end %>
+      <%= render 'destroy_link', object: @page %>
   <% end %>
 </div>

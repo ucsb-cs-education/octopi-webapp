@@ -5,12 +5,19 @@
 PagesController = Paloma.controller('Pages/Pages');
 PagesController.prototype.show = () ->
 
+  enableSubmitButton = () ->
+    $('.page-form input[type=submit]').removeAttr('disabled');
+
+
   addPageViewSelectorCallback = () ->
     CKEDITOR.disableAutoInline = true;
 
     inline = (element) ->
       CKEDITOR.inline( element, {
-        toolbar:'Pure'
+        toolbar:'Pure',
+        on: {
+          blur: enableSubmitButton
+        }
       });
 
     $("div.octopieditable").each( () ->
@@ -32,18 +39,25 @@ PagesController.prototype.show = () ->
     $("#children").sortable({
       placeholder: "ui-state-highlight",
       axis: 'y',
-      update: ->
-        $.post($(this).data('update-url'), $(this).sortable('serialize'))
+      update: enableSubmitButton
     });
     $("#children").disableSelection();
-    $('.page form ').submit( ->
+
+    submitFunction = () ->
       teacher_body = $('#teacher-body').html()
       student_body = $('#student-body').html()
       title = $('#page-title').html()
+      children = $("#children")
+      if (children.length)
+        $(this).find('.children_order').val(children.sortable('serialize'))
       $(this).find('.teacher_body').val(teacher_body)
       $(this).find('.student_body').val(student_body)
       $(this).find('.title').val(title)
       return true;
-    )
+
+
+    $('.page form ').submit(submitFunction)
+
   $(document).ready(addPageViewSelectorCallback);
+  $(document).ready()
 

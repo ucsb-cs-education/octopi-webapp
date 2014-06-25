@@ -7,14 +7,53 @@ class Pages::ActivityPagesController < Pages::PagesController
   def show
   end
 
-  def sort
-    @activity_page.update_children_order(params[:task])
-    render nothing: true
+  def update
+    ids = CGI.parse(params[:children_order])['task[]']
+    updated = @activity_page.update_with_children(activity_params, ids)
+    respond_to do |format|
+      format.html do
+        if updated
+          redirect_to @activity_page, notice: "Successfully updated"
+        else
+          render action: edit
+        end
+      end
+      format.js do
+        response.location = activity_page_url(@activity_page)
+        js false
+        unless updated
+          head :bad_request, location: activity_page_url(@activity_page)
+        end
+      end
+    end
   end
+
+  def destroy
+    @activity_page.destroy
+    flash[:success] = "Activity #{@activity_page.title} has been deleted."
+    redirect_to @activity_page.module_page
+  end
+
+  def create
+    @activity_page.parent = @module_page
+    @activity_page.update_attributes({title: 'New Activity', teacher_body: '<p></p>', student_body: '<p></p>'})
+    respond_to do |format|
+      format.html { redirect_to @module_page }
+      format.js {
+        js false
+      }
+    end
+  end
+
+  private
 
   def set_page_variable
     @page = @activity_page
     @pages = @activity_pages
+  end
+
+  def activity_params
+    params.require(:activity_page).permit(:title, :'teacher_body', :'student_body')
   end
 
 end

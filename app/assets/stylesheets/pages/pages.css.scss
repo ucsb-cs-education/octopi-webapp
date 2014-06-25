@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 body.pages {
-  .jumbotron.pages {
+  .pages {
     background-color: transparent;
     .page-header {
       h1 {
@@ -15,23 +15,39 @@ body.pages {
       margin-top: 0px;
       padding-bottom: 0px;
     }
+    #delete-page-link {
+      width: 60%;
+      color: inherit;
+      &:visited, &:hover, &:active {
+        color: #ffffff;
+      }
+    }
+    form .btn {
+      width: 60%;
+    }
+    .new_child_page {
+      margin-bottom: 10px;
+    }
     #tabs {
       margin-top: 5px;
+      p {
+        font-size: 16px;
+      }
     }
-  }
-  #children {
-    list-style-type: none;
-    margin: 15px 0 0;
-    padding: 0;
-    width: 60%;
-    li {
-      margin: 0 3px 3px 3px;
-      padding: 0.4em 0.4em 0.4em 1.5em;
-      font-size: 1.4em;
-      height: 35px;
-      span {
-        position: absolute;
-        margin-left: -1.3em;
+    #children {
+      list-style-type: none;
+      margin: 15px 0 0;
+      padding: 0;
+      width: 60%;
+      li {
+        margin: 0 3px 3px 3px;
+        padding: 0.4em 0.4em 0.4em 1.5em;
+        font-size: 1.4em;
+        height: 35px;
+        span {
+          position: absolute;
+          margin-left: -1.3em;
+        }
       }
     }
   }

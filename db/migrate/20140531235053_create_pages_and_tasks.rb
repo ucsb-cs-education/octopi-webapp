@@ -12,6 +12,8 @@ class CreatePagesAndTasks < ActiveRecord::Migration
 
       #For Module and Activity
       t.references :page
+      #For permissions, overall curriculum_id
+      t.integer :curriculum_id
 
       t.timestamps
     end

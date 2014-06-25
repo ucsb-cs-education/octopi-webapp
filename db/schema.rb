@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 20140609121905) do
     t.string   "type"
     t.integer  "position"
     t.integer  "page_id"
+    t.integer  "curriculum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

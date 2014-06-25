@@ -1,4 +1,5 @@
 class Task < ActiveRecord::Base
+  resourcify
   belongs_to :activity_page, foreign_key: :page_id
   acts_as_list scope: [:type, :page_id]
   # include CustomModelNaming
