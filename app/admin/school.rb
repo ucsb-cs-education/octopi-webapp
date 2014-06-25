@@ -1,4 +1,3 @@
-include OctopiAdminControllerBase
 ActiveAdmin.register School do
 
   # See permitted parameters documentation:
@@ -20,12 +19,11 @@ ActiveAdmin.register School do
   # filter :current_sign_in_at
   # filter :sign_in_count
   # filter :created_at
-  insert_controller_actions
-  controller do
-    def default_update_path
-      admin_schools_path
-    end
-  end
+  # controller do
+  #   def default_update_path
+  #     admin_schools_path
+  #   end
+  # end
 
 
 end
