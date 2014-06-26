@@ -6,17 +6,54 @@
   <%= @school_class.name %>
 </p>
 
-<div class="row">
-  <div class="col-md-3"><strong>Student Name</strong>
-    </div>
-  <div class="col-md-3"><strong>Login Name</strong></div>
-</div>
-<% @school_class.students.each do |s| %>
-    <div class="row">
-        <div class="col-md-3"><%= s.name %></div>
-      <div class="col-md-3"><%= s.login_name %></div>
-    </div>
-<%end%>
+<button>Add Student</button>
+<p></p>
+
+
+
+<head>
+
+  <style>
+      table.sortable thead {
+          background-color:#B2B2FF;
+          color:#666666;
+          font-weight: bold;
+          cursor: default;
+      }
+      table,th,td
+      {
+          border:1px solid black;
+          border-collapse:collapse;
+      }
+      th,td
+      {
+          padding:5px;
+      }
+  </style>
+  <script src="/sorttable.js"></script>
+</head>
+<body>
+
+<table class="sortable" style="width:1200px">
+  <tr>
+    <th>Firstname</th>
+    <th>Lastname</th>
+    <th>Login Name</th>
+    <th>Progress</th>
+  </tr>
+  <% @school_class.students.each do |s| %>
+      <tr>
+        <td><%= s.first_name %></td>
+        <td><%= s.last_name %></td>
+        <td><%= s.login_name %></td>
+        <td></td>
+      </tr>
+  <%end%>
+</table>
+
+</body>
+
+
 
 <br>
 <p>
