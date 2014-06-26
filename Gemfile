@@ -78,6 +78,7 @@ end
 group :production do
 # If running on Heroku
   gem 'rails_12factor'
+  gem 'newrelic_rpm'
 end
 
 group :test do
