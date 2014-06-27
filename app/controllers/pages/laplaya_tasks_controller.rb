@@ -12,8 +12,6 @@ class Pages::LaplayaTasksController < Pages::TasksController
     @laplaya_task.parent = @activity_page
     @laplaya_task.update_attributes({title: 'New Task', teacher_body: '<p></p>', student_body: '<p></p>'})
     laplaya_file = TaskBaseLaplayaFile.new_base_file(@laplaya_task)
-    laplaya_file.laplaya_task=@laplaya_task
-    laplaya_file.save!
     respond_to do |format|
       format.html { redirect_to @laplaya_task }
       format.js {

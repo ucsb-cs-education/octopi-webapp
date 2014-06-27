@@ -7,12 +7,14 @@ PagesController.prototype.show = () ->
 
   enableSubmitButton = () ->
     $('.page-form input[type=submit]').removeAttr('disabled');
+  $('#page-title').blur(enableSubmitButton)
 
 
   addPageViewSelectorCallback = () ->
     CKEDITOR.disableAutoInline = true;
 
     inline = (element) ->
+      $(element).attr("contenteditable", true)
       CKEDITOR.inline( element, {
         toolbar:'Pure',
         on: {
@@ -21,7 +23,6 @@ PagesController.prototype.show = () ->
       });
 
     $("div.octopieditable").each( () ->
-      $(this).attr("contenteditable", true)
       inline(this)
     )
 
@@ -57,6 +58,7 @@ PagesController.prototype.show = () ->
 
 
     $('.page form ').submit(submitFunction)
+
 
   $(document).ready(addPageViewSelectorCallback);
   $(document).ready()
