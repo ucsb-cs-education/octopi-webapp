@@ -8,7 +8,7 @@ class Pages::ActivityPagesController < Pages::PagesController
   end
 
   def update
-    ids = CGI.parse(params[:children_order])['task[]']
+    ids = CGI.parse(params[:children_order].gsub("laplaya_task","task"))['task[]']
     updated = @activity_page.update_with_children(activity_page_params, ids)
     respond_to do |format|
       format.html do
