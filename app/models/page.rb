@@ -1,5 +1,6 @@
 class Page < ActiveRecord::Base
   resourcify
+  include Curriculumify
 
   protected
   def difference_between_arrays(array1, array2)

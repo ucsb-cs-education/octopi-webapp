@@ -6,7 +6,6 @@ class ActivityPage < Page
 
   alias_attribute :children, :tasks
   alias_attribute :parent, :module_page
-  after_create {update_attribute(:curriculum_id, parent.curriculum_id)}
 
   def update_with_children(params, ids)
     transaction do
@@ -19,11 +18,6 @@ class ActivityPage < Page
       end
       update_attributes!(params)
     end
-  end
-
-  private
-  def update_curriculum_id
-    self.curriculum_id = parent.curriculum_id
   end
 
 end

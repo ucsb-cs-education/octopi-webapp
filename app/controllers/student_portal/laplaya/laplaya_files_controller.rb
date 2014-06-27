@@ -2,10 +2,11 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
   load_and_authorize_resource
 
   def index
-    render :json => @laplaya_files, each_serializer: LaplayaFileIndexSerializer
+    render json: @laplaya_files, each_serializer: LaplayaFileIndexSerializer
   end
 
   def show
+    @laplaya_file = @laplaya_file.becomes(LaplayaFile)
     render json: @laplaya_file
   end
 

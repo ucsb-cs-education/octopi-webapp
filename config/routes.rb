@@ -38,7 +38,10 @@ OctopiWebapp::Application.routes.draw do
         member { post :sort }
         resources :activity_pages, path: 'activities', except: [:index, :edit], shallow: true do
           member { post :sort }
-          resources :tasks, except: [:index, :edit], shallow: true do
+          resources :laplaya_tasks, except: [:index, :edit], shallow: true do
+            member do
+              patch 'clone'
+            end
           end
         end
       end

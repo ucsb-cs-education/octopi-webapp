@@ -6,7 +6,6 @@ class ModulePage < Page
 
   alias_attribute :children, :activity_pages
   alias_attribute :parent, :curriculum_page
-  after_create {update_attribute(:curriculum_id, parent.curriculum_id)}
 
   def update_with_children(params, ids)
     transaction do

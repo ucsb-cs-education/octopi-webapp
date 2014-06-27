@@ -2,7 +2,6 @@ class CurriculumPage < Page
   resourcify
   has_many :module_pages, -> { order('position ASC') }, foreign_key: :page_id
   alias_attribute :children, :module_pages
-  after_create {update_attribute(:curriculum_id, id)}
 
   def update_with_children(params, ids)
     transaction do

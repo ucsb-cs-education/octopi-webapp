@@ -29,6 +29,7 @@ FactoryGirl.define do
     end
 
     factory :task_base_laplaya_file, class: TaskBaseLaplayaFile do
+      public false
     end
 
   end

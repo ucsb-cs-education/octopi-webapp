@@ -25,7 +25,7 @@
       </div>
       <% if @page.respond_to? :children %>
           <div id="child-pages">
-            <%= render partial: "children", object: @page, as: :page %>
+            <%= render partial: "children", locals: {page: @page, user_laplaya_files: @user_laplaya_files} %>
           </div>
       <% end %>
       <%= simple_form_for @page, html: {class: 'page-form'}, remote: true do |f| %>

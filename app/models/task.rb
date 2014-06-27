@@ -7,4 +7,6 @@ class Task < ActiveRecord::Base
   # self.route_key = :feeds
 
   alias_attribute :parent, :activity_page
+  include Curriculumify
+
 end
