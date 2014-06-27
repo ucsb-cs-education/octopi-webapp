@@ -31,9 +31,6 @@ class CreateSchools < ActiveRecord::Migration
       t.text   :note,       null: false, default: ""
       t.boolean :public,    default: false
 
-      #STI for BaseFile
-      t.string :type
-
       t.timestamps
     end
 

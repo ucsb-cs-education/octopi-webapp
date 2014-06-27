@@ -8,6 +8,26 @@ class Pages::LaplayaTasksController < Pages::TasksController
     @user_laplaya_files = LaplayaFile.accessible_by(current_ability, :index)
   end
 
+  def update
+    updated = @laplaya_task.update(laplaya_task_params)
+    respond_to do |format|
+      format.html do
+        if updated
+          redirect_to @laplaya_task, notice: 'Task was successfully updated.'
+        else
+          render action: 'edit'
+        end
+      end
+      format.js do
+        response.location = laplaya_file_url(@laplaya_task)
+        js false
+        unless updated
+          head :bad_request, location: laplaya_file_url(@laplaya_task)
+        end
+      end
+    end
+  end
+
   def create
     @laplaya_task.parent = @activity_page
     @laplaya_task.update_attributes({title: 'New Task', teacher_body: '<p></p>', student_body: '<p></p>'})
@@ -35,9 +55,12 @@ class Pages::LaplayaTasksController < Pages::TasksController
   end
 
   private
-    def set_page_variable
-      @page = @laplaya_task if @laplaya_task
-      @pages = @laplaya_tasks if @laplaya_tasks
-    end
+  def set_page_variable
+    @page = @laplaya_task if @laplaya_task
+    @pages = @laplaya_tasks if @laplaya_tasks
+  end
 
+  def laplaya_task_params
+    params.require(:laplaya_task).permit(:title, :'teacher_body', :'student_body')
+  end
 end
