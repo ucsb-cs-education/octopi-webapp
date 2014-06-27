@@ -9,7 +9,7 @@ class Pages::ModulePagesController < Pages::PagesController
 
   def update
     ids = CGI.parse(params[:children_order])['activity_page[]']
-    updated = @module_page.update_with_children(module_params, ids)
+    updated = @module_page.update_with_children(module_page_params, ids)
     respond_to do |format|
       format.html do
         if updated
@@ -30,7 +30,7 @@ class Pages::ModulePagesController < Pages::PagesController
 
   def create
     @module_page.parent = @curriculum_page
-    @module_page.update_attributes({title: 'New Module', teacher_body: '<p></p>', student_body: '<p></p>'})
+    @module_page.save!
     respond_to do |format|
       format.html { redirect_to @curriculum_page }
       format.js {
@@ -51,7 +51,7 @@ class Pages::ModulePagesController < Pages::PagesController
     @pages = @module_pages
   end
 
-  def module_params
+  def module_page_params
     params.require(:module_page).permit(:title, :'teacher_body', :'student_body')
   end
 end

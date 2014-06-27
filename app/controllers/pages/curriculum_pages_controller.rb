@@ -31,7 +31,7 @@ class Pages::CurriculumPagesController < Pages::PagesController
 
   def update
     ids = CGI.parse(params[:children_order])['module_page[]']
-    updated = @curriculum_page.update_with_children(curriculum_params, ids)
+    updated = @curriculum_page.update_with_children(curriculum_page_params, ids)
     respond_to do |format|
       format.html do
         if updated
@@ -56,7 +56,7 @@ class Pages::CurriculumPagesController < Pages::PagesController
     @pages = @curriculum_pages
   end
 
-  def curriculum_params
+  def curriculum_page_params
     params.require(:curriculum_page).permit(:title, :'teacher_body', :'student_body')
   end
 

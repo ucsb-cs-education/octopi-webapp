@@ -9,7 +9,7 @@ class Pages::ActivityPagesController < Pages::PagesController
 
   def update
     ids = CGI.parse(params[:children_order])['task[]']
-    updated = @activity_page.update_with_children(activity_params, ids)
+    updated = @activity_page.update_with_children(activity_page_params, ids)
     respond_to do |format|
       format.html do
         if updated
@@ -36,7 +36,7 @@ class Pages::ActivityPagesController < Pages::PagesController
 
   def create
     @activity_page.parent = @module_page
-    @activity_page.update_attributes({title: 'New Activity', teacher_body: '<p></p>', student_body: '<p></p>'})
+    @activity_page.save!
     respond_to do |format|
       format.html { redirect_to @module_page }
       format.js {
@@ -52,7 +52,7 @@ class Pages::ActivityPagesController < Pages::PagesController
     @pages = @activity_pages
   end
 
-  def activity_params
+  def activity_page_params
     params.require(:activity_page).permit(:title, :'teacher_body', :'student_body')
   end
 
