@@ -60,7 +60,6 @@ class SchoolClassesController < ApplicationController
 
   # POST /school_classes/:school_class_id/add_student
   def add_student
-    @school_class = SchoolClass.find(params[:school_class_id])
     @student = Student.find(params[:student][:id])
     authorize! :update, @student
     @school_class.students << @student unless @school_class.students.include? @student

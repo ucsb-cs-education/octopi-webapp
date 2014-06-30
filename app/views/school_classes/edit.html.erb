@@ -8,19 +8,15 @@
   <%= @school_class.name %>
 </p>
 <!--Add Existing student to class-->
+
+<br>
 <div class="row">
   <div class="col-md-6">
-    <%= simple_form_for :student, url: add_student_school_class_path(@school_class) , method:'post', remote: true do |f| %>
-    <div class="form-inputs">
-      <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected:0, label:"Add student to class:" %>
-    </div>
-    <div class="form-actions">
-      <%= f.button :submit,  'Add Student to Class'%>
-    </div>
-    <% end %>
-    </div>
- </div>
+    <%= render 'form' %>
+  </div>
+</div>
 <p></p>
+
 
 
 <!--Class list-->
@@ -87,18 +83,31 @@
 </div>
 -->
 
+<div class="row">
+  <div class="col-md-6">
+    <%= simple_form_for :student, url: add_student_school_class_path(@school_class) , method:'post', remote: true do |f| %>
+        <div class="form-inputs">
+          <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected:0, label:"Add student to class:" %>
+        </div>
+        <div class="form-actions">
+          <%= f.button :submit,  'Add Existing Student to Class'%>
+        </div>
+    <% end %>
+  </div>
+</div>
+<p></p>
 
 <div class="row">
   <div class="col-md-6">
-    <%= simple_form_for :student,  url: add_new_student_school_class_path(@school_class.id), method:'post' do |f|  %>
+    <%= simple_form_for :student,  url: add_new_student_school_class_path(@school_class.id), method:'post', remote: true, html: {id: 'create_and_add_student_form', style: "display: none"} do |f|  %>
         <%= f.error_notification %>
 
         <div class="form-inputs">
-          <%= f.input :first_name, required: true, autofocus: true %>
-          <%= f.input :last_name, required: true, autofocus: true %>
-          <%= f.input :login_name, required: true, autofocus: true %>
-          <%= f.input :password, required: true %>
-          <%= f.input :password_confirmation, required: true %>
+          <%= f.input :first_name, label: false,placeholder: "First Name",required: true, autofocus: true %>
+          <%= f.input :last_name, label: false,placeholder: "Last Name",required: true, autofocus: true %>
+          <%= f.input :login_name, label: false, placeholder: "Login Name",required: true, autofocus: true %>
+          <%= f.input :password,label: false,placeholder: "Password",required: true %>
+          <%= f.input :password_confirmation,label: false,placeholder: "Password Confirmation",required: true %>
         </div>
 
         <div class="form-actions">
@@ -108,12 +117,19 @@
     </div>
 </div>
 
-<br>
 <div class="row">
   <div class="col-md-6">
-  <%= render 'form' %>
+    <button id="toggle_button" type="button" onclick="toggleButton()" class="btn btn-primary">Add New Student</button>
     </div>
 </div>
+<script>
+  function toggleButton() {
+      $("#create_and_add_student_form").toggle();
+      $("#toggle_button").toggle();
+  }
+</script>
+
+
 
 <%= link_to 'Show', school_class_path(@school_class) %> |
 <%= link_to 'Back', school_class_path %>
