@@ -23,8 +23,6 @@ class SchoolClassesController < ApplicationController
     if @school_class.save
       flash[:success] = 'Class saved successfully.'
       redirect_to @school_class
-    else
-      render 'new', :layout => 'layouts/devise'
     end
   end
 
@@ -40,15 +38,44 @@ class SchoolClassesController < ApplicationController
   end
 
 
+  def add_new_student
+    @student = Student.new(student_params)
+    @student.school = @school_class.school
+    @school_class.students << @student unless @school_class.students.include? @student
+    #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
+    if @student.save
+      respond_to do |format|
+        format.js    do
+          js false
+        end
+        format.html do
+          redirect_to edit_school_class_path, notice: 'Student was successfully added.'
+        end
+
+      end
+    else
+      render 'new', :layout => 'layouts/devise'
+    end
+  end
+
   # POST /school_classes/:school_class_id/add_student
   def add_student
     @school_class = SchoolClass.find(params[:school_class_id])
-    student = Student.find(params[:student][:id])
-    authorize! :update, student
-    @school_class.students << student unless @school_class.students.include? student
+    @student = Student.find(params[:student][:id])
+    authorize! :update, @student
+    @school_class.students << @student unless @school_class.students.include? @student
     #if @school_class
-      #redirect_to [@school, @school_class], notice: 'Student was successfully added.'
-    redirect_to edit_school_class_url(@school_class), notice: 'Student was added successfully'
+
+    respond_to do |format|
+      format.js    do
+        js false
+      end
+      format.html do
+        redirect_to edit_school_class_path, notice: 'Student was successfully added.'
+      end
+
+   end
+    #redirect_to edit_school_class_url(@school_class), notice: 'Student was added successfully'
     #else
      # render action: 'edit'
     #end
@@ -64,6 +91,10 @@ class SchoolClassesController < ApplicationController
   end
 
   private
+  def student_params
+    params.require(:student).permit(:first_name, :last_name,:login_name, :password, :password_confirmation)
+  end
+
   def school_class_params
     params.require(:school_class).permit(:name)
   end

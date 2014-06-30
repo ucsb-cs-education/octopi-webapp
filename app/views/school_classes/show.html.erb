@@ -5,32 +5,6 @@
   <strong>Name:</strong>
   <%= @school_class.name %>
 </p>
-<!--Add student to class-->
-<div class="row">
-  <div class="col-lg-6">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button name="Add Student"  class="btn btn-default" type="button" onclick="addStudent()">Add Student</button>
-
-      </span>
-      <input type="text" class="form-control" id="login">
-      <script> function addStudent() {
-          var login = document.getElementById("login").value;
-
-      }
-      </script>
-    </div>
-  </div>
-</div>
-<%= simple_form_for :student, url: school_class_add_student_path(@school_class.id) , method:'post' do |f| %>
-    <div class="form-inputs">
-      <%= f.input :id, collection: @school_class.school.students-@school_class.students, include_blank: true, selected:0, label:"Add student to class:" %>
-    </div>
-    <div class="form-actions">
-      <%= f.button :submit, 'Add student to class'%>
-    </div>
-<% end %>
-<p></p>
 
 
 <!--Class list-->
@@ -56,10 +30,10 @@
 </head>
 <body>
 
-<table class="sortable" style="width:1200px">
+<table id="classlist" class="sortable" style="width:1140px">
   <tr>
-    <th>Firstname</th>
-    <th>Lastname</th>
+    <th>First Name</th>
+    <th>Last Name</th>
     <th>Login Name</th>
     <th>Progress</th>
   </tr>
@@ -74,11 +48,33 @@
 </table>
 
 </body>
+<!--Add new student to class-->
+<!--
+<div class="row">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button name="Add New Student"  class="btn btn-default" type="button" onclick="addNewStudent()">Add New Student</button>
 
+      </span>
+      <input placeholder="First Name" type="text" class="form-control" id="login">
+      <input placeholder="Last Name" type="text" class="form-control" id="login">
+      <input placeholder="Login Name" type="text" class="form-control" id="login">
+      <input placeholder="Password" type="text" class="form-control" id="login">
+      <script> function addNewStudent() {
+          var login = document.getElementById("login").value;
+
+      }
+      </script>
+    </div>
+  </div>
+</div>
+-->
 
 
 <br>
 <p>
-  <%= link_to 'Back', school_school_classes_path(@school_class.school) %>
+  <%= link_to 'Back', school_school_classes_path(@school_class.school) %> |
+  <%= link_to 'Edit', edit_school_class_path  %>
 </p>
 

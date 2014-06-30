@@ -1,15 +1,110 @@
 <h1>Editing school</h1>
 
+<p>
+  <strong>School:</strong>
+  <%= @school_class.school.name %>
+  <br>
+  <strong>Name:</strong>
+  <%= @school_class.name %>
+</p>
+<!--Add Existing student to class-->
 <div class="row">
   <div class="col-md-6">
-  <%= simple_form_for :student, url: school_class_add_student_path(@school_class.id) , method:'post' do |f| %>
-      <div class="form-inputs">
-        <%= f.input :id, collection: @school_class.school.students-@school_class.students, include_blank: true, selected:0, label:"Add student to class:" %>
-      </div>
-      <div class="form-actions">
-        <%= f.button :submit, 'Add student to class'%>
-      </div>
-  <% end %>
+    <%= simple_form_for :student, url: add_student_school_class_path(@school_class) , method:'post', remote: true do |f| %>
+    <div class="form-inputs">
+      <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected:0, label:"Add student to class:" %>
+    </div>
+    <div class="form-actions">
+      <%= f.button :submit,  'Add Student to Class'%>
+    </div>
+    <% end %>
+    </div>
+ </div>
+<p></p>
+
+
+<!--Class list-->
+<head>
+  <style>
+      table.sortable thead {
+          background-color:#B2B2FF;
+          color:#666666;
+          font-weight: bold;
+          cursor: default;
+      }
+      table,th,td
+      {
+          border:1px solid black;
+          border-collapse:collapse;
+      }
+      th,td
+      {
+          padding:5px;
+      }
+  </style>
+  <script src="/sorttable.js"></script>
+</head>
+<body>
+
+<table id="classlist" class="sortable" style="width:1140px">
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Login Name</th>
+    <th>Progress</th>
+  </tr>
+  <% @school_class.students.each do |s| %>
+      <tr>
+        <td><%= s.first_name %></td>
+        <td><%= s.last_name %></td>
+        <td><%= s.login_name %></td>
+        <td></td>
+      </tr>
+  <%end%>
+</table>
+
+</body>
+<!--Add new student to class-->
+<!--
+<div class="row">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button name="Add New Student"  class="btn btn-default" type="button" onclick="addNewStudent()">Add New Student</button>
+
+      </span>
+      <input placeholder="First Name" type="text" class="form-control" id="login">
+      <input placeholder="Last Name" type="text" class="form-control" id="login">
+      <input placeholder="Login Name" type="text" class="form-control" id="login">
+      <input placeholder="Password" type="text" class="form-control" id="login">
+      <script> function addNewStudent() {
+          var login = document.getElementById("login").value;
+
+      }
+      </script>
+    </div>
+  </div>
+</div>
+-->
+
+
+<div class="row">
+  <div class="col-md-6">
+    <%= simple_form_for :student,  url: add_new_student_school_class_path(@school_class.id), method:'post' do |f|  %>
+        <%= f.error_notification %>
+
+        <div class="form-inputs">
+          <%= f.input :first_name, required: true, autofocus: true %>
+          <%= f.input :last_name, required: true, autofocus: true %>
+          <%= f.input :login_name, required: true, autofocus: true %>
+          <%= f.input :password, required: true %>
+          <%= f.input :password_confirmation, required: true %>
+        </div>
+
+        <div class="form-actions">
+          <%= f.button :submit, "Add New Student" %>
+        </div>
+    <% end %>
     </div>
 </div>
 
