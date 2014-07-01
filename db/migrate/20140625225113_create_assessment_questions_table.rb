@@ -16,6 +16,5 @@ class CreateAssessmentQuestionsTable < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_column :tasks, :curriculum_id, :integer
   end
 end
