@@ -103,11 +103,11 @@
         <%= f.error_notification %>
 
         <div class="form-inputs">
-          <%= f.input :first_name, label: false,placeholder: "First Name",required: true, autofocus: true %>
-          <%= f.input :last_name, label: false,placeholder: "Last Name",required: true, autofocus: true %>
-          <%= f.input :login_name, label: false, placeholder: "Login Name",required: true, autofocus: true %>
-          <%= f.input :password,label: false,placeholder: "Password",required: true %>
-          <%= f.input :password_confirmation,label: false,placeholder: "Password Confirmation",required: true %>
+          <%= f.input :first_name,class: "input", required: true, autofocus: true %>
+          <%= f.input :last_name, class: "input",required: true, autofocus: true %>
+          <%= f.input :login_name, class: "input",required: true, autofocus: true %>
+          <%= f.input :password,class: "input",required: true %>
+          <%= f.input :password_confirmation,class: "input",required: true %>
         </div>
 
         <div class="form-actions">
@@ -116,10 +116,9 @@
     <% end %>
     </div>
 </div>
-
 <div class="row">
   <div class="col-md-6">
-    <button id="toggle_button" type="button" onclick="toggleButton()" class="btn btn-primary">Add New Student</button>
+    <button  id="toggle_button" type="button" onclick="toggleButton()" class="btn btn-primary">Add New Student</button>
     </div>
 </div>
 <script>

@@ -73,7 +73,7 @@ class SchoolClassesController < ApplicationController
         redirect_to edit_school_class_path, notice: 'Student was successfully added.'
       end
 
-   end
+    end
     #redirect_to edit_school_class_url(@school_class), notice: 'Student was added successfully'
     #else
      # render action: 'edit'
@@ -83,7 +83,16 @@ class SchoolClassesController < ApplicationController
   def update
     @school_class = SchoolClass.find(params[:id])
     if @school_class.update(school_class_params)
-      redirect_to @school_class, notice: 'Class was successfully updated.'
+      #redirect_to @school_class, notice: 'Class was successfully updated.'
+      respond_to do |format|
+        format.js    do
+          js false
+        end
+        format.html do
+          redirect_to edit_school_class_path, notice: 'Class was successfully updated.'
+        end
+
+      end
     else
       render action: 'edit'
     end
