@@ -36,7 +36,7 @@
             <%= hidden_field_tag :'children_order', '', class: 'children_order' if @page.respond_to? :children %>
           </div>
           <div class="form-actions">
-            <%= f.submit "Update #{@page.title}", class: 'btn btn-primary', disabled: true %>
+            <%= f.submit "Save changes to #{@page.title}", class: 'btn btn-primary', id: 'update-page-btn', disabled: true %>
           </div>
       <% end %>
       <%= render 'destroy_link', object: @page %>

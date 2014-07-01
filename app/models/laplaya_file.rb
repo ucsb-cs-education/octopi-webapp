@@ -8,13 +8,13 @@ class LaplayaFile < ActiveRecord::Base
     self.file_name
   end
 
-  def owners
-    User.with_role(:owner, self)
-  end
-
-  def owner
-    owners.first
-  end
+  # def owners
+  #   User.with_role(:owner, self)
+  # end
+  #
+  # def owner
+  #   owners.first
+  # end
 
   private
   def update_thumbnail_and_note
@@ -22,6 +22,14 @@ class LaplayaFile < ActiveRecord::Base
       begin
         parser = XML::Parser.string(self.project)
         content = parser.parse
+        unless content.root.name == "project"
+          errors.add(:project, "root node must be a project")
+          return
+        end
+        unless content.root.attributes['name']
+          errors.add(:project, "name must be present")
+          return
+        end
         self.file_name = content.root.attributes['name']
         note = content.find_first('notes')
         thumbnail = content.find_first('thumbnail')

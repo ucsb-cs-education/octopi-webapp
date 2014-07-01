@@ -8,6 +8,7 @@ module Curriculumify
 
   end
 
+  private
   def curriculum_page?
     type == 'CurriculumPage'
   end

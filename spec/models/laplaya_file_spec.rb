@@ -102,10 +102,40 @@ eod
 
       describe 'to an xml with a non-project root' do
         before do
-          @laplaya_file.project = "<brokenxml name=\"hello world\"></brokenxml>"
+          @laplaya_file.project = "<brokenxml name=\"\"></brokenxml>"
         end
         it { should_not be_valid }
         it { should have(1).error_on(:project) }
+      end
+
+      describe 'to an xml without a name attribute on the root node' do
+        before do
+          @laplaya_file.project = "<project><notes name='test'>helloworld</notes></project>"
+        end
+        it { should_not be_valid }
+        it { should have(1).error_on(:project) }
+      end
+
+      describe 'to an xml with notes not on the project root' do
+        before do
+          @laplaya_file.project = "<project name=\"RspecTestProj\"><sprite><notes name='test'>non-root notes go here!</notes></sprite></project>"
+        end
+        it { should be_valid }
+        it 'should not change the notes' do
+          expect{@laplaya_file.save}.to_not change{@laplaya_file.note}
+        end
+        its(:note) { should_not eq("non-root notes go here!") }
+      end
+
+      describe 'to an xml with a thumbnail not on the project root' do
+        before do
+          @laplaya_file.project = "<project name=\"RspecTestProj\"><sprite><thumbnail name='test'>#{thumbnail}</thumbnail></sprite></project>"
+        end
+        it { should be_valid }
+        it 'should not change the notes' do
+          expect{@laplaya_file.save}.to_not change{@laplaya_file.note}
+        end
+        its(:note) { should_not eq("non-root notes go here!") }
       end
     end
 
@@ -130,7 +160,54 @@ eod
 
     subject { @laplaya_file }
     it_should_behave_like "a laplaya file"
+    it { should respond_to(:laplaya_task) }
+    it { should respond_to(:parent) }
 
+    describe '#clone' do
+      let(:another_laplaya_file){FactoryGirl.create(:laplaya_file, :star_wars, public: true, media:"sometestmedia")}
+
+      describe 'the file to be cloned' do
+        subject {another_laplaya_file}
+        it{ should be_valid }
+        its(:public) { should be true }
+      end
+      describe 'before called' do
+        its(:file_name) { should_not eq(another_laplaya_file.file_name)}
+        its(:project) { should_not eq(another_laplaya_file.project)}
+        its(:media) { should_not eq(another_laplaya_file.media)}
+        its(:thumbnail) { should_not eq(another_laplaya_file.thumbnail)}
+        its(:note) { should_not eq(another_laplaya_file.note)}
+      end
+
+      describe 'after called on a private base_task_file' do
+        before do
+          @laplaya_file.public = false
+          @laplaya_file.save
+          @laplaya_file.clone(another_laplaya_file)
+        end
+        its(:file_name) { should eq(another_laplaya_file.file_name)}
+        its(:project) { should eq(another_laplaya_file.project)}
+        its(:media) { should eq(another_laplaya_file.media)}
+        its(:thumbnail) { should eq(another_laplaya_file.thumbnail)}
+        its(:note) { should eq(another_laplaya_file.note)}
+        its(:public) { should eq(false) }
+      end
+
+      describe 'after called on a public base_task_file' do
+        before do
+          @laplaya_file.public = true
+          @laplaya_file.save
+          @laplaya_file.clone(another_laplaya_file)
+        end
+        its(:file_name) { should eq(another_laplaya_file.file_name)}
+        its(:project) { should eq(another_laplaya_file.project)}
+        its(:media) { should eq(another_laplaya_file.media)}
+        its(:thumbnail) { should eq(another_laplaya_file.thumbnail)}
+        its(:note) { should eq(another_laplaya_file.note)}
+        its(:public) { should eq(true) }
+      end
+
+    end
   end
 
 end
