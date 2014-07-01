@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe School do
+describe School, type: :model do
 
   before do
     @school = FactoryGirl.create(:school)
@@ -65,36 +65,36 @@ describe School do
     let(:student_in_the_school) { FactoryGirl.create(:student, school: @school) }
     let(:student_in_a_different_school) { FactoryGirl.create(:student, school: FactoryGirl.create(:school)) }
     it 'should contain students in the school' do
-      expect(@school.students.include?(student_in_the_school)).to be_true
+      expect(@school.students.include?(student_in_the_school)).to be true
     end
     it 'should not contain students in a different school' do
-      expect(@school.students.include?(student_in_a_different_school)).to be_false
+      expect(@school.students.include?(student_in_a_different_school)).to be false
     end
   end
 
   describe '#teachers' do
-    let(:teacher_in_the_school) { FactoryGirl.create(:user, :teacher, school: @school) }
-    let(:teacher_a_different_school) { FactoryGirl.create(:user, :teacher, school: FactoryGirl.create(:school)) }
+    let(:teacher_in_the_school) { FactoryGirl.create(:staff, :teacher, school: @school) }
+    let(:teacher_a_different_school) { FactoryGirl.create(:staff, :teacher, school: FactoryGirl.create(:school)) }
     it 'should contain teachers in the school' do
-      expect(@school.teachers.include?(teacher_in_the_school)).to be_true
+      expect(@school.teachers.include?(teacher_in_the_school)).to be true
     end
     it 'should not contain teachers in a different school' do
-      expect(@school.teachers.include?(teacher_a_different_school)).to be_false
+      expect(@school.teachers.include?(teacher_a_different_school)).to be false
     end
   end
 
   describe '#school_admins' do
-    let(:school_admin_in_the_school) { FactoryGirl.create(:user, :school_admin, school: @school) }
-    let(:school_admin_a_different_school) { FactoryGirl.create(:user, :school_admin, school: FactoryGirl.create(:school)) }
-    let(:super_staff) { FactoryGirl.create(:user, :super_staff) }
+    let(:school_admin_in_the_school) { FactoryGirl.create(:staff, :school_admin, school: @school) }
+    let(:school_admin_a_different_school) { FactoryGirl.create(:staff, :school_admin, school: FactoryGirl.create(:school)) }
+    let(:super_staff) { FactoryGirl.create(:staff, :super_staff) }
     it 'should contain school_admins in the school' do
-      expect(@school.school_admins.include?(school_admin_in_the_school)).to be_true
+      expect(@school.school_admins.include?(school_admin_in_the_school)).to be true
     end
     it 'should not contain school_admins in a different school' do
-      expect(@school.school_admins.include?(school_admin_a_different_school)).to be_false
+      expect(@school.school_admins.include?(school_admin_a_different_school)).to be false
     end
     it 'should not contain super_staffs' do
-      expect(@school.school_admins.include?(super_staff)).to be_false
+      expect(@school.school_admins.include?(super_staff)).to be false
     end
   end
 

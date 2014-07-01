@@ -16,6 +16,10 @@ Spork.prefork do
   ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
   RSpec.configure do |config|
+    # RSpec::Core::ExampleGroup#example is deprecated and will be removed
+    # in RSpec 3. There are a few options for what you can use instead:
+    config.expose_current_running_example_as :example
+
     # ## Mock Framework
     #
     # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:

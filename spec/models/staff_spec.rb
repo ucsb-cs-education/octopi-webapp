@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe Staff do
+describe Staff, type: :model do
 
-  describe 'basic user' do
+  describe 'basic staff' do
 
     before do
-      @user = FactoryGirl.create(:user)
+      @staff = FactoryGirl.create(:staff)
     end
 
-    subject { @user }
+    subject { @staff }
 
     # Basic attributes
     it { should respond_to(:first_name) }
@@ -44,119 +44,119 @@ describe Staff do
 
     describe '#name' do
       before do
-        @user.first_name = 'This is a strange'
-        @user.last_name = 'Name'
+        @staff.first_name = 'This is a strange'
+        @staff.last_name = 'Name'
       end
       it 'returns the concatenated first and last name' do
-        expect(@user.name).to eq('This is a strange Name')
+        expect(@staff.name).to eq('This is a strange Name')
       end
     end
 
     describe 'when first_name is not present' do
-      before { @user.first_name = ' ' }
+      before { @staff.first_name = ' ' }
       it { should_not be_valid }
     end
 
     describe 'when last_name is not present' do
-      before { @user.last_name = ' ' }
+      before { @staff.last_name = ' ' }
       it { should_not be_valid }
     end
 
     describe 'when email is not present' do
-      before { @user.email = ' ' }
+      before { @staff.email = ' ' }
       it { should_not be_valid }
     end
 
     describe 'when first_name is too long' do
-      before { @user.first_name = 'a' * 51 }
+      before { @staff.first_name = 'a' * 51 }
       it { should_not be_valid }
     end
 
     describe 'when last_name is too long' do
-      before { @user.last_name = 'a' * 51 }
+      before { @staff.last_name = 'a' * 51 }
       it { should_not be_valid }
     end
 
     describe 'when email format is invalid' do
       it 'should be invalid' do
-        addresses = %w[user@foo,com user_at_foo.org example.user@foo. foo@bar..com
+        addresses = %w[staff@foo,com staff_at_foo.org example.staff@foo. foo@bar..com
                      foo@bar_baz.com foo@bar+baz.com]
         addresses.each do |invalid_address|
-          @user.email = invalid_address
-          expect(@user).not_to be_valid
+          @staff.email = invalid_address
+          expect(@staff).not_to be_valid
         end
       end
     end
 
     describe 'when email format is valid' do
       it 'should be valid' do
-        addresses = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
+        addresses = %w[staff@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
         addresses.each do |valid_address|
-          @user.email = valid_address
-          expect(@user).to be_valid
+          @staff.email = valid_address
+          expect(@staff).to be_valid
         end
       end
     end
 
     describe 'when email address is already taken' do
-      let(:user_with_same_email) { @user.dup }
+      let(:staff_with_same_email) { @staff.dup }
       before do
-        user_with_same_email.email = @user.email.upcase
-        user_with_same_email.save
+        staff_with_same_email.email = @staff.email.upcase
+        staff_with_same_email.save
       end
 
-      describe 'original user' do
+      describe 'original staff' do
         it 'should be valid' do
-          expect(@user).to be_valid
+          expect(@staff).to be_valid
         end
       end
 
-      describe 'duplicate user' do
+      describe 'duplicate staff' do
         it 'should be invalid' do
-          expect(user_with_same_email).not_to be_valid
+          expect(staff_with_same_email).not_to be_valid
         end
       end
     end
 
     describe 'when password is not present' do
       before do
-        @user.password = ' '
-        @user.password_confirmation = ' '
+        @staff.password = ' '
+        @staff.password_confirmation = ' '
       end
       it { should_not be_valid }
     end
 
     describe 'when password doesn\'t match confirmation' do
-      before { @user.password_confirmation = 'mismatch' }
+      before { @staff.password_confirmation = 'mismatch' }
       it { should_not be_valid }
     end
 
     describe 'with a password that\'s too short' do
-      before { @user.password = @user.password_confirmation = 'a' * 7 }
+      before { @staff.password = @staff.password_confirmation = 'a' * 7 }
       it { should be_invalid }
     end
 
     describe 'return value of authenticate method' do
-      before { @user.save }
-      let(:found_user) { Staff.find_by(email: @user.email) }
+      before { @staff.save }
+      let(:found_staff) { Staff.find_by(email: @staff.email) }
 
       describe 'with valid password' do
-        it { should eq Staff.authenticate(@user.email, @user.password) }
+        it { should eq Staff.authenticate(@staff.email, @staff.password) }
       end
 
       describe 'with invalid password' do
-        it { should_not eq Staff.authenticate(@user.email, 'invalid') }
-        specify { expect(Staff.authenticate(@user.email, 'invalid')).to be_nil }
+        it { should_not eq Staff.authenticate(@staff.email, 'invalid') }
+        specify { expect(Staff.authenticate(@staff.email, 'invalid')).to be_nil }
       end
     end
 
     describe 'email address with mixed case' do
-      let(:mixed_case_email) { @user.email = @user.email.gsub(/./) { |c| [c, c.swapcase][rand(2)] }.gsub(/^./) { |c| c.upcase } }
+      let(:mixed_case_email) { @staff.email = @staff.email.gsub(/./) { |c| [c, c.swapcase][rand(2)] }.gsub(/^./) { |c| c.upcase } }
 
       it 'should be saved as all lower-case' do
-        @user.email = mixed_case_email
-        @user.save
-        expect(@user.reload.email).to eq mixed_case_email.downcase
+        @staff.email = mixed_case_email
+        @staff.save
+        expect(@staff.reload.email).to eq mixed_case_email.downcase
       end
     end
 
@@ -168,7 +168,7 @@ describe Staff do
   describe 'school_admin' do
 
     before do
-      @school_admin = FactoryGirl.create(:user, :school_admin)
+      @school_admin = FactoryGirl.create(:staff, :school_admin)
     end
 
     subject { @school_admin }
@@ -177,8 +177,8 @@ describe Staff do
     it { should be_a_school_admin }
     it { should_not be_a_super_staff }
     it 'shouldn\'t be a global :school_admin' do
-      expect(@school_admin.has_role?(:school_admin)).to be_false
-      expect(@school_admin.has_role?(:school_admin, School)).to be_false
+      expect(@school_admin.has_role?(:school_admin)).to be false
+      expect(@school_admin.has_role?(:school_admin, School)).to be false
     end
 
   end
@@ -186,7 +186,7 @@ describe Staff do
   describe 'teacher' do
 
     before do
-      @teacher = FactoryGirl.create(:user, :teacher)
+      @teacher = FactoryGirl.create(:staff, :teacher)
     end
 
     subject { @teacher }
@@ -195,8 +195,8 @@ describe Staff do
     it { should_not be_a_school_admin }
     it { should_not be_a_super_staff }
     it 'shouldn\'t be a global :teacher' do
-      expect(@teacher.has_role?(:teacher)).to be_false
-      expect(@teacher.has_role?(:teacher, School)).to be_false
+      expect(@teacher.has_role?(:teacher)).to be false
+      expect(@teacher.has_role?(:teacher, School)).to be false
     end
 
   end

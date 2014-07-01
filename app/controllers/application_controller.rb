@@ -23,7 +23,14 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
-    redirect_to main_app.root_url, :alert => exception.message
+    respond_to do |format|
+      format.html do
+        redirect_to main_app.root_url, :alert => exception.message
+      end
+      format.js do
+        render text: exception.message, status: 404
+      end
+    end
   end
 
   def current_user

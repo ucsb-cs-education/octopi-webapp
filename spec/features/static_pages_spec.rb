@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Static pages" do
+describe "Static pages", type: :feature do
 
   subject { page }
 
@@ -10,11 +10,13 @@ describe "Static pages" do
   end
 
   describe "Home page" do
-    before {visit root_path}
+    before do
+      sign_in_as_a_valid_staff
+      visit root_path
+    end
     let(:heading) { 'Octopi' }
     let(:page_title) { '' }
-
     it_should_behave_like "all static pages"
-
   end
+
 end

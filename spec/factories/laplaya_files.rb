@@ -18,7 +18,7 @@ FactoryGirl.define do
         starwars file.read
         file.close
       end
-      project {starwars}
+      project { starwars }
     end
 
     after(:create) do |laplaya_file, evaluator|
@@ -29,7 +29,16 @@ FactoryGirl.define do
     end
 
     factory :task_base_laplaya_file, class: TaskBaseLaplayaFile do
+      ignore do
+        laplaya_task { FactoryGirl.create(:laplaya_task) }
+      end
+
       public false
+
+      after(:build) do |laplaya_file, evaluator|
+        laplaya_file.laplaya_task = evaluator.laplaya_task
+      end
+
     end
 
   end

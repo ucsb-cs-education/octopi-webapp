@@ -90,6 +90,8 @@ group :development, :test do
   gem 'factory_girl_rails', '4.2.1'
   gem 'faker', '~> 1.3.0'
   gem 'rspec-rails', '~> 2.14'
+  gem 'rspec-its', '~> 1.0.1'
+  gem 'rspec-collection_matchers', '~> 1.0.0'
   gem 'spork-rails', '~> 4.0.0'
   gem 'guard-rspec', '~> 4.2.8'
   gem 'guard-spork', '~> 1.5.1'

@@ -50,23 +50,27 @@ ActiveAdmin.register Staff do
   scope :unconfirmed
   scope :confirmed
 
-  form do |f|
-    f.inputs "Staff Details" do
-      f.input :first_name
-      f.input :last_name
-      f.input :email
-      f.input :password, required: false, label: "New password"
-      f.input :password_confirmation, label: "New password confirmation"
-      if staff == current_staff
-        f.input :current_password
-      else
-        f.input :roles, :as => :select, :collection => Role.global, label: "Global roles"
-      end
-      f.input :super_staff, as: :boolean if can? :create_super_staff, User
-    end
-
-    f.actions
-  end
+  form partial: 'form'
+  # form do |f|
+  #   f.inputs "Staff Details" do
+  #     f.input :first_name
+  #     f.input :last_name
+  #     f.input :email
+  #     f.input :password, required: false, label: "New password"
+  #     f.input :password_confirmation, label: "New password confirmation"
+  #     if devise_mapping.confirmable? && staff.pending_reconfirmation?
+  #       "<p>Currently waiting confirmation for: #{resource.unconfirmed_email}</p>".html_safe
+  #     end
+  #     if staff == current_staff
+  #       f.input :current_password
+  #     else
+  #       f.input :roles, :as => :select, :collection => Role.global, label: "Global roles"
+  #     end
+  #     f.input :super_staff, as: :boolean if can? :create_super_staff, User
+  #   end
+  #
+  #   f.actions
+  # end
 
   controller do
     def update_resource(object, attributes)

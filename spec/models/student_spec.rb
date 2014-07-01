@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Student do
+describe Student, type: :model do
 
     before do
       @student = FactoryGirl.create(:student)
@@ -9,10 +9,12 @@ describe Student do
     subject { @student }
 
     # Basic attributes
-    it { should respond_to(:name) }
+    it { should respond_to(:first_name) }
+    it { should respond_to(:last_name) }
     it { should respond_to(:login_name) }
     it { should respond_to(:password_digest) }
     #Non-database attributes
+    it { should respond_to(:name) }
     it { should respond_to(:password) }
     it { should respond_to(:password_confirmation) }
 
@@ -20,13 +22,33 @@ describe Student do
 
     it { should be_valid }
 
-    describe 'when name is not present' do
-      before { @student.name = ' ' }
+    describe '#name' do
+      before do
+        @student.first_name = 'This is a strange'
+        @student.last_name = 'Name'
+      end
+      it 'returns the concatenated first and last name' do
+        expect(@student.name).to eq('This is a strange Name')
+      end
+    end
+
+    describe 'when first_name is not present' do
+      before { @student.first_name = ' ' }
       it { should_not be_valid }
     end
 
-    describe 'when name is too long' do
-      before { @student.name = 'a' * 51 }
+    describe 'when last_name is not present' do
+      before { @student.last_name = ' ' }
+      it { should_not be_valid }
+    end
+
+    describe 'when first_name is too long' do
+      before { @student.first_name = 'a' * 51 }
+      it { should_not be_valid }
+    end
+
+    describe 'when last_name is too long' do
+      before { @student.last_name = 'a' * 51 }
       it { should_not be_valid }
     end
 
@@ -108,7 +130,7 @@ describe Student do
 
       describe 'with invalid password' do
         it { should_not eq found_student.authenticate('invalid') }
-        specify { expect(found_student.authenticate('invalid')).to be_false }
+        specify { expect(found_student.authenticate('invalid')).to be false }
       end
     end
 end

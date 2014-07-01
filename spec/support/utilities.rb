@@ -18,13 +18,7 @@ RSpec::Matchers.define :have_success_message do |message|
   end
 end
 
-def capy_sign_in(user, options={})
-  if options[:no_capybara]
-    throw ('Not implemented')
-  else
-    visit new_user_session_path
-    fill_in 'Email',    with: user.email
-    fill_in 'Password', with: user.password
-    click_button 'Sign in'
-  end
+def valid_session
+  {"warden.user.user.key" => session["warden.user.user.key"]}
 end
+

@@ -24,11 +24,19 @@ OctopiWebapp::Application.routes.draw do
     end
   end
   root 'static_pages#home'
-  match '/home', to: 'static_pages#home', via: 'get'
-  match '/help', to: 'static_pages#help', via: 'get'
-  match '/sign_in', to: redirect('/student_portal/signin'), via: 'get'
-  match '/signin', to: redirect('/student_portal/signin'), via: 'get'
-  devise_for :staff
+  get 'home', to: 'static_pages#home'
+  get '/help', to: 'static_pages#help'
+  get '/sign_in', to: redirect('/student_portal/signin')
+  get '/signin', to: redirect('/student_portal/signin')
+  namespace :staff do
+    root 'static_pages#home'
+    get 'home', to: 'static_pages#home'
+  end
+  devise_for :staff, controllers: { sessions: 'staff/sessions', confirmations: 'staff/confirmations' } , skip: [:registrations]
+  as :staff do
+    get 'staff/sign_up', to: 'staff/registrations#new', as: 'new_staff_registration'
+    post 'staff', to: 'staff/registrations#create', as: 'staff_registration'
+  end
   ActiveAdmin.routes(self)
 
   scope module: 'pages' do
