@@ -10,7 +10,7 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
 
   def update
     @assessment_question = AssessmentQuestion.find(params[:id])
-    updated = @assessment_question.update(assessment_params)
+    updated = @assessment_question.update(assessment_question_params)
     respond_to do |format|
       format.js do
         response.location = assessment_question_url(@assessment_question)
@@ -24,7 +24,7 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
 
   def create
     @assessment_question.assessment_task = @assessment_task
-    @assessment_question.update_attributes!({title: 'New Question', question_body:'<p></p>', answers:'[{"text":"<p></p>","correct":true}]',questionType: 'singleAnswer'})
+    @assessment_question.update_attributes!({title: 'New Question', question_body:'<p></p>', answers:'[{"text":"<p></p>","correct":true}]',question_type: 'singleAnswer'})
     respond_to do |format|
       format.html { redirect_to @assessment_task }
       format.js {
@@ -46,8 +46,8 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
   end
 
   private
-  def assessment_params
-    params.require(:assessment_question).permit(:title,:question_body,:answers,:questionType)
+  def assessment_question_params
+    params.require(:assessment_question).permit(:title,:question_body,:answers,:question_type)
   end
 
 end

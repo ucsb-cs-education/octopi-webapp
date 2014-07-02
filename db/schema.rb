@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20140627203730) do
     t.string   "title"
     t.text     "question_body"
     t.text     "answers"
-    t.text     "questionType"
+    t.text     "question_type"
     t.integer  "position"
     t.integer  "assessment_task_id"
     t.integer  "curriculum_id"

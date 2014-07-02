@@ -28,7 +28,7 @@ class AssessmentQuestion < ActiveRecord::Base
   end
 
   def radios_have_one_answer
-    if questionType=="singleAnswer"
+    if question_type=="singleAnswer"
       numTrue = 0;
       @infoArray.each { |x|
         if x['correct']==true
@@ -60,7 +60,7 @@ class AssessmentQuestion < ActiveRecord::Base
   end
 
   def valid_answer_type
-    errors.add(:answers, "answer type must be singleAnswer or multipleAnswers") unless questionType=="singleAnswer" || questionType=="multipleAnswers"
+    errors.add(:answers, "answer type must be singleAnswer or multipleAnswers") unless question_type=="singleAnswer" || question_type=="multipleAnswers"
   end
 
   def answers_should_be_valid_JSON

@@ -53,7 +53,7 @@ PagesController.prototype.show = () ->
         str += "<input type = 'radio' class = 'choices' name='answerChoice'>"
       else
         str += "<input type = 'checkbox' class = 'choices' name='answerChoice'>"
-      str += "<button class='deleteAnswer'>Remove Answer</button></div> <div class = 'answerBox'> <div class='octopieditable answerText'></div></div></div>"
+      str += "<button class='deleteAnswer'>Remove Answer</button></div> <div class = 'answerBox'> <div class='octopieditable answerText'><p></p></div></div></div>"
       $("#answerList").append(str).children().last().find(".octopieditable").each ->
         window.ckeditor_inline this
         return
@@ -129,7 +129,7 @@ PagesController.prototype.show = () ->
       if hasAnAnswer is true
         $(this).find('.title').val(title)
         $(this).find('.question_body').val(question_body)
-        $(this).find('.questionType').val(question_type)
+        $(this).find('.question_type').val(question_type)
         $(this).find(".answers").val JSON.stringify(ansArray)
       else
         alert "A question must have at least one correct answer."

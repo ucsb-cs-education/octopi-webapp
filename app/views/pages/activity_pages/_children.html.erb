@@ -8,5 +8,8 @@
     <%= f.submit "Add a new LaPlaya Task", class: "btn btn-default" %>
 <% end %>
 <%= simple_form_for( [page, page.children.build(type: 'AssessmentTask').becomes(AssessmentTask)], html: {class: 'new_child_page'}, remote: true) do |f| %>
+    <%= f.hidden_field :title, value: 'New AssessmentTask' %>
+    <%= f.hidden_field :teacher_body, value: '<p></p>' %>
+    <%= f.hidden_field :student_body, value: '<p></p>' %>
     <%= f.submit "Add a new Assessment Task", class: "btn btn-default" %>
 <% end %>

@@ -22,8 +22,6 @@ PagesController.prototype.show = () ->
         }
       });
 
-    window.ckeditor_inline = inline
-
     $("div.octopieditable").each( () ->
       inline(this)
     )

@@ -4,7 +4,7 @@ class CreateAssessmentQuestionsTable < ActiveRecord::Migration
       t.string :title
       t.text :question_body
       t.text :answers
-      t.text :questionType #singleAnswer or multipleAnswers
+      t.text :question_type #singleAnswer or multipleAnswers
       #acts as list
       t.integer :position
 
