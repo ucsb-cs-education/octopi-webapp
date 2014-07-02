@@ -65,7 +65,6 @@ module ValidStaffFeatureHelper
     fill_in 'Email',    with: @staff.email
     fill_in 'Password', with: @staff.password
     click_button 'Sign in'
-    sign_in_as_staff(@staff)
   end
 
   def sign_in_as_staff(staff)

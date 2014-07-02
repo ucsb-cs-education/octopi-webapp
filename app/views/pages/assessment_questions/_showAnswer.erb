@@ -1,22 +1,22 @@
 <% inputType = "" %>
 <% isChecked = "" %>
 <% isChecked = "checked" unless showAnswer['correct']==false %>
-<%if question_type=="singleAnswer"%>
-    <% inputType = "radio"%>
-<%else%>
+<% if question_type=="singleAnswer" %>
+    <% inputType = "radio" %>
+<% else %>
     <% inputType = "checkbox" %>
-<%end%>
+<% end %>
 
-<div class = 'answer'>
-  <div class = 'answerHead is<%= "Notchecked" unless isChecked==="checked"%><%= isChecked%>'>
-    This answer is correct: <input type = '<%=inputType%>' class = 'choices' name = 'answerChoice' <%=isChecked%>>
+<div class='answer'>
+  <div class='answerHead is<%= "Notchecked" unless isChecked==="checked" %><%= isChecked %>'>
+    This answer is correct:<input type='<%= inputType %>' class='choices' name='answerChoice' <%= isChecked %>>
     <button class='deleteAnswer'>
-        Remove Answer
+      Remove Answer
     </button>
   </div>
-  <div class = 'answerBox'>
-    <div class = 'octopieditable answerText'>
-        <%= showAnswer['text'].html_safe %>
+  <div class='answerBox'>
+    <div class='octopieditable answerText'>
+      <%= showAnswer['text'].html_safe %>
     </div>
   </div>
 </div>

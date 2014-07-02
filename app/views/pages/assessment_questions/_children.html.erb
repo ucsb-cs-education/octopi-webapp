@@ -1,19 +1,29 @@
-<div id = "choosetype">
-    Answer Options:
-    <form action="">
-        <select id = "ansType">
-          <option value="singleAnswer">One Correct</option>
-          <option value="multipleAnswers">Multiple Correct</option>
-        </select>
-    </form>
-</div>
+<table>
+  <tr>
+    <th>
+      <div id="choosetype">
+        Answer Options:
+        <form action="">
+          <label for="ansType" class="sr-only">Answer Types</label>
+          <select id="ansType">
+            <option value="singleAnswer">One Correct</option>
+            <option value="multipleAnswers">Multiple Correct</option>
+          </select>
+        </form>
+      </div>
+    </th>
+  </tr>
+  <tr>
+    <th>
+      <button type="button" id="addAns">
+        Add New Answer Choice
+      </button>
+    </th>
+  </tr>
+</table>
 
-<button type="button" id = "addAns">
-    Add New Answer Choice
-</button>
-
-<div id = "answerList">
-  <%= render partial: "showAnswer", collection: JSON.parse(@assessment_question.answers), locals:{:question_type => @assessment_question.question_type} %>
+<div id="answerList">
+  <%= render partial: "showAnswer", collection: JSON.parse(@assessment_question.answers), locals: {:question_type => @assessment_question.question_type} %>
 </div>
 
 <script>$("#ansType").val("<%= @assessment_question.question_type %>");</script>

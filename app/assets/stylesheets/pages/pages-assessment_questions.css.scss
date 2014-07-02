@@ -5,26 +5,24 @@
 body.pages.pages-assessment_questions {
   #choosetype {
     display: inline-block;
-    background-color: rgb(250,250,250);
-    text-align:center;
-    padding: 2px;
+    background-color: rgb(250, 250, 250);
+    text-align: center;
     margin: 2px;
-    max-width:15em;
-    height:78px;
+    padding: 2px;
+    max-width: 15em;
+    height: 78px;
     border: 1px solid lightgrey;
     border-radius: 3px;
     border-bottom-right-radius: 10px;
   }
-  #ansType
-  {
+  #ansType {
     width: 11em;
   }
-  #addAns
-  {
-    display:  inline-block;
+  #addAns {
+    display: inline-block;
     background-color: #3EDD6B;
     padding: 2px;
-    margin-left: 2px;
+    margin: 2px;
     max-width: 10em;
     height: 78px;
     border: 1px solid #2DAF61;
@@ -33,67 +31,57 @@ body.pages.pages-assessment_questions {
     border-radius: 3px;
     border-bottom-left-radius: 10px;
   }
-  #addAns:hover
-  {
+  #addAns:hover {
     background-color: #3FA36C;
   }
 
-  #addAns:active
-  {
-    border-style:inset;
+  #addAns:active {
+    border-style: inset;
   }
 
-  .choices
-  {
-    max-width:20px;
-    display:inline-block;
+  .choices {
+    max-width: 20px;
+    display: inline-block;
   }
 
-  .answerHead
-  {
+  .answerHead {
     padding: .5em;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    margin-top:5px;
+    margin-top: 5px;
   }
 
-  .ischecked
-  {
+  .ischecked {
     background-color: #9fefa6;
   }
 
-  .isNotchecked
-  {
+  .isNotchecked {
     background-color: #ED6868;
   }
 
-  .answerBox
-  {
+  .answerBox {
     border: 4px solid darkgray;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
-    margin-bottom:5px;
+    margin-bottom: 5px;
   }
 
-  .deleteAnswer
-  {
+  .deleteAnswer {
     float: right;
     color: white;
-    font-size:120%;
+    font-size: 120%;
     padding: .1em;
     border: 1px solid black;
     background-color: #C9302C;
-    border-radius:3px;
+    border-radius: 3px;
     border-bottom-left-radius: 8px;
   }
 
-  .deleteAnswer:hover
-  {
-    background-color:#F73936;
+  .deleteAnswer:hover {
+    background-color: #F73936;
   }
 
-  .deleteAnswer:active
-  {
-    border-style:inset;
+  .deleteAnswer:active {
+    border-style: inset;
   }
 }
