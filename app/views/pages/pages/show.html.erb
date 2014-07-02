@@ -11,18 +11,7 @@
             </div>
         <% end %>
       </div>
-      <div id="tabs">
-        <ul>
-          <li><a href="#teacher-body">Teacher Body</a></li>
-          <li><a href="#student-body">Student Body</a></li>
-        </ul>
-        <div id="teacher-body" class="octopieditable">
-          <%= @page.teacher_body.html_safe if @page.teacher_body.present? %>
-        </div>
-        <div id="student-body" class="octopieditable">
-          <%= @page.student_body.html_safe if @page.teacher_body.present? %>
-        </div>
-      </div>
+      <%= render partial: "page_body", object: @page, as: :page %>
       <% if @page.respond_to? :children %>
           <div id="child-pages">
             <%= render partial: "children", locals: {page: @page, user_laplaya_files: @user_laplaya_files} %>
@@ -30,10 +19,7 @@
       <% end %>
       <%= simple_form_for @page, html: {class: 'page-form'}, remote: true do |f| %>
           <div class="form-inputs">
-            <%= f.hidden_field :title, class: 'title' %>
-            <%= f.hidden_field :'student_body', class: 'student_body' %>
-            <%= f.hidden_field :'teacher_body', class: 'teacher_body' %>
-            <%= hidden_field_tag :'children_order', '', class: 'children_order' if @page.respond_to? :children %>
+            <%= render 'hidden_fields', f: f %>
           </div>
           <div class="form-actions">
             <%= f.submit "Save changes to #{@page.title}", class: 'btn btn-primary', id: 'update-page-btn', disabled: true %>

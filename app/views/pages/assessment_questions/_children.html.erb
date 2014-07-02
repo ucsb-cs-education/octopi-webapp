@@ -1,0 +1,19 @@
+<div id = "choosetype">
+    Answer Options:
+    <form action="">
+        <select id = "ansType">
+          <option value="singleAnswer">One Correct</option>
+          <option value="multipleAnswers">Multiple Correct</option>
+        </select>
+    </form>
+</div>
+
+<button type="button" id = "addAns">
+    Add New Answer Choice
+</button>
+
+<div id = "answerList">
+  <%= render partial: "showAnswer", collection: JSON.parse(@assessment_question.answers), locals:{:questionType => @assessment_question.questionType} %>
+</div>
+
+<script>$("#ansType").val("<%= @assessment_question.questionType %>");</script>

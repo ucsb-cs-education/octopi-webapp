@@ -30,6 +30,12 @@ namespace :db do
           5.times do
             d = FactoryGirl.create(:laplaya_task, activity_page: c)
           end
+          2.times do
+            e = FactoryGirl.create(:assessment_task, activity_page: c)
+            2.times do
+              f = FactoryGirl.create(:assessment_question, assessment_task: e)
+            end
+          end
         end
       end
     end

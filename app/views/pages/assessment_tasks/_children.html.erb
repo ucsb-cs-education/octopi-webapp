@@ -1,0 +1,6 @@
+<ul id="children" data-update-url="<%= sort_activity_page_url(page) %>">
+  <%= render partial: "page", collection: page.children %>
+</ul>
+<%= simple_form_for( [page, page.children.build], html: {class: 'new_child_page'}, remote: true) do |f| %>
+    <%= f.submit "Add New Question", class: "btn btn-default" %>
+<% end %>

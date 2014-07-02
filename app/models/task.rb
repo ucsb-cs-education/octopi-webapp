@@ -5,7 +5,6 @@ class Task < ActiveRecord::Base
   # include CustomModelNaming
   # self.param_key = :feed
   # self.route_key = :feeds
-
   alias_attribute :parent, :activity_page
   include Curriculumify
 

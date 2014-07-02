@@ -1,0 +1,8 @@
+<div id="tabs">
+  <ul>
+    <li><a href="#question-body">Question</a></li>
+  </ul>
+    <div id="question-body" class="octopieditable">
+        <%= @assessment_question.question_body.html_safe if @assessment_question.question_body.present? %>
+    </div>
+</div>

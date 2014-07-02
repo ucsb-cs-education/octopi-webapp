@@ -1,0 +1,3 @@
+<%= content_tag_for :li, page.becomes(Task), class: 'ui-state-default' do %>
+    <span class="ui-icon ui-icon-arrowthick-2-n-s handle"></span><%= link_to page.title, task_url(page) %>
+<% end %>

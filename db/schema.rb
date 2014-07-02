@@ -31,6 +31,18 @@ ActiveRecord::Schema.define(version: 20140627203730) do
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
 
+  create_table "assessment_questions", force: true do |t|
+    t.string   "title"
+    t.text     "question_body"
+    t.text     "answers"
+    t.text     "questionType"
+    t.integer  "position"
+    t.integer  "assessment_task_id"
+    t.integer  "curriculum_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "ckeditor_assets", force: true do |t|
     t.string   "data_file_name",               null: false
     t.string   "data_content_type"
