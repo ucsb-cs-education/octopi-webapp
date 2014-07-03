@@ -4,7 +4,6 @@
 
 PagesController = Paloma.controller('Pages/AssessmentQuestion');
 PagesController.prototype.show = () ->
-
   enableSubmitButton = () ->
     $('.page-form input[type=submit]').removeAttr('disabled');
   window.enableUpdateButton = enableSubmitButton;
@@ -14,16 +13,16 @@ PagesController.prototype.show = () ->
 
     inline = (element) ->
       $(element).attr("contenteditable", true)
-      CKEDITOR.inline( element, {
-        toolbar:'Pure',
-        on: {
+      CKEDITOR.inline(element, {
+        toolbar: 'Pure',
+        on:{
           blur: enableSubmitButton
         }
       });
 
     window.ckeditor_inline = inline
 
-    $("div.octopieditable").each( () ->
+    $("div.octopieditable").each(() ->
       inline(this)
     )
 
@@ -34,7 +33,7 @@ PagesController.prototype.show = () ->
             instance = CKEDITOR.instances[name]
             instance.destroy()  if ui.newPanel and ui.newPanel.is($(instance.element.$))
           ui.newPanel.attr("contenteditable", true)
-          ui.newPanel.each( () ->
+          ui.newPanel.each(() ->
             editor = inline(this)
           )
     });
@@ -96,7 +95,7 @@ PagesController.prototype.show = () ->
 
       return
 
-  #remove an answer
+    #remove an answer
     $(document).on "click", ".deleteAnswer", ->
       if confirm("Are you sure you want to remove this answer?")
         window.enableUpdateButton()
@@ -123,17 +122,21 @@ PagesController.prototype.show = () ->
         ansArray[index].text = $(this).html()
         return
 
+      nonemptyTitle = false
       title = $('#page-title').html()
 
-
-      if hasAnAnswer is true
+      if hasAnAnswer is true and title isnt ""
         $(this).find('.title').val(title)
         $(this).find('.question_body').val(question_body)
         $(this).find('.question_type').val(question_type)
         $(this).find(".answers").val JSON.stringify(ansArray)
       else
-        alert "A question must have at least one correct answer."
-        return false
+        if hasAnAnswer is false
+          alert "A question must have at least one correct answer."
+          return false
+        else
+          alert "Title cannot be blank"
+          return false
       return true;
 
 

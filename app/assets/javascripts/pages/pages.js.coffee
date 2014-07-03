@@ -47,15 +47,20 @@ PagesController.prototype.show = () ->
     submitFunction = () ->
       teacher_body = $('#teacher-body').html()
       student_body = $('#student-body').html()
+
       title = $('#page-title').html()
       children = $("#children")
-      if (children.length)
-        $(this).find('.children_order').val(children.sortable('serialize'))
-      $(this).find('.teacher_body').val(teacher_body)
-      $(this).find('.student_body').val(student_body)
-      $(this).find('.title').val(title)
-      return true;
 
+      if title isnt ""
+        if (children.length)
+          $(this).find('.children_order').val(children.sortable('serialize'))
+        $(this).find('.teacher_body').val(teacher_body)
+        $(this).find('.student_body').val(student_body)
+        $(this).find('.title').val(title)
+        return true;
+      else
+        alert "Title cannot be blank"
+        return false
 
     $('.page form ').submit(submitFunction)
 

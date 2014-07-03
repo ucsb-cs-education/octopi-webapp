@@ -4,11 +4,16 @@ class AssessmentQuestion < ActiveRecord::Base
   belongs_to :assessment_task, foreign_key: :assessment_task_id
   alias_attribute :parent, :assessment_task
   alias_attribute :children, :answers
-  after_create {update_attribute(:curriculum_id, parent.curriculum_id)}
+  after_create { update_attribute(:curriculum_id, parent.curriculum_id) }
   validate :JSON_validator
   validate :valid_answer_type
+  validate :title_length
 
   private
+
+  def title_length
+    errors.add(:answers, "must have a title") unless title.length>0
+  end
 
   def JSON_validator
     begin
@@ -51,7 +56,7 @@ class AssessmentQuestion < ActiveRecord::Base
         hasAnswer = true;
       end
     }
-    if(hasAnswer==true)
+    if (hasAnswer==true)
       return true
     else
       errors.add(:answers, "must have atleast one correct answer")
@@ -65,7 +70,7 @@ class AssessmentQuestion < ActiveRecord::Base
 
   def answers_should_be_valid_JSON
     if @infoArray.is_a?(Array)
-      @infoArray.each {|x|
+      @infoArray.each { |x|
         if !(x.has_key? 'correct')
           errors.add(:answers, "answers must have 'correct' key")
           return false;

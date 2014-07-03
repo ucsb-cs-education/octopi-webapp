@@ -53,14 +53,15 @@ describe "Assessment question page", type: :feature do
       answer = find(".answerText")
       answer.click
       answer.native.send_keys("ExampleContent")
+
       title = find("#page-title")
-      title.click
-      title.text.length.times { title.native.send_keys(:delete) }
+      clear_text_box(title)
       title.native.send_keys("ExampleTitle")
+
       question = find("#question-body")
-      question.click
-      question.text.length.times { question.native.send_keys(:delete) }
+      clear_text_box(question)
       question.native.send_keys("ExampleQuestion")
+
       select('Multiple Correct', :from => 'ansType')
       click_on ("addAns")
       first(".choices").click
@@ -126,7 +127,7 @@ describe "Assessment question page", type: :feature do
         page.driver.browser.switch_to.alert.accept
         wait_for_ajax
         assessment_question.reload
-      end.not_to change(assessment_question, :question_body)
+      end.not_to change(assessment_question,:question_body)
     end
   end
 

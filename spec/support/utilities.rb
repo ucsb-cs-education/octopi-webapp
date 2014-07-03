@@ -30,3 +30,11 @@ def wait_for_ajax
     end
   end
 end
+
+def clear_text_box(textbox)
+  textbox.click
+  textbox.text.length.times{
+    textbox.native.send_keys(:right)
+    textbox.native.send_keys(:backspace)
+  }
+end
