@@ -7,8 +7,8 @@ describe "page", type: :feature do
   shared_examples "a page" do
 
     describe "with a valid page" do
-      it{should have_content("Teacher Body")}
-      it{should have_content("Student Body")}
+      it{should have_selector("a[href='#teacher-body']")}
+      it{should have_selector("a[href='#student-body']")}
       it{should have_selector("#page-title")}
       it{should have_selector("#child-pages")}
     end
@@ -17,8 +17,6 @@ describe "page", type: :feature do
       it{should have_selector("input[id=update-page-btn]")}
     end
 
-
-#=begin
     describe "that has a correctly editable title",js:true do
       describe "before any editing" do
         it{should have_selector("span[id='page-title']")}
@@ -99,15 +97,13 @@ describe "page", type: :feature do
         end.to change(me, :title).to('SampleTitle')
       end
     end
-#=end
-
   end
 
 
   shared_examples "a child page" do
 
     describe "with a valid page" do
-      it{should have_content("Delete")}
+      it{should have_selector("a[href='#{thisPath}'][id='delete-page-link']")}
     end
 
     describe "that can be deleted" do
@@ -167,6 +163,29 @@ describe "page", type: :feature do
           it{should have_selector("span[id='child-link']",:count=>2)}
         end
     end
+
+    describe "that has draggable children", js:true do
+      before do
+        3.times {find("#add-new-child-btn").click}
+        wait_for_ajax
+        page.execute_script %{
+          $.getScript("/test/jquery.simulate.js", function() {
+            $('#children li:first').simulate('drag', {dx: 0, dy: 80});
+          });
+        }
+        find("#page-title").click
+        click_on("update-page-btn")
+        wait_for_ajax
+        visit thisPath
+      end
+
+      it"should have preserved the change in order" do
+        #what is happening here is that I am extracting the number in the id of each child link and comparing them
+        childOne = find('#children').first( 'li')['id'].scan(/\d+/).first
+        childTwo = find('#children').all( 'li').last['id'].scan(/\d+/).first
+        (childOne > childTwo).should be_truthy
+      end
+    end
   end
 
 
@@ -198,7 +217,6 @@ describe "page", type: :feature do
     let(:myModel){ModulePage}
     let(:thisPath){module_page_path(newmodule)}
     let(:me){newmodule}
-    let(:child){"activity_page"}
 
     before do
       sign_in_as_staff(user)
@@ -224,14 +242,13 @@ describe "page", type: :feature do
       visit thisPath
     end
 
-    it_behaves_like "a page"
-    it_behaves_like "a child page"
-    it_behaves_like "a page with standard child structure"
-
-    describe "with the correct buttons" do
+    describe "with the correct additional button" do
       it{should have_selector("input[id=add-new-assessment-child-btn]")}
     end
 
+    it_behaves_like "a page"
+    it_behaves_like "a child page"
+    it_behaves_like "a page with standard child structure"
 
     describe "after clicking the assessment task button",js:true do
       before do
