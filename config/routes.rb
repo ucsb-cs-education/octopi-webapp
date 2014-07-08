@@ -26,8 +26,6 @@ OctopiWebapp::Application.routes.draw do
         post 'add_new_student'
         post 'add_student'
       end
-      # match '/add_student', to: 'school_classes#add_student', via: 'post', as: 'add_student'
-      # match '/add_new_student', to: 'school_classes#add_new_student', via: 'post', as: 'add_new_student'
     end
   end
   root 'static_pages#home'

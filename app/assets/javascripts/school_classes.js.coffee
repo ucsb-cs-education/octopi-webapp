@@ -2,12 +2,12 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-PagesController = Paloma.controller('SchoolClasses');
+SchoolClassesController = Paloma.controller('SchoolClasses');
 
-PagesController.prototype.show = () ->
+SchoolClassesController.prototype.show = () ->
   SortableJS()
 
-PagesController.prototype.edit = () ->
+SchoolClassesController.prototype.edit = () ->
 
   showFormAndHideAddNewStudentButton = () ->
     $("#create_and_add_student_form").show()
