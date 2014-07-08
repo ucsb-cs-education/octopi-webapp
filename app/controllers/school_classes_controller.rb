@@ -19,7 +19,6 @@ class SchoolClassesController < ApplicationController
   def create
     @school_class = SchoolClass.new(school_class_params)
     @school_class.school = @school
-    #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
     if @school_class.save
       flash[:success] = 'Class saved successfully.'
       redirect_to @school_class
@@ -33,8 +32,6 @@ class SchoolClassesController < ApplicationController
 
   # GET /school_classes/1/edit
   def edit
-    # @school_classes = @school.school_classes
-    #@school_class = SchoolClass.find(params[:id])
   end
 
 
@@ -45,7 +42,6 @@ class SchoolClassesController < ApplicationController
       @school_class.students << @student unless @school_class.students.include? @student
       saved = @student.save
     end
-    #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
     if saved
       respond_to do |format|
         format.js    do
@@ -66,8 +62,6 @@ class SchoolClassesController < ApplicationController
     @student = Student.find(params[:student][:id])
     authorize! :update, @student
     @school_class.students << @student unless @school_class.students.include? @student
-    #if @school_class
-
     respond_to do |format|
       format.js    do
         js false
@@ -77,16 +71,11 @@ class SchoolClassesController < ApplicationController
       end
 
     end
-    #redirect_to edit_school_class_url(@school_class), notice: 'Student was added successfully'
-    #else
-     # render action: 'edit'
-    #end
   end
 
   def update
     @school_class = SchoolClass.find(params[:id])
     if @school_class.update(school_class_params)
-      #redirect_to @school_class, notice: 'Class was successfully updated.'
       respond_to do |format|
         format.html do
           redirect_to edit_school_class_path, notice: 'Class was successfully updated.'
