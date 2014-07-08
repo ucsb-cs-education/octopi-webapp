@@ -1,18 +1,22 @@
-<%= link_to "Edit LaPlaya file", student_portal_laplaya_path(anchor: "octopi-cloud:#{page.task_base_laplaya_file.id}") %>
-<div class="laplaya-clone">
-  Clone from one of your existing LaPlaya projects:
-  <%= simple_form_for :laplaya_file, url: clone_laplaya_task_path(page), method: :patch do |f| %>
-      <div class="form-inputs">
-        <%= f.input :laplaya_file,
-                    collection: user_laplaya_files,
-                    include_blank: true,
-                    selected: 0,
-                    label_method: lambda { |obj| "#{obj.file_name} (#{obj.id})" }
-        %>
-      </div>
+<% link_text = "Edit Laplaya file"%>
+<% link_text = "Open Laplaya file" if !(can? :update, @page) %>
+<%= link_to link_text, student_portal_laplaya_path(anchor: "octopi-cloud:#{page.task_base_laplaya_file.id}") %>
+<%if can? :update, @page %>
+    <div class="laplaya-clone">
+      Clone from one of your existing LaPlaya projects:
+      <%= simple_form_for :laplaya_file, url: clone_laplaya_task_path(page), method: :patch do |f| %>
+          <div class="form-inputs">
+            <%= f.input :laplaya_file,
+                        collection: user_laplaya_files,
+                        include_blank: true,
+                        selected: 0,
+                        label_method: lambda { |obj| "#{obj.file_name} (#{obj.id})" }
+            %>
+          </div>
 
-      <div class="form-actions">
-        <%= f.button :submit, "Clone" %>
-      </div>
-  <% end %>
-</div>
+          <div class="form-actions">
+            <%= f.button :submit, "Clone" %>
+          </div>
+      <% end %>
+    </div>
+<%end%>

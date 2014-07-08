@@ -9,6 +9,7 @@ describe Pages::AssessmentTasksController, type: :controller do
   let(:myself){ FactoryGirl.create(:assessment_task)}
   let(:myModel){AssessmentTask}
   let(:parent_id_symbol){:activity_page_id}
+  let(:my_children){:assessment_question}
 
   before do
     sign_in_as_staff(super_staff)
@@ -18,4 +19,6 @@ describe Pages::AssessmentTasksController, type: :controller do
     include_examples Pages::PagesController
   end
 
+  it_behaves_like "a controller that can create and destroy"
+  it_behaves_like "a controller with children"
 end

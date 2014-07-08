@@ -18,4 +18,5 @@ describe Pages::LaplayaTasksController, type: :controller do
     include_examples Pages::PagesController
   end
 
+  it_behaves_like "a controller that can create and destroy"
 end

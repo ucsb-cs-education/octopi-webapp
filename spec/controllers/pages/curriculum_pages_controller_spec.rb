@@ -8,13 +8,16 @@ describe Pages::CurriculumPagesController, type: :controller do
   let(:staff) { FactoryGirl.create(:staff) }
   let(:myself){ FactoryGirl.create(:curriculum_page)}
   let(:myModel){CurriculumPage}
+  let(:my_children){:module_page}
 
   before do
     sign_in_as_staff(super_staff)
   end
 
   describe "that should act like a page controller" do
-    #include_examples Pages::PagesController
+    include_examples Pages::PagesController
   end
+
+  it_behaves_like "a controller with children"
 
 end

@@ -3,7 +3,7 @@
   <%= div_for @page, class: 'page', :'data-update-url' => url_for(@page) do %>
       <div class="page-header">
         <h1>
-          <span id="page-title" <%=  'contenteditable=true' unless !(can? :update, @page)%> ><%= @page.title %></span>
+          <span id="page-title" <%=  'contenteditable=true' if can? :update, @page%> ><%= @page.title %></span>
         </h1>
         <% if @page.respond_to? :parent %>
             <div class='parent'>

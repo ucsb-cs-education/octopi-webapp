@@ -8,8 +8,13 @@ class Pages::ModulePagesController < Pages::PagesController
   end
 
   def update
-    ids = CGI.parse(params[:children_order])['activity_page[]']
-    updated = @module_page.update_with_children(module_page_params, ids)
+    ids = CGI.parse(params[:children_order])['activity_page[]'] if params[:children_order].present?
+    if ids
+      updated = @module_page.update_with_children(module_page_params, ids)
+    else
+      updated = @module_page.update(module_page_params)
+    end
+
     respond_to do |format|
       format.html do
         if updated

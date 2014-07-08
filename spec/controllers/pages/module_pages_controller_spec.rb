@@ -9,7 +9,7 @@ describe Pages::ModulePagesController , type: :controller do
   let(:myself){ FactoryGirl.create(:module_page)}
   let(:myModel){ModulePage}
   let(:parent_id_symbol){:curriculum_page_id}
-  let(:myPath){module_page_url}
+  let(:my_children){:activity_page}
 
   before do
     sign_in_as_staff(super_staff)
@@ -18,5 +18,8 @@ describe Pages::ModulePagesController , type: :controller do
   describe "that should act like a page controller" do
     include_examples Pages::PagesController
   end
+
+  it_behaves_like "a controller that can create and destroy"
+  it_behaves_like "a controller with children"
 
 end

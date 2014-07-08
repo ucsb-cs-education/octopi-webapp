@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "page", type: :feature do
   subject{page}
   let(:user) { FactoryGirl.create(:staff, :super_staff) }
+  let(:teacher){ FactoryGirl.create(:staff, :teacher)}
 
   shared_examples "a page" do
 
@@ -112,6 +113,17 @@ describe "page", type: :feature do
           click_on("delete-page-link")
         end.to change(myModel, :count).by(-1)
       end
+      describe "that correct redirects to parent", js:true do
+        it "should redirect to parent when deleted" do
+          find("div.parent").find("a").click
+          parent_path = current_path
+          visit thisPath
+          click_on("delete-page-link")
+          page.driver.browser.switch_to.alert.accept
+          wait_for_ajax
+          current_path.should == parent_path
+        end
+      end
     end
 
     describe "that correctly links to parent" do
@@ -188,7 +200,40 @@ describe "page", type: :feature do
     end
   end
 
+  shared_examples "a page that may not be edited" do
+    before do
+      sign_in_as_staff(teacher)
+      visit thisPath
+    end
 
+    describe "with a valid page" do
+      it{should have_selector("a[href='#teacher-body']")} or it{should have_selector("a[href='#student-body']")}
+      it{should have_selector("#page-title")}
+      it{should have_selector("#child-pages")}
+      it{should_not have_selector("input[id=add-new-child-btn]")}
+      it{should_not have_selector("input[id=add-new-assessment-child-btn]")}
+      it{should_not have_selector("a[href='#{thisPath}'][id='delete-page-link']")}
+      it{should_not have_selector("input[id=update-page-btn]")}
+    end
+
+    describe "after attempting to edit the boxed",js: true do
+      before do
+        teacher_body=find('#teacher-body')
+        teacher_body.native.send_keys("SampleTeacherBody")
+
+        find("a[href='#student-body']").click
+        student_body=find("#student-body")
+        student_body.native.send_keys("SampleStudentBody")
+
+        title = find("#page-title")
+        title.native.send_keys("SampleTitle")
+      end
+      it{should_not have_content("SampleTeacherBody")}
+      it{should_not have_content("SampleStudentBody")}
+      it{should_not have_content("SampleTitle")}
+    end
+
+  end
 
 
 
@@ -200,14 +245,19 @@ describe "page", type: :feature do
     let(:thisPath){curriculum_page_path(curriculum)}
     let(:me){curriculum}
 
+    describe "when authorized to edit" do
+      before do
+        sign_in_as_staff(user)
+        visit thisPath
+      end
 
-    before do
-      sign_in_as_staff(user)
-      visit thisPath
+      it_behaves_like "a page"
+      it_behaves_like "a page with standard child structure"
     end
 
-    it_behaves_like "a page"
-    it_behaves_like "a page with standard child structure"
+    describe "when not authorized to edit" do
+      it_behaves_like "a page that may not be edited"
+    end
   end
 
 
@@ -219,14 +269,20 @@ describe "page", type: :feature do
     let(:thisPath){module_page_path(newmodule)}
     let(:me){newmodule}
 
-    before do
-      sign_in_as_staff(user)
-      visit thisPath
+    describe "when authorized to edit" do
+      before do
+        sign_in_as_staff(user)
+        visit thisPath
+      end
+
+      it_behaves_like "a page"
+      it_behaves_like "a child page"
+      it_behaves_like "a page with standard child structure"
     end
 
-    it_behaves_like "a page"
-    it_behaves_like "a child page"
-    it_behaves_like "a page with standard child structure"
+    describe "when not authorized to edit" do
+      it_behaves_like "a page that may not be edited"
+    end
   end
 
 
@@ -238,40 +294,46 @@ describe "page", type: :feature do
     let(:thisPath){activity_page_path(activity)}
     let(:me){activity}
 
-    before do
-      sign_in_as_staff(user)
-      visit thisPath
-    end
-
-    describe "with the correct additional button" do
-      it{should have_selector("input[id=add-new-assessment-child-btn]")}
-    end
-
-    it_behaves_like "a page"
-    it_behaves_like "a child page"
-    it_behaves_like "a page with standard child structure"
-
-    describe "after clicking the assessment task button",js:true do
+    describe "when authorized to edit" do
       before do
-        find("#add-new-assessment-child-btn").click
-        wait_for_ajax
-      end
-      it{should have_selector("span[id='child-link']",:count=>1)}
-    end
-
-    describe "after updating with both buttons",js:true do
-      before do
-        find("#add-new-child-btn").click
-        wait_for_ajax
-        find("#add-new-assessment-child-btn").click
-        wait_for_ajax
-        find("#teacher-body").click
-        find("#page-title").click
-        click_on("update-page-btn")
-        wait_for_ajax
+        sign_in_as_staff(user)
         visit thisPath
       end
-      it{should have_selector("span[id='child-link']",:count=>2)}
+
+      describe "with the correct additional button" do
+        it{should have_selector("input[id=add-new-assessment-child-btn]")}
+      end
+
+      it_behaves_like "a page"
+      it_behaves_like "a child page"
+      it_behaves_like "a page with standard child structure"
+
+      describe "after clicking the assessment task button",js:true do
+        before do
+          find("#add-new-assessment-child-btn").click
+          wait_for_ajax
+        end
+        it{should have_selector("span[id='child-link']",:count=>1)}
+      end
+
+      describe "after updating with both buttons",js:true do
+        before do
+          find("#add-new-child-btn").click
+          wait_for_ajax
+          find("#add-new-assessment-child-btn").click
+          wait_for_ajax
+          find("#teacher-body").click
+          find("#page-title").click
+          click_on("update-page-btn")
+          wait_for_ajax
+          visit thisPath
+        end
+        it{should have_selector("span[id='child-link']",:count=>2)}
+      end
+    end
+
+    describe "when not authorized to edit" do
+      it_behaves_like "a page that may not be edited"
     end
   end
 
@@ -284,17 +346,40 @@ describe "page", type: :feature do
     let(:thisPath){laplaya_task_path(laplayatask)}
     let(:me){laplayatask}
 
-    before do
-      sign_in_as_staff(user)
-      visit thisPath
+    describe "when authorized to edit" do
+
+      it{should have_content("Edit Laplaya")}
+
+      before do
+        sign_in_as_staff(user)
+        visit thisPath
+      end
+
+      it_behaves_like "a page"
+      it_behaves_like "a child page"
+
+      describe "with the correct buttons" do
+        it{should have_selector("input[id=update-page-btn]")}
+        it{should have_selector("input[value=Clone]")}
+      end
     end
 
-    it_behaves_like "a page"
-    it_behaves_like "a child page"
+    describe "when not authorized to edit" do
 
-    describe "with the correct buttons" do
-      it{should have_selector("input[id=update-page-btn]")}
-      it{should have_selector("input[value=Clone]")}
+      describe "without a clone button" do
+        it{should_not have_selector("input[value=Clone]")}
+      end
+
+      it_behaves_like "a page that may not be edited"
+      describe "with the correct text for accessing the laplaya file" do
+        before do
+          sign_in_as_staff(teacher)
+          visit thisPath
+        end
+
+        it{should_not have_content("Edit Laplaya")}
+        it{should have_content("Open Laplaya")}
+      end
     end
   end
 
@@ -307,15 +392,19 @@ describe "page", type: :feature do
     let(:thisPath){assessment_task_path(assessmenttask)}
     let(:me){assessmenttask}
 
-    before do
-      sign_in_as_staff(user)
-      visit thisPath
+    describe "when authorized to edit" do
+      before do
+        sign_in_as_staff(user)
+        visit thisPath
+      end
+
+      it_behaves_like "a page"
+      it_behaves_like "a child page"
+      it_behaves_like "a page with standard child structure"
     end
 
-    it_behaves_like "a page"
-    it_behaves_like "a child page"
-    it_behaves_like "a page with standard child structure"
-
-
+    describe "when not authorized to edit" do
+      it_behaves_like "a page that may not be edited"
+    end
   end
 end

@@ -8,8 +8,13 @@ class Pages::AssessmentTasksController < Pages::TasksController
   end
 
   def update
-    ids = CGI.parse(params[:children_order])['assessment_question[]']
-    updated = @assessment_task.update_with_children(assessment_task_params, ids)
+    ids = CGI.parse(params[:children_order])['assessment_question[]'] if params[:children_order].present?
+    if ids
+      updated = @assessment_task.update_with_children(assessment_task_params, ids)
+    else
+      updated = @assessment_task.update(assessment_task_params)
+    end
+
     respond_to do |format|
       format.html do
         if updated

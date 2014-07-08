@@ -37,12 +37,14 @@ PagesController.prototype.show = () ->
             editor = inline(this)
           )
     });
-    $("#children").sortable({
-      placeholder: "ui-state-highlight",
-      axis: 'y',
-      update: enableSubmitButton
-    });
-    $("#children").disableSelection();
+    $("#children.octopisortable").each(() ->
+      $(this).sortable({
+        placeholder: "ui-state-highlight",
+        axis: 'y',
+        update: enableSubmitButton
+      });
+      $(this).disableSelection();
+    )
 
     submitFunction = () ->
       teacher_body = $('#teacher-body').html()

@@ -2,7 +2,7 @@
   <ul>
     <li><a href="#question-body">Question</a></li>
   </ul>
-    <div id="question-body" <%= "class=octopieditable" unless !(can? :update, @page)%>>
+    <div id="question-body" <%= "class=octopieditable" if can? :update, @page%>>
         <%= @assessment_question.question_body.html_safe if @assessment_question.question_body.present? %>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<%= render partial: "answer_options" unless !(can? :update, @page)%>
+<%= render partial: "answer_options" if can? :update, @page%>
 
 <div id="answerList">
   <%= render partial: "showAnswer", collection: JSON.parse(@assessment_question.answers), locals: {:question_type => @assessment_question.question_type} %>
