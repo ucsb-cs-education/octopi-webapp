@@ -30,12 +30,16 @@ class Pages::AssessmentTasksController < Pages::TasksController
 
   def create
     @assessment_task.parent = @activity_page
-    @assessment_task.save!
-    respond_to do |format|
-      format.html { redirect_to @activity_page }
-      format.js {
-        js false
-      }
+    if @assessment_task.save
+      respond_to do |format|
+        format.html { redirect_to @activity_page }
+        format.js {
+          js false
+          render status: :created
+        }
+      end
+    else
+      render text: @assessment_task.errors, status: :bad_request
     end
   end
 

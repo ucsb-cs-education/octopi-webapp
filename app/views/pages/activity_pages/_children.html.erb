@@ -1,15 +1,17 @@
 <ul id="children" data-update-url="<%= sort_activity_page_url(page) %>">
   <%= render partial: "page", collection: page.children %>
 </ul>
-<%= simple_form_for( [page, page.children.build(type: 'LaplayaTask')], html: {class: 'new_child_page'}, remote: true) do |f| %>
-    <%= f.hidden_field :title, value: 'New LaplayaTask' %>
-    <%= f.hidden_field :teacher_body, value: '<p></p>' %>
-    <%= f.hidden_field :student_body, value: '<p></p>' %>
-    <%= f.submit "Add a new LaPlaya Task", class: "btn btn-default", id:"add-new-child-btn" %>
-<% end %>
-<%= simple_form_for( [page, page.children.build(type: 'AssessmentTask').becomes(AssessmentTask)], html: {class: 'new_child_page'}, remote: true) do |f| %>
-    <%= f.hidden_field :title, value: 'New AssessmentTask' %>
-    <%= f.hidden_field :teacher_body, value: '<p></p>' %>
-    <%= f.hidden_field :student_body, value: '<p></p>' %>
-    <%= f.submit "Add a new Assessment Task", class: "btn btn-default", id:"add-new-assessment-child-btn" %>
+<% if can? :update, @page %>
+    <%= simple_form_for( [page, page.children.build(type: 'LaplayaTask')], html: {class: 'new_child_page'}, remote: true) do |f| %>
+        <%= f.hidden_field :title, value: 'New LaplayaTask' %>
+        <%= f.hidden_field :teacher_body, value: '<p></p>' %>
+        <%= f.hidden_field :student_body, value: '<p></p>' %>
+        <%= f.submit "Add a new LaPlaya Task", class: "btn btn-default", id:"add-new-child-btn" %>
+    <% end %>
+    <%= simple_form_for( [page, page.children.build(type: 'AssessmentTask').becomes(AssessmentTask)], html: {class: 'new_child_page'}, remote: true) do |f| %>
+        <%= f.hidden_field :title, value: 'New AssessmentTask' %>
+        <%= f.hidden_field :teacher_body, value: '<p></p>' %>
+        <%= f.hidden_field :student_body, value: '<p></p>' %>
+        <%= f.submit "Add a new Assessment Task", class: "btn btn-default", id:"add-new-assessment-child-btn" %>
+    <% end %>
 <% end %>

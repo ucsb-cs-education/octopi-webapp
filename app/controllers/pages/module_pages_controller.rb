@@ -30,12 +30,16 @@ class Pages::ModulePagesController < Pages::PagesController
 
   def create
     @module_page.parent = @curriculum_page
-    @module_page.save!
-    respond_to do |format|
-      format.html { redirect_to @curriculum_page }
-      format.js {
-        js false
-      }
+    if @module_page.save
+      respond_to do |format|
+        format.html { redirect_to @curriculum_page }
+        format.js {
+          js false
+          render status: :created
+        }
+      end
+    else
+      render text: @module_page.errors, status: :bad_request
     end
   end
 

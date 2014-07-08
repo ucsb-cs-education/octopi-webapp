@@ -42,7 +42,7 @@ OctopiWebapp::Application.routes.draw do
   ActiveAdmin.routes(self)
 
   scope module: 'pages' do
-    resources :curriculum_pages, path: 'curriculums', except: [:edit], shallow: true do
+    resources :curriculum_pages, path: 'curriculums', except: [:create, :edit], shallow: true do
       member { post :sort }
       resources :module_pages, path: 'modules', except: [:index, :edit], shallow: true do
         member { post :sort }

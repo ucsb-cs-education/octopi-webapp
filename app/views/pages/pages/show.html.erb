@@ -3,7 +3,7 @@
   <%= div_for @page, class: 'page', :'data-update-url' => url_for(@page) do %>
       <div class="page-header">
         <h1>
-          <span id="page-title" contenteditable="true"><%= @page.title %></span>
+          <span id="page-title" <%=  'contenteditable=true' unless !(can? :update, @page)%> ><%= @page.title %></span>
         </h1>
         <% if @page.respond_to? :parent %>
             <div class='parent'>
@@ -17,14 +17,16 @@
             <%= render partial: "children", locals: {page: @page, user_laplaya_files: @user_laplaya_files} %>
           </div>
       <% end %>
-      <%= simple_form_for @page, html: {class: 'page-form'}, remote: true do |f| %>
-          <div class="form-inputs">
-            <%= render 'hidden_fields', f: f %>
-          </div>
-          <div class="form-actions">
-            <%= f.submit "Save changes to #{@page.title}", class: 'btn btn-primary', id: 'update-page-btn', disabled: true %>
-          </div>
+      <% if can? :update, @page %>
+          <%= simple_form_for @page, html: {class: 'page-form'}, remote: true do |f| %>
+              <div class="form-inputs">
+                <%= render 'hidden_fields', f: f %>
+              </div>
+              <div class="form-actions">
+                <%= f.submit "Save changes to #{@page.title}", class: 'btn btn-primary', id: 'update-page-btn', disabled: true %>
+              </div>
+          <% end %>
+          <%= render 'destroy_link', object: @page %>
       <% end %>
-      <%= render 'destroy_link', object: @page %>
   <% end %>
 </div>

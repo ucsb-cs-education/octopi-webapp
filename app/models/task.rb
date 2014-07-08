@@ -7,5 +7,6 @@ class Task < ActiveRecord::Base
   # self.route_key = :feeds
   alias_attribute :parent, :activity_page
   include Curriculumify
+  validates :title, presence: true, length: {maximum: 100}, allow_blank: false
 
 end

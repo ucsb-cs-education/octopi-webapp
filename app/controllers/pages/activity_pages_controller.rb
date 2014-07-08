@@ -36,13 +36,19 @@ class Pages::ActivityPagesController < Pages::PagesController
 
   def create
     @activity_page.parent = @module_page
-    @activity_page.save!
-    respond_to do |format|
-      format.html { redirect_to @module_page }
-      format.js {
-        js false
-      }
+    if @activity_page.save
+      respond_to do |format|
+        format.html { redirect_to @module_page }
+        format.js {
+          js false
+          render status: :created
+        }
+      end
+    else
+      render text: @activity_page.errors, status: :bad_request
     end
+
+
   end
 
   private

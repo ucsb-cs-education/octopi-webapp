@@ -31,14 +31,18 @@ class Pages::LaplayaTasksController < Pages::TasksController
   def create
     LaplayaTask.transaction do
       @laplaya_task.parent = @activity_page
-      @laplaya_task.save!
+      if @laplaya_task.save
+        respond_to do |format|
+          format.html { redirect_to @laplaya_task }
+          format.js {
+            js false
+            render status: :created
+          }
+        end
+      else
+        render text: @laplaya_task.errors, status: :bad_request
+      end
       laplaya_file = TaskBaseLaplayaFile.new_base_file(@laplaya_task)
-    end
-    respond_to do |format|
-      format.html { redirect_to @laplaya_task }
-      format.js {
-        js false
-      }
     end
   end
 

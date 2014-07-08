@@ -71,10 +71,13 @@ class Ability
     page_ids = CurriculumPage.with_role(:curriculum_designer, user).pluck(:id)
     can :crud, Page, :curriculum_id => page_ids
     can [:crud, :clone], Task, :curriculum_id => page_ids
+    can :crud, AssessmentQuestion, :curriculum_id => page_ids
     can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
     can :create, ModulePage
     can :create, ActivityPage
     can :create, LaplayaTask
+    can :create, AssessmentQuestion
+    can :create, AssessmentTask
   end
 
   def super_staff(user)
@@ -102,8 +105,14 @@ class Ability
     can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
 
     school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
+    #Need to assign school_class to a curriculum/module
+    page_ids = CurriculumPage.all.pluck(:id)
     can :read_update, SchoolClass, :id => school_classes
     can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
+    can :read, Page, :curriculum_id => page_ids
+    can :read, Task, :curriculum_id => page_ids
+    can :read, AssessmentQuestion, :curriculum_id => page_ids
+    can :show, LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
 
     can :create, Student
   end

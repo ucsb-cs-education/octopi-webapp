@@ -26,7 +26,8 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
       current_user.add_role(:owner, @laplaya_file)
       create_post_success_response(:created, laplaya_file_url(@laplaya_file),@laplaya_file.id)
     else
-      head :bad_request
+      render text: @laplaya_file.errors, status: :bad_request
+      # head :bad_request
     end
   end
 

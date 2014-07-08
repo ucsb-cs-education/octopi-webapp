@@ -1,24 +1,4 @@
-<table>
-  <tr>
-    <td>
-      <div id="choosetype">
-        Answer Options:
-        <form action="">
-          <label for="ansType" class="sr-only">Answer Types</label>
-          <select id="ansType">
-            <option value="singleAnswer">One Correct</option>
-            <option value="multipleAnswers">Multiple Correct</option>
-          </select>
-        </form>
-      </div>
-    </td>
-    <td>
-      <button type="button" id="addAns">
-        Add New Answer Choice
-      </button>
-    </td>
-  </tr>
-</table>
+<%= render partial: "answer_options" unless !(can? :update, @page)%>
 
 <div id="answerList">
   <%= render partial: "showAnswer", collection: JSON.parse(@assessment_question.answers), locals: {:question_type => @assessment_question.question_type} %>

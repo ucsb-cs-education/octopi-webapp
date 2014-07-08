@@ -200,6 +200,7 @@ describe "page", type: :feature do
     let(:thisPath){curriculum_page_path(curriculum)}
     let(:me){curriculum}
 
+
     before do
       sign_in_as_staff(user)
       visit thisPath

@@ -1,10 +1,12 @@
 <ul id="children" data-update-url="<%= sort_activity_page_url(page) %>">
   <%= render partial: "page", collection: page.children %>
 </ul>
-<%= simple_form_for( [page, page.children.build], html: {class: 'new_child_page'}, remote: true) do |f| %>
-    <%= f.hidden_field :title, value: 'New Question' %>
-    <%= f.hidden_field :question_body, value: '<p></p>' %>
-    <%= f.hidden_field :answers, value: '[{text:"<p></p>",correct:true}]' %>
-    <%= f.hidden_field :question_type, value: 'singleAnswer' %>
-    <%= f.submit "Add New Question", class: "btn btn-default", id:"add-new-child-btn" %>
+<% if can? :update, @page %>
+    <%= simple_form_for( [page, page.children.build], html: {class: 'new_child_page'}, remote: true) do |f| %>
+        <%= f.hidden_field :title, value: 'New Question' %>
+        <%= f.hidden_field :question_body, value: '<p></p>' %>
+        <%= f.hidden_field :answers, value: '[{text:"<p></p>",correct:true}]' %>
+        <%= f.hidden_field :question_type, value: 'singleAnswer' %>
+        <%= f.submit "Add New Question", class: "btn btn-default", id:"add-new-child-btn" %>
+    <% end %>
 <% end %>
