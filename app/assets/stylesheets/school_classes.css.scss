@@ -1,3 +1,62 @@
 // Place all the styles related to the school_classes controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+// Place all the styles related to the pages/pages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body.school_classes {
+  .pages {
+    background-color: transparent;
+    .page-header {
+      h1 {
+        text-align: left;
+        font-size: 32px;
+        margin-bottom: 25px;
+        span:empty {
+          display: block;
+          height: 1em;
+        }
+      }
+      margin-bottom: 0px;
+      margin-top: 0px;
+      padding-bottom: 0px;
+    }
+    #delete-page-link {
+      width: 60%;
+      color: inherit;
+      &:visited, &:hover, &:active {
+        color: #ffffff;
+      }
+    }
+    form {
+      width: 60%;
+    }
+
+    .new_child_page {
+      margin-bottom: 10px;
+    }
+    #tabs {
+      margin-top: 5px;
+      p {
+        font-size: 16px;
+      }
+    }
+    #children {
+      list-style-type: none;
+      margin: 15px 0 0;
+      padding: 0;
+      width: 60%;
+      li {
+        margin: 0 3px 3px 3px;
+        padding: 0.4em 0.4em 0.4em 1.5em;
+        font-size: 1.4em;
+        height: 35px;
+        span {
+          position: absolute;
+          margin-left: -1.3em;
+        }
+      }
+    }
+  }
+}

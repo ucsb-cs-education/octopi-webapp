@@ -31,9 +31,11 @@ end
 module ValidStaffRequestHelper
 
   # for use in request specs
-  def sign_in_as_a_valid_staff
+  def sign_in_as_a_valid_staff(staff=nil)
+    @staff = staff if staff.present?
     @staff ||= FactoryGirl.create :staff
-    post_via_redirect staff_session_path, 'staff[email]' => @staff.email, 'staff[password]' => @staff.password
+    status = post_via_redirect staff_session_path, 'staff[email]' => @staff.email, 'staff[password]' => @staff.password
+    status
   end
 
   def sign_in_as_staff(staff)

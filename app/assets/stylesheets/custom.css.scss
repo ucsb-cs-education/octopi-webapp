@@ -158,3 +158,8 @@ input {
   @include box_sizing;
 }
 
+#existing_student {
+  p {
+    margin-left: 16px;
+  }
+}

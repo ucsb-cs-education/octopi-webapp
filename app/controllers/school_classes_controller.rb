@@ -41,9 +41,12 @@ class SchoolClassesController < ApplicationController
   def add_new_student
     @student = Student.new(student_params)
     @student.school = @school_class.school
-    @school_class.students << @student unless @school_class.students.include? @student
+    Student.transaction do
+      @school_class.students << @student unless @school_class.students.include? @student
+      saved = @student.save
+    end
     #Might need to add School.with_role(:school_admin, current_user).pluck(:id).includes(@student.school_id) && , lets chcek
-    if @student.save
+    if saved
       respond_to do |format|
         format.js    do
           js false
@@ -85,19 +88,18 @@ class SchoolClassesController < ApplicationController
     if @school_class.update(school_class_params)
       #redirect_to @school_class, notice: 'Class was successfully updated.'
       respond_to do |format|
-        format.js    do
-          js false
-        end
         format.html do
           redirect_to edit_school_class_path, notice: 'Class was successfully updated.'
         end
-
+        format.js do
+          js false
+        end
       end
+
     else
       render action: 'edit'
     end
   end
-
   private
   def student_params
     params.require(:student).permit(:first_name, :last_name,:login_name, :password, :password_confirmation)

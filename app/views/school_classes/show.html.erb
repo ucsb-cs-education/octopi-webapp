@@ -48,33 +48,12 @@
 </table>
 
 </body>
-<!--Add new student to class-->
-<!--
-<div class="row">
-  <div class="col-lg-6">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button name="Add New Student"  class="btn btn-default" type="button" onclick="addNewStudent()">Add New Student</button>
-
-      </span>
-      <input placeholder="First Name" type="text" class="form-control" id="login">
-      <input placeholder="Last Name" type="text" class="form-control" id="login">
-      <input placeholder="Login Name" type="text" class="form-control" id="login">
-      <input placeholder="Password" type="text" class="form-control" id="login">
-      <script> function addNewStudent() {
-          var login = document.getElementById("login").value;
-
-      }
-      </script>
-    </div>
-  </div>
-</div>
--->
 
 
 <br>
 <p>
-  <%= link_to 'Back', school_school_classes_path(@school_class.school) %> |
-  <%= link_to 'Edit', edit_school_class_path  %>
+
+  <%= link_to 'Back', school_school_classes_path(@school_class.school), class: "btn btn-default" %>
+  <%= link_to 'Edit Students', edit_school_class_path, class: "btn btn-primary"  %>
 </p>
 

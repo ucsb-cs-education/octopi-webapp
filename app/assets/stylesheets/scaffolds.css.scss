@@ -23,12 +23,21 @@ a {
   &:visited {
     color: #666;
   }
+  &.btn {
+    &:visited {
+      color: #ffffff;
+    }
+    &.btn-default:visited {
+      color: #000000;
+    }
+  }
 }
 
+
 div {
-  &.field, &.actions {
+ &.field, &.actions {
     margin-bottom: 10px;
-  }
+ }
 }
 
 #notice {

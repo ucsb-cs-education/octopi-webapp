@@ -29,7 +29,7 @@ gem 'coffee-rails', '~> 4.0.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '~> 4.2.1'
 
 gem 'active_model_serializers', '~> 0.9.0.alpha1'
 
@@ -84,6 +84,7 @@ end
 group :test do
   gem 'selenium-webdriver', '2.42.0'
   gem 'capybara', '2.1.0'
+  gem 'launchy'
 end
 
 group :development, :test do
