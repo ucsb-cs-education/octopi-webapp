@@ -22,27 +22,29 @@ class Pages::LaplayaTasksController < Pages::TasksController
         response.location = laplaya_file_url(@laplaya_task)
         js false
         unless updated
-          head :bad_request, location: laplaya_file_url(@laplaya_task)
+          render text: @laplaya_task.erors, status: :bad_request, location: laplaya_file_url(@laplaya_task)
         end
       end
     end
   end
 
   def create
-    LaplayaTask.transaction do
-      @laplaya_task.parent = @activity_page
-      if @laplaya_task.save
-        respond_to do |format|
-          format.html { redirect_to @laplaya_task }
-          format.js {
-            js false
-            render status: :created
-          }
-        end
-      else
-        render text: @laplaya_task.errors, status: :bad_request
+    begin
+      LaplayaTask.transaction do
+        @laplaya_task.parent = @activity_page
+        @laplaya_task.save!
+        laplaya_file = TaskBaseLaplayaFile.new_base_file(@laplaya_task)
       end
-      laplaya_file = TaskBaseLaplayaFile.new_base_file(@laplaya_task)
+    rescue ActiveRecord::RecordInvalid
+      render text: @laplaya_task.errors, status: :bad_request
+      return
+    end
+    respond_to do |format|
+      format.html { redirect_to @laplaya_task }
+      format.js {
+        js false
+        response.status = :created
+      }
     end
   end
 
@@ -67,6 +69,6 @@ class Pages::LaplayaTasksController < Pages::TasksController
   end
 
   def laplaya_task_params
-    params.require(:laplaya_task).permit(:title, :'teacher_body', :'student_body')
+    params.require(:laplaya_task).permit(:title, :teacher_body, :student_body)
   end
 end

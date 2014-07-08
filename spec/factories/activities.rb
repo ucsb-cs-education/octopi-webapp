@@ -4,7 +4,14 @@ FactoryGirl.define do
   factory :activity_page, :class => ActivityPage do
 
     ignore do
-      module_page { ModulePage.first || FactoryGirl.create(:module_page) }
+      curriculum_id nil
+      module_page do
+        page = nil
+        if curriculum_id.present?
+          page = ModulePage.where(curriculum_id: curriculum_id).first
+        end
+        page || FactoryGirl.create(:module_page, curriculum_id: curriculum_id)
+      end
     end
 
     sequence(:title) { |n| "SampleActivity #{n}" }

@@ -1,24 +1,31 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
+require 'erbalt'
 
 FactoryGirl.define do
+  sequence :file_name do |n|
+    "Laplaya_File #{n}"
+  end
   factory :laplaya_file, :class => LaplayaFile do
     ignore do
-      file = File.open("#{Rails.root}/public/laplaya_test_files/testproj.xml", 'r')
-      testproj file.read
-      file.close
+      file_name_for_template { generate :file_name }
+      notes_for_template { "Some notes for #{file_name_for_template}. \n:)" }
+      project_template_file File.open("#{Rails.root}/lib/laplaya_test_files/testproj_project.xml.erb").read
+      media_template_file File.open("#{Rails.root}/lib/laplaya_test_files/testproj_media.xml.erb").read
       owner nil
     end
 
-    project { testproj }
+    project { ErbalT::render_from_hash(project_template_file, {file_name: file_name_for_template, notes: notes_for_template}) }
+    media { ErbalT::render_from_hash(media_template_file, {file_name: file_name_for_template}) }
     public { owner.nil? }
 
     trait :star_wars do
       ignore do
         file = File.open("#{Rails.root}/public/laplaya_test_files/starwars.xml", 'r')
-        starwars file.read
+        project_data file.read
         file.close
       end
-      project { starwars }
+      project { project_data }
+      media { nil }
     end
 
     after(:create) do |laplaya_file, evaluator|

@@ -3,14 +3,6 @@ class StudentPortal::Laplaya::LaplayaBaseController < StudentPortal::BaseControl
 
   protect_from_forgery with: :null_session
 
-  rescue_from CanCan::AccessDenied do |exception|
-    render file: File.join(Rails.root, 'public/403.html'), status: 403, layout: false
-  end
-
-  rescue_from ActiveRecord::RecordNotFound do |exception|
-    render file: File.join(Rails.root, 'public/404.html'), status: 404, layout: false
-  end
-
   def current_user
     current_student || current_staff
   end

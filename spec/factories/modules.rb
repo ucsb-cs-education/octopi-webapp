@@ -4,6 +4,14 @@ FactoryGirl.define do
   factory :module_page, :class => ModulePage do
 
     ignore do
+      curriculum_id nil
+      module_page do
+        page = nil
+        if curriculum_id.present?
+          page = ModulePage.where(curriculum_id: curriculum_id).first
+        end
+        page || FactoryGirl.create(:module_page, curriculum_id: curriculum_id)
+      end
       curriculum_page { CurriculumPage.first || FactoryGirl.create(:curriculum_page) }
     end
 

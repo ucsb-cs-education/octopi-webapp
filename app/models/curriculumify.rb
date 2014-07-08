@@ -5,10 +5,15 @@ module Curriculumify
     base.validates :parent, presence: true, unless: :curriculum_page?
     base.validates :curriculum_id, presence: true, unless: :new_record?
     base.validate :curriculum_id_validator, unless: :new_record?
+    base.validate :title, presence: true, if: :has_title?
 
   end
 
   private
+  def has_title?
+    type != 'TaskBaseLaplayaFile'
+  end
+
   def curriculum_page?
     type == 'CurriculumPage'
   end

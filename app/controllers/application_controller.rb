@@ -1,5 +1,3 @@
-require 'IdCrypt'
-
 class ApplicationController < ActionController::Base
 
   # Prevent CSRF attacks by raising an exception.
@@ -7,16 +5,23 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  def exception_redirect_path(login_dependent=false)
+    if staff_signed_in? || !login_dependent
+      main_app.root_path
+    else
+      main_app.new_staff_session_path
+    end
+  end
+
   rescue_from CanCan::AccessDenied do |exception|
     respond_to do |format|
       format.html do
-        if staff_signed_in?
-          redirect_to main_app.root_url, :alert => exception.message
-        else
-          redirect_to main_app.new_staff_session_url, :alert => exception.message
-        end
+        redirect_to exception_redirect_path(true), :alert => exception.message
       end
       format.js do
+        head :forbidden
+      end
+      format.json do
         head :forbidden
       end
     end
@@ -25,9 +30,12 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound do |exception|
     respond_to do |format|
       format.html do
-        redirect_to main_app.root_url, :alert => exception.message
+        redirect_to exception_recirect_path, :alert => exception.message
       end
       format.js do
+        render text: exception.message, status: 404
+      end
+      format.json do
         render text: exception.message, status: 404
       end
     end
@@ -41,10 +49,6 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :password, :password_confirmation, :first_name, :last_name) }
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :password, :password_confirmation, :first_name, :last_name, :current_password) }
-  end
-
-  def decode_id
-    params[:id] = IdCrypt::decode_id(params[:id]).to_s if params[:id]
   end
 
 end

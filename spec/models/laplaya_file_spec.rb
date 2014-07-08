@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe LaplayaFile do
+describe LaplayaFile, type: :model do
   shared_examples_for "a laplaya file" do
     # Basic attributes
     it { should respond_to(:file_name) }
@@ -121,8 +121,9 @@ eod
           @laplaya_file.project = "<project name=\"RspecTestProj\"><sprite><notes name='test'>non-root notes go here!</notes></sprite></project>"
         end
         it { should be_valid }
-        it 'should not change the notes' do
-          expect{@laplaya_file.save}.to_not change{@laplaya_file.note}
+        it 'should change the notes to an empty string' do
+          expect{@laplaya_file.save}.to change{@laplaya_file.note}
+          expect(@laplaya_file.note).to eq("")
         end
         its(:note) { should_not eq("non-root notes go here!") }
       end
@@ -132,8 +133,9 @@ eod
           @laplaya_file.project = "<project name=\"RspecTestProj\"><sprite><thumbnail name='test'>#{thumbnail}</thumbnail></sprite></project>"
         end
         it { should be_valid }
-        it 'should not change the notes' do
-          expect{@laplaya_file.save}.to_not change{@laplaya_file.note}
+        it 'should change the notes to an empty string' do
+          expect{@laplaya_file.save}.to change{@laplaya_file.note}
+          expect(@laplaya_file.note).to eq("")
         end
         its(:note) { should_not eq("non-root notes go here!") }
       end

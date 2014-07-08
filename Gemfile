@@ -79,18 +79,20 @@ group :production do
 # If running on Heroku
   gem 'rails_12factor'
   gem 'newrelic_rpm'
+  gem 'lograge'
+
 end
 
 group :test do
-  gem 'selenium-webdriver', '2.42.0'
-  gem 'capybara', '2.1.0'
+  gem 'selenium-webdriver', '~> 2.42.0'
+  gem 'capybara', '~> 2.3.0'
   gem 'launchy'
 end
 
 group :development, :test do
-  gem 'factory_girl_rails', '4.2.1'
+  gem 'factory_girl_rails', '~> 4.4.1'
   gem 'faker', '~> 1.3.0'
-  gem 'rspec-rails', '~> 2.14'
+  gem 'rspec-rails', '~> 3.0.1'
   gem 'rspec-its', '~> 1.0.1'
   gem 'rspec-collection_matchers', '~> 1.0.0'
   gem 'spork-rails', '~> 4.0.0'
@@ -103,6 +105,7 @@ group :development do
   #Rubymine debugging
   gem 'ruby-debug-ide'
   gem 'debase'
+  gem 'debugger'
 
   #nice debugging in your browser
   gem 'better_errors'
@@ -111,7 +114,6 @@ group :development do
   #enables RailsPanel chrome developer addon
   gem 'meta_request'
   gem 'rack-mini-profiler'
-
 
 end
 
@@ -125,5 +127,4 @@ end
 # gem 'capistrano', group: :development
 
 # Use debugger
-# gem 'debugger', group: [:development, :test]
 

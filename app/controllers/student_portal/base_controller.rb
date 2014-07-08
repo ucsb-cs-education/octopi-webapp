@@ -4,10 +4,12 @@ class StudentPortal::BaseController < ApplicationController
   alias_method :current_user, :current_student
 
 
-  rescue_from CanCan::AccessDenied do |exception|
-    redirect_to student_portal_root_path, :alert => exception.message
-
-    $stderr.puts flash.to_hash
+  def exception_redirect_path(login_dependent=false)
+    if signed_in_student? || !login_dependent
+      main_app.student_portal_root_path
+    else
+      main_app.student_portal_signin_path
+    end
   end
 
   def current_user

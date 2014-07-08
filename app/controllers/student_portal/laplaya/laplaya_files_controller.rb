@@ -1,7 +1,11 @@
 class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::LaplayaBaseController
   load_and_authorize_resource
+  js false
 
   def index
+    #Following line needed to prevent super_staff from crashing server during index
+    @laplaya_files = LaplayaFile.with_role(:owner, current_user) if current_user.has_role? :super_staff
+
     render json: @laplaya_files, each_serializer: LaplayaFileIndexSerializer
   end
 
@@ -13,21 +17,18 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
   def update
     params = laplaya_file_params
     if params.any? && @laplaya_file.update_attributes(params)
-      status = :no_content
+      head :no_content, location: laplaya_file_url(@laplaya_file)
     else
-      status = :bad_request
+      render text: @laplaya_file.errors, status: :bad_request
     end
-    head status, location: laplaya_file_url(@laplaya_file)
   end
 
   def create
-    @laplaya_file = LaplayaFile.new(laplaya_file_params)
     if @laplaya_file.save
       current_user.add_role(:owner, @laplaya_file)
       create_post_success_response(:created, laplaya_file_url(@laplaya_file),@laplaya_file.id)
     else
       render text: @laplaya_file.errors, status: :bad_request
-      # head :bad_request
     end
   end
 

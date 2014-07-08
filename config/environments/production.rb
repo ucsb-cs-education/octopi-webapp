@@ -94,4 +94,6 @@ OctopiWebapp::Application.configure do
       :enable_starttls_auto => true
   }
 
+  config.lograge.enabled = true
+
 end

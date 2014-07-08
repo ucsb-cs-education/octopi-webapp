@@ -4,7 +4,14 @@ FactoryGirl.define do
   factory :laplaya_task, :class => LaplayaTask do
 
     ignore do
-      activity_page { ActivityPage.first || FactoryGirl.create(:activity_page) }
+      curriculum_id nil
+      activity_page do
+        page = nil
+        if curriculum_id.present?
+          page = ActivityPage.where(curriculum_id: curriculum_id).first
+        end
+        page || FactoryGirl.create(:activity_page, curriculum_id: curriculum_id)
+      end
     end
 
     sequence(:title) { |n| "SampleLaplayaTask #{n}" }
