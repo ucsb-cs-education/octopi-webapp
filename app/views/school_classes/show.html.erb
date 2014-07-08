@@ -8,35 +8,17 @@
 
 
 <!--Class list-->
-<head>
-  <style>
-      table.sortable thead {
-          background-color:#B2B2FF;
-          color:#666666;
-          font-weight: bold;
-          cursor: default;
-      }
-      table,th,td
-      {
-          border:1px solid black;
-          border-collapse:collapse;
-      }
-      th,td
-      {
-          padding:5px;
-      }
-  </style>
-  <script src="/sorttable.js"></script>
-</head>
-<body>
 
+<body>
 <table id="classlist" class="sortable" style="width:1140px">
-  <tr>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Login Name</th>
-    <th>Progress</th>
-  </tr>
+  <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Login Name</th>
+        <th>Progress</th>
+      </tr>
+  </thead>
   <% @school_class.students.each do |s| %>
       <tr>
         <td><%= s.first_name %></td>

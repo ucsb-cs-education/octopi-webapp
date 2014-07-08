@@ -40,9 +40,8 @@ class SchoolClassesController < ApplicationController
     @student.school = @school_class.school
     Student.transaction do
       @school_class.students << @student unless @school_class.students.include? @student
-      saved = @student.save
     end
-    if saved
+    if @student.save
       respond_to do |format|
         format.js    do
           js false

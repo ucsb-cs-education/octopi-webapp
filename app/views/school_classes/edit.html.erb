@@ -16,28 +16,6 @@
 <p></p>
 
 
-
-<!--Class list-->
-<head>
-  <style>
-      table.sortable thead {
-          background-color:#B2B2FF;
-          color:#666666;
-          font-weight: bold;
-          cursor: default;
-      }
-      table,th,td
-      {
-          border:1px solid black;
-          border-collapse:collapse;
-      }
-      th,td
-      {
-          padding:5px;
-      }
-  </style>
-  <script src="/sorttable.js"></script>
-</head>
 <body>
 
 <table id="classlist" class="sortable" style="width:1000px">
@@ -100,21 +78,14 @@
 <p></p>
 <div class="row">
   <div class="col-md-6">
-    <button  id="cancel_button" style= "display: none" type="button" onclick="toggleButton()" class="btn btn-primary">Cancel</button>
+    <button  id="cancel_button" style= "display: none" type="button"  class="btn btn-primary">Cancel</button>
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
-    <button  id="toggle_add_new_student_button" type="button" onclick="toggleButton()" class="btn btn-primary">Add New Student</button>
+    <button  id="toggle_add_new_student_button" type="button"  class="btn btn-primary">Add New Student</button>
     </div>
 </div>
-<script>
-  function toggleButton() {
-      $("#create_and_add_student_form").toggle();
-      $("#toggle_add_new_student_button").toggle();
-      $("#cancel_button").toggle();
-  }
-</script>
 
 <p></p>
 <%= link_to 'Back', school_class_path, class: "btn btn-default" %>

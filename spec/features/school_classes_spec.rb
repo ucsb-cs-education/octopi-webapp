@@ -51,7 +51,7 @@ describe "SchoolClasses", type: :feature do
         before {click_button 'Cancel'}
         it {should_not have_content("Password")}
         it {should_not have_selector("button[id='cancel_button']")}
-        it {should have_selector("button[id='toggle_button']")}
+        it {should have_selector("button[id='toggle_add_new_student_button']")}
       end
       describe "Fill in right info" do
         before do
