@@ -1,0 +1,12 @@
+<div class = "question-box">
+  <div class = "question-title">
+    <%= show_question.title %>
+  </div>
+  <div class = "question-body">
+    <%= show_question.question_body.html_safe %>
+  </div>
+  <div id = "question-answers" >
+
+    <%= render partial: "student_portal/pages/assessment_task/show_answer", collection: JSON.parse(show_question.answers), locals: {:question_type => show_question.question_type, :question_id=>show_question.id} %>
+  </div>
+</div>

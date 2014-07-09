@@ -1,0 +1,14 @@
+<div id = "page-title">
+  <%= @page.title %>
+</div>
+<div id = 'parent-link'>
+  <% if @page.is_a?(ModulePage) %>
+      <a href = 'student_portal/home'>Back to class select</a>
+  <% else %>
+      <a href = '/student_portal/<%=yield(:parent_page)+'/'+@page.parent.id.to_s%>'>Back to <%= @page.parent.title %></a>
+  <% end unless yield(:parent_page)==""%>
+</div>
+
+<div class = "student-body">
+  <%= @page.student_body.html_safe if @page.respond_to?(:student_body) && !(@page.student_body=="") %>
+</div>

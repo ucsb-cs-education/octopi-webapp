@@ -1,0 +1,10 @@
+<% provide(:parent_page,'activity') %>
+<%= render partial: "inner_header"%>
+
+<div id = "questions">
+  <%= render partial: "student_portal/pages/assessment_task/show_question",collection: @page.children %>
+</div>
+
+<div id = "submit-answers" class = "btn btn-primary">
+  Submit Answers
+</div>

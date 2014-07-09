@@ -1,0 +1,20 @@
+<% locked = false %>
+<% complete = false%>
+<% #if rand(2)==1%>
+    <%#locked = true end%>
+<% #if rand(2)==1%>
+    <%#complete = true end%>
+<% if !(children.is_a?(AssessmentTask) && complete) %>
+    <div class = "child-link<%= " locked" if locked%><%= " complete" if complete%>">
+      <% if locked %>
+          <img src = "http://openclipart.org/image/800px/svg_to_png/68533/padlock.png" width="21" height="21">
+          <%= children.title %>
+      <% else %>
+          <%if children.is_a?(AssessmentTask) %>
+            <a href='/student_portal/assessment_task/<%= children.id%>'> <%= children.title %></a>
+          <% else %>
+            <a href='/student_portal/whateven/<%= children.id%>'> <%= children.title %></a>
+          <% end %>
+      <% end %>
+    </div>
+<% end %>

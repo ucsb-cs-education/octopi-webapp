@@ -1,0 +1,142 @@
+
+
+body.student_portal.student_portal-pages
+{
+
+  .locked
+  {
+
+  }
+
+  #select-module
+  {
+    float:right;
+  }
+
+  #page-title
+  {
+    font-size:250%;
+    margin-bottom:15px;
+  }
+  .student-body
+  {
+
+    display:inline-block;
+    padding:.5em;
+    margin: 2px;
+    border: 3px solid #CCCCCC;
+    border-radius: 5px;
+    p
+    {
+      font-size:115%;
+    }
+  }
+
+  .child-link
+  {
+    margin: 2px;
+    border: 2px solid #DDDDDD;
+    background-color: #EEEEEE;
+    border-radius: 3px;
+    padding:.5em;
+    color: black;
+    a
+    {
+      font-size: 105%;
+      color: black;
+    }
+  }
+
+  .locked
+  {
+    border: 2px solid #BBBBBB;
+    background-color: #CCCCCC;
+  }
+
+  .complete
+  {
+    border: 2px solid rgba(159, 239, 166, 0.41);
+    background-color: rgba(193, 237, 194, 0.38);
+  }
+
+  #sandbox-link
+  {
+    text-align:center;
+    padding:2em;
+    border: 3px solid rgba(255, 239, 145, 0.75);
+    background-color: rgba(255, 242, 150, 0.59);
+    border-radius: 5px;
+    display:inline-block;
+    width:12em;
+    height:12em;
+  }
+
+
+  #main-project-link
+  {
+    float:right;
+    text-align:center;
+    padding:2em;
+    border: 3px solid rgba(97, 211, 255, 0.75);
+    background-color: rgba(97, 211, 255, 0.51);
+    border-radius: 5px;
+    display:inline-block;
+    width:12em;
+    height:12em;
+  }
+
+  #submit-answers
+  {
+    margin:2px;
+  }
+
+  //everything below is the css for the question and answer boxes in assessment questions
+  .question-box
+  {
+    margin:2px;
+    padding:.5em;
+    margin: 2px;
+    border: 2px solid #DDDDDD;
+    border-radius: 5px;
+
+    .question-title
+    {
+      font-size:120%;
+      font-weight:bold;
+    }
+
+    .question-body
+    {
+      margin:2px;
+      padding:.5em;
+      margin: 2px;
+      /*border: 2px solid #DDDDDD;
+      border-radius: 5px;*/
+      border:1px solid black;
+    }
+
+    .input-box
+    {
+      width:1.5em;
+      display:inline-block;
+      .answer-input
+      {
+        max-width:1.5em;
+        display:inline-block;
+      }
+    }
+
+    .answer-text
+    {
+      display:inline-block;
+    }
+
+    .answer
+    {
+      border: 1px solid lightgrey;
+      border-radius: 2px;
+      margin:-1px;
+    }
+  }
+
+}

@@ -11,6 +11,9 @@ OctopiWebapp::Application.routes.draw do
     match '/home', to: redirect('/'), via: 'get'
     match '/signin', to: 'sessions#new', via: 'get'
     match '/signout', to: 'sessions#destroy', via: 'delete'
+    get '/module/:id', to: 'pages#module'
+    get '/activity/:id', to: 'pages#activity'
+    get '/assessment_task/:id', to: 'pages#assessment_task'
   end
   match '/school_classes/:school_class_id/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'
   match '/schools/:school_id/school_classes.json', to: 'student_portal/sessions#list_school_classes', format: false, via: 'get'
@@ -67,6 +70,8 @@ OctopiWebapp::Application.routes.draw do
       end
     end
   end
+
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -1,0 +1,36 @@
+<% provide(:parent_page,'curriculum') %>
+<div id = "select-module">
+  <div class="form-group" id = "module-list" >
+      <form id = "change-module"action="<%= @page.id %>">
+        <label for="modules" class="select required control-label">Select a different module</label>
+        <select id="modules" class = "form-control">
+          <%= render partial: "student_portal/pages/module/module_options", collection:@page.parent.children %>
+        </select>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value = "Switch Modules">
+        </div>
+      </form>
+   </div>
+</div>
+
+<%= render partial: "inner_header"%>
+
+<div id = "children-pages" >
+  <%= render partial: "student_portal/pages/module/children",collection: @page.children %>
+</div>
+
+<div id="other-links">
+    <div id = "sandbox-link">
+      <img src="borken image" width="100" height="100" >
+    </div>
+    <div id = "main-project-link">
+      <img src="broken image" width="100" height="100" >
+      Story Project
+    </div>
+</div>
+
+<script>
+  $("#change-module").change(function(){
+      $(this).attr('action',$("#change-module option:selected").val());
+  });
+</script>
