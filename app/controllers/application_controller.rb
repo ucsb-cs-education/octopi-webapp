@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound do |exception|
     respond_to do |format|
       format.html do
-        redirect_to exception_recirect_path, :alert => exception.message
+        redirect_to exception_redirect_path, :alert => exception.message
       end
       format.js do
         render text: exception.message, status: 404

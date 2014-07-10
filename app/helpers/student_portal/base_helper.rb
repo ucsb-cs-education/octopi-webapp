@@ -1,13 +1,20 @@
 module StudentPortal::BaseHelper
-  def sign_in_student(student)
+  def sign_in_student(student, school_class)
     remember_token = Student.new_remember_token
     session[:student_remember_token] = remember_token
+    session[:school_class_id] = school_class.id
+    @current_school_class = school_class
+    @current_student = student
     update_autosignout_time
     student.update_attribute(:remember_token, Student.create_remember_hash(remember_token))
   end
 
   def update_autosignout_time
     session[:student_autosignout_time] = 30.days.from_now # We need a way to properly keep logins during snap sessions, so for now we don't log out
+  end
+
+  def current_school_class=(school_class)
+    @current_school_class = school_class
   end
 
   def current_student=(student)
@@ -23,6 +30,13 @@ module StudentPortal::BaseHelper
       @current_student = nil
     end
     @current_student
+  end
+
+  def current_school_class
+    if signed_in_student?
+      @current_school_class ||= SchoolClass.find_by(id: session[:school_class_id]) if session[:school_class_id]
+    end
+    @current_school_class
   end
 
   def current_student?(student)
@@ -47,7 +61,7 @@ module StudentPortal::BaseHelper
     student ||= current_student
     student.update_attribute(:remember_token,
                                   Student.create_remember_hash(Student.new_remember_token))
-    cookies.delete(:remember_token)
+    session.delete(:remember_token)
     self.current_student = nil
   end
 

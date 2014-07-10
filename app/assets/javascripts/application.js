@@ -27,7 +27,7 @@ var updateDropDowns = function () {
         var url_mask = $(this).data('option-url');
         var key_method = $(this).data('option-key-method');
         var value_method = $(this).data('option-value-method');
-        var prompt = $(this).has('option[value=]').size() ? $(this).find('option[value=]') : $('<option value=\"\">').text('Select a specialization');
+        var prompt = $(this).has('option[value=\'\']').size() ? $(this).find('option[value=\'\']') : $('<option value=\"\">').text('Please select from the above drop down first');
         var regexp = /:[0-9a-zA-Z_]+:/g;
         var observer = $('select#' + observer_dom_id);
         var observed = $('#' + observed_dom_id);
@@ -37,15 +37,20 @@ var updateDropDowns = function () {
         }
 
         observed.on('change', function () {
-            observer.empty().append(prompt);
+            observer.empty();
+            observer.change();
             if (observed.val()) {
+                observer.append($('<option value=\"\">').text('Loading...'));
                 url = url_mask.replace(regexp, observed.val());
                 $.getJSON(url, function (data) {
+                    observer.empty().append(prompt);
                     $.each(data, function (i, object) {
                         observer.append($('<option>').attr('value', object[key_method]).text(object[value_method]));
                         observer.attr('disabled', false);
                     });
                 });
+            } else {
+                observer.append(prompt);
             }
         });
     });

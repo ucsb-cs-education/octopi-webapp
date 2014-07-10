@@ -105,7 +105,6 @@ group :development do
   #Rubymine debugging
   gem 'ruby-debug-ide'
   gem 'debase'
-  gem 'debugger'
 
   #nice debugging in your browser
   gem 'better_errors'

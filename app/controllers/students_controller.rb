@@ -1,8 +1,8 @@
 class StudentsController < ApplicationController
-  load_and_authorize_resource :school, only: [:index, :new, :create, :list_student_logins]
+  load_and_authorize_resource :school, only: [:index, :new, :create]
   load_and_authorize_resource
   skip_authorize_resource :school, only: [:list_student_logins]
-  before_action :load_students, only: [:index, :list_student_logins]
+  before_action :load_students, only: [:index]
 
 
   # Deep actions
@@ -11,9 +11,6 @@ class StudentsController < ApplicationController
   end
 
   # GET /schools/:school_id/student_logins.json
-  def list_student_logins
-    render json: @students.select(:login_name, :school_id, :id)
-  end
 
   # GET /schools/:school_id/students/new
   def new

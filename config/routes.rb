@@ -12,6 +12,8 @@ OctopiWebapp::Application.routes.draw do
     match '/signin', to: 'sessions#new', via: 'get'
     match '/signout', to: 'sessions#destroy', via: 'delete'
   end
+  match '/school_classes/:school_class_id/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'
+  match '/schools/:school_id/school_classes.json', to: 'student_portal/sessions#list_school_classes', format: false, via: 'get'
 
   resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, controller: 'student_portal/laplaya/laplaya_files' do
   end
@@ -19,7 +21,7 @@ OctopiWebapp::Application.routes.draw do
   #resources :assessment_questions, only: [:show, :update, :destroy, :create, :index], format: false, controller:
 
   resources :schools, only: [:show, :index], shallow: true do
-    match '/student_logins.json', to: 'students#list_student_logins', format: false, via: 'get'
+   # match '/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'
     resources :students, except: [:update, :edit, :destroy]
     resources :school_classes do
       member do
