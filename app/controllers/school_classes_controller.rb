@@ -1,6 +1,7 @@
 class SchoolClassesController < ApplicationController
   load_and_authorize_resource
   load_and_authorize_resource :school, only: [:index, :new, :create]
+  before_action :load_school, only: [:edit]
 
 
   # Deep actions
@@ -94,7 +95,11 @@ class SchoolClassesController < ApplicationController
   end
 
   def school_class_params
-    params.require(:school_class).permit(:name)
+    params.require(:school_class).permit(:name, module_page_ids: [])
+  end
+
+  def load_school
+    @school = @school_class.school
   end
 
 end

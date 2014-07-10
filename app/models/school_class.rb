@@ -1,6 +1,7 @@
 class SchoolClass < ActiveRecord::Base
   resourcify
   has_and_belongs_to_many :students, join_table: :school_classes_students, before_add: :verify_student
+  has_and_belongs_to_many :module_pages, join_table: :module_pages_school_classes
   belongs_to :school
   validates :school, presence: true
   validates :name, presence: true, length: { maximum: 100 }, uniqueness: { scope: :school }

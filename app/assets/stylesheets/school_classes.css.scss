@@ -3,7 +3,25 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 body.school_classes {
+  form.edit_school_class {
+    border: '1px solid #cccccc';
+    div.school_class_name {
+      width: 70%;
+      input {
+        width: 100%;
+      }
+    }
+    #edit_school_class_submit {
+      width: auto;
+    }
+    div.check_boxes div.checkbox{
+      @extend .col-md-4;
+      margin-top: 5px;
+    }
+  }
   #classlist {
+    margin-left: 15px;
+    width: 90%;
     thead {
       background-color:#B2B2FF;
       color:#666666;
@@ -23,6 +41,7 @@ body.school_classes {
   #existing_student {
     p {
       margin-left: 16px;
+      margin-top: 8px;
     }
   }
 

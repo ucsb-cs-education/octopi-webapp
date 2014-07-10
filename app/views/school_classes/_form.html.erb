@@ -1,9 +1,10 @@
-<%= simple_form_for [@school, @school_class], class: "form-inline" do |f| %>
+<%= simple_form_for @school_class, html: {class: "edit_school_class"} do |f| %>
     <%= f.error_notification %>
-    <div class="form-inputs col-md-6">
-      <%= f.input :name, label: "Save Class Name:", label_html: {class: 'sr-only'} %>
-    </div>
-    <div class="form-actions col-md-2">
-      <%= f.button :submit, "Save class name" %>
-    </div>
+    <%= f.input :name, label: "Class Name:", required: false %>
+    <% @school_class.school.curriculum_pages.each do |curr_page| %>
+        <%= f.label "Modules in #{curr_page.title}" %>
+        <%= f.association :module_pages, as: :check_boxes, label: false, wrapper_html: {class: 'row'}, collection: curr_page.module_pages %>
+    <% end %>
+    <%= f.button :submit, "Save class settings", id: 'edit_school_class_submit' %>
 <% end %>
+

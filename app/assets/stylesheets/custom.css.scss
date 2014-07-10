@@ -34,21 +34,28 @@ textarea {
     margin-bottom: 10px;
   }
 }
+div.checkbox label label {
+  padding-left: 0px;
+}
+form.simple_form div.check_boxes div label input {
+  width: inherit;
+  height: inherit;
+}
 
 /* Students index */
 
-.students {
-  list-style: none;
-  margin: 0;
-  li {
-    overflow: auto;
-    padding: 10px 0;
-    border-top: 1px solid $gray-lighter;
-    &:last-child {
-      border-bottom: 1px solid $gray-lighter;
-    }
-  }
-}
+//.students {
+//  list-style: none;
+//  margin: 0;
+//  li {
+//    overflow: auto;
+//    padding: 10px 0;
+//    border-top: 1px solid $gray-lighter;
+//    &:last-child {
+//      border-bottom: 1px solid $gray-lighter;
+//    }
+//  }
+//}
 
 /* typography */
 
@@ -123,29 +130,9 @@ footer {
 
 
 /* forms */
-
-input, textarea, select, .uneditable-input {
-  border: 1px solid #bbb;
-  width: 100%;
+form {
+  margin-left: 15px;
   margin-bottom: 15px;
-  @include box_sizing;
-}
-
-input {
-  height: auto !important;
-}
-
-#error_explanation {
-  color: #f00;
-  ul {
-    list-style: none;
-    margin: 0 0 18px 0;
-  }
-}
-
-.field_with_errors {
-  @extend .form-group;
-  @extend .error !optional;
 }
 
 /* miscellaneous */

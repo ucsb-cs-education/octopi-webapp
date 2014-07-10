@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140627203730) do
+ActiveRecord::Schema.define(version: 20140709224141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,11 @@ ActiveRecord::Schema.define(version: 20140627203730) do
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
 
+  create_table "curriculum_pages_schools", id: false, force: true do |t|
+    t.integer "school_id",          null: false
+    t.integer "curriculum_page_id", null: false
+  end
+
   create_table "laplaya_files", force: true do |t|
     t.string   "file_name",     default: "",    null: false
     t.binary   "project"
@@ -71,6 +76,11 @@ ActiveRecord::Schema.define(version: 20140627203730) do
     t.integer  "task_id"
     t.integer  "curriculum_id"
     t.string   "type"
+  end
+
+  create_table "module_pages_school_classes", id: false, force: true do |t|
+    t.integer "school_class_id", null: false
+    t.integer "module_page_id",  null: false
   end
 
   create_table "pages", force: true do |t|
