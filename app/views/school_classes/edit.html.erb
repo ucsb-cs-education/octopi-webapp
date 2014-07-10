@@ -34,48 +34,40 @@
 <div class="row" id="existing_student">
   <p><strong>Add an existing student at the school to the class:</strong></p>
   <%= simple_form_for :student, url: add_student_school_class_path(@school_class), method: 'post', remote: true do |f| %>
-      <div class="col-md-6">
-        <div class="form-inputs">
-          <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected: 0, :input_html => {id: "existing_student_list"}, label: false %>
-        </div>
+      <div class="col-md-6 form-inputs">
+        <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected: 0, :input_html => {id: "existing_student_list"}, label: false %>
       </div>
-      <div class="col-md-1">
-        <div class="form-actions">
-          <%= f.button :submit, 'Add', id: "add_existing_student_button" %>
-        </div>
+      <div class="col-md-1 form-actions">
+        <%= f.button :submit, 'Add', id: "add_existing_student_button" %>
       </div>
   <% end %>
 </div>
 
 <!--Add new student to class-->
 
-<div class="row" id="new_student">
-  <div class="col-md-6">
-    <%= simple_form_for :student, url: add_new_student_school_class_path(@school_class.id), method: 'post', remote: true, html: {id: 'create_and_add_student_form', style: "display: none"} do |f| %>
-        <%= f.error_notification %>
+<div class="row hidden" id="new_student">
+  <%= simple_form_for :student, url: add_new_student_school_class_path(@school_class.id),
+                      method: 'post', remote: true,
+                      html: {class: 'col-md-6'} do |f| %>
+      <%= f.error_notification %>
 
-        <div class="form-inputs">
-          <%= f.input :first_name, class: "input", required: true, autofocus: true %>
-          <%= f.input :last_name, class: "input", required: true, autofocus: true %>
-          <%= f.input :login_name, class: "input", required: true, autofocus: true %>
-          <%= f.input :password, class: "input", required: true %>
-          <%= f.input :password_confirmation, class: "input", required: true %>
-        </div>
-        <div class="form-actions">
-          <%= f.button :submit, "Add New Student" %>
-        </div>
-    <% end %>
-  </div>
+      <div class="form-inputs">
+        <%= f.input :first_name, class: "input", required: true, autofocus: true %>
+        <%= f.input :last_name, class: "input", required: true, autofocus: true %>
+        <%= f.input :login_name, class: "input", required: true, autofocus: true %>
+        <%= f.input :password, class: "input", required: true %>
+        <%= f.input :password_confirmation, class: "input", required: true %>
+      </div>
+      <div class="form-actions">
+        <%= f.button :submit, "Add New Student" %>
+        <%= button_tag :Cancel, class: "btn btn-default", type: "button", id: 'cancel_new_student_button' %>
+      </div>
+  <% end %>
 </div>
 <p></p>
 <div class="row">
   <div class="col-md-6">
-    <button id="cancel_button" style="display: none" type="button" class="btn btn-primary">Cancel</button>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <button id="toggle_add_new_student_button" type="button" class="btn btn-primary">Add New Student</button>
+    <%= button_tag :'Add New Student', class: "btn btn-primary", type: "button", id: 'new_student_button' %>
   </div>
 </div>
 

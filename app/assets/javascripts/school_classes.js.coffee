@@ -10,20 +10,16 @@ SchoolClassesController.prototype.show = () ->
 SchoolClassesController.prototype.edit = () ->
 
   showFormAndHideAddNewStudentButton = () ->
-    $("#create_and_add_student_form").show()
-    $("#toggle_add_new_student_button").hide()
-    $("#cancel_button").show()
-    return
+    $("#new_student").removeClass("hidden")
+    $("#new_student_button").addClass("hidden")
 
   hideFormAndShowNewStudentButton = () ->
-    $("#create_and_add_student_form").hide()
-    $("#toggle_add_new_student_button").show()
-    $("#cancel_button").hide()
-    return
+    $("#new_student").addClass("hidden")
+    $("#new_student_button").removeClass("hidden")
 
   addButtonOnClicks = () ->
-    $("#toggle_add_new_student_button").click(showFormAndHideAddNewStudentButton)
-    $("#cancel_button").click(hideFormAndShowNewStudentButton)
+    $("#new_student_button").click(showFormAndHideAddNewStudentButton)
+    $("#cancel_new_student_button").click(hideFormAndShowNewStudentButton)
 
   SortableJS()
 
