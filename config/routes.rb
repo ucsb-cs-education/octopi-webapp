@@ -11,7 +11,7 @@ OctopiWebapp::Application.routes.draw do
     match '/home', to: redirect('/'), via: 'get'
     match '/signin', to: 'sessions#new', via: 'get'
     match '/signout', to: 'sessions#destroy', via: 'delete'
-    get '/module/:id', to: 'pages#module'
+    get '/module_page/:id', to: 'pages#module_page'
     get '/activity/:id', to: 'pages#activity'
     get '/assessment_task/:id', to: 'pages#assessment_task'
   end

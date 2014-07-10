@@ -23,15 +23,17 @@ namespace :db do
     2.times do
       puts "Creating Curriculum Page and children..."
       a = FactoryGirl.create(:curriculum_page)
-      5.times do
+      2.times do
         b = FactoryGirl.create(:module_page, curriculum_page: a)
-        5.times do
+        2.times do
           c = FactoryGirl.create(:activity_page, module_page: b)
-          5.times do
-            d = FactoryGirl.create(:laplaya_task, activity_page: c)
+          2.times do
+            d = FactoryGirl.create(:laplaya_task, activity_page: c,)
+            d.depend_on(d.id-1)
           end
           2.times do
             e = FactoryGirl.create(:assessment_task, activity_page: c)
+            e.depend_on(e.id-1)
             2.times do
               f = FactoryGirl.create(:assessment_question, assessment_task: e)
             end
@@ -48,5 +50,15 @@ namespace :db do
     FactoryGirl.create(:laplaya_file, :star_wars, owner: curriculum_designer)
     FactoryGirl.create(:laplaya_file, :star_wars, owner: curriculum_designer)
     FactoryGirl.create(:laplaya_file, :star_wars, owner: admin)
+
+    School.first.curriculum_pages << CurriculumPage.first
+    School.first.school_classes.first.module_pages << CurriculumPage.first.module_pages.first
+
+    FactoryGirl.create(:unlock, unlockable_id:1,unlockable_type:"Task",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:false )
+    FactoryGirl.create(:unlock, unlockable_id:3,unlockable_type:"Page",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:false )
+
+    #FactoryGirl.create(:unlock, unlockable_id:5,unlockable_type:"Task",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:false )
+    #FactoryGirl.create(:unlock, unlockable_id:7,unlockable_type:"Task",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:false )
+    #FactoryGirl.create(:unlock, unlockable_id:4,unlockable_type:"Page",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:true )
   end
 end

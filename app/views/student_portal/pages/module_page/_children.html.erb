@@ -1,5 +1,10 @@
 <% locked = false %>
-<% complete = false %>
+<% complete = false%>
+<% if @unlocks.find_by(unlockable_id:children.id) == nil %>
+    <% locked = true %>
+<% else %>
+    <% complete = true if @unlocks.find_by(unlockable_id:children.id).completed == true %>
+<% end %>
 <div class = "child-link<%= " locked" if locked%><%= " complete" if complete%>">
   <% if locked %>
       <img src = "http://openclipart.org/image/800px/svg_to_png/68533/padlock.png" width="21" height="21">
