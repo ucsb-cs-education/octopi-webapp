@@ -44,39 +44,64 @@ describe "SchoolClasses", type: :feature do
 
   let(:staff) { FactoryGirl.create(:staff, :super_staff) }
   let(:school_class) { FactoryGirl.create(:school_class) }
+  let(:student_in_class) { FactoryGirl.create(:student, school: school_class.school, school_class: school_class) }
   subject { page }
-  before do
-    sign_in_as_staff(staff)
-    visit school_class_path(school_class)
+
+  describe "Show page" do
+    before do
+      sign_in_as_staff(staff)
+      visit school_class_path(school_class)
+    end
+    it { should have_content('Curriculum') }
+    it { should have_content('About') }
+    it { should have_content('School:') }
+    it { should have_link('Edit Students', href: edit_school_class_path(school_class)) }
+    it { should have_link('Back', href: school_school_classes_path(school_class.school)) }
+    it { should have_table("classlist") }
+    it 'should contain info for the students in the table' do
+      expect(find('table#classlist')).to have_content(student_in_class.first_name)
+      expect(find('table#classlist')).to have_content(student_in_class.last_name)
+      expect(find('table#classlist')).to have_content(student_in_class.login_name)
+    end
   end
-  it { should have_content('Curriculum') }
-  it { should have_content('About') }
-  it { should have_content('School:') }
-  it { should have_link('Edit Students', href: edit_school_class_path(school_class)) }
-  it { should have_link('Back', href: school_school_classes_path(school_class.school)) }
-  it { should have_table("classlist") }
 
   describe "Edit Page" do
+    before(:each) do
+      sign_in_as_staff(staff)
+      add_existing_student
+      student_in_class
+      school_class.school.curriculum_pages << module_page.curriculum_page
+      visit edit_school_class_path(school_class)
+    end
+
     let(:add_existing_student) do
       FactoryGirl.create(:student, school: school_class.school,
                          school_class: FactoryGirl.create(:school_class, school: school_class.school))
     end
     let(:module_page) { FactoryGirl.create(:assessment_question).assessment_task.activity_page.module_page }
-    before(:each) do
-      add_existing_student
-      school_class.school.curriculum_pages << module_page.curriculum_page
-      school_class.module_pages << module_page
-      visit edit_school_class_path(school_class)
-    end
+
     it { should have_table("classlist") }
     it { should have_link("Back", href: school_class_path(school_class)) }
     it { should have_content("School:") }
     it { should have_content("Modules in #{module_page.curriculum_page.title.downcase}") }
     it { should have_content(module_page.title) }
+    it 'should contain info for the students in the table' do
+      expect(find('table#classlist')).to have_content(student_in_class.first_name)
+      expect(find('table#classlist')).to have_content(student_in_class.last_name)
+      expect(find('table#classlist')).to have_content(student_in_class.login_name)
+    end
 
-    describe "Saving class name" do
-      before { click_button 'Save class settings' }
+    describe "Updating a class" do
+      before do
+        fill_in 'Class Name', with: 'This is a test class name'
+        check "school_class_module_page_ids_#{module_page.id}"
+        click_button 'Save class settings'
+      end
       it { should have_content("Class was successfully updated.") }
+      it 'should update the model' do
+        expect(school_class.reload.name).to eq('This is a test class name')
+        expect(school_class.reload.module_pages).to eq([module_page])
+      end
     end
 
     describe "Add existing student" do
@@ -89,8 +114,8 @@ describe "SchoolClasses", type: :feature do
           wait_for_ajax
         end.to change(school_class.students, :count).by(1)
       end
-
     end
+
     describe "adding a new student", js: true do
 
       let (:student) { FactoryGirl.build(:student) }
@@ -123,6 +148,12 @@ describe "SchoolClasses", type: :feature do
             wait_for_ajax
           end
           include_examples "hidden new student form"
+          it 'should contain info for the new student in the table' do
+            expect(find('table#classlist')).to have_content(student.first_name)
+            expect(find('table#classlist')).to have_content(student.last_name)
+            expect(find('table#classlist')).to have_content(student.login_name)
+          end
+
         end
       end
       describe "with a different password and confirmation" do
@@ -150,7 +181,7 @@ describe "SchoolClasses", type: :feature do
           it { should have_content('Please review the problems below:') }
         end
       end
-
     end
+
   end
 end
