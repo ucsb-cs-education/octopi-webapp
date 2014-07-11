@@ -1,6 +1,7 @@
-<% provide(:parent_page,'module_page') %>
+<% provide(:parent_redirect, student_portal_module_path(@page.parent)) %>
 <%= render partial: "inner_header"%>
 
 <div id = "children-pages" >
   <%= render partial: "student_portal/pages/activity/children",collection: @page.children %>
-</div>current_student.id
+</div>
+

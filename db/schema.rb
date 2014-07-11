@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140710172543) do
+ActiveRecord::Schema.define(version: 20140711202204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,12 @@ ActiveRecord::Schema.define(version: 20140710172543) do
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
+  create_table "assessment_question_responses", force: true do |t|
+    t.integer "task_response_id"
+    t.integer "assessment_question_id"
+    t.text    "student_answers"
+  end
 
   create_table "assessment_questions", force: true do |t|
     t.string   "title"
@@ -142,6 +148,23 @@ ActiveRecord::Schema.define(version: 20140710172543) do
   add_index "task_dependencies", ["dependant_id"], name: "index_task_dependencies_on_dependant_id", using: :btree
   add_index "task_dependencies", ["prerequisite_id", "dependant_id"], name: "index_task_dependencies_on_prerequisite_id_and_dependant_id", unique: true, using: :btree
   add_index "task_dependencies", ["prerequisite_id"], name: "index_task_dependencies_on_prerequisite_id", using: :btree
+
+  create_table "task_responses", force: true do |t|
+    t.integer  "student_id"
+    t.integer  "task_id"
+    t.integer  "school_class_id"
+    t.integer  "laplaya_file_id"
+    t.text     "assessment_question_response"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "task_responses", ["laplaya_file_id"], name: "index_task_responses_on_laplaya_file_id", using: :btree
+  add_index "task_responses", ["school_class_id"], name: "index_task_responses_on_school_class_id", using: :btree
+  add_index "task_responses", ["student_id", "school_class_id", "task_id"], name: "task_response_tri_index", unique: true, using: :btree
+  add_index "task_responses", ["student_id"], name: "index_task_responses_on_student_id", using: :btree
+  add_index "task_responses", ["task_id"], name: "index_task_responses_on_task_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "type"

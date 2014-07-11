@@ -10,14 +10,14 @@
       <% if locked %>
           <img src = "http://openclipart.org/image/800px/svg_to_png/68533/padlock.png" width="21" height="21">
           <%= children.title %>
-          [Depends on: <%= children.prerequisites.first.title.to_s if children.prerequisites.first!=nil %>]
       <% else %>
           <%if children.is_a?(AssessmentTask) %>
-            <a href='/student_portal/assessment_task/<%= children.id%>'> <%= children.title %></a>
+              <%= link_to children.title, student_portal_assessment_task_path(children) %>
           <% else %>
-            <a href='/student_portal/whateven/<%= children.id%>'> <%= children.title %></a>
+              <%= link_to children.title, student_portal_laplaya_task_path(children) %>
           <% end %>
       <% end %>
-
+      [Depends on: <%= children.prerequisites.first.title.to_s if children.prerequisites.first!=nil %>]
+      [Unlocks: <%= children.dependants.first.title.to_s if children.dependants.first!=nil %>]
     </div>
 <% end %>

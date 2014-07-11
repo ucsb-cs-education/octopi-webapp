@@ -1,4 +1,4 @@
-<% provide(:parent_page,'curriculum') %>
+<% provide(:parent_redirect,student_portal_signin_path) %>
 <div id = "select-module">
   <div class="form-group" id = "module-list" >
       <form id = "change-module"action="<%= @page.id %>">
@@ -14,6 +14,7 @@
 </div>
 
 <%= render partial: "inner_header"%>
+
 
 <div id = "children-pages" >
   <%= render partial: "student_portal/pages/module_page/children",collection: @page.children %>

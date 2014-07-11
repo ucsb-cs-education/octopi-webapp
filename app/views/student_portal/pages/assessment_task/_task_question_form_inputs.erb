@@ -1,0 +1,20 @@
+<div class="assessment_question_fields question-box" id="assessment_question_<%= question.id %>">
+  <div class="question-title">
+    <%= question.title %>
+  </div>
+  <div class="question-body">
+    <%= question.question_body.html_safe %>
+  </div>
+  <div id="question-answers">
+    <%= render partial: "student_portal/pages/assessment_task/question_answer",
+               collection: JSON.parse(question.answers),
+               locals: {
+                       :question_type => question.question_type,
+                       :question_id => question.id, f: p,
+                       p: p
+               } %>
+
+    <%= p.input :student_answers, class:'question-input'%>
+    <%= p.hidden_field :assessment_question_id %>
+  </div>
+</div>

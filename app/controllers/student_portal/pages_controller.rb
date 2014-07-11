@@ -1,7 +1,8 @@
 class StudentPortal::PagesController < StudentPortal::BaseController
   before_action :signed_in_student
   before_action :verify_valid_module_page, only: [:module_page, :activity]
-  before_action :verify_valid_module_page_task, only: [:assessment_task]
+  before_action :verify_valid_module_page_assessment_task, only: [:assessment_task]
+  before_action :verify_valid_module_page_laplaya_task, only: [:laplaya_task]
   before_action :verify_unlocked_activity, only: [:activity]
 
   def module_page
@@ -19,6 +20,15 @@ class StudentPortal::PagesController < StudentPortal::BaseController
 
   def assessment_task
     @page = AssessmentTask.find(params[:id])
+    @task_response = TaskResponse.new(student_id:current_student.id,school_class_id:current_school_class.id,task_id:@page.id)
+    @page.children.each do |x|
+      @task_response.assessment_question_responses.build(assessment_question: x)
+    end
+
+  end
+
+  def laplaya_task
+    @page = LaplayaTask.find(params[:id])
   end
 
 
@@ -41,13 +51,23 @@ class StudentPortal::PagesController < StudentPortal::BaseController
                                                     unlockable_type: "Page", unlockable_id:@page.id)==nil
   end
 
-  def verify_valid_module_page_task
+  def verify_valid_module_page_assessment_task
     @page = AssessmentTask.find(params[:id])
     if !in_a_valid_module_page?(@page.parent.parent)
       redirect_to_first_module_page
     else
       unlocker = Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id,unlockable_type:"Task", unlockable_id:@page.id)
       redirect_to_first_module_page if unlocker == nil || unlocker.completed==true
+    end
+  end
+
+  def verify_valid_module_page_laplaya_task
+    @page = LaplayaTask.find(params[:id])
+    if !in_a_valid_module_page?(@page.parent.parent)
+      redirect_to_first_module_page
+    else
+      redirect_to_first_module_page if Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id,
+                                                      unlockable_type: "Task", unlockable_id:@page.id)==nil
     end
   end
 
@@ -68,4 +88,20 @@ class StudentPortal::PagesController < StudentPortal::BaseController
       redirect_to action: 'module_page', id: id
     end
   end
+
+  def assessment_response
+    @task = AssessmentTask.find(params[:id])
+    @task_response = TaskResponse.create(assessment_response_params)
+    redirect_to student_portal_activity_path(@task.parent)
+  end
+
+  private
+    def assessment_response_params
+      result = params.require(:task_response).permit(:'assessment_question_responses_attributes' => [:student_answers, :assessment_question_id])
+      result[:task_id] = @task.id
+      result[:student_id] = current_student.id
+      result[:school_class_id] = current_school_class.id
+      result
+    end
+
 end

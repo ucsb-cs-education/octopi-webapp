@@ -2,11 +2,10 @@
   <%= @page.title %>
 </div>
 <div id = 'parent-link'>
-  <% if @page.is_a?(ModulePage) %>
-      <a href = '/student_portal/signin'>Back to Sign In</a>
-  <% else %>
-      <a href = '/student_portal/<%=yield(:parent_page)+'/'+@page.parent.id.to_s%>'>Back to <%= @page.parent.title %></a>
-  <% end unless yield(:parent_page)==""%>
+    <% if @page.is_a?(ModulePage)%>
+      <%link_title = "Sign In"%>
+      <%else link_title = @page.parent.title end%>
+    <%= link_to "Return to #{link_title}", yield(:parent_redirect) unless yield(:parent_redirect)=="" %>
 </div>
 
 <div class = "student-body">

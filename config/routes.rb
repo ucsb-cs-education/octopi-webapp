@@ -3,6 +3,7 @@ OctopiWebapp::Application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
   namespace :student_portal do
     resources :sessions, only: [:create] #, :destroy]
+    root 'static_pages#home', as: ''
     root 'static_pages#home'
     match '/help', to: 'static_pages#help', via: 'get'
     match '/about', to: 'static_pages#about', via: 'get'
@@ -11,17 +12,20 @@ OctopiWebapp::Application.routes.draw do
     match '/home', to: redirect('/'), via: 'get'
     match '/signin', to: 'sessions#new', via: 'get'
     match '/signout', to: 'sessions#destroy', via: 'delete'
-    get '/module_page/:id', to: 'pages#module_page'
-    get '/activity/:id', to: 'pages#activity'
-    get '/assessment_task/:id', to: 'pages#assessment_task'
+    get '/modules/:id', to: 'pages#module_page', as: 'module'
+    get '/activities/:id', to: 'pages#activity', as: 'activity'
+    get '/assessment_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
+    post '/assessment_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
+    get '/laplaya_tasks/:id', to: 'pages#laplaya_task', as: 'laplaya_task'
   end
   match '/school_classes/:school_class_id/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'
   match '/schools/:school_id/school_classes.json', to: 'student_portal/sessions#list_school_classes', format: false, via: 'get'
 
+
   resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, controller: 'student_portal/laplaya/laplaya_files' do
   end
 
-  #resources :assessment_questions, only: [:show, :update, :destroy, :create, :index], format: false, controller:
+            #resources :assessment_questions, only: [:show, :update, :destroy, :create, :index], format: false, controller:
 
   resources :schools, only: [:show, :index], shallow: true do
    # match '/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'

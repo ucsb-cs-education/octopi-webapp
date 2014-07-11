@@ -29,11 +29,15 @@ namespace :db do
           c = FactoryGirl.create(:activity_page, module_page: b)
           2.times do
             d = FactoryGirl.create(:laplaya_task, activity_page: c,)
-            d.depend_on(d.id-1)
+            if(d.id-1 > 0)
+              d.depend_on(d.id-1)
+            end
           end
           2.times do
             e = FactoryGirl.create(:assessment_task, activity_page: c)
-            e.depend_on(e.id-1)
+            if(e.id-1 > 0)
+              e.depend_on(e.id-1)
+            end
             2.times do
               f = FactoryGirl.create(:assessment_question, assessment_task: e)
             end
@@ -54,8 +58,8 @@ namespace :db do
     School.first.curriculum_pages << CurriculumPage.first
     School.first.school_classes.first.module_pages << CurriculumPage.first.module_pages.first
 
-    FactoryGirl.create(:unlock, unlockable_id:1,unlockable_type:"Task",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:false )
-    FactoryGirl.create(:unlock, unlockable_id:3,unlockable_type:"Page",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:false )
+    4.times {|x| FactoryGirl.create(:unlock, unlockable_id:x,unlockable_type:"Task",school_class_id: School.first.school_classes.first.id,student_id:4,completed:false )}
+    FactoryGirl.create(:unlock, unlockable_id:3,unlockable_type:"Page",school_class_id: School.first.school_classes.first.id,student_id:4,completed:false )
 
     #FactoryGirl.create(:unlock, unlockable_id:5,unlockable_type:"Task",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:false )
     #FactoryGirl.create(:unlock, unlockable_id:7,unlockable_type:"Task",school_class_id: School.first.school_classes.first.id,student_id:Student.find(4).id,completed:false )
