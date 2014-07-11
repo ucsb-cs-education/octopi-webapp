@@ -50,6 +50,7 @@ describe "SchoolClasses", type: :feature do
   describe "Show page" do
     before do
       sign_in_as_staff(staff)
+      student_in_class
       visit school_class_path(school_class)
     end
     it { should have_content('Curriculum') }
