@@ -33,27 +33,25 @@ class SchoolClassesController < ApplicationController
 
   # GET /school_classes/1/edit
   def edit
+    @student = Student.new
   end
 
 
   def add_new_student
     @student = Student.new(student_params)
     @student.school = @school_class.school
-    Student.transaction do
-      @school_class.students << @student unless @school_class.students.include? @student
-    end
-    if @student.save
-      respond_to do |format|
-        format.js    do
-          js false
-        end
-        format.html do
-          redirect_to edit_school_class_path, notice: 'Student was successfully added.'
-        end
-
+    begin
+      Student.transaction do
+        @student.save!
+        @school_class.students << @student unless @school_class.students.include? @student
       end
-    else
-      render 'new', :layout => 'layouts/devise'
+    rescue ActiveRecord::RecordInvalid
+      response.status = :bad_request
+    end
+    respond_to do |format|
+      format.js do
+        js false
+      end
     end
   end
 
@@ -63,13 +61,9 @@ class SchoolClassesController < ApplicationController
     authorize! :update, @student
     @school_class.students << @student unless @school_class.students.include? @student
     respond_to do |format|
-      format.js    do
+      format.js do
         js false
       end
-      format.html do
-        redirect_to edit_school_class_path, notice: 'Student was successfully added.'
-      end
-
     end
   end
 
@@ -80,18 +74,15 @@ class SchoolClassesController < ApplicationController
         format.html do
           redirect_to edit_school_class_path, notice: 'Class was successfully updated.'
         end
-        format.js do
-          js false
-        end
       end
-
     else
       render action: 'edit'
     end
   end
+
   private
   def student_params
-    params.require(:student).permit(:first_name, :last_name,:login_name, :password, :password_confirmation)
+    params.require(:student).permit(:first_name, :last_name, :login_name, :password, :password_confirmation)
   end
 
   def school_class_params

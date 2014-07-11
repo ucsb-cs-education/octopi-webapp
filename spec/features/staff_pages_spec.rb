@@ -37,8 +37,8 @@ describe 'Staff pages', type: :feature do
         fill_in 'First name', with: 'Example'
         fill_in 'Last name', with: 'Staff'
         fill_in 'Email', with: 'staff@example.com'
-        fill_in 'Password', with: 'foobarbaz'
-        fill_in 'Password confirmation', with: 'foobarbaz'
+        fill_in 'Password', with: 'foobarbaz', match: :prefer_exact
+        fill_in 'Password confirmation', with: 'foobarbaz', match: :prefer_exact
       end
 
       it 'should create a staff' do

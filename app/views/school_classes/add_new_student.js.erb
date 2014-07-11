@@ -1,6 +1,12 @@
+<% if @student.errors.empty? %>
 $(function() {
     $("#classlist").append('<tr><td><%= @student.first_name %></td><td><%= @student.last_name %></td><td><%= @student.login_name %></td></tr>');
     $("#new_student").addClass("hidden");
     $("#new_student_button").removeClass("hidden");
     $('#new_student').find('form')[0].reset()
 });
+<% else %>
+$(function() {
+    $('#new_student').html("<%= j render 'new_student_form' %>");
+});
+<% end %>

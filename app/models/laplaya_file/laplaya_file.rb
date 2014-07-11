@@ -8,6 +8,15 @@ class LaplayaFile < ActiveRecord::Base
     self.file_name
   end
 
+  def clone(other_file)
+    update_attributes!(file_name: other_file.file_name,
+                       project: other_file.project,
+                       media: other_file.media,
+                       thumbnail: other_file.thumbnail,
+                       note: other_file.note
+    )
+  end
+
   # def owners
   #   User.with_role(:owner, self)
   # end
