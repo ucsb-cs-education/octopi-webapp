@@ -4,6 +4,9 @@ class ActivityPage < Page
   acts_as_list scope: [:type, :page_id]
   has_many :tasks, -> { order('position ASC') }, foreign_key: :page_id
 
+  has_many :activity_dependencies, foreign_key: :activity_dependant_id, dependent: :destroy
+  has_many :prerequisites, :through => :activity_dependencies, source: :task_prerequisite
+
   alias_attribute :children, :tasks
   alias_attribute :parent, :module_page
 
@@ -18,6 +21,10 @@ class ActivityPage < Page
       end
       update_attributes!(params)
     end
+  end
+
+  def depend_on (prereq)
+    activity_dependencies.create!(task_prerequisite_id: prereq.id)
   end
 
 end

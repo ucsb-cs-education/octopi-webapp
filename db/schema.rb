@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140711202204) do
+ActiveRecord::Schema.define(version: 20140714182200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,10 +31,21 @@ ActiveRecord::Schema.define(version: 20140711202204) do
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
 
+  create_table "activity_dependencies", id: false, force: true do |t|
+    t.integer "task_prerequisite_id"
+    t.integer "activity_dependant_id"
+  end
+
+  add_index "activity_dependencies", ["activity_dependant_id"], name: "index_activity_dependencies_on_activity_dependant_id", using: :btree
+  add_index "activity_dependencies", ["task_prerequisite_id", "activity_dependant_id"], name: "activity_dependency_index", unique: true, using: :btree
+  add_index "activity_dependencies", ["task_prerequisite_id"], name: "index_activity_dependencies_on_task_prerequisite_id", using: :btree
+
   create_table "assessment_question_responses", force: true do |t|
-    t.integer "task_response_id"
-    t.integer "assessment_question_id"
-    t.text    "student_answers"
+    t.integer  "task_response_id"
+    t.integer  "assessment_question_id"
+    t.text     "selected"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "assessment_questions", force: true do |t|
@@ -179,7 +190,7 @@ ActiveRecord::Schema.define(version: 20140711202204) do
   end
 
   create_table "unlocks", force: true do |t|
-    t.boolean  "completed"
+    t.boolean  "hidden"
     t.integer  "unlockable_id"
     t.string   "unlockable_type"
     t.integer  "student_id"

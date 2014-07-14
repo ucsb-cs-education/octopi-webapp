@@ -1,2 +1,11 @@
 <% provide(:parent_redirect, student_portal_activity_path(@page.parent)) %>
 <%= render partial: "inner_header"%>
+<%= simple_form_for @task_response, url: student_portal_laplaya_task_response_path(@page), action: :post do |f| %>
+    <%= f.error_notification %>
+    <div class="form-action">
+      <%=f.hidden_field :laplaya_file %>
+    </div>
+    <div class="form-actions">
+      <%= f.submit 'Complete', class: 'btn btn-default' %>
+    </div>
+<% end %>

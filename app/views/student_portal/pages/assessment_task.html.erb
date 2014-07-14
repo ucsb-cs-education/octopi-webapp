@@ -10,18 +10,3 @@
       <%= f.submit 'Submit your answers', class: 'btn btn-default' %>
     </div>
 <% end %>
-
-
-<script>
-  $('.answer-input').change(function(){
-      parent_box = $(this).parents().closest(".question-box")
-      var str = "["
-      parent_box.find('.answer-input').each(function(){
-          if($(this).prop('checked')===true){
-              str+=$(this).val()+","
-          }
-      });
-      parent_box.find(".question-input").first().val(str+"]");
-      console.log(str)
-  });
-</script>

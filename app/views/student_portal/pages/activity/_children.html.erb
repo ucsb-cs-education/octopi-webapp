@@ -3,7 +3,7 @@
 <% if @unlocks.find_by(unlockable_id:children.id) == nil %>
     <% locked = true %>
 <% else %>
-    <% complete = true if @unlocks.find_by(unlockable_id:children.id).completed == true %>
+    <% complete = true if @unlocks.find_by(unlockable_id:children.id).hidden == true %>
 <% end %>
 <% if !(children.is_a?(AssessmentTask) && complete) %>
     <div class = "child-link<%= " locked" if locked%><%= " complete" if complete%>">
@@ -17,7 +17,5 @@
               <%= link_to children.title, student_portal_laplaya_task_path(children) %>
           <% end %>
       <% end %>
-      [Depends on: <%= children.prerequisites.first.title.to_s if children.prerequisites.first!=nil %>]
-      [Unlocks: <%= children.dependants.first.title.to_s if children.dependants.first!=nil %>]
     </div>
 <% end %>

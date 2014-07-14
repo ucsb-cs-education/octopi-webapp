@@ -1,7 +1,7 @@
 class CreateUnlocks < ActiveRecord::Migration
   def change
     create_table :unlocks do |t|
-      t.boolean :completed
+      t.boolean :hidden
       t.integer :unlockable_id
       t.string :unlockable_type
 

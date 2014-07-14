@@ -3,7 +3,7 @@
 <% if @unlocks.find_by(unlockable_id:children.id) == nil %>
     <% locked = true %>
 <% else %>
-    <% complete = true if @unlocks.find_by(unlockable_id:children.id).completed == true %>
+    <% complete = true if @unlocks.find_by(unlockable_id:children.id).hidden == true %>
 <% end %>
 <div class = "child-link<%= " locked" if locked%><%= " complete" if complete%>">
   <% if locked %>

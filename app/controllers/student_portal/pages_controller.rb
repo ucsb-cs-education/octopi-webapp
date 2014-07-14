@@ -1,15 +1,16 @@
 class StudentPortal::PagesController < StudentPortal::BaseController
   before_action :signed_in_student
   before_action :verify_valid_module_page, only: [:module_page, :activity]
-  before_action :verify_valid_module_page_assessment_task, only: [:assessment_task]
-  before_action :verify_valid_module_page_laplaya_task, only: [:laplaya_task]
+  before_action :verify_valid_page_assessment_task, only: [:assessment_task]
+  before_action :verify_valid_page_laplaya_task, only: [:laplaya_task]
   before_action :verify_unlocked_activity, only: [:activity]
+
 
   def module_page
     @page = ModulePage.find(params[:id])
     activity_ids = @page.activity_pages.pluck(:id)
     @unlocks = Unlock.where(student_id: current_student.id, school_class_id: current_school_class.id, unlockable_type: "Page", unlockable_id: activity_ids)
-    set_module_cookie
+    set_module_cookie(@page)
   end
 
   def activity
@@ -29,13 +30,14 @@ class StudentPortal::PagesController < StudentPortal::BaseController
 
   def laplaya_task
     @page = LaplayaTask.find(params[:id])
+    @task_response = TaskResponse.new(student_id:current_student.id,school_class_id:current_school_class.id,task_id:@page.id)
   end
 
 
 
-  def set_module_cookie
-    if @page != nil
-      cookies.permanent.signed[:student_last_module] = @page.id
+  def set_module_cookie(which_module)
+    if which_module != nil
+      cookies.permanent.signed[:student_last_module] = which_module.id
     end
   end
 
@@ -48,26 +50,29 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def verify_unlocked_activity
     @page = Page.find(params[:id])
     redirect_to_first_module_page if Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id,
-                                                    unlockable_type: "Page", unlockable_id:@page.id)==nil
+                                    unlockable_type: "Page", unlockable_id:@page.id)==nil
+
   end
 
-  def verify_valid_module_page_assessment_task
+  def verify_valid_page_assessment_task
     @page = AssessmentTask.find(params[:id])
     if !in_a_valid_module_page?(@page.parent.parent)
       redirect_to_first_module_page
     else
       unlocker = Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id,unlockable_type:"Task", unlockable_id:@page.id)
-      redirect_to_first_module_page if unlocker == nil || unlocker.completed==true
+      activity_unlocker = Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id,unlockable_type:"Page", unlockable_id:@page.activity_page)
+      redirect_to_first_module_page if unlocker == nil || unlocker.hidden==true || activity_unlocker==nil
     end
   end
 
-  def verify_valid_module_page_laplaya_task
+  def verify_valid_page_laplaya_task
     @page = LaplayaTask.find(params[:id])
     if !in_a_valid_module_page?(@page.parent.parent)
       redirect_to_first_module_page
     else
-      redirect_to_first_module_page if Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id,
-                                                      unlockable_type: "Task", unlockable_id:@page.id)==nil
+      unlocker = Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id,unlockable_type:"Task", unlockable_id:@page.id)
+      activity_unlocker = Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id,unlockable_type:"Page", unlockable_id:@page.activity_page)
+      redirect_to_first_module_page if unlocker == nil || activity_unlocker==nil
     end
   end
 
@@ -91,13 +96,69 @@ class StudentPortal::PagesController < StudentPortal::BaseController
 
   def assessment_response
     @task = AssessmentTask.find(params[:id])
-    @task_response = TaskResponse.create(assessment_response_params)
+    unlock = Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id, unlockable_type: "Task", unlockable_id: @task.id)
+    if unlock == nil
+      flash[:warning]='You do have permission to complete that task'
+    else
+      unlock.update_attribute(:hidden,true)
+      unlock_dependants(@task)
+      @task_response = TaskResponse.create(assessment_response_params)
+    end
     redirect_to student_portal_activity_path(@task.parent)
+  end
+
+  def laplaya_task_response
+    @task = LaplayaTask.find(params[:id])
+    unlock = Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id, unlockable_type: "Task", unlockable_id: @task.id)
+    if unlock == nil
+      flash[:warning]='You do have permission to complete that task'
+    else
+      unlock.update_attribute(:hidden,true)
+      unlock_dependants(@task)
+      @task_response = TaskResponse.create(laplaya_task_response_params)
+    end
+    redirect_to student_portal_activity_path(@task.parent)
+  end
+
+  def unlock_dependants(prerequisite)
+    prerequisite.activity_dependants.each{|x|
+      if check_prereqs(x) == true
+        Unlock.create(student_id: current_student.id, school_class_id: current_school_class.id, unlockable_type: "Page", unlockable_id: x.id)
+      end
+    }
+    prerequisite.dependants.each {|x|
+      if check_prereqs(x) == true
+        if Unlock.find_by(student_id: current_student.id,
+                          school_class_id: current_school_class.id,
+                          unlockable_type: "Page",
+                          unlockable_id: x.activity_page) != nil
+          Unlock.create(student_id: current_student.id, school_class_id: current_school_class.id, unlockable_type: "Task", unlockable_id: x.id)
+        end
+      end
+    }
+  end
+
+  def check_prereqs(model)
+    model.prerequisites.each{|y|
+      prereq_unlock = Unlock.find_by(student_id: current_student.id, school_class_id: current_school_class.id, unlockable_type: "Task", unlockable_id: y.id)
+      if prereq_unlock == nil || prereq_unlock.hidden != true
+        return false
+      end
+    }
+    return true
   end
 
   private
     def assessment_response_params
       result = params.require(:task_response).permit(:'assessment_question_responses_attributes' => [:student_answers, :assessment_question_id])
+      result[:task_id] = @task.id
+      result[:student_id] = current_student.id
+      result[:school_class_id] = current_school_class.id
+      result
+    end
+
+    def laplaya_task_response_params
+      result = params.require(:task_response).permit(:laplaya_file)
       result[:task_id] = @task.id
       result[:student_id] = current_student.id
       result[:school_class_id] = current_school_class.id

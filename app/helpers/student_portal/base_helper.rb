@@ -69,7 +69,9 @@ module StudentPortal::BaseHelper
   end
 
   def redirect_back_or(default)
-    redirect_to(session[:return_to] || default)
+    redirect_to(session[:return_to] ||
+                    student_portal_module_path(cookies.signed[:student_last_module])||
+                    default)
     session.delete(:return_to)
   end
 
