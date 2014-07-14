@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(version: 20140714182200) do
     t.integer  "laplaya_file_id"
     t.text     "assessment_question_response"
     t.string   "type"
+    t.boolean  "completed",                    default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
