@@ -9,11 +9,11 @@
     <%= render partial: "student_portal/pages/assessment_task/question_answer",
                collection: JSON.parse(question.answers),
                locals: {
-                       :question_type => question.question_type,
-                       :question_id => question.id, f: p,
+                       :question => question,
+                       f: p,
                        p: p
                } %>
-
+    <% #hidden field needs a class so that it can be accessed in javascript %>
     <%= p.hidden_field :selected, class:'question-input'%>
     <%= p.hidden_field :assessment_question_id %>
   </div>

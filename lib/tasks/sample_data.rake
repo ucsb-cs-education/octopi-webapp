@@ -52,8 +52,8 @@ namespace :db do
     School.first.curriculum_pages << CurriculumPage.first
     School.first.school_classes.first.module_pages << CurriculumPage.first.module_pages.first
 
-    2.times {|x| FactoryGirl.create(:unlock, unlockable_id:x,unlockable_type:"Task",school_class_id: School.first.school_classes.first.id,student_id:4,hidden:false )}
-    FactoryGirl.create(:unlock, unlockable_id:3,unlockable_type:"Page",school_class_id: School.first.school_classes.first.id,student_id:4,hidden:false )
+    Unlock.create(unlockable:Task.find(1).becomes(Task),school_class: School.first.school_classes.first,student:Student.find(4),hidden:false )
+    Unlock.create(unlockable:ActivityPage.find(3),school_class: School.first.school_classes.first,student:Student.find(4),hidden:false )
 
     Task.find(2).depend_on(Task.find(1))
     Task.find(3).depend_on(Task.find(1))

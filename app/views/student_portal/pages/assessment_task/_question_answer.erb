@@ -1,10 +1,6 @@
 <div class="answer">
   <div class="input-box">
-    <% if question_type == "singleAnswer" %>
-        <input class = "answer-input" name = "question_<%= question_id %>_input" type="radio" value = <%=question_answer_counter%>>
-    <% else %>
-        <input class = "answer-input" name = "question_<%= question_id %>_input" type="checkbox" value = <%=question_answer_counter%>>
-    <% end %>
+    <input class="answer-input" name="question_<%= question.id %>_input" type="<%= (question.question_type == "singleAnswer") ? "radio":"checkbox" %>" value= <%= question_answer_counter %>>
   </div>
   <div class="answer-text">
     <%= question_answer['text'].html_safe %>

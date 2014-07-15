@@ -1,21 +1,22 @@
-<% locked = false %>
-<% complete = false%>
-<% if @unlocks.find_by(unlockable_id:children.id) == nil %>
-    <% locked = true %>
-<% else %>
-    <% complete = true if @unlocks.find_by(unlockable_id:children.id).hidden == true %>
-<% end %>
-<% if !(children.is_a?(AssessmentTask) && complete) %>
-    <div class = "child-link<%= " locked" if locked%><%= " complete" if complete%>">
-      <% if locked %>
-          <img src = "http://openclipart.org/image/800px/svg_to_png/68533/padlock.png" width="21" height="21">
+<% if status = children.get_visibility_status_for(current_student, current_school_class) %>
+    <% if status == :locked %>
+        <div class="child-link locked">
+          <%= image_tag("padlock.png", size: "21") %>
           <%= children.title %>
-      <% else %>
-          <%if children.is_a?(AssessmentTask) %>
+        </div>
+    <% else %>
+        <div class="child-link">
+          <% if children.is_a?(AssessmentTask) %>
               <%= link_to children.title, student_portal_assessment_task_path(children) %>
           <% else %>
               <%= link_to children.title, student_portal_laplaya_task_path(children) %>
           <% end %>
-      <% end %>
-    </div>
+        </div>
+    <% end %>
+<% else %>
+    <% if children.is_a?(LaplayaTask) %>
+        <div class="child-link complete">
+          <%= link_to children.title, student_portal_laplaya_task_path(children) %>
+        </div>
+    <% end %>
 <% end %>

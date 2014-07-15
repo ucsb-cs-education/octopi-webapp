@@ -15,4 +15,16 @@ class AssessmentTask < Task
       update_attributes!(params)
     end
   end
+
+  def get_visibility_status_for(student,school_class)
+    if find_unlock_for(student,school_class).nil?
+      return :locked
+    else
+      if find_unlock_for(student,school_class).hidden==true
+        return false
+      else
+        return true
+      end
+    end
+  end
 end

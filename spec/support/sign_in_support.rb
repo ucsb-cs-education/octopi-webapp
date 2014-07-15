@@ -74,8 +74,8 @@ module ValidUserFeatureHelper
 
   def sign_in_as_a_valid_student_helper
     visit student_portal_signin_path
-    select @student.school.name, from: 'School'
-    select @student.school_classes.first.name, from: 'Class name'
+    select @student.school.name, from: 'School', match: :prefer_exact
+    select @student.school_classes.first.name, from: 'School class'
     select @student.login_name, from: 'Login name'
     fill_in "Password", with: @student.password
     click_button "Sign in"

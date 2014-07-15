@@ -1,4 +1,3 @@
-<% provide(:parent_redirect,student_portal_signin_path) %>
 <div id = "select-module">
   <div class="form-group" id = "module-list" >
       <form id = "change-module"action="<%= @page.id %>">
@@ -7,7 +6,7 @@
           <%= render partial: "student_portal/pages/module_page/module_options", collection:current_school_class.module_pages  %>
         </select>
         <div class="form-actions">
-            <input type="submit" class="btn btn-primary" value = "Switch Modules">
+            <input type="submit" class="btn btn-primary" value = "Switch Modules" id="change-module-button">
         </div>
       </form>
    </div>

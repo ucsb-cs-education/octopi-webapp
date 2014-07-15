@@ -26,7 +26,6 @@ OctopiWebapp::Application.routes.draw do
   resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, controller: 'student_portal/laplaya/laplaya_files' do
   end
 
-            #resources :assessment_questions, only: [:show, :update, :destroy, :create, :index], format: false, controller:
 
   resources :schools, only: [:show, :index], shallow: true do
    # match '/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'

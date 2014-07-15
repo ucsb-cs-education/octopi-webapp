@@ -1,13 +1,12 @@
-<div id = "page-title">
+<div id="page-title">
   <%= @page.title %>
 </div>
-<div id = 'parent-link'>
-    <% if @page.is_a?(ModulePage)%>
-      <%link_title = "Sign In"%>
-      <%else link_title = @page.parent.title end%>
-    <%= link_to "Return to #{link_title}", yield(:parent_redirect) unless yield(:parent_redirect)=="" %>
-</div>
+<% unless yield(:parent_redirect)=="" %>
+    <div id='parent-link'>
+      <%= link_to "Return to #{@page.parent.title}", yield(:parent_redirect) %>
+    </div>
+<% end %>
 
-<div class = "student-body">
+<div class="student-body">
   <%= @page.student_body.html_safe if @page.respond_to?(:student_body) && !(@page.student_body=="") %>
 </div>

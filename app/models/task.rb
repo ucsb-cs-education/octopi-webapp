@@ -20,17 +20,21 @@ class Task < ActiveRecord::Base
   validates :title, presence: true, length: {maximum: 100}, allow_blank: false
 
   def depend_on(prereq)
-    task_dependencies.create!(prerequisite_id: prereq.id)
+    task_dependencies.create!(prerequisite: prereq)
   end
 
   def be_prereq_to(depend)
     if depend.is_a?(Task)
-      reverse_task_dependencies.create!(dependant_id: depend.id)
+      reverse_task_dependencies.create!(dependant: depend)
     else
       if depend.is_a?(ActivityPage)
-        activity_dependencies.create!(activity_dependant_id: depend.id)
+        activity_dependencies.create!(activity_dependant: depend)
       end
     end
+  end
+
+  def find_unlock_for(student,school_class)
+    Unlock.find_by(student: student, school_class: school_class, unlockable: self)
   end
 
 end
