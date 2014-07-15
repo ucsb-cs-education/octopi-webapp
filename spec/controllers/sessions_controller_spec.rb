@@ -29,14 +29,16 @@ describe StudentPortal::SessionsController, type: :controller do
       end
       describe "verify that the page is redirected when a student signs in" do
         it do
-          xhr :post, :create, session: {school: school_class.school, school_class: school_class, login_name: new_student.login_name,
-          password: new_student.password}
+          post :create, session: {school: school_class.school,
+                                  school_class: school_class,
+                                  login_name: new_student.login_name,
+                                  password: new_student.password}
           expect(response).to redirect_to(student_portal_root_url)
         end
       end
       describe "verify that a signed in student cannot access the login page" do
         it do
-          xhr :post, :new
+          post :new
           expect(response).to redirect_to(student_portal_root_url)
         end
       end

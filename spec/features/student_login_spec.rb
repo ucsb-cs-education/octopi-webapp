@@ -28,10 +28,14 @@ describe "For the student portal,", js: true, type: :feature do
     end
     describe " when entering the right password" do
       before {sign_in_as_student(new_student)}
-      it {should_not have_content("Invalid login/password combination")}
+      it do
+        expect(current_path).to eq(student_portal_root_path)
+        should_not have_content("Invalid login/password combination")
+      end
       describe " will stay logged in" do
         before {visit student_portal_signin_path}
         it do
+          expect(current_path).to eq(student_portal_root_path)
           should have_content("Student signed in")
           should have_content(new_student.name)
         end
