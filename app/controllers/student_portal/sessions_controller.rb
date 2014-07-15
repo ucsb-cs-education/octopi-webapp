@@ -3,7 +3,12 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
   skip_authorize_resource :school
 
   def new
-    render(:layout => 'layouts/devise')
+    if signed_in_student?
+      redirect_to student_portal_root_url
+      flash[:warning] = 'Student signed in.'
+    else
+      render(:layout => 'layouts/devise')
+    end
   end
 
   def create
@@ -26,12 +31,12 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
 
   def list_school_classes
     school_classes = School.find(params[:school_id]).school_classes
-    render json: school_classes.select(:name, :school_id, :id)
+    render json: school_classes.order("name ASC").select(:name, :school_id, :id)
   end
 
   def list_student_logins
     students  = SchoolClass.find(params[:school_class_id]).students
-    render json: students.select(:login_name, :school_class_id, :id)
+    render json: students.order("login_name ASC").select(:login_name, :school_class_id, :id)
   end
 
 

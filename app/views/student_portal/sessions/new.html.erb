@@ -3,9 +3,9 @@
 <h2>Student sign in</h2>
 <%= simple_form_for :session, url: student_portal_sessions_path do |f| %>
     <div class="form-inputs">
-      <% selected_school_id = School.second.id %>
+      <% selected_school_id = School.first.id %>
       <%= f.input :school, include_blank: false, collection: School.all.to_a, selected: selected_school_id %>
-      <%= f.input :school_class, collection: School.find(selected_school_id).school_classes,
+      <%= f.input :school_class, collection: School.find(selected_school_id).school_classes, label: "Class name",
                   include_blank: true, selected: 0,
                   input_html: {
               'data-option-dependent' => true,

@@ -38,7 +38,9 @@ module StudentPortal::BaseHelper
     end
     @current_school_class
   end
-
+  def current_school_class?(school_class)
+    school_class == current_school_class
+  end
   def current_student?(student)
     student == current_student
   end
@@ -63,6 +65,7 @@ module StudentPortal::BaseHelper
                                   Student.create_remember_hash(Student.new_remember_token))
     session.delete(:remember_token)
     self.current_student = nil
+    self.current_school_class = nil
   end
 
   def redirect_back_or(default)
