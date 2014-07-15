@@ -10,8 +10,7 @@ describe StudentPortal::SessionsController, type: :controller do
       before(:each) do
         school_class
         new_student
-        visit student_portal_signin_path
-        sign_in_student(new_student, school_class)
+        sign_in_as_student(new_student)
       end
       describe "the class should be saved" do
         it { session[:school_class_id].should eq(school_class.id) }
@@ -27,6 +26,19 @@ describe StudentPortal::SessionsController, type: :controller do
       end
       describe "verify the current school class" do
         it { current_school_class?(school_class).should eq(true) }
+      end
+      describe "verify that the page is redirected when a student signs in" do
+        it do
+          xhr :post, :create, session: {school: school_class.school, school_class: school_class, login_name: new_student.login_name,
+          password: new_student.password}
+          expect(response).to redirect_to(student_portal_root_url)
+        end
+      end
+      describe "verify that a signed in student cannot access the login page" do
+        it do
+          xhr :post, :new
+          expect(response).to redirect_to(student_portal_root_url)
+        end
       end
 
       describe "and then logging out" do

@@ -41,6 +41,7 @@ module ValidUserControllerHelper
     # Sign in when not using Capybara.
     remember_token = Student.new_remember_token
     session[:student_remember_token] = remember_token
+    session[:school_class_id] = @student.school_classes.first.id
     @student.update_attribute(:remember_token, Student.create_remember_hash(remember_token))
   end
 end
@@ -54,7 +55,8 @@ module ValidUserRequestHelper
   end
 
   def sign_in_as_a_valid_student_helper
-    raise NotImplementedError
+    post_via_redirect student_portal_sessions_path, 'student[school]' =>@student.school, 'student[login_name]' =>@student.login_name,
+                      'student[school_classes]' =>@student.school_classes, 'student[password]' =>@student.password
   end
 
 end
@@ -72,9 +74,10 @@ module ValidUserFeatureHelper
 
   def sign_in_as_a_valid_student_helper
     visit student_portal_signin_path
-    select user.school.name, from: 'School'
-    select user.login_name, from: 'Login Name'
-    fill_in "Password", with: user.password
+    select @student.school.name, from: 'School'
+    select @student.school_classes.first.name, from: 'Class name'
+    select @student.login_name, from: 'Login name'
+    fill_in "Password", with: @student.password
     click_button "Sign in"
   end
 

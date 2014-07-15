@@ -4,7 +4,7 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
 
   def new
     if signed_in_student?
-      redirect_to student_portal_root_url
+      redirect_back_or student_portal_root_url
       flash[:warning] = 'Student signed in.'
     else
       render(:layout => 'layouts/devise')
@@ -23,8 +23,11 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
     if student && school_class && student.authenticate(password)
       sign_in_student student, school_class
       redirect_back_or student_portal_root_url
+    elsif student == nil || school_class == nil
+      flash.now[:danger] = 'Please select a class and/or login name'
+      render 'new', layout: 'layouts/devise'
     else
-      flash.now[:danger] = 'Invalid email/password combination'
+      flash.now[:danger] = 'Invalid login/password combination'
       render 'new', layout: 'layouts/devise'
     end
   end
