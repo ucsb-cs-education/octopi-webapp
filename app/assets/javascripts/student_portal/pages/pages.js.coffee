@@ -8,3 +8,8 @@ PagesController.prototype.assessment_task = () ->
       ansArray.push parseInt($(this).val())  if $(this).prop("checked") is true
 
     parent_box.find(".question-input").val JSON.stringify(ansArray)
+
+PagesController.prototype.module_page = () ->
+
+  $("#change-module").change ->
+    $(this).attr "action", $("#change-module option:selected").val()

@@ -20,8 +20,8 @@ describe "student portal", type: :feature do
   let(:assessment_task_not_in_class) { FactoryGirl.create(:assessment_task, activity_page: activity_page) }
   let(:assessment_question) { FactoryGirl.create(:assessment_question, assessment_task: assessment_task) }
 
-  let(:unlock) { Unlock.create(unlockable: activity_page, school_class: school_class.school.school_classes.first, student: new_student, hidden: false) }
-  let(:unlock_task) { Unlock.create(unlockable: assessment_task, school_class: school_class.school.school_classes.first, student: new_student, hidden: false) }
+  let(:unlock) { Unlock.create(unlockable: activity_page, school_class: school_class, student: new_student, hidden: false) }
+  let(:unlock_task) { Unlock.create(unlockable: assessment_task, school_class: school_class, student: new_student, hidden: false) }
 
   before(:each) do
     school_class
