@@ -55,5 +55,17 @@ body.pages {
         }
       }
     }
+    #base_laplaya_files {
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-top: 5px;
+      .base_laplaya_file {
+        h2 {
+          text-align: left;
+        }
+        border: 1px solid $gray-lighter;
+      }
+      margin-bottom: 20px;
+    }
   }
 }

@@ -10,11 +10,14 @@
 <div class='answer'>
   <div class='answerHead is<%= "Notchecked" unless isChecked==="checked" %><%= isChecked %>'>
     This answer is correct:<input type='<%= inputType %>' class='choices' name='answerChoice' <%= isChecked %>>
-    <%= '<button class="deleteAnswer"> Remove Answer </button>'.html_safe if can? :update, @page%>
+    <% if can? :update, @page %>
+        <button class="deleteAnswer">Remove Answer</button>
+    <% end %>
   </div>
   <div class='answerBox'>
-    <div class='<%= "octopieditable" if can? :update, @page%> answerText'>
+    <div class='<%= "octopieditable" if can? :update, @page %> answerText'>
       <%= showAnswer['text'].html_safe %>
+
     </div>
   </div>
 </div>

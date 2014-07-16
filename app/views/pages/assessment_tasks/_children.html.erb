@@ -1,4 +1,4 @@
-<ul id="children" <%= 'class=octopisortable' if can? :update, page%> data-update-url="<%= sort_activity_page_url(page) %>">
+<ul id="children" <%= 'class=octopisortable' if can? :update, page%> >
   <%= render partial: "page", collection: page.children %>
 </ul>
 <% if can? :update, @page %>
@@ -7,6 +7,6 @@
         <%= f.hidden_field :question_body, value: '<p></p>' %>
         <%= f.hidden_field :answers, value: '[{text:"<p></p>",correct:true}]' %>
         <%= f.hidden_field :question_type, value: 'singleAnswer' %>
-        <%= f.submit "Add New Question", class: "btn btn-default", id:"add-new-child-btn" %>
+        <%= f.submit "Add a new Question", class: "btn btn-default", id:"add-new-child-btn" %>
     <% end %>
 <% end %>

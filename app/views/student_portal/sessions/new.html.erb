@@ -1,45 +1,39 @@
 <% provide(:title, 'Student sign in') %>
 <% if School.any? %>
-<h2>Student sign in</h2>
-<%= simple_form_for :session, url: student_portal_sessions_path do |f| %>
-    <div class="form-inputs">
-      <% selected_school_id = School.first.id %>
-      <%= f.input :school, include_blank: false, collection: School.all.to_a, selected: selected_school_id %>
-      <%= f.input :school_class, collection: School.find(selected_school_id).school_classes, label: "Class name",
-                  include_blank: true, selected: 0,
-                  input_html: {
-              'data-option-dependent' => true,
-              'data-option-observed' => 'session_school',
-              'data-option-url' => '/schools/:school_id:/school_classes.json',
-              'data-option-key-method' => :id,
-              'data-option-value-method' => :name }
-      %>
-      <%= f.input :login_name, collection: School.find(selected_school_id).students.pluck(:login_name),
-                  include_blank: true, selected: 0,
-                  input_html: {
-      'data-option-dependent' => true,
-      'data-option-observed' => 'session_school_class',
-      'data-option-url' => '/school_classes/:school_class_id:/student_logins.json',
-      'data-option-key-method' => :login_name,
-      'data-option-value-method' => :login_name }
-      %>
-      <%= f.input :password, required: false %>
-    </div>
-    <div class="form-actions">
-      <%= f.button :submit, "Sign in" %>
-    </div>
-<% end %>
-        <script>
-          function changeId(school) {
-              alert(school)
-
-          }
-        </script>
-
+    <h2>Student sign in</h2>
+    <%= simple_form_for :session, url: student_portal_sessions_path do |f| %>
+        <div class="form-inputs">
+          <% selected_school_id = School.first.id %>
+          <%= f.input :school, include_blank: false,
+                      collection: School.all.to_a, selected: selected_school_id %>
+          <%= f.input :school_class, collection: School.find(selected_school_id).school_classes, label: "Class name",
+                      include_blank: 'Please select a class', selected: 0,
+                      input_html: {
+                              'data-option-dependent' => true,
+                              'data-option-observed' => 'session_school',
+                              'data-option-url' => '/schools/:school_id:/school_classes.json',
+                              'data-option-key-method' => :id,
+                              'data-option-value-method' => :name}
+          %>
+          <%= f.input :login_name, collection: School.find(selected_school_id).students.pluck(:login_name),
+                      include_blank: 'Please select a login name', selected: 0,
+                      input_html: {
+                              'data-option-dependent' => true,
+                              'data-option-observed' => 'session_school_class',
+                              'data-option-url' => '/school_classes/:school_class_id:/student_logins.json',
+                              'data-option-key-method' => :login_name,
+                              'data-option-value-method' => :login_name}
+          %>
+          <%= f.input :password, required: false %>
+        </div>
+        <div class="form-actions">
+          <%= f.button :submit, "Sign in" %>
+        </div>
+    <% end %>
 
 <% else %>
 
-<h3>Error: There are no schools currently set up for octopi.</h3>
-<div>Students: Please contact an administrator if you see this message.</div>
-<div>Staff: Please use the non-student portal available in the top right.</div>
+    <h3>Error: There are no schools currently set up for octopi.</h3>
+    <div>Students: Please contact an administrator if you see this message.</div>
+    <div>Staff: Please use the non-student portal available in the top right.</div>
 <% end %>

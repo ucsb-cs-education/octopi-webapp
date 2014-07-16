@@ -1,4 +1,4 @@
-<ul id="children" <%= 'class=octopisortable' if can? :update, page%> data-update-url="<%= sort_activity_page_url(page) %>">
+<ul id="children" <%= 'class=octopisortable' if can? :update, page%> >
   <%= render partial: "page", collection: page.children %>
 </ul>
 <% if can? :update, @page %>

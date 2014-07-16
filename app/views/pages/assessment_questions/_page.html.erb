@@ -1,3 +1,6 @@
-<%= content_tag_for :li, page.becomes(AssessmentQuestion), class: 'ui-state-default' do %>
-    <span class="ui-icon ui-icon-arrowthick-2-n-s handle" id="child-link"></span><%= link_to page.title, assessment_question_url(page) %>
+<%= content_tag_for :li, page.becomes(AssessmentQuestion), class: 'ui-state-default page-child-li' do %>
+    <% if can? :update, @page %>
+        <span class='ui-icon ui-icon-arrowthick-2-n-s'></span>
+    <% end %>
+    <%= link_to page.title, assessment_question_url(page) %>
 <% end %>
