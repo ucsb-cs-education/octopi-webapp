@@ -103,7 +103,7 @@ describe Pages::LaplayaTasksController, type: :controller do
     end
 
     describe "with unathorized parameters" do
-      let(:another_curriculum){FactoryGirl.create(:curriculum_page)}
+      let(:another_curriculum) { FactoryGirl.create(:curriculum_page) }
       it "should not use the unathorized parameters" do
         xhr :post, :create,
             activity_page_id: laplaya_task.parent.id,

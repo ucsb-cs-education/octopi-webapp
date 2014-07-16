@@ -5,7 +5,8 @@ class Pages::LaplayaTasksController < Pages::TasksController
 
   # GET /activity/:id
   def show
-    @user_laplaya_files = LaplayaFile.accessible_by(current_ability, :index)
+    @user_laplaya_files = LaplayaFile.with_role(:owner, current_user) if current_user.has_role? :super_staff
+    @user_laplaya_files ||= LaplayaFile.accessible_by(current_ability, :index)
   end
 
   def update
@@ -55,10 +56,14 @@ class Pages::LaplayaTasksController < Pages::TasksController
   end
 
   def clone
-    laplaya_file = LaplayaFile.find(params[:laplaya_file][:laplaya_file])
-    authorize! :show, laplaya_file
-    @laplaya_task.task_base_laplaya_file.clone(laplaya_file)
-    flash[:success] = "Laplaya File successfully cloned!"
+    if params[:laplaya_file] && params[:laplaya_file][:laplaya_file] && params[:laplaya_file][:laplaya_file].present?
+      laplaya_file = LaplayaFile.find(params[:laplaya_file][:laplaya_file])
+      authorize! :show, laplaya_file
+      @laplaya_task.task_base_laplaya_file.clone(laplaya_file)
+      flash[:success] = "Laplaya File successfully cloned!"
+    else
+      flash[:danger] = "Invalid selection for Laplaya File cloning!"
+    end
     redirect_to @laplaya_task
   end
 
@@ -71,4 +76,5 @@ class Pages::LaplayaTasksController < Pages::TasksController
   def laplaya_task_params
     params.require(:laplaya_task).permit(:title, :teacher_body, :student_body)
   end
+
 end
