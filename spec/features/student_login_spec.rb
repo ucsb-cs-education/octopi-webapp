@@ -5,10 +5,12 @@ describe "For the student portal,", js: true, type: :feature do
   let(:new_student) { FactoryGirl.create(:student, school: school_class.school, school_class: school_class) }
   let(:second_school_class) { FactoryGirl.create(:school_class) }
   let(:second_new_student) { FactoryGirl.create(:student, school: second_school_class.school, school_class: second_school_class) }
-  let(:second_school) {FactoryGirl.create(:school)}
+  let(:second_school) { FactoryGirl.create(:school) }
   let(:third_school_class) { FactoryGirl.create(:school_class, school: second_school) }
   let(:third_new_student) { FactoryGirl.create(:student, school: second_school, school_class: third_school_class) }
-  subject{page}
+  let(:class_prompt) { 'Please select a class' }
+  let(:login_prompt) { 'Please select a login name' }
+  subject { page }
   before(:each) do
     school_class
     new_student
@@ -21,19 +23,19 @@ describe "For the student portal,", js: true, type: :feature do
   end
   describe "on the login page" do
     it { should have_button("Sign in") }
-    it { should_not have_content("Student signed in")}
+    it { should_not have_content("Student signed in") }
     describe " while not selecting school class and login name" do
       before { click_button "Sign in" }
       it { should have_error_message "Please select a class and/or login name" }
     end
     describe " when entering the right password" do
-      before {sign_in_as_student(new_student)}
+      before { sign_in_as_student(new_student) }
       it do
         expect(current_path).to eq(student_portal_root_path)
         should_not have_content("Invalid login/password combination")
       end
       describe " will stay logged in" do
-        before {visit student_portal_signin_path}
+        before { visit student_portal_signin_path }
         it do
           expect(current_path).to eq(student_portal_root_path)
           should have_content("Student signed in")
@@ -58,40 +60,37 @@ describe "For the student portal,", js: true, type: :feature do
         select school_class.school, from: 'School'
         wait_for_ajax
         select school_class.name, from: 'Class name'
+        wait_for_ajax
       end
       it do
-        find_field('Class name').text.should have_text(second_school_class.name)
-        find_field('Class name').text.should have_text(school_class.name)
-        find_field('Class name').text.should_not have_text(third_school_class.name)
-        find_field('Login name').text.should_not have_text(second_new_student.login_name)
-        find_field('Login name').text.should_not have_text(third_new_student.login_name)
-        find_field('Login name').text.should have_text(new_student.login_name)
+        #have select is exact! should_not is here for completeness sake
+        should have_select('Class name', options: [class_prompt, second_school_class.name, school_class.name])
+        should_not have_select('Class name', options: [class_prompt, second_school_class.name])
+        should have_select('Login name', options: [login_prompt, new_student.login_name])
       end
       describe " and the same when switching the class" do
-        before {select second_school_class.name, from: 'Class name'}
+        before do
+          select second_school_class.name, from: 'Class name'
+          wait_for_ajax
+        end
         it do
-          find_field('Login name').text.should have_text(second_new_student.login_name)
-          find_field('Login name').text.should_not have_text(third_new_student.login_name)
-          find_field('Login name').text.should_not have_text(new_student.login_name)
+          should have_select('Login name', options: [login_prompt, second_new_student.login_name])
         end
       end
     end
     describe "a class not in the school should not appear in the dropdown and no students should show when switching schools" do
-      before {select second_school.name, from: 'School'}
+      before do
+        select second_school.name, from: 'School'
+        wait_for_ajax
+      end
       it do
-        find_field('Class name').text.should_not have_text(second_school_class.name)
-        find_field('Class name').text.should_not have_text(school_class.name)
-        find_field('Class name').text.should have_text(third_school_class.name)
-        find_field('Login name').text.should_not have_text(second_new_student.login_name)
-        find_field('Login name').text.should_not have_text(new_student.login_name)
-        find_field('Login name').text.should_not have_text(third_new_student.login_name)
+        should have_select('Class name', options: [class_prompt, third_school_class.name])
+        should have_select('Login name', options: [login_prompt])
       end
       describe " and should show the student when clicking the class" do
-        before {select third_school_class.name, from: 'Class name'}
+        before { select third_school_class.name, from: 'Class name' }
         it do
-          find_field('Login name').text.should_not have_text(second_new_student.login_name)
-          find_field('Login name').text.should_not have_text(new_student.login_name)
-          find_field('Login name').text.should have_text(third_new_student.login_name)
+          should have_select('Login name', options: [login_prompt, third_new_student.login_name])
         end
       end
     end

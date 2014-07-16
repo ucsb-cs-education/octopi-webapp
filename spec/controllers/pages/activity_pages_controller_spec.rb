@@ -6,10 +6,10 @@ describe Pages::ActivityPagesController, type: :controller do
   let(:student) { FactoryGirl.create(:student) }
   let(:super_staff) { FactoryGirl.create(:staff, :super_staff) }
   let(:staff) { FactoryGirl.create(:staff) }
-  let(:myself){ FactoryGirl.create(:activity_page)}
-  let(:myModel){ActivityPage}
-  let(:parent_id_symbol){:module_page_id}
-  let(:my_children){:laplaya_task}
+  let(:myself) { FactoryGirl.create(:activity_page) }
+  let(:myModel) { ActivityPage }
+  let(:parent_id_symbol) { :module_page_id }
+  let(:my_children) { :laplaya_task }
 
   before do
     sign_in_as_staff(super_staff)

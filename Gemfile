@@ -86,6 +86,7 @@ end
 group :test do
   gem 'selenium-webdriver', '~> 2.42.0'
   gem 'capybara', '~> 2.3.0'
+  gem 'poltergeist', '~> 1.5.1'
   gem 'launchy'
 end
 

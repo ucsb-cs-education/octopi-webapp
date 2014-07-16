@@ -6,9 +6,9 @@ describe Pages::CurriculumPagesController, type: :controller do
   let(:student) { FactoryGirl.create(:student) }
   let(:super_staff) { FactoryGirl.create(:staff, :super_staff) }
   let(:staff) { FactoryGirl.create(:staff) }
-  let(:myself){ FactoryGirl.create(:curriculum_page)}
-  let(:myModel){CurriculumPage}
-  let(:my_children){:module_page}
+  let(:myself) { FactoryGirl.create(:curriculum_page) }
+  let(:myModel) { CurriculumPage }
+  let(:my_children) { :module_page }
 
   before do
     sign_in_as_staff(super_staff)

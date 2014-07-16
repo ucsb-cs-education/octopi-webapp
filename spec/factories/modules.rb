@@ -13,6 +13,7 @@ FactoryGirl.define do
         page || FactoryGirl.create(:module_page, curriculum_id: curriculum_id)
       end
       curriculum_page { CurriculumPage.first || FactoryGirl.create(:curriculum_page) }
+      laplaya_file true
     end
 
     sequence(:title) { |n| "SampleModule #{n}" }
@@ -37,6 +38,13 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     eos
+
+    after :create do |module_page, evaluator|
+      if evaluator.laplaya_file
+        FactoryGirl.create(:project_base_laplaya_file, module_page: module_page)
+        FactoryGirl.create(:sandbox_base_laplaya_file, module_page: module_page)
+      end
+    end
 
     after(:build) do |module_page, evaluator|
       module_page.page_id = evaluator.curriculum_page.id

@@ -154,7 +154,7 @@ describe "SchoolClasses", type: :feature do
             expect(find('table#classlist')).to have_content(student.last_name)
             expect(find('table#classlist')).to have_content(student.login_name)
           end
-
+          it { should_not have_content('Please review the problems below:') }
         end
       end
       describe "with a different password and confirmation" do
@@ -179,7 +179,7 @@ describe "SchoolClasses", type: :feature do
           it { should_not have_content(student.name) }
           include_examples "visible new student form"
           it { should have_content('doesn\'t match Password') }
-          it { should have_content('Please review the problems below:') }
+          it { should have_error_message('Please review the problems below:') }
         end
       end
     end

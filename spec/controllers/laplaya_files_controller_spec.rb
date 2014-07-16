@@ -157,6 +157,22 @@ describe StudentPortal::Laplaya::LaplayaFilesController, type: :controller do
     include_examples "updating an existing laplaya file with ajax"
   end
 
+  describe "updating a ProjectBaseLaplayaFile as a super staff" do
+    let(:laplaya_file) { FactoryGirl.create(:project_base_laplaya_file) }
+    before(:each) do
+      sign_in_as(super_staff)
+    end
+    include_examples "updating an existing laplaya file with ajax"
+  end
+
+  describe "updating a SandboxBaseLaplayaFile as a super staff" do
+    let(:laplaya_file) { FactoryGirl.create(:sandbox_base_laplaya_file) }
+    before(:each) do
+      sign_in_as(super_staff)
+    end
+    include_examples "updating an existing laplaya file with ajax"
+  end
+
   describe "creating a LaplayaFile as a student" do
     let(:laplaya_file) { FactoryGirl.create(:laplaya_file, owner: student) }
     before(:each) do

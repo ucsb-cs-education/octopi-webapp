@@ -6,10 +6,10 @@ describe Pages::AssessmentTasksController, type: :controller do
   let(:student) { FactoryGirl.create(:student) }
   let(:super_staff) { FactoryGirl.create(:staff, :super_staff) }
   let(:staff) { FactoryGirl.create(:staff) }
-  let(:myself){ FactoryGirl.create(:assessment_task)}
-  let(:myModel){AssessmentTask}
-  let(:parent_id_symbol){:activity_page_id}
-  let(:my_children){:assessment_question}
+  let(:myself) { FactoryGirl.create(:assessment_task) }
+  let(:myModel) { AssessmentTask }
+  let(:parent_id_symbol) { :activity_page_id }
+  let(:my_children) { :assessment_question }
 
   before do
     sign_in_as_staff(super_staff)

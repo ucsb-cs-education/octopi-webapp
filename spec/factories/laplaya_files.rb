@@ -37,7 +37,7 @@ FactoryGirl.define do
 
     factory :task_base_laplaya_file, class: TaskBaseLaplayaFile do
       ignore do
-        laplaya_task { FactoryGirl.create(:laplaya_task) }
+        laplaya_task { FactoryGirl.create(:laplaya_task, laplaya_file: false ) }
       end
 
       public false
@@ -45,7 +45,30 @@ FactoryGirl.define do
       after(:build) do |laplaya_file, evaluator|
         laplaya_file.laplaya_task = evaluator.laplaya_task
       end
+    end
 
+    factory :project_base_laplaya_file, class: ProjectBaseLaplayaFile do
+      ignore do
+        module_page { FactoryGirl.create(:module_page, laplaya_file: false ) }
+      end
+
+      public false
+
+      after(:build) do |laplaya_file, evaluator|
+        laplaya_file.module_page = evaluator.module_page
+      end
+    end
+
+    factory :sandbox_base_laplaya_file, class: SandboxBaseLaplayaFile do
+      ignore do
+        module_page { FactoryGirl.create(:module_page, laplaya_file: false ) }
+      end
+
+      public false
+
+      after(:build) do |laplaya_file, evaluator|
+        laplaya_file.module_page = evaluator.module_page
+      end
     end
 
   end

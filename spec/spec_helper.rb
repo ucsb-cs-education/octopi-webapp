@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'spork'
+require 'capybara/poltergeist'
 
 
 Spork.prefork do
@@ -9,11 +10,15 @@ Spork.prefork do
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
-  Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+  Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
   # Checks for pending migrations before tests are run.
   # If you are not using ActiveRecord, you can remove this line.
   ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+
+  Capybara.register_driver :poltergeist_debug do |app|
+    Capybara::Poltergeist::Driver.new(app, :inspector => true)
+  end
 
   RSpec.configure do |config|
     # RSpec::Core::ExampleGroup#example is deprecated and will be removed
@@ -47,9 +52,28 @@ Spork.prefork do
     #     --seed 1234
     config.order = "random"
     config.include Capybara::DSL
+    Capybara.javascript_driver = :poltergeist
 
     config.include Devise::TestHelpers, :type => :controller
     config.include ControllerMacros, :type => :controller
+
+
+    #Autoscreenshots from Mike Ackerman
+    #http://viget.com/extend/auto-saving-screenshots-on-test-failures-other-capybara-tricks
+    config.after(:each) do
+      if example.exception && example.metadata[:js]
+        meta = example.metadata
+        filename = File.basename(meta[:file_path])
+        line_number = meta[:line_number]
+        screenshot_name = "screenshot-#{filename}-#{line_number}.png"
+        screenshot_path = "#{Rails.root.join("tmp")}/#{screenshot_name}"
+
+        page.save_screenshot(screenshot_path)
+
+        puts meta[:full_description] + "\n  Screenshot: #{screenshot_path}"
+      end
+    end
+
   end
 
   class ActiveRecord::Base

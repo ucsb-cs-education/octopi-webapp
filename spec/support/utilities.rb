@@ -1,4 +1,6 @@
 include ApplicationHelper
+require 'timeout'
+require 'html/sanitizer'
 
 RSpec::Matchers.define :have_error_message do |message|
   match do |page|
@@ -23,18 +25,33 @@ def valid_session
 end
 
 def wait_for_ajax
-  Timeout.timeout(Capybara.default_wait_time) do
-    active = page.evaluate_script('jQuery.active')
-    until active == 0
-      active = page.evaluate_script('jQuery.active')
-    end
+  wait_until do
+    page.evaluate_script('jQuery.active') == 0
   end
 end
 
+def wait_until
+  Timeout.timeout(Capybara.default_wait_time) do
+    sleep(0.1) until yield == true
+  end
+end
+
+def wait_for_and_click_on_button button
+  wait_until do
+    page.has_button?(button)
+  end
+  click_on(button)
+end
+
 def clear_text_box(textbox)
-  textbox.native.clear
+  textbox.set('')
   textbox.click
   textbox.native.send_keys(:delete)
-  #textbox.native.send_keys(:right)
-  #textbox.native.send_keys(:backspace)
+end
+
+module RSpecSanitizer
+  def self.sanitize(string)
+    @sanitizer ||= HTML::FullSanitizer.new
+    @sanitizer.sanitize(string)
+  end
 end

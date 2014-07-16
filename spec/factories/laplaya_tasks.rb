@@ -12,6 +12,8 @@ FactoryGirl.define do
         end
         page || FactoryGirl.create(:activity_page, curriculum_id: curriculum_id)
       end
+      #set to false if you don't want it to create a laplaya_file
+      laplaya_file true
     end
 
     sequence(:title) { |n| "SampleLaplayaTask #{n}" }
@@ -35,7 +37,7 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     eos
 
     after :create do |task, evaluator|
-      FactoryGirl.create(:task_base_laplaya_file, laplaya_task: task)
+      FactoryGirl.create(:task_base_laplaya_file, laplaya_task: task) if evaluator.laplaya_file
     end
 
     after(:build) do |task, evaluator|
