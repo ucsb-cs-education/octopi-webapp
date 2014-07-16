@@ -1,0 +1,18 @@
+<% student = student[1] %>
+<td>
+  <div class="student-name-div">
+    <span title="<%= student[:name] %>">
+      <%= link_to student[:first_name], school_class_student_progress_path(@school_class, student[:id]) %>
+    </span>
+  </div>
+</td>
+<td>
+  <div class="student-name-div">
+    <span value = "<%= student[:last_name] %>" title="<%= student[:name] %>">
+      <%= link_to student[:last_name], school_class_student_progress_path(@school_class, student[:id]) %>
+    </span>
+  </div>
+</td>
+<td>
+  <%= render partial: "percent_completed", locals: {activity: activity, student: student} %>
+</td>

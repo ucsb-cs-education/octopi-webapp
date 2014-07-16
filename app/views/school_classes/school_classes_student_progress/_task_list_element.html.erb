@@ -1,0 +1,25 @@
+<% status = task[:visibility] %>
+<% if status == :locked %>
+    <li class="locked-task" id="task_<%= task[:id] %>_student_<%= @student.id %>">
+      <%= image_tag("padlock.png", size: "15") %>
+      <%= task[:title] %>
+      <div class="unlock-button">
+        <%= simple_form_for [@school_class, @unlocks.build], html: {method: :post}, remote: true do |f| %>
+            <%= f.hidden_field :unlockable_id, value: task[:id] %>
+            <%= f.hidden_field :student_id, value: @student[:id] %>
+            <%= f.hidden_field :unlockable_type, value: Task %>
+            <%= f.hidden_field :from_student_progress_view, value: true %>
+            <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
+        <% end %>
+      </div>
+    </li>
+<% elsif status == :completed || status == false %>
+    <li class="completed-task" id="task_<%= task[:id] %>_student_<%= @student.id %>">
+      <%= task[:title] %> - Completed
+    </li>
+<% else %>
+    <li class="unlocked-task" id="task_<%= task[:id] %>_student_<%= @student.id %>">
+      <%= task[:title] %>
+    </li>
+<% end %>
+
