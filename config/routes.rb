@@ -86,7 +86,9 @@ OctopiWebapp::Application.routes.draw do
               patch :clone
             end
           end
+
           resources :assessment_tasks, except: [:index, :edit], shallow: true do
+            #patch '/assessment_tasks/:id', to: 'tasks#remove_dependant', as: 'remove_dependant'
             member do
             end
             resources :assessment_questions, except: [:index, :edit], shallow: true do
@@ -106,7 +108,6 @@ OctopiWebapp::Application.routes.draw do
   constraints resque_web_constraint do
     mount ResqueWeb::Engine => '/resque_web'
   end
-
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

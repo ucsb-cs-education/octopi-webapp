@@ -69,3 +69,12 @@ body.pages {
     }
   }
 }
+
+#dependency_graph {
+  color: black;
+  background-color: #e3e3e3;
+  border: 1px solid #c8c8c8;
+  margin-top:2px;
+  padding:.5em;
+  width: 60%;
+}

@@ -27,6 +27,10 @@ class ActivityPage < Page
     activity_dependencies.create!(task_prerequisite: prereq)
   end
 
+  def depends_on?(prereq)
+    self.prerequisites.include?(prereq)
+  end
+
   def find_unlock_for(student, school_class)
     unlock = Unlock.find_for(student, school_class, self)
     if unlock.nil? && prerequisites.empty?
