@@ -73,7 +73,6 @@ OctopiWebapp::Application.routes.draw do
   end
   ActiveAdmin.routes(self)
 
-
   scope module: 'pages' do
     resources :curriculum_pages, path: 'curriculums', except: [:create, :edit], shallow: true do
       member do
@@ -101,7 +100,6 @@ OctopiWebapp::Application.routes.draw do
             resources :task_dependencies, only: [:destroy, :create]
             resources :activity_dependencies, only: [:destroy, :create]
           end
-
           resources :assessment_tasks, except: [:index, :edit], shallow: true do
             resources :task_dependencies, only: [:destroy, :create]
             resources :activity_dependencies, only: [:destroy, :create]
@@ -121,6 +119,7 @@ OctopiWebapp::Application.routes.draw do
   constraints resque_web_constraint do
     mount ResqueWeb::Engine => '/resque_web'
   end
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

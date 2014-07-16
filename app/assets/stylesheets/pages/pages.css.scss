@@ -9,18 +9,18 @@ body.pages {
       h1 {
         text-align: left;
         font-size: 32px;
-        margin-bottom: 5px;
+        margin-bottom: 25px;
         span:empty {
           display: block;
           height: 1em;
         }
       }
-      margin-bottom: 12px;
+      margin-bottom: 0px;
       margin-top: 0px;
       padding-bottom: 0px;
     }
     #delete-page-link {
-      width: 20%;
+      width: 60%;
       color: inherit;
       &:visited, &:hover, &:active {
         color: #ffffff;
@@ -56,32 +56,27 @@ body.pages {
       }
     }
     #base_laplaya_files {
-      div.files-header {
-        margin-top: 10px;
-        min-height: 45px;
-      }
-      .col-md-4, .col-md-6 {
-        min-height: 300px;
-      }
-      form {
-        width: 100%;
-      }
-      .base_laplaya_file, .laplaya-analysis-file {
-        h2, h3 {
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-top: 5px;
+      .base_laplaya_file {
+        h2 {
           text-align: left;
           margin-bottom: 0px;
           margin-top: 0px;
         }
         border: 1px solid $gray-lighter;
       }
-      .laplaya-analysis-file {
-        div.form-inputs{
-          margin-top: 5px;
-          margin-bottom: 15px;
-        }
-      }
-      margin: 5px 0px 20px;
+      margin-bottom: 20px;
     }
   }
 }
 
+#dependency_graph {
+  color: black;
+  background-color: #e3e3e3;
+  border: 1px solid #c8c8c8;
+  margin-top:2px;
+  padding:.5em;
+  width: 60%;
+}
