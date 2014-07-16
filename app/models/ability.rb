@@ -72,7 +72,7 @@ class Ability
     can :crud, Page, :curriculum_id => page_ids
     can [:crud, :clone], Task, :curriculum_id => page_ids
     can :crud, AssessmentQuestion, :curriculum_id => page_ids
-    can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
+    can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => ["TaskBaseLaplayaFile", "SandboxBaseLaplayaFile", "ProjectBaseLaplayaFile"]}
     can :create, ModulePage
     can :create, ActivityPage
     can :create, LaplayaTask

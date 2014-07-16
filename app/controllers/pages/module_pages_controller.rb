@@ -5,6 +5,8 @@ class Pages::ModulePagesController < Pages::PagesController
 
   # GET /modules/:id
   def show
+    @user_laplaya_files = LaplayaFile.with_role(:owner, current_user) if current_user.has_role? :super_staff
+    @user_laplaya_files ||= LaplayaFile.accessible_by(current_ability, :index)
   end
 
   def update
@@ -34,17 +36,24 @@ class Pages::ModulePagesController < Pages::PagesController
   end
 
   def create
-    @module_page.parent = @curriculum_page
-    if @module_page.save
-      respond_to do |format|
-        format.html { redirect_to @curriculum_page }
-        format.js {
-          js false
-          render status: :created
-        }
+
+    begin
+      ModulePage.transaction do
+        @module_page.parent = @curriculum_page
+        @module_page.save!
+        sandbox_laplaya_file = SandboxBaseLaplayaFile.new_base_file(@module_page)
+        project_laplaya_file = ProjectBaseLaplayaFile.new_base_file(@module_page)
       end
-    else
+    rescue ActiveRecord::RecordInvalid
       render text: @module_page.errors, status: :bad_request
+      return
+    end
+    respond_to do |format|
+      format.html { redirect_to @curriculum_page }
+      format.js {
+        js false
+        render status: :created
+      }
     end
   end
 
@@ -54,7 +63,28 @@ class Pages::ModulePagesController < Pages::PagesController
     redirect_to @module_page.curriculum_page
   end
 
+  def clone_project
+    clone_helper(@module_page.project_base_laplaya_file)
+  end
+
+  def clone_sandbox
+    clone_helper(@module_page.sandbox_base_laplaya_file)
+  end
+
+
   private
+  def clone_helper(file_to_clone_to)
+    if params[:laplaya_file] && params[:laplaya_file][:laplaya_file] && params[:laplaya_file][:laplaya_file].present?
+      laplaya_file = LaplayaFile.find(params[:laplaya_file][:laplaya_file])
+      authorize! :show, laplaya_file
+      file_to_clone_to.clone(laplaya_file)
+      flash[:success] = "Laplaya File successfully cloned!"
+    else
+      flash[:danger] = "Invalid selection for Laplaya File cloning!"
+    end
+    redirect_to @module_page
+  end
+
   def set_page_variable
     @page = @module_page
     @pages = @module_pages

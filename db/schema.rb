@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20140714182200) do
+=======
+ActiveRecord::Schema.define(version: 20140715192913) do
+>>>>>>> Add Module base files
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,7 +94,7 @@ ActiveRecord::Schema.define(version: 20140714182200) do
     t.boolean  "public",        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "task_id"
+    t.integer  "parent_id"
     t.integer  "curriculum_id"
     t.string   "type"
   end

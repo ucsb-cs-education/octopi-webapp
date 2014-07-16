@@ -1,11 +1,28 @@
-<ul id="children" <%= 'class=octopisortable' if can? :update, page%> data-update-url="<%= sort_module_page_url(page) %>">
+<ul id="children" <%= 'class=octopisortable' if can? :update, page %> >
   <%= render partial: "page", collection: page.children %>
 </ul>
 <% if can? :update, @page %>
-    <%= simple_form_for( [page, page.children.build], html: {class: 'new_child_page'}, remote: true) do |f| %>
+    <%= simple_form_for([page, page.children.build], html: {class: 'new_child_page'}, remote: true) do |f| %>
         <%= f.hidden_field :title, value: 'New Activity' %>
         <%= f.hidden_field :teacher_body, value: '<p></p>' %>
         <%= f.hidden_field :student_body, value: '<p></p>' %>
-        <%= f.submit "Add a new activity", class: "btn btn-default", id:"add-new-child-btn" %>
+        <%= f.submit "Add a new activity", class: "btn btn-default", id: "add-new-child-btn" %>
     <% end %>
 <% end %>
+<div class="row" id="base_laplaya_files">
+  <div id="project_base" class="col-md-6 base_laplaya_file">
+    <h2>Design Thinking Project File</h2>
+    <%= render partial: 'laplaya_file_form', locals: {
+            laplaya_file: @page.project_base_laplaya_file,
+            clone_url: clone_project_module_page_path(page),
+            laplaya_files_collection: @user_laplaya_files} %>
+  </div>
+
+  <div id="sandbox_base" class="col-md-6 base_laplaya_file">
+    <h2>Sandbox File</h2>
+    <%= render partial: 'laplaya_file_form', locals: {
+            laplaya_file: @page.sandbox_base_laplaya_file,
+            clone_url: clone_sandbox_module_page_path(page),
+            laplaya_files_collection: @user_laplaya_files} %>
+  </div>
+</div>

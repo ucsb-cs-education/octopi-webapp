@@ -28,7 +28,6 @@ OctopiWebapp::Application.routes.draw do
 
 
   resources :schools, only: [:show, :index], shallow: true do
-   # match '/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'
     resources :students, except: [:update, :edit, :destroy]
     resources :school_classes do
       member do
@@ -46,7 +45,7 @@ OctopiWebapp::Application.routes.draw do
     root 'static_pages#home'
     get 'home', to: 'static_pages#home'
   end
-  devise_for :staff, controllers: { sessions: 'staff/sessions', confirmations: 'staff/confirmations' } , skip: [:registrations]
+  devise_for :staff, controllers: {sessions: 'staff/sessions', confirmations: 'staff/confirmations'}, skip: [:registrations]
   as :staff do
     get 'staff/sign_up', to: 'staff/registrations#new', as: 'new_staff_registration'
     post 'staff', to: 'staff/registrations#create', as: 'staff_registration'
@@ -55,18 +54,24 @@ OctopiWebapp::Application.routes.draw do
 
   scope module: 'pages' do
     resources :curriculum_pages, path: 'curriculums', except: [:create, :edit], shallow: true do
-      member { post :sort }
+      member do
+      end
       resources :module_pages, path: 'modules', except: [:index, :edit], shallow: true do
-        member { post :sort }
+        member do
+          patch :clone_sandbox
+          patch :clone_project
+        end
         resources :activity_pages, path: 'activities', except: [:index, :edit], shallow: true do
-          member { post :sort }
+          member do
+          end
           resources :laplaya_tasks, except: [:index, :edit], shallow: true do
             member do
-              patch 'clone'
+              patch :clone
             end
           end
           resources :assessment_tasks, except: [:index, :edit], shallow: true do
-            member {post :sort}
+            member do
+            end
             resources :assessment_questions, except: [:index, :edit], shallow: true do
             end
           end

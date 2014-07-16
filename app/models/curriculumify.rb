@@ -11,7 +11,7 @@ module Curriculumify
 
   private
   def has_title?
-    type != 'TaskBaseLaplayaFile'
+    (type =~ /(Task|Project|Sandbox)BaseLaplayaFile/).nil?
   end
 
   def curriculum_page?
