@@ -89,14 +89,24 @@ class StudentPortal::PagesController < StudentPortal::BaseController
 
   def assessment_response
     @task = AssessmentTask.find(params[:id])
-    @task_response = AssessmentTaskResponse.create(assessment_response_params)
-    redirect_to student_portal_activity_path(@task.parent)
+    task_response = AssessmentTaskResponse.create(assessment_response_params)
+
+    if task_response.errors.empty?
+      redirect_to student_portal_activity_path(@task.parent)
+    else
+      head :bad_request
+    end
   end
 
   def laplaya_task_response
     @task = LaplayaTask.find(params[:id])
-    @task_response = LaplayaTaskResponse.create(task_id: @task.id, student_id: current_student.id, school_class_id: current_school_class.id, completed: true);
-    redirect_to student_portal_activity_path(@task.parent)
+    task_response = LaplayaTaskResponse.create(task_id: @task.id, student_id: current_student.id, school_class_id: current_school_class.id, completed: true)
+
+    if task_response.errors.empty?
+      redirect_to student_portal_activity_path(@task.parent)
+    else
+      head :bad_request
+    end
   end
 
   private
@@ -105,7 +115,6 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     result[:task_id] = @task.id
     result[:student_id] = current_student.id
     result[:school_class_id] = current_school_class.id
-    result[:completed] = false
     result
   end
 

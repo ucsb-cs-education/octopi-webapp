@@ -9,6 +9,10 @@ PagesController.prototype.assessment_task = () ->
 
     parent_box.find(".question-input").val JSON.stringify(ansArray)
 
+  $('.simple_form').submit ->
+    (if confirm("You will not be able to return to this page after submitting answers. Are you sure you are done?") then true else false)
+
+
 PagesController.prototype.module_page = () ->
 
   $("#change-module").change ->

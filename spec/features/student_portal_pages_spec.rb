@@ -117,6 +117,34 @@ describe "student portal", type: :feature do
           expect(current_path).to eq(student_portal_assessment_task_path(assessment_task))
         end
       end
+
+      describe "a laplaya task link" do
+        let(:laplaya_task) { FactoryGirl.create(:laplaya_task, activity_page: activity_page) }
+        before do
+          activity_page.children << laplaya_task
+        end
+        describe "when locked" do
+          it { should_not have_link("#{laplaya_task.title}", :href => student_portal_laplaya_task_path(laplaya_task)) }
+        end
+        describe "when unlocked" do
+          let(:laplaya_unlock) { Unlock.create(student: new_student, school_class: school_class, unlockable: laplaya_task) }
+          before do
+            laplaya_unlock
+            visit(thisPath)
+          end
+          it { should have_link("#{laplaya_task.title}", :href => student_portal_laplaya_task_path(laplaya_task)) }
+        end
+        describe "when completed" do
+          let(:laplaya_unlock) { Unlock.create(student: new_student, school_class: school_class, unlockable: laplaya_task) }
+          let(:laplaya_response) { TaskResponse.create(student: new_student, school_class: school_class, task: laplaya_task, completed: true) }
+          before do
+            laplaya_unlock
+            laplaya_response
+            visit(thisPath)
+          end
+          it { should have_selector("div[class='child-link complete']") }
+        end
+      end
     end
 
     describe "after visiting a not allowed activity page" do
@@ -158,15 +186,17 @@ describe "student portal", type: :feature do
         describe "should submit correctly" do
           subject { -> {
             click_button "submit-answer-button"
+            page.driver.browser.switch_to.alert.accept
             wait_for_ajax
           } }
           it { should change(TaskResponse, :count).by(1) }
           it { should change(AssessmentQuestionResponse, :count).by(1) }
           it { should change(Unlock, :count).by(2) }
         end
-        describe "after redirecting" do
+        describe "after redirecting", driver: :selenium do
           before do
             click_button "submit-answer-button"
+            page.driver.browser.switch_to.alert.accept
             wait_for_ajax
           end
           it "should redirect to the parent activity" do
@@ -179,6 +209,7 @@ describe "student portal", type: :feature do
         describe "after attempting to visit the newly unlocked assessment task" do
           before do
             click_button "submit-answer-button"
+            page.driver.browser.switch_to.alert.accept
             wait_for_ajax
             visit student_portal_assessment_task_path(assessment_task_locked)
           end
@@ -191,6 +222,7 @@ describe "student portal", type: :feature do
         describe "after attempting to visit the newly unlocked activity page" do
           before do
             click_button "submit-answer-button"
+            page.driver.browser.switch_to.alert.accept
             wait_for_ajax
             visit student_portal_activity_path(activity_page_locked)
           end
@@ -202,6 +234,7 @@ describe "student portal", type: :feature do
         describe "after visiting the module page" do
           before do
             click_button "submit-answer-button"
+            page.driver.browser.switch_to.alert.accept
             wait_for_ajax
             visit student_portal_module_path(module_page)
           end

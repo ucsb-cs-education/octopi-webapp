@@ -22,7 +22,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
         response.location = laplaya_file_url(@laplaya_task)
         js false
         unless updated
-          render text: @laplaya_task.erors, status: :bad_request, location: laplaya_file_url(@laplaya_task)
+          render text: @laplaya_task.errors, status: :bad_request, location: laplaya_file_url(@laplaya_task)
         end
       end
     end
