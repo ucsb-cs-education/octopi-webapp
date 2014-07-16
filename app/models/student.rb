@@ -1,6 +1,7 @@
 class Student < User
   belongs_to :school, counter_cache: true
   has_and_belongs_to_many :school_classes, after_add: :verify_classes, join_table: 'school_classes_students'
+  has_many :task_responses
   validates :login_name, presence: true, length: { maximum: 50 } , :uniqueness => {:scope => :school_id, :case_sensitive => false}
   validates :school, presence: true
   before_save { login_name.downcase! }

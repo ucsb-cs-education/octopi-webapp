@@ -13,8 +13,12 @@
                        f: p,
                        p: p
                } %>
-    <% #hidden field needs a class so that it can be accessed in javascript %>
-    <%= p.hidden_field :selected, class:'question-input'%>
+    <% #hidden field needs a class so that it can be accessed in javascript  %>
+    <% unless question.question_type=="freeResponse" %>
+        <%= p.hidden_field :selected, class: 'question-input' %>
+    <% else %>
+        <%= p.input :selected, class: 'question-input', label: "Answer:", input_html:{rows: 4}%>
+    <% end %>
     <%= p.hidden_field :assessment_question_id %>
   </div>
 </div>

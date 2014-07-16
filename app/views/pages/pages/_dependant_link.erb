@@ -1,0 +1,12 @@
+<div class="dependant_link">
+    Is a prerequisite of <%= link_to "#{dependant_link.title}", dependant_link %>
+  <%# simple_form_for @page, url: assessment_task_remove_dependant_path(dependant_link,@page), action: :patch do |f| %>
+      <%# f.hidden_field :task_dependency, value: dependant_link%>
+      <%# f.submit 'Remove' %>
+  <%# end %>
+  <%= form_for(@page.task_dependencies.first,
+               html: { method: :delete }, remote: true) do |f| %>
+      <%= f.submit "Remove" %>
+  <% end %>
+  <% #ind_by(dependant_id: dependant_link.id) #%>
+</div>

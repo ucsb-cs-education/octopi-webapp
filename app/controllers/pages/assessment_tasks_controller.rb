@@ -21,6 +21,13 @@ class Pages::AssessmentTasksController < Pages::TasksController
     end
 
     respond_to do |format|
+      format.html do
+        if updated
+          redirect_to @assessment_task, notice: "Successfully updated"
+        else
+          render action: edit
+        end
+      end
       format.js do
         response.location = assessment_task_url(@assessment_task)
         js false
@@ -58,6 +65,7 @@ class Pages::AssessmentTasksController < Pages::TasksController
     # @page = @assessment_task.becomes(Task) if @assessment_task
     # @pages = @assessment_tasks.map{|x| x.becomes(Task)} if @assessment_tasks
   end
+
 
 
   def assessment_task_params

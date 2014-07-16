@@ -3,3 +3,8 @@
 <div id="answerList">
   <%= render partial: "showAnswer", collection: JSON.parse(@assessment_question.answers), locals: {:question_type => @assessment_question.question_type} %>
 </div>
+<div id="free-response-note" <%= 'class="hidden"'.html_safe unless @assessment_question.question_type=="freeResponse"%>>
+  <hr>
+  This question will be answerable with a free response text box.
+  <hr>
+</div>

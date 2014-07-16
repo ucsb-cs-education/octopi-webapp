@@ -1,0 +1,13 @@
+<div id="student-name">
+  <%= @student.name %>
+</div>
+<%= link_to "Back", @school_class, class: "btn btn-default" %>
+<div id="progress-summary">
+<%= render partial: "graph", locals:{graph_info: @graph_info} %>
+</div>
+<hr>
+<div id="curriculum-list">
+  <ul class="module-page-ul">
+    <%= render partial: "module_list_element", collection: @info.to_a, as: "module_page" %>
+  </ul>
+</div>

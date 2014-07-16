@@ -10,10 +10,15 @@ class LaplayaTask < Task
   end
 
   def get_visibility_status_for(student, school_class)
-    if find_unlock_for(student, school_class).nil?
+    LaplayaTask.get_visibility_status(
+        find_unlock_for(student, school_class),
+        TaskResponse.find_by(student: student, school_class: school_class, task: self))
+  end
+
+  def self.get_visibility_status(unlock, response)
+    if unlock.nil?
       :locked
     else
-      response = TaskResponse.find_by(student: student, school_class: school_class, task: self)
       result = :visible
       if response.present? && response.completed
         result = :completed
@@ -21,4 +26,5 @@ class LaplayaTask < Task
       result
     end
   end
+
 end
