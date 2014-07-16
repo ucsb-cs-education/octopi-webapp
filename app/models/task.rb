@@ -24,6 +24,10 @@ class Task < ActiveRecord::Base
     task_dependencies.create!(prerequisite: prereq)
   end
 
+  def depends_on?(prereq)
+    self.prerequisites.include?(prereq)
+  end
+
   def be_prereq_to(depend)
     if depend.is_a?(Task)
       reverse_task_dependencies.create!(dependant: depend)

@@ -69,7 +69,9 @@ OctopiWebapp::Application.routes.draw do
               patch :clone
             end
           end
+
           resources :assessment_tasks, except: [:index, :edit], shallow: true do
+            #patch '/assessment_tasks/:id', to: 'tasks#remove_dependant', as: 'remove_dependant'
             member do
             end
             resources :assessment_questions, except: [:index, :edit], shallow: true do
@@ -79,7 +81,6 @@ OctopiWebapp::Application.routes.draw do
       end
     end
   end
-
 
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -12,6 +12,9 @@
         <% end %>
       </div>
       <%= render partial: "page_body", object: @page, as: :page %>
+      <% if @page.respond_to? :prerequisites %>
+          <%= render partial: "dependency_graph" %>
+      <% end %>
       <% if @page.respond_to? :children %>
           <div id="child-pages">
             <%= render partial: "children", locals: {page: @page, user_laplaya_files: @user_laplaya_files} %>
