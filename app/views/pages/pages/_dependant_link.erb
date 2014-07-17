@@ -4,7 +4,7 @@
       <%# f.hidden_field :task_dependency, value: dependant_link%>
       <%# f.submit 'Remove' %>
   <%# end %>
-  <%= form_for(@page.task_dependencies.first,
+  <%= form_for(dependant_link.task_dependencies.find_by(prerequisite_id: @page.id),
                html: { method: :delete }, remote: true) do |f| %>
       <%= f.submit "Remove" %>
   <% end %>

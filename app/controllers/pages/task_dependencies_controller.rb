@@ -1,8 +1,8 @@
 class Pages::TaskDependenciesController < ApplicationController
+  before_action :signed_in_user
 
-  def delete
+  def destroy
    @task = Task.find(params[:id])
-   return
   end
 
 end
