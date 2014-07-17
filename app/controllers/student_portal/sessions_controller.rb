@@ -23,7 +23,7 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
     if student && school_class && student.authenticate(password)
       sign_in_student student, school_class
       redirect_back_or student_portal_root_url
-    elsif student == nil || school_class == nil
+    elsif student.nil? || school_class.nil?
       flash.now[:danger] = 'Please select a class and/or login name'
       render 'new', layout: 'layouts/devise'
     else

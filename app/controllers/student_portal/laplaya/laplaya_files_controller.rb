@@ -5,7 +5,6 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
   def index
     #Following line needed to prevent super_staff from crashing server during index
     @laplaya_files = LaplayaFile.with_role(:owner, current_user) if current_user.has_role? :super_staff
-
     render json: @laplaya_files, each_serializer: LaplayaFileIndexSerializer
   end
 

@@ -22,7 +22,7 @@
 </div>
 
 <div id="children-pages">
-  <%= render partial: "student_portal/pages/module_page/children", collection: @module_page.children %>
+  <%= render partial: "student_portal/pages/module_page/children", collection: @module_page.children, as: :child %>
 </div>
 
 <div id="other-links">

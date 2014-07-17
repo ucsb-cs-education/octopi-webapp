@@ -12,18 +12,16 @@ class TaskResponse < ActiveRecord::Base
   def unlock_dependencies
     if self.completed_changed?
       unlock.update_attribute(:hidden, true) if task.is_a?(AssessmentTask)
-      task.activity_dependants.each { |x|
-        if check_prereqs(x)
-          Unlock.create(student: student, school_class: school_class, unlockable: x)
+      task.activity_dependants.each do |activity|
+        if check_prereqs(activity) && activity.find_unlock_for(student, school_class).nil?
+          Unlock.create(student: student, school_class: school_class, unlockable: activity)
         end
-      }
-      task.dependants.each { |x|
-        if check_prereqs(x)
-          if x.find_unlock_for(student, school_class).nil?
-            Unlock.create(student_id: student.id, school_class_id: school_class.id, unlockable_type: "Task", unlockable_id: x.id)
-          end
+      end
+      task.dependants.each do |depdendant_task|
+        if check_prereqs(depdendant_task) && depdendant_task.find_unlock_for(student, school_class).nil?
+          Unlock.create(student: student, school_class: school_class, unlockable: depdendant_task)
         end
-      }
+      end
     end
   end
 
@@ -36,7 +34,7 @@ class TaskResponse < ActiveRecord::Base
       unless y==self.task
         prereq_response = TaskResponse.find_by(student: student, school_class: school_class, task: y)
 
-        if prereq_response == nil || prereq_response.completed != true
+        if prereq_response.nil? || !prereq_response.completed
           return false
         end
       end

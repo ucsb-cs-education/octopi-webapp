@@ -44,7 +44,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def assessment_response
     task_response = AssessmentTaskResponse.create(assessment_response_params)
     if task_response.errors.empty?
-      redirect_to student_portal_activity_path(@assessment_task.parent)
+      redirect_to student_portal_activity_path(@assessment_task.activity_page)
     else
       head :bad_request
     end
@@ -55,13 +55,13 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def laplaya_task_response
     @laplaya_task = LaplayaTask.find(params[:id])
     task_response = LaplayaTaskResponse.create(
-        task_id: @task.id,
-        student_id: current_student.id,
-        school_class_id: current_school_class.id,
+        task: @task,
+        student: current_student,
+        school_class: current_school_class,
         completed: true)
 
     if task_response.errors.empty?
-      redirect_to student_portal_activity_path(@laplaya_task.parent)
+      redirect_to student_portal_activity_path(@laplaya_task.activity_page)
     else
       head :bad_request
     end
@@ -101,10 +101,6 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     if @module_page != nil
       cookies.permanent.signed[:student_last_module] = @module_page.id
     end
-  end
-
-  def load_valid_module_page
-    redirect_to_first_module_page unless in_a_valid_module_page?
   end
 
   def verify_unlocked_activity

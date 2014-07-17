@@ -1,10 +1,10 @@
-<% if children.get_locked_status_for(current_student, current_school_class) %>
+<% if child.get_locked_status_for(current_student, current_school_class) %>
     <div class="child-link locked">
       <%= image_tag("padlock.png", size: "21") %>
-      <%= children.title %>
+      <%= child.title %>
     </div>
 <% else %>
     <div class="child-link">
-         <%= link_to children.title, student_portal_activity_path(children) %>
+         <%= link_to child.title, student_portal_activity_path(children) %>
     </div>
 <% end %>
