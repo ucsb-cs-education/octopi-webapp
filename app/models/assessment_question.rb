@@ -7,23 +7,19 @@ class AssessmentQuestion < ActiveRecord::Base
   after_create { update_attribute(:curriculum_id, parent.curriculum_id) }
   validate :JSON_validator
   validate :valid_answer_type
-  validate :title_length
+  validates :title, presence: true, allow_blank: false
 
   private
 
-  def title_length
-    errors.add(:answers, "must have a title") unless title.length>0
-  end
-
   def JSON_validator
     begin
-      @infoArray = JSON.parse(answers)
+      @info_array = JSON.parse(answers)
     rescue
-      @infoArray = "Bad String"
+      @info_array = "Bad String"
     end
-    if answers_should_be_valid_JSON()==true
-      if an_answer_exists()==true
-        radios_have_one_answer()
+    if answers_should_be_valid_JSON
+      if an_answer_exists
+        radios_have_one_answer
       end
     end
   end
@@ -33,59 +29,59 @@ class AssessmentQuestion < ActiveRecord::Base
   end
 
   def radios_have_one_answer
-    if question_type=="singleAnswer"
-      numTrue = 0;
-      @infoArray.each { |x|
-        if x['correct']==true
-          numTrue+=1;
+    if question_type == "singleAnswer"
+      num_true = 0
+      @info_array.each do |x|
+        if x['correct']
+          num_true+=1;
         end
-      }
-      if numTrue > 1
-        errors.add(:answers, "must only have one answer if its using radios")
-        return false;
       end
-      return true;
+      if num_true > 1
+        errors.add(:answers, "must only have one answer if its using radios")
+        return false
+      end
     end
     true
   end
 
   def an_answer_exists
-    hasAnswer = false;
-    @infoArray.each { |x|
-      if x['correct'] == true
-        hasAnswer = true;
+    has_answer = false
+    @info_array.each do |x|
+      if x['correct']
+        has_answer = true
       end
-    }
-    if (hasAnswer==true)
-      return true
+    end
+    if has_answer
+      true
     else
-      errors.add(:answers, "must have atleast one correct answer")
-      return false
+      errors.add(:answers, 'must have at least one correct answer')
+      false
     end
   end
 
   def valid_answer_type
-    errors.add(:answers, "answer type must be singleAnswer or multipleAnswers") unless question_type=="singleAnswer" || question_type=="multipleAnswers"
+    unless question_type == "singleAnswer" || question_type == "multipleAnswers"
+      errors.add(:answers, 'answer type must be singleAnswer or multipleAnswers')
+    end
   end
 
   def answers_should_be_valid_JSON
-    if @infoArray.is_a?(Array)
-      @infoArray.each { |x|
-        if !(x.has_key? 'correct')
+    if @info_array.is_a?(Array)
+      @info_array.each do |x|
+        unless x.has_key? 'correct'
           errors.add(:answers, "answers must have 'correct' key")
-          return false;
+          return false
         end
-        if !(x.has_key? 'text')
+        unless x.has_key? 'text'
           errors.add(:answers, "answers must have 'text' key")
-          return false;
+          return false
         end
-      }
+      end
     else
-      errors.add(:answers, "answers must be a JSON array")
-      return false;
+      errors.add(:answers, 'answers must be a JSON array')
+      return false
     end
-    return true;
+    true
   end
 
-  #validates :file_name, presence: true, length: {maximum: 50}
 end
