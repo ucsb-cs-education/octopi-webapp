@@ -1,12 +1,19 @@
-<%= render partial: "inner_header" %>
-<%= simple_form_for @task_response, url: student_portal_assessment_task_response_path(@page), action: :post do |f| %>
+<div id="page-title">
+  <%= @assessment_task.title %>
+</div>
+
+<div class="student-body">
+  <%= @assessment_task.student_body.html_safe %>
+</div>
+
+<%= simple_form_for @task_response, url: student_portal_assessment_task_response_path(@assessment_task), action: :post do |f| %>
     <%= f.error_notification %>
     <div class="form-inputs task-response-questions">
       <%= f.simple_fields_for :assessment_question_responses do |p| %>
-          <%= render partial: 'student_portal/pages/assessment_task/task_question_form_inputs', locals: {f: f, p: p, question: p.object.assessment_question } %>
+          <%= render partial: 'student_portal/pages/assessment_task/task_question_form_inputs', locals: {f: f, p: p, question: p.object.assessment_question} %>
       <% end %>
     </div>
     <div class="form-actions">
-      <%= f.submit 'Submit your answers', class: 'btn btn-default', id:"submit-answer-button" %>
+      <%= f.submit 'Submit your answers', class: 'btn btn-default', id: "submit-answer-button" %>
     </div>
 <% end %>

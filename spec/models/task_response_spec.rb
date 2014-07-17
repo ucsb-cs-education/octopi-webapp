@@ -137,10 +137,10 @@ describe TaskResponse do
       @TaskResponseWithoutUnlock = TaskResponse.create(task: locked_task, school_class: school_class, student: new_student)
     end
     it "should return a lock when the unlock exists" do
-      expect(@TaskResponse.find_unlock).to be_a(Unlock)
+      expect(@TaskResponse.unlock).to be_a(Unlock)
     end
     it "should return nil when the unlock does not exist" do
-      expect(@TaskResponseWithoutUnlock.find_unlock).to eq(nil)
+      expect(@TaskResponseWithoutUnlock.unlock).to eq(nil)
     end
   end
 

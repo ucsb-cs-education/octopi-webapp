@@ -34,7 +34,7 @@ class Task < ActiveRecord::Base
   end
 
   def find_unlock_for(student,school_class)
-    Unlock.find_by(student: student, school_class: school_class, unlockable: self)
+    Unlock.find_for(student, school_class, self)
   end
 
 end

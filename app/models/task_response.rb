@@ -6,19 +6,19 @@ class TaskResponse < ActiveRecord::Base
   validate :task_is_unlocked
 
   def task_is_unlocked
-    errors.add(:taskresponse, "must be unlocked") unless find_unlock
+    errors.add(:taskresponse, "must be unlocked") unless unlock
   end
 
   def unlock_dependencies
-    if self.completed_changed? == true
-      find_unlock.update_attribute(:hidden, true) if task.is_a?(AssessmentTask)
+    if self.completed_changed?
+      unlock.update_attribute(:hidden, true) if task.is_a?(AssessmentTask)
       task.activity_dependants.each { |x|
-        if check_prereqs(x) == true
+        if check_prereqs(x)
           Unlock.create(student: student, school_class: school_class, unlockable: x)
         end
       }
       task.dependants.each { |x|
-        if check_prereqs(x) == true
+        if check_prereqs(x)
           if x.find_unlock_for(student, school_class).nil?
             Unlock.create(student_id: student.id, school_class_id: school_class.id, unlockable_type: "Task", unlockable_id: x.id)
           end
@@ -27,8 +27,8 @@ class TaskResponse < ActiveRecord::Base
     end
   end
 
-  def find_unlock
-    Unlock.find_by(student: student.id, school_class: school_class.id, unlockable: task)
+  def unlock
+    Unlock.find_for(student, school_class, task)
   end
 
   def check_prereqs(model)
@@ -41,7 +41,7 @@ class TaskResponse < ActiveRecord::Base
         end
       end
     }
-    return true
+    true
   end
 
 end

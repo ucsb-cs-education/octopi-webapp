@@ -1,6 +1,6 @@
 class CreateTaskDependencies < ActiveRecord::Migration
   def change
-    create_table :task_dependencies, :force => true, :id => false do |t|
+    create_table :task_dependencies, :force => true do |t|
       t.integer :prerequisite_id
       t.integer :dependant_id
     end

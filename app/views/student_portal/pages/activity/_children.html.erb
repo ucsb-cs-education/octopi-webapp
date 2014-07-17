@@ -1,22 +1,14 @@
-<% if status = children.get_visibility_status_for(current_student, current_school_class) %>
+<% path = (child.is_a? AssessmentTask ) ? student_portal_assessment_task_path(child) : student_portal_laplaya_task_path(child) %>
+
+<% if status = child.get_visibility_status_for(current_student, current_school_class) %>
     <% if status == :locked %>
         <div class="child-link locked">
           <%= image_tag("padlock.png", size: "21") %>
-          <%= children.title %>
+          <%= child.title %>
         </div>
     <% else %>
         <div class="child-link">
-          <% if children.is_a?(AssessmentTask) %>
-              <%= link_to children.title, student_portal_assessment_task_path(children) %>
-          <% else %>
-              <%= link_to children.title, student_portal_laplaya_task_path(children) %>
-          <% end %>
-        </div>
-    <% end %>
-<% else %>
-    <% if children.is_a?(LaplayaTask) %>
-        <div class="child-link complete">
-          <%= link_to children.title, student_portal_laplaya_task_path(children) %>
+          <%= link_to child.title, path %>
         </div>
     <% end %>
 <% end %>

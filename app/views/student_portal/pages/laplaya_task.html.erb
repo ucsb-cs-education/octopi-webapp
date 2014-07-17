@@ -1,9 +1,19 @@
-<% provide(:parent_redirect, student_portal_activity_path(@page.parent)) %>
-<%= render partial: "inner_header"%>
-<%= simple_form_for @task_response, url: student_portal_laplaya_task_response_path(@page), action: :post do |f| %>
+<div id="page-title">
+  <%= @laplaya_task.title %>
+</div>
+
+<div id='parent-link'>
+  <%= link_to "Return to #{@activity_page.title}", student_portal_activity_path(@activity_page) %>
+</div>
+
+<div class="student-body">
+  <%= @task_response.student_body.html_safe %>
+</div>
+
+<%= simple_form_for @task_response, url: student_portal_laplaya_task_response_path(@task_response), action: :post do |f| %>
     <%= f.error_notification %>
     <div class="form-action">
-      <%=f.hidden_field :laplaya_file %>
+      <%= f.hidden_field :laplaya_file %>
     </div>
     <div class="form-actions">
       <%= f.submit 'Complete', class: 'btn btn-default' %>

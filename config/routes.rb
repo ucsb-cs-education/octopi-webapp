@@ -13,11 +13,11 @@ OctopiWebapp::Application.routes.draw do
     match '/signin', to: 'sessions#new', via: 'get'
     match '/signout', to: 'sessions#destroy', via: 'delete'
     get '/modules/:id', to: 'pages#module_page', as: 'module'
-    get '/activities/:id', to: 'pages#activity', as: 'activity'
+    get '/activities/:id', to: 'pages#activity_page', as: 'activity'
     get '/assessment_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
     post '/assessment_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
-    post '/laplaya_tasks/:id', to: 'pages#laplaya_task_response', as: 'laplaya_task_response'
     get '/laplaya_tasks/:id', to: 'pages#laplaya_task', as: 'laplaya_task'
+    post '/laplaya_tasks/:id', to: 'pages#laplaya_task_response', as: 'laplaya_task_response'
   end
   match '/school_classes/:school_class_id/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'
   match '/schools/:school_id/school_classes.json', to: 'student_portal/sessions#list_school_classes', format: false, via: 'get'

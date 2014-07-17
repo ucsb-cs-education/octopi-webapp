@@ -23,16 +23,16 @@ class ActivityPage < Page
     end
   end
 
-  def depend_on (prereq)
+  def depend_on(prereq)
     activity_dependencies.create!(task_prerequisite: prereq)
   end
 
-  def find_unlock_for(student,school_class)
-    Unlock.find_by(student: student, school_class: school_class, unlockable: self)
+  def find_unlock_for(student, school_class)
+    Unlock.find_for(student, school_class, self)
   end
 
-  def get_locked_status_for(student,school_class)
-    find_unlock_for(student,school_class).nil? ? true:false
+  def get_locked_status_for(student, school_class)
+    find_unlock_for(student, school_class).nil?
   end
 
 end
