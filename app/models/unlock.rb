@@ -4,12 +4,12 @@ class Unlock < ActiveRecord::Base
   belongs_to :unlockable, polymorphic: true
 
   scope :where_student_class_unlockable, ->(student, school_class, unlockable) \
-    {where(student: student, school_class: school_class, unlockable: unlockable) }
+    { where(student: student, school_class: school_class, unlockable: unlockable) }
 
   def self.find_for(student, school_class, unlockable)
-    result = where_student_class_unlockable(student,school_class,unlockable)
+    result = where_student_class_unlockable(student, school_class, unlockable)
     unless unlockable.respond_to? :count
-      result = result.take(1)
+      result = result.take
     end
     result
   end

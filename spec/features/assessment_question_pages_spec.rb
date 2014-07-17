@@ -20,18 +20,20 @@ describe "Assessment question page", type: :feature do
   end
 
   describe "answer tests" do
-    it { should have_selector("div.answer", :count => 1) }
+    it { should have_selector("div.answer", :count => 4) }
     describe "add answer", js: true do
       before do
         visit assessment_question_path(assessment_question)
         click_button("Add New Answer Choice")
       end
-      it { should have_selector("div.answer", :count => 2) }
+      it { should have_selector("div.answer", :count => 5) }
     end
     describe "remove answer", js: true, driver: :selenium do
       before do
-        click_button("Remove Answer")
-        page.driver.browser.switch_to.alert.accept
+        4.times do
+          click_button("Remove Answer", match: :first)
+          page.driver.browser.switch_to.alert.accept
+        end
       end
       it { should_not have_selector("div.answer") }
     end
@@ -43,14 +45,14 @@ describe "Assessment question page", type: :feature do
       select('Multiple Correct', :from => 'ansType')
     end
     it { should_not have_selector('input[type=radio]') }
-    it { should have_selector('input[type=checkbox]', :count => 2) }
+    it { should have_selector('input[type=checkbox]', :count => 5) }
     it { should_not have_selector('div.ischecked') }
     it { should have_selector('div.isNotchecked') }
   end
 
   describe "update question", js: true do
     before do
-      answer = find(".answerText")
+      answer = find(".answerText", match: :first)
       answer.click
       answer.set("ExampleContent")
 
@@ -60,7 +62,7 @@ describe "Assessment question page", type: :feature do
 
       question = find("#question-body")
       question.click
-      question.set("ExampleQuestion")
+      question.set("ExampleQuestion for an rspec test")
 
       select('Multiple Correct', :from => 'ansType')
       click_button("Add New Answer Choice")
@@ -81,7 +83,7 @@ describe "Assessment question page", type: :feature do
         wait_for_ajax
         assessment_question.reload
       end.to change(assessment_question, :question_body)
-      expect(RSpecSanitizer::sanitize(assessment_question.question_body)).to eq('ExampleQuestion')
+      expect(RSpecSanitizer::sanitize(assessment_question.question_body)).to eq('ExampleQuestion for an rspec test')
     end
 
     it "should update the answer text" do
@@ -95,7 +97,11 @@ describe "Assessment question page", type: :feature do
         x[:text] = RSpecSanitizer::sanitize(x[:text])
         x
       end
-      expect(parsed).to eq([{text: 'ExampleContent', correct: true}, {text: '', correct: false}])
+      expect(parsed).to eq([{text: 'ExampleContent', correct: true},
+                            {text: 'This is a toaster. ', correct: false},
+                            {text: 'You can trust me.', correct: false},
+                            {text: 'Whales can fly.', correct: false},
+                            {text: '', correct: false}])
     end
 
     it "should update the question type" do

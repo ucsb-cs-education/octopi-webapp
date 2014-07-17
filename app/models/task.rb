@@ -6,8 +6,9 @@ class Task < ActiveRecord::Base
   has_many :reverse_task_dependencies, foreign_key: :prerequisite_id, dependent: :destroy, class_name: 'TaskDependency'
   has_many :dependants, :through => :reverse_task_dependencies, source: :dependant
 
-  has_many :activity_dependencies, foreign_key: :task_prerequisite_id, dependent: :destroy;
+  has_many :activity_dependencies, foreign_key: :task_prerequisite_id, dependent: :destroy
   has_many :activity_dependants, :through => :activity_dependencies, source: :activity_dependant
+  has_many :unlocks, as: :unlockable
   #before_save :check_dependants
 
 

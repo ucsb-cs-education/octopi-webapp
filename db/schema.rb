@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20140714182200) do
-=======
 ActiveRecord::Schema.define(version: 20140715192913) do
->>>>>>> Add Module base files
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,7 +31,7 @@ ActiveRecord::Schema.define(version: 20140715192913) do
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
 
-  create_table "activity_dependencies", id: false, force: true do |t|
+  create_table "activity_dependencies", force: true do |t|
     t.integer "task_prerequisite_id"
     t.integer "activity_dependant_id"
   end
@@ -99,6 +95,8 @@ ActiveRecord::Schema.define(version: 20140715192913) do
     t.string   "type"
   end
 
+  add_index "laplaya_files", ["parent_id", "type"], name: "index_laplaya_files_on_parent_id_and_type", unique: true, using: :btree
+
   create_table "module_pages_school_classes", id: false, force: true do |t|
     t.integer "school_class_id", null: false
     t.integer "module_page_id",  null: false
@@ -155,7 +153,7 @@ ActiveRecord::Schema.define(version: 20140715192913) do
     t.datetime "updated_at"
   end
 
-  create_table "task_dependencies", id: false, force: true do |t|
+  create_table "task_dependencies", force: true do |t|
     t.integer "prerequisite_id"
     t.integer "dependant_id"
   end
@@ -169,9 +167,8 @@ ActiveRecord::Schema.define(version: 20140715192913) do
     t.integer  "task_id"
     t.integer  "school_class_id"
     t.integer  "laplaya_file_id"
-    t.text     "assessment_question_response"
     t.string   "type"
-    t.boolean  "completed",                    default: false
+    t.boolean  "completed",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

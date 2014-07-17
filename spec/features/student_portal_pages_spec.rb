@@ -183,7 +183,7 @@ describe "student portal", type: :feature do
         before do
           first(".answer-input").click
         end
-        describe "should submit correctly" do
+        describe "should submit correctly", driver: :selenium do
           subject { -> {
             click_button "submit-answer-button"
             page.driver.browser.switch_to.alert.accept
@@ -206,7 +206,7 @@ describe "student portal", type: :feature do
           it { should_not have_link("#{assessment_task.title}", :href => student_portal_assessment_task_path(assessment_task)) }
         end
 
-        describe "after attempting to visit the newly unlocked assessment task" do
+        describe "after attempting to visit the newly unlocked assessment task", driver: :selenium do
           before do
             click_button "submit-answer-button"
             page.driver.browser.switch_to.alert.accept
@@ -219,7 +219,7 @@ describe "student portal", type: :feature do
           end
         end
 
-        describe "after attempting to visit the newly unlocked activity page" do
+        describe "after attempting to visit the newly unlocked activity page", driver: :selenium do
           before do
             click_button "submit-answer-button"
             page.driver.browser.switch_to.alert.accept
@@ -231,7 +231,7 @@ describe "student portal", type: :feature do
           end
         end
 
-        describe "after visiting the module page" do
+        describe "after visiting the module page", driver: :selenium do
           before do
             click_button "submit-answer-button"
             page.driver.browser.switch_to.alert.accept

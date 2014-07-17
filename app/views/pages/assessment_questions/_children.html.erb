@@ -3,5 +3,3 @@
 <div id="answerList">
   <%= render partial: "showAnswer", collection: JSON.parse(@assessment_question.answers), locals: {:question_type => @assessment_question.question_type} %>
 </div>
-
-<script>$("#ansType").val("<%= @assessment_question.question_type %>");</script>

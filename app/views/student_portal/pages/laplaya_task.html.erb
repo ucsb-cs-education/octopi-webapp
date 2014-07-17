@@ -7,10 +7,10 @@
 </div>
 
 <div class="student-body">
-  <%= @task_response.student_body.html_safe %>
+  <%= @laplaya_task.student_body.html_safe %>
 </div>
 
-<%= simple_form_for @task_response, url: student_portal_laplaya_task_response_path(@task_response), action: :post do |f| %>
+<%= simple_form_for @task_response, url: student_portal_laplaya_task_response_path(@laplaya_task), action: :post do |f| %>
     <%= f.error_notification %>
     <div class="form-action">
       <%= f.hidden_field :laplaya_file %>

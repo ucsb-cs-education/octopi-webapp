@@ -1,9 +1,9 @@
 class StudentPortal::PagesController < StudentPortal::BaseController
   before_action :signed_in_student
   before_action :load_variables
-  before_action :verify_valid_module_page, only: [:module_page, :activity]
+  before_action :verify_valid_module_page, only: [:module_page, :activity_page]
   before_action :verify_valid_page_task, only: [:laplaya_task, :assessment_task]
-  before_action :verify_unlocked_activity, only: [:activity]
+  before_action :verify_unlocked_activity, only: [:activity_page]
   after_action :set_module_cookie, only: [:module_page]
 
   #GET /student_portal/modules/:id
@@ -15,7 +15,9 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #GET /student_portal/activities/:id
   #student_portal_activity_path
   def activity_page
-    @unlocks = Unlock.find_for(current_student, current_school_class, @activity_page.tasks)
+    # we should try to do some eager loading. It'd make things faster. But I don't think this works
+    # @tasks = @activity_page.tasks.includes(:unlocks).where("unlocks.student_id" => current_student.id, "unlocks.school_class_id" => current_school_class.id)
+    @tasks = @activity_page.tasks
   end
 
   #GET /student_portal/assessment_tasks/:id
@@ -53,9 +55,8 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #POST /student_portal/laplaya_tasks/:id
   #student_portal_laplaya_task_response_path
   def laplaya_task_response
-    @laplaya_task = LaplayaTask.find(params[:id])
     task_response = LaplayaTaskResponse.create(
-        task: @task,
+        task: @laplaya_task,
         student: current_student,
         school_class: current_school_class,
         completed: true)
@@ -68,20 +69,27 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   end
 
   private
+  def verify_valid_module_page
+    redirect_to_first_module_page unless in_a_valid_module_page?
+  end
+
   def load_variables
-    if params[:action] == :module_page
-      @module_page = ModulePage.find(params[:id])
-    elsif params[:action] == :activity_page
-      @activity_page = ActivityPage.find(params[:id])
-      @module_page = @activity_page.module_page
-    elsif params[:action] == :assessment_task || params[:action] == :assessment_response
-      @assessment_task = AssessmentTask.find(params[:id])
-      @activity_page = @assessment_task.activity_page
-      @module_page = @activity_page.module_page
-    elsif params[:action] == :laplaya_task || params[:action] == :laplaya_task_response
-      @laplaya_task = LaplayaTask.find(params[:id])
-      @activity_page = @laplaya_task.activity_page
-      @module_page = @activity_page.module_page
+    action = params[:action].to_sym
+    case action
+      when :module_page
+        @module_page = ModulePage.find(params[:id])
+      when :activity_page
+        @activity_page = ActivityPage.find(params[:id])
+        @module_page = @activity_page.module_page
+      when :assessment_task, :assessment_response
+        @assessment_task = AssessmentTask.find(params[:id])
+        @activity_page = @assessment_task.activity_page
+        @module_page = @activity_page.module_page
+      when :laplaya_task, :laplaya_task_response
+        @laplaya_task = LaplayaTask.find(params[:id])
+        @activity_page = @laplaya_task.activity_page
+        @module_page = @activity_page.module_page
+      else
     end
   end
 
