@@ -24,7 +24,7 @@
       var world;
       window.onload = function () {
           world = new WorldMorph(document.getElementById('world'));
-          new IDE_Morph({developerMode: true}).openIn(world);
+          new IDE_Morph(<%= raw @laplaya_ide_params %>).openIn(world);
           setInterval(loop, 1);
       };
       function loop() {

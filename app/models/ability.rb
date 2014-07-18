@@ -78,6 +78,7 @@ class Ability
     can :create, LaplayaTask
     can :create, AssessmentQuestion
     can :create, AssessmentTask
+    can :see_developer_view, LaplayaFile
   end
 
   def super_staff(user)
@@ -119,7 +120,9 @@ class Ability
 
   def student(user)
     can :read, Student, id: user
+    if (user.respond_to? :current_class) && (user.current_class.present?)
+      can :show, LaplayaFile, id: SandboxBaseLaplayaFile.where(parent_id: user.current_class.module_pages.pluck(:id)).pluck(:id)
+    end
   end
-
 
 end

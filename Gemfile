@@ -127,6 +127,10 @@ end
 # Use unicorn as the app server
 gem 'unicorn'
 
+gem 'resque'
+gem 'resque-web', require: 'resque_web'
+
+
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 

@@ -26,11 +26,6 @@
 </div>
 
 <div id="other-links">
-  <div id="sandbox-link">
-    <img src="broken image" width="100" height="100">
-  </div>
-  <div id="main-project-link">
-    <img src="broken image" width="100" height="100">
-    Story Project
-  </div>
+  <%= link_to image_tag('75px-Sandbox.png'), student_portal_module_sandbox_path(@module_page), id: 'sandbox-link' %>
+  <%= link_to image_tag('375px-Open_book_nae_02.svg.png'), student_portal_laplaya_file_path(@project_laplaya_file), id: 'main-project-link' %>
 </div>

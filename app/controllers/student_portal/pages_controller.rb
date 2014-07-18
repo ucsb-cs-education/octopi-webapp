@@ -35,10 +35,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #GET /student_portal/laplaya_tasks/:id
   #student_portal_laplaya_task_path
   def laplaya_task
-    @task_response = LaplayaTaskResponse.new(
-        student: current_student,
-        school_class: current_school_class,
-        task: @laplaya_task)
+    # redirect_to student_portal_laplaya_file_path(@laplaya_task_response.laplaya_file)
   end
 
   #POST /student_portal/assessment_tasks/:id
@@ -55,17 +52,24 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #POST /student_portal/laplaya_tasks/:id
   #student_portal_laplaya_task_response_path
   def laplaya_task_response
-    task_response = LaplayaTaskResponse.create(
-        task: @laplaya_task,
-        student: current_student,
-        school_class: current_school_class,
-        completed: true)
+    @laplaya_task_response.completed = true
+    @laplaya_task_response.save
 
-    if task_response.errors.empty?
+    if @laplaya_task_response.errors.empty?
       redirect_to student_portal_activity_path(@laplaya_task.activity_page)
     else
       head :bad_request
     end
+  end
+
+  #GET /student_portal/modules/:id/laplaya_sandbox
+  def laplaya_sandbox
+    sandboxmode = {}
+    sandboxmode['modulePath_URL'] = student_portal_module_sandbox_files_path(@module_page)
+    sandboxmode['baseFile_ID'] = @module_page.sandbox_base_laplaya_file.id
+    session[:laplaya_params] ||= {}
+    session[:laplaya_params]['sandboxMode'] = sandboxmode
+    redirect_to student_portal_laplaya_path
   end
 
   private
@@ -78,6 +82,18 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     case action
       when :module_page
         @module_page = ModulePage.find(params[:id])
+        @project_laplaya_file = ::StudentResponse::ProjectResponseLaplayaFile.find_by(
+            owner: current_student,
+            module_page: @module_page
+        )
+        if @project_laplaya_file.nil?
+          @project_laplaya_file ||= ::StudentResponse::ProjectResponseLaplayaFile.create(
+              owner: current_student,
+              module_page: @module_page).clone(@module_page.project_base_laplaya_file)
+          current_user.add_role :owner, @project_laplaya_file.becomes(LaplayaFile)
+        end
+      when :laplaya_sandbox
+        @module_page = ModulePage.find(params[:id])
       when :activity_page
         @activity_page = ActivityPage.find(params[:id])
         @module_page = @activity_page.module_page
@@ -89,6 +105,17 @@ class StudentPortal::PagesController < StudentPortal::BaseController
         @laplaya_task = LaplayaTask.find(params[:id])
         @activity_page = @laplaya_task.activity_page
         @module_page = @activity_page.module_page
+        @laplaya_task_response = LaplayaTaskResponse.find_by(
+            student: current_student,
+            school_class: current_school_class,
+            task: @laplaya_task
+        )
+        @laplaya_task_response ||= LaplayaTaskResponse.new_response(
+            current_student,
+            current_school_class,
+            @laplaya_task
+        )
+      when :module_page
       else
     end
   end
@@ -131,7 +158,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   end
 
   def in_a_valid_module_page?
-    current_school_class.module_pages.include?(@module_page)
+    @module_page && current_school_class.module_pages.include?(@module_page)
   end
 
   def redirect_to_first_module_page

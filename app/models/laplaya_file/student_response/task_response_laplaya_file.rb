@@ -1,0 +1,2 @@
+class StudentResponse::TaskResponseLaplayaFile < StudentResponse::StudentResponseLaplayaFile
+end

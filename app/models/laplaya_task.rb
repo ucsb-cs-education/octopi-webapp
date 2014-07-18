@@ -8,7 +8,7 @@ class LaplayaTask < Task
       :locked
     else
       response = TaskResponse.find_by(student: student, school_class: school_class, task: self)
-      response.nil? || (response.completed) ? :completed : true
+      (response.present? && ((response.completed) ? :completed : true))
     end
   end
 end

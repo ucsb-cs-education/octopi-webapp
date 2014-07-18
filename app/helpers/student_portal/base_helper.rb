@@ -4,10 +4,10 @@ module StudentPortal::BaseHelper
     remember_token = Student.new_remember_token
     session[:student_remember_token] = remember_token
     session[:school_class_id] = school_class.id
-    @current_school_class = school_class
-    @current_student = student
-    update_autosignout_time
     student.update_attribute(:remember_token, Student.create_remember_hash(remember_token))
+    @current_student = student
+    @current_school_class = school_class
+    current_student
   end
 
   def update_autosignout_time
@@ -29,6 +29,10 @@ module StudentPortal::BaseHelper
     if expires_at && expires_at < Time.now
       sign_out_student(@current_student) if @current_student
     end
+    update_autosignout_time
+    if @current_student && session[:school_class_id]
+      @current_student.current_class ||= SchoolClass.find_by(id: session[:school_class_id])
+    end
     @current_student
   end
 
@@ -38,9 +42,11 @@ module StudentPortal::BaseHelper
     end
     @current_school_class
   end
+
   def current_school_class?(school_class)
     school_class == current_school_class
   end
+
   def current_student?(student)
     student == current_student
   end

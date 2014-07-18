@@ -10,12 +10,15 @@
   <%= @laplaya_task.student_body.html_safe %>
 </div>
 
-<%= simple_form_for @task_response, url: student_portal_laplaya_task_response_path(@laplaya_task), action: :post do |f| %>
-    <%= f.error_notification %>
-    <div class="form-action">
-      <%= f.hidden_field :laplaya_file %>
-    </div>
-    <div class="form-actions">
-      <%= f.submit 'Complete', class: 'btn btn-default' %>
-    </div>
+<%= link_to 'Get started in LaPlaya!', student_portal_laplaya_file_path(@laplaya_task_response.laplaya_file), class: 'btn btn-primary' %>
+
+<% unless @laplaya_task_response.completed? %>
+    <%= simple_form_for LaplayaTaskResponse.new, url: student_portal_laplaya_task_response_path(@laplaya_task), action: :post do |f| %>
+        <%= f.error_notification %>
+        <div class="form-actions">
+          <%= f.submit 'Complete', class: 'btn btn-default' %>
+        </div>
+    <% end %>
+<% else %>
+    <div>Completed</div>
 <% end %>

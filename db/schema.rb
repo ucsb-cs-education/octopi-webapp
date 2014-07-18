@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140715192913) do
+ActiveRecord::Schema.define(version: 20140721225050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,9 +93,11 @@ ActiveRecord::Schema.define(version: 20140715192913) do
     t.integer  "parent_id"
     t.integer  "curriculum_id"
     t.string   "type"
+    t.integer  "user_id"
   end
 
-  add_index "laplaya_files", ["parent_id", "type"], name: "index_laplaya_files_on_parent_id_and_type", unique: true, using: :btree
+  add_index "laplaya_files", ["type", "parent_id"], name: "index_laplaya_files_on_type_and_parent_id", using: :btree
+  add_index "laplaya_files", ["user_id"], name: "index_laplaya_files_on_user_id", using: :btree
 
   create_table "module_pages_school_classes", id: false, force: true do |t|
     t.integer "school_class_id", null: false
@@ -166,18 +168,13 @@ ActiveRecord::Schema.define(version: 20140715192913) do
     t.integer  "student_id"
     t.integer  "task_id"
     t.integer  "school_class_id"
-    t.integer  "laplaya_file_id"
     t.string   "type"
     t.boolean  "completed",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "task_responses", ["laplaya_file_id"], name: "index_task_responses_on_laplaya_file_id", using: :btree
-  add_index "task_responses", ["school_class_id"], name: "index_task_responses_on_school_class_id", using: :btree
   add_index "task_responses", ["student_id", "school_class_id", "task_id"], name: "task_response_tri_index", unique: true, using: :btree
-  add_index "task_responses", ["student_id"], name: "index_task_responses_on_student_id", using: :btree
-  add_index "task_responses", ["task_id"], name: "index_task_responses_on_task_id", using: :btree
 
   create_table "tasks", force: true do |t|
     t.string   "type"

@@ -1,3 +1,5 @@
+require "resque_web"
+
 OctopiWebapp::Application.routes.draw do
 
   mount Ckeditor::Engine => '/ckeditor'
@@ -8,14 +10,29 @@ OctopiWebapp::Application.routes.draw do
     match '/help', to: 'static_pages#help', via: 'get'
     match '/about', to: 'static_pages#about', via: 'get'
     match '/contact', to: 'static_pages#contact', via: 'get'
-    match '/laplaya', to: 'static_pages#laplaya', via: 'get'
     match '/home', to: redirect('/'), via: 'get'
     match '/signin', to: 'sessions#new', via: 'get'
     match '/signout', to: 'sessions#destroy', via: 'delete'
-    get '/modules/:id', to: 'pages#module_page', as: 'module'
+
+    scope module: 'laplaya' do
+      match '/laplaya', to: 'laplaya_base#laplaya', via: 'get'
+      match '/laplaya/:id', to: 'laplaya_base#laplaya_file', via: 'get', as: 'laplaya_file'
+    end
+
+    scope 'modules' do
+      get ':id', to: 'pages#module_page', as: 'module'
+      get ':id/laplaya_sandbox', to: 'pages#laplaya_sandbox', as: 'module_sandbox'
+      scope module: 'laplaya' do
+        get ':module_page_id/laplaya_files', to: 'laplaya_sandbox#index', as: 'module_sandbox_files'
+        post ':module_page_id/laplaya_files', to: 'laplaya_sandbox#create'
+      end
+    end
+
     get '/activities/:id', to: 'pages#activity_page', as: 'activity'
+
     get '/assessment_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
     post '/assessment_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
+
     get '/laplaya_tasks/:id', to: 'pages#laplaya_task', as: 'laplaya_task'
     post '/laplaya_tasks/:id', to: 'pages#laplaya_task_response', as: 'laplaya_task_response'
   end
@@ -80,6 +97,15 @@ OctopiWebapp::Application.routes.draw do
     end
   end
 
+  resque_web_constraint = lambda do |request|
+    current_staff = request.env['warden'].user
+    current_staff.present? && current_staff.respond_to?(:has_role?) && current_staff.has_role?(:super_staff)
+  end
+
+  ResqueWeb::Engine.eager_load!
+  constraints resque_web_constraint do
+    mount ResqueWeb::Engine => '/resque_web'
+  end
 
 
   # The priority is based upon order of creation: first created -> highest priority.

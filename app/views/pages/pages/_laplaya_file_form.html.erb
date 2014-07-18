@@ -1,5 +1,5 @@
 <%= link_to "#{(can? :update, @page) ? 'Edit' : 'Open'} LaPlaya file",
-            student_portal_laplaya_path(anchor: "octopi-cloud:#{laplaya_file.id}") %>
+            student_portal_laplaya_file_path(laplaya_file) %>
 <% if can? :update, @page %>
     <div class="laplaya-clone">
       Clone from one of your existing LaPlaya projects:
