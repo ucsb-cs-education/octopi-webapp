@@ -1,0 +1,9 @@
+<% unless dependency.id==nil %>
+    <li class="prereq_link">
+      Depends on <%= link_to "#{dependency.prerequisite.title}", dependency.prerequisite %>
+      <%= form_for dependency,
+                   html: {method: :delete}, remote: true do |f| %>
+          <%= f.submit "Remove", class: "remove-button" %>
+      <% end %>
+    </li>
+<% end %>

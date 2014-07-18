@@ -27,17 +27,12 @@ class ActivityPage < Page
     activity_dependencies.create!(task_prerequisite: prereq)
   end
 
-<<<<<<< HEAD
   def find_unlock_for(student, school_class)
     Unlock.find_for(student, school_class, self)
-=======
-  def depends_on?(prereq)
-    self.prerequisites.include?(prereq)
   end
 
-  def find_unlock_for(student,school_class)
-    Unlock.find_by(student: student, school_class: school_class, unlockable: self)
->>>>>>> Made a way to see prerequisites and dependencies and am slowly figuring out the forms to edit them
+  def depends_on?(prereq)
+    self.prerequisites.include?(prereq)
   end
 
   def get_locked_status_for(student, school_class)
