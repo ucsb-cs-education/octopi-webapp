@@ -66,7 +66,9 @@ class Pages::AssessmentTasksController < Pages::TasksController
     # @pages = @assessment_tasks.map{|x| x.becomes(Task)} if @assessment_tasks
   end
 
+
+
   def assessment_task_params
-    params.require(:assessment_task).permit(:title, :'teacher_body', :'student_body', :'designer_note')
+    params.require(:assessment_task).permit(:title, :'teacher_body', :'student_body')
   end
 end
