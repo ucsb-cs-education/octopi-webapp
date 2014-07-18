@@ -4,19 +4,25 @@ class Pages::ActivityDependenciesController < ApplicationController
 
   def create
     @prereq = Task.find(params[:activity_dependency][:task_prerequisite_id])
-    @dependant = @activity_page
-    @dependant.depend_on(@prereq)
+    @dependant = ActivityPage.find(params[:activity_page_id])
+    @dependency = @dependant.depend_on(@prereq)
     respond_to do |format|
-      format.html { redirect_to @prereq }
-      format.js
+      format.html { redirect_to @dependency }
+      format.js do
+        js false
+      end
     end
   end
 
   def destroy
     @dependency = ActivityDependency.find(params[:id])
-    @return = @dependency.task_prerequisite
     @dependency.destroy
-    redirect_to @return
+    respond_to do |format|
+      format.html { redirect_to @dependency }
+      format.js do
+        js false
+      end
+    end
   end
 
 end

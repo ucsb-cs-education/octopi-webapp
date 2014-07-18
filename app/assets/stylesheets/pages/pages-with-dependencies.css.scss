@@ -1,0 +1,63 @@
+
+#dependency_graph {
+  color: black;
+  background-color: #e3e3e3;
+  border: 1px solid #c8c8c8;
+  margin-top: 2px;
+  padding: .5em;
+  width: 60%;
+  a {
+    color: #000052;
+  }
+}
+
+.remove-button {
+  border: 0px;
+  padding: 0px;
+  color: #999999;
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.remove-button:hover {
+  color: #ad0000;
+}
+
+.edit_task_dependency, .edit_activity_dependency {
+  margin-bottom: .1em;
+  display: inline-block;
+  max-width: 8em;
+}
+
+.add-prereq {
+  margin-bottom: 1px;
+}
+
+.new_task_dependency {
+  display: inline-block;
+  max-width: 8em;
+}
+
+#task-dependency-form, #activity-dependency-form {
+  display: inline-block;
+}
+
+#possible-dependant-list {
+  display: inline-block;
+}
+
+#task-prerequisites, #all-dependants {
+  list-style-type: none;
+  padding: 0;
+}
+
+#no-prereq-message {
+  color: rgba(0, 0, 0, .5);
+}
+
+#edit-dependencies {
+  .simple_form {
+    min-width: 20em;
+    max-width: 20em;
+  }
+}

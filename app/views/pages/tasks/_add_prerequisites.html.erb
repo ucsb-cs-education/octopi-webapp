@@ -1,4 +1,4 @@
 <%= simple_form_for [@page, @task_dependencies.build], html: {method: :post}, remote: true do |f| %>
-    <%= f.input :prerequisite_id, collection: @relatable_tasks %>
-    <%= f.submit "Add New", class: "add-dependant-button" %>
+    <%= f.input :prerequisite_id, input_html:{class: 'input-sm'}, label: "Add new prerequisite", required: false, collection: @relatable_tasks %>
+    <%= f.submit "Add New Prerequisite", class: 'btn btn-default btn-xs' %>
 <% end %>

@@ -115,7 +115,7 @@ describe "page", type: :feature do
           click_link("Delete #{me.title}")
         end.to change(myModel, :count).by(-1)
       end
-      describe "that correct redirects to parent", js: true do
+      describe "that correctly redirects to parent", js: true do
         it "should redirect to parent when deleted", driver: :selenium do
           click_link('return to parent')
           parent_path = current_path
@@ -213,7 +213,7 @@ describe "page", type: :feature do
       it { should_not have_button("Save changes to") }
     end
 
-    describe "after attempting to edit the boxed", js: true do
+    describe "after attempting to edit the boxes", js: true do
       before do
         teacher_body=find('#teacher-body')
         teacher_body.native.send_keys("SampleTeacherBody")
@@ -230,6 +230,97 @@ describe "page", type: :feature do
       it { should_not have_content("SampleTitle") }
     end
 
+  end
+
+  shared_examples "a page with dependencies" do
+    describe "when editing dependencies" do
+
+      shared_examples "a page depending on a task" do
+        before do
+          activity_2
+          prereq_task
+          myModule.activity_pages << activity_2
+          activity_2.tasks << prereq_task
+          visit thisPath
+        end
+        describe "with the add prerequisite form" do
+          it { should have_selector("div[id=edit-dependencies]") }
+        end
+
+        describe "before a dependency is created" do
+          it { should_not have_content("Depends on") }
+          it { should have_selector("##{add_dependency_id} option[value='#{prereq_task.id.to_s}']") }
+          describe "when another module exists" do
+            let(:other_module) { FactoryGirl.create(:module_page) }
+            let(:other_activity) { FactoryGirl.create(:activity_page, module_page: other_module) }
+            let(:other_task) { FactoryGirl.create(:assessment_task, activity_page: other_activity) }
+            before do
+              other_module
+              other_activity
+              other_task
+              visit thisPath
+            end
+            it { should_not have_selector("##{add_dependency_id} option[value='#{other_task.id.to_s}']") }
+          end
+        end
+
+        describe "after a dependency is created", js: true do
+          before do
+            select(prereq_task.title, :from => add_dependency_id)
+            click_on "Add New Prerequisite"
+            wait_for_ajax
+          end
+          it { should have_content("Depends on") }
+          it { should have_link(prereq_task.title) }
+          it { should_not have_selector("##{add_dependency_id} option[value='#{prereq_task.id.to_s}']") }
+
+          describe "after deleting a dependency", js: true do
+            before do
+              click_on "Remove"
+              wait_for_ajax
+            end
+            it { should_not have_content("Depends on") }
+            it { should_not have_link(prereq_task.title) }
+            it { should have_selector("##{add_dependency_id} option[value='#{prereq_task.id.to_s}']") }
+          end
+
+          describe "after following the depends on link" do
+            before do
+              click_on "#{prereq_task.title}"
+            end
+            it { should have_link(me.title) }
+            it "should link to the prerequisite task" do
+              expect(current_path).to eq(prereq_path)
+            end
+          end
+          describe "after clicking the corresponding is prerequisite to link", driver: :selenium do
+            #diver: :selenium is set here because without it this test will fail unpredictably
+            before do
+              click_on "#{prereq_task.title}"
+              click_on "#{me.title}"
+            end
+            it "should link back to the dependant" do
+              expect(current_path).to eq(thisPath)
+            end
+          end
+        end
+      end
+
+
+      describe "when depending on an assessment task" do
+        let(:activity_2) { FactoryGirl.create(:activity_page, module_page: myModule) }
+        let(:prereq_task) { FactoryGirl.create(:assessment_task, activity_page: activity_2) }
+        let(:prereq_path) { assessment_task_path(prereq_task) }
+        it_behaves_like "a page depending on a task"
+      end
+
+      describe "when depending on a laplaya task" do
+        let(:activity_2) { FactoryGirl.create(:activity_page, module_page: myModule) }
+        let(:prereq_task) { FactoryGirl.create(:laplaya_task, activity_page: activity_2) }
+        let(:prereq_path) { laplaya_task_path(prereq_task) }
+        it_behaves_like "a page depending on a task"
+      end
+    end
   end
 
 
@@ -311,7 +402,9 @@ describe "page", type: :feature do
     let(:activity) { FactoryGirl.create(:activity_page) }
     let(:myModel) { ActivityPage }
     let(:thisPath) { activity_page_path(activity) }
+    let(:add_dependency_id) { "activity_dependency_task_prerequisite_id" }
     let(:me) { activity }
+    let(:myModule) { me.module_page }
 
     describe "when authorized to edit" do
       before do
@@ -326,8 +419,21 @@ describe "page", type: :feature do
       it_behaves_like "a page"
       it_behaves_like "a child page"
       it_behaves_like "a page with standard child structure"
+      it_behaves_like "a page with dependencies"
 
-      describe "after clicking the assessment task button", js: true do
+      describe "with a task" do
+        let(:child_assessment_task) { FactoryGirl.create(:assessment_task, activity_page: me) }
+        let(:child_laplaya_task) { FactoryGirl.create(:laplaya_task, activity_page: me) }
+        before do
+          child_assessment_task
+          child_laplaya_task
+          visit thisPath
+        end
+        it { should_not have_selector("##{add_dependency_id} option[value='#{child_assessment_task.id.to_s}']") }
+        it { should_not have_selector("##{add_dependency_id} option[value='#{child_laplaya_task.id.to_s}']") }
+      end
+
+      describe "after clicking the assessment task button", js: true, driver: :selenium do
         before do
           click_button("Add a new Assessment Task")
           wait_for_ajax
@@ -358,6 +464,7 @@ describe "page", type: :feature do
       end
 
       it_behaves_like "a page that may not be edited"
+      it { should_not have_selector("div[id=edit-dependencies]") }
     end
   end
 
@@ -366,7 +473,9 @@ describe "page", type: :feature do
     let(:laplayatask) { FactoryGirl.create(:laplaya_task) }
     let(:myModel) { LaplayaTask }
     let(:thisPath) { laplaya_task_path(laplayatask) }
+    let(:add_dependency_id) { "task_dependency_prerequisite_id" }
     let(:me) { laplayatask }
+    let(:myModule) { me.activity_page.module_page }
 
     describe "when authorized to edit" do
 
@@ -380,6 +489,7 @@ describe "page", type: :feature do
 
       it_behaves_like "a page"
       it_behaves_like "a child page"
+      it_behaves_like "a page with dependencies"
 
       describe "with the correct buttons" do
         it { should have_button("Save changes to", disabled: true) }
@@ -396,6 +506,7 @@ describe "page", type: :feature do
       it { should_not have_content("Edit LaPlaya") }
       it { should have_content("Open LaPlaya") }
       it { should have_content("Task Base LaPlaya File") }
+      it { should_not have_selector("div[id=edit-dependencies]") }
 
       describe "without a clone button" do
         it { should_not have_button("Clone") }
@@ -414,7 +525,9 @@ describe "page", type: :feature do
     let(:assessmenttask) { FactoryGirl.create(:assessment_task) }
     let(:myModel) { AssessmentTask }
     let(:thisPath) { assessment_task_path(assessmenttask) }
+    let(:add_dependency_id) { "task_dependency_prerequisite_id" }
     let(:me) { assessmenttask }
+    let(:myModule) { me.activity_page.module_page }
 
     describe "when authorized to edit" do
       before do
@@ -425,6 +538,7 @@ describe "page", type: :feature do
       it_behaves_like "a page"
       it_behaves_like "a child page"
       it_behaves_like "a page with standard child structure"
+      it_behaves_like "a page with dependencies"
     end
 
     describe "when not authorized to edit" do
@@ -433,6 +547,7 @@ describe "page", type: :feature do
         visit thisPath
       end
       it_behaves_like "a page that may not be edited"
+      it { should_not have_selector("div[id=edit-dependencies]") }
     end
   end
 end

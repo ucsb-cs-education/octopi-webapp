@@ -1,0 +1,13 @@
+<div id="dependency_graph">
+  <% if can? :update, @page %>
+      <div id="edit-dependencies">
+        <%= render partial: "add_prerequisites" %>
+        <div id="no-prereq-message">
+          (An activity with no prerequisites will begin unlocked)
+        </div>
+      </div>
+  <% end %>
+  <ul id="task-prerequisites">
+    <%= render partial: "prereq_link", collection: @activity_dependencies, as: :dependency %>
+  </ul>
+</div>

@@ -6,12 +6,9 @@ class Pages::AssessmentTasksController < Pages::TasksController
   # GET /activity/:id
   def show
     @task_dependencies = @assessment_task.task_dependencies
-    @activity_dependencies = @assessment_task.activity_dependencies
-    @task_dependants = @assessment_task.dependants
-
-    
     @activity_dependants = @assessment_task.activity_dependants
-    @relatable_tasks = Task.where(activity_page: ModulePage.find(@assessment_task.activity_page.module_page).activity_pages) - @assessment_task.prerequisites
+    @task_dependants = @assessment_task.dependants
+    @relatable_tasks = Task.where(activity_page: ModulePage.find(@assessment_task.activity_page.module_page).activity_pages) - (@assessment_task.prerequisites.to_ary.push(@assessment_task))
   end
 
   def update
@@ -67,7 +64,6 @@ class Pages::AssessmentTasksController < Pages::TasksController
     # @page = @assessment_task.becomes(Task) if @assessment_task
     # @pages = @assessment_tasks.map{|x| x.becomes(Task)} if @assessment_tasks
   end
-
 
 
   def assessment_task_params

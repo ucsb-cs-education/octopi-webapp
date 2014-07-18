@@ -28,16 +28,6 @@ class Task < ActiveRecord::Base
     self.prerequisites.include?(prereq)
   end
 
-  def be_prereq_to(depend)
-    if depend.is_a?(Task)
-      reverse_task_dependencies.create!(dependant: depend)
-    else
-      if depend.is_a?(ActivityPage)
-        activity_dependencies.create!(activity_dependant: depend)
-      end
-    end
-  end
-
   def find_unlock_for(student, school_class)
     unlock = Unlock.find_for(student, school_class, self)
     if unlock.nil? && prerequisites.empty?
