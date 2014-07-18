@@ -7,6 +7,9 @@ gem 'rails', '~> 4.1'
 # Use bcrypt for password hashing
 gem 'bcrypt', '~> 3.1.5'
 
+# Use paper_trail for versioning
+gem 'paper_trail', '~>3.0.3'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'
 
