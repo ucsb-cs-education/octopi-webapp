@@ -5,7 +5,8 @@ class Pages::ActivityPagesController < Pages::PagesController
 
   # GET /activity/:id
   def show
-
+    @activity_dependencies = @activity_page.activity_dependencies
+    @relatable_tasks = Task.where(activity_page: (ModulePage.find(@activity_page.module_page).activity_pages)) - (@activity_page.prerequisites.to_ary.concat(@activity_page.children))
   end
 
   def update

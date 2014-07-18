@@ -2,11 +2,15 @@ class Pages::LaplayaTasksController < Pages::TasksController
   load_and_authorize_resource
   load_and_authorize_resource :activity_page, only: [:new, :create]
   before_filter :set_page_variable
-
   # GET /activity/:id
   def show
     @user_laplaya_files = LaplayaFile.with_role(:owner, current_user) if current_user.has_role? :super_staff
     @user_laplaya_files ||= LaplayaFile.accessible_by(current_ability, :index)
+
+    @task_dependencies = @laplaya_task.task_dependencies
+    @activity_dependants = @laplaya_task.activity_dependants
+    @task_dependants = @laplaya_task.dependants
+    @relatable_tasks = Task.where(activity_page: ModulePage.find(@laplaya_task.activity_page.module_page).activity_pages) - (@laplaya_task.prerequisites.to_ary.push(@laplaya_task))
   end
 
   def update

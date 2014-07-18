@@ -1,0 +1,5 @@
+$('#prerequisite-id-<%= @dependency.prerequisite.id%>').remove();;
+$('#task_dependency_prerequisite_id').append($('<option>', {
+    value: <%= @dependency.prerequisite.id%>,
+    text: '<%= @dependency.prerequisite.title%>'
+}));
