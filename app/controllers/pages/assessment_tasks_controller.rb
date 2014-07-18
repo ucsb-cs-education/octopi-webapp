@@ -5,6 +5,13 @@ class Pages::AssessmentTasksController < Pages::TasksController
 
   # GET /activity/:id
   def show
+    @task_dependencies = @assessment_task.task_dependencies
+    @activity_dependencies = @assessment_task.activity_dependencies
+    @task_dependants = @assessment_task.dependants
+
+    
+    @activity_dependants = @assessment_task.activity_dependants
+    @relatable_tasks = Task.where(activity_page: ModulePage.find(@assessment_task.activity_page.module_page).activity_pages) - @assessment_task.prerequisites
   end
 
   def update

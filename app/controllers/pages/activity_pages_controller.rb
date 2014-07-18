@@ -5,6 +5,7 @@ class Pages::ActivityPagesController < Pages::PagesController
 
   # GET /activity/:id
   def show
+
   end
 
   def update

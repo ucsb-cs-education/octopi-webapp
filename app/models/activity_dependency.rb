@@ -3,4 +3,5 @@ class ActivityDependency < ActiveRecord::Base
   belongs_to :activity_dependant, class_name: 'ActivityPage'
   validates :task_prerequisite_id, presence: true
   validates :activity_dependant_id, presence: true
+  alias_attribute :dependant, :activity_dependant
 end

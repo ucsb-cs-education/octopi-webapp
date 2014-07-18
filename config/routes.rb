@@ -44,6 +44,10 @@ OctopiWebapp::Application.routes.draw do
   end
 
 
+
+
+
+
   resources :schools, only: [:show, :index], shallow: true do
     resources :students, except: [:update, :edit, :destroy]
     resources :school_classes do
@@ -69,6 +73,8 @@ OctopiWebapp::Application.routes.draw do
   end
   ActiveAdmin.routes(self)
 
+
+
   scope module: 'pages' do
     resources :curriculum_pages, path: 'curriculums', except: [:create, :edit], shallow: true do
       member do
@@ -81,18 +87,19 @@ OctopiWebapp::Application.routes.draw do
         resources :activity_pages, path: 'activities', except: [:index, :edit], shallow: true do
           member do
           end
+          resources :activity_dependencies, only: [:destroy, :create]
           resources :laplaya_tasks, except: [:index, :edit], shallow: true do
             member do
               patch :clone
             end
+            resources :task_dependencies, only: [:destroy, :create]
+            resources :activity_dependencies, only: [:destroy, :create]
           end
 
           resources :assessment_tasks, except: [:index, :edit], shallow: true do
-            #patch '/assessment_tasks/:id', to: 'tasks#remove_dependant', as: 'remove_dependant'
-            member do
-            end
-            resources :assessment_questions, except: [:index, :edit], shallow: true do
-            end
+            resources :task_dependencies, only: [:destroy, :create]
+            resources :activity_dependencies, only: [:destroy, :create]
+            resources :assessment_questions, except: [:index, :edit], shallow: true
           end
         end
       end

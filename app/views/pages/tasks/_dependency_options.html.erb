@@ -1,0 +1,5 @@
+Make
+<div id="possible-dependant-list">
+  <%= render partial: "available_for_relationship", locals: {:main_module => @page.is_a?(Task) ? @page.activity_page.module_page : @page.module_page} %>
+</div>
+depend on <%= @page.title %>: <%= render partial: "add_dependant_forms" %>

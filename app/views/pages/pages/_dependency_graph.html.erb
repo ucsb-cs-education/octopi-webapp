@@ -1,25 +1,15 @@
-<% if @page.is_a?(Task) %>
-    <% iterator = @page.activity_page.module_page %>
-<% else %>
-    <% iterator = @page.module_page %>
-<% end %>
 <div id="dependency_graph">
   <div id="edit-dependencies">
-    <form class="add-prereq">
-      <select class="form-input" id="tasks-availible">
-        <% iterator.children.each { |x| %>
-            <% x.children.each { |y| %>
-                <% unless @page.depends_on?(y) %>
-                    <option value=<%= y %>><%= y.title %></option>
-                <% end %>
-            <% } %>
-        <% } %>
-      </select>
-    </form>
+    <%= render partial: "add_prerequisites" %>
   </div>
-  <%= render partial: "prereq_link", collection: @page.prerequisites %>
-  <% if @page.is_a?(Task) %>
-      <%= render partial: "dependant_link", collection: @page.activity_dependants %>
-      <%= render partial: "dependant_link", collection: @page.dependants %>
+  <ul id = "task-prerequisites" >
+    <%= render partial: "prereq_link", collection: @task_dependencies, as: :dependency %>
+  </ul>
+  <% if @page.is_a?(Task) && false %>
+      <ul id="task-dependants">
+        <%= render partial: "dependant_link", collection: @activity_depencies, as: :dependency %>
+        <%= render partial: "dependant_link", collection: @task_dependencies, as: :dependency %>
+      </ul>
   <% end %>
 </div>
+
