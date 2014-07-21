@@ -29,6 +29,8 @@ class SchoolClassesController < ApplicationController
   #Shallow actions
   # GET /school_classes/1
   def show
+    @module_pages = @school_class.module_pages.includes(activity_pages: [:tasks])
+    @unlocks = Unlock.where(student: @school_class.students)
   end
 
   # GET /school_classes/1/edit
@@ -65,6 +67,19 @@ class SchoolClassesController < ApplicationController
         js false
       end
     end
+  end
+
+  def activity_page
+    @activity_page = ActivityPage.find(params[:school_class_id])
+    @tasks= @activity_page.tasks
+    @unlocks = Unlock.where(student: @school_class.students, school_class: @school_class)
+    @responses = TaskResponse.where(student: @school_class.students, school_class: @school_class)
+
+  end
+
+  # POST /school_classes/:school_class_id/manual_unlock
+  def manual_unlock
+
   end
 
   def update

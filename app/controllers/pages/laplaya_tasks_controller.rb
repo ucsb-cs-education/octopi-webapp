@@ -107,4 +107,5 @@ class Pages::LaplayaTasksController < Pages::TasksController
     params.require(:laplaya_task).permit(:title, :teacher_body, :student_body)
   end
 
+
 end

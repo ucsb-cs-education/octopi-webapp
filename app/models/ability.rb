@@ -124,6 +124,10 @@ class Ability
   end
 
   def teacher(user)
+    schools = School.with_role(:teacher, user).pluck(:id)
+    can :read, School, :id => schools
+    can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
+
     school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
     school_classes_teacher = SchoolClass.with_role(:teacher, user).pluck(:school_id)
     schools_teacher = School.with_role(:teacher, user).pluck(:id)
@@ -141,6 +145,8 @@ class Ability
       can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
     end
     page_ids = CurriculumPage.all.pluck(:id)
+    can :read_update, SchoolClass, :id => school_classes
+    can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
     can :read, Page, :curriculum_id => page_ids
     can :read, Task, :curriculum_id => page_ids
     can :read, AssessmentQuestion, :curriculum_id => page_ids

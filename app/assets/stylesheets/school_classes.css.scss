@@ -14,7 +14,7 @@ body.school_classes {
     #edit_school_class_submit {
       width: auto;
     }
-    div.check_boxes div.checkbox{
+    div.check_boxes div.checkbox {
       @extend .col-md-4;
       margin-top: 5px;
     }
@@ -23,19 +23,17 @@ body.school_classes {
     margin-left: 15px;
     width: 90%;
     thead {
-      background-color:#B2B2FF;
-      color:#666666;
+      background-color: #B2B2FF;
+      color: #666666;
       font-weight: bold;
       cursor: default;
     }
-    &,th,td
-    {
-      border:1px solid black;
-      border-collapse:collapse;
+    &, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
     }
-    th,td
-    {
-      padding:5px;
+    th, td {
+      padding: 5px;
     }
   }
   #existing_student {
@@ -52,5 +50,25 @@ body.school_classes {
       padding-left: 0px;
     }
   }
+}
+#curriculum-div{
+  font-size:180%;
+  margin-top:10px;
+  margin-bottom:-10px;
+}
 
+.module-title-box {
+  font-size: 110%;
+  margin-top: 2px;
+}
+.activity-title-box {
+  font-size: 180%;
+  margin: 8px
+}
+
+.unlock-button{
+  display:inline-block;
+  paddinbg:-10px;
+  margin:0px;
+  max-height:2em;
 }
