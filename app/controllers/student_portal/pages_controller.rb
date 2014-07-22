@@ -1,9 +1,21 @@
 class StudentPortal::PagesController < StudentPortal::BaseController
   before_action :signed_in_student
   before_action :load_variables
-  before_action :verify_valid_module_page, only: [:module_page, :activity_page]
-  before_action :verify_valid_page_task, only: [:laplaya_task, :assessment_task]
-  before_action :verify_unlocked_activity, only: [:activity_page]
+  before_action :verify_valid_module
+  before_action :verify_valid_activity, only: [
+      :activity_page,
+      :laplaya_task,
+      :assessment_task,
+      :laplaya_task_response,
+      :assessment_response
+  ]
+  before_action :verify_valid_task, only: [
+      :laplaya_task,
+      :assessment_task,
+      :laplaya_task_response,
+      :assessment_response
+  ]
+
   after_action :set_module_cookie, only: [:module_page]
 
   #GET /student_portal/modules/:id
@@ -73,10 +85,6 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   end
 
   private
-  def verify_valid_module_page
-    redirect_to_first_module_page unless in_a_valid_module_page?
-  end
-
   def load_variables
     action = params[:action].to_sym
     case action
@@ -115,8 +123,26 @@ class StudentPortal::PagesController < StudentPortal::BaseController
             current_school_class,
             @laplaya_task
         )
-      when :module_page
       else
+    end
+  end
+
+  def verify_valid_module
+    unless @module_page && current_school_class.module_pages.include?(@module_page)
+      redirect_to_first_module_page
+    end
+  end
+
+  def verify_valid_activity
+    unless @activity_page.is_accessible?(current_student, current_school_class)
+      redirect_to_first_module_page
+    end
+  end
+
+  def verify_valid_task
+    task = @assessment_task || @laplaya_task
+    unless task.is_accessible?(current_student, current_school_class)
+      redirect_to_first_module_page
     end
   end
 
@@ -128,37 +154,10 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     result
   end
 
-  def find_unlocks_for(unlockable)
-    Unlock.find_for(current_student, current_school_class, unlockable)
-  end
-
   def set_module_cookie
     if @module_page != nil
       cookies.permanent.signed[:student_last_module] = @module_page.id
     end
-  end
-
-  def verify_unlocked_activity
-    unless find_unlocks_for @activity_page
-      redirect_to_first_module_page
-    end
-  end
-
-  def verify_valid_page_task
-    task = @assessment_task || @laplaya_task
-    if in_a_valid_module_page?
-      task_unlock = find_unlocks_for(task)
-      activity_unlock = find_unlocks_for(task.activity_page)
-      unless task_unlock && activity_unlock && !task_unlock.hidden
-        redirect_to_first_module_page
-      end
-    else
-      redirect_to_first_module_page
-    end
-  end
-
-  def in_a_valid_module_page?
-    @module_page && current_school_class.module_pages.include?(@module_page)
   end
 
   def redirect_to_first_module_page
@@ -171,4 +170,5 @@ class StudentPortal::PagesController < StudentPortal::BaseController
       redirect_to student_portal_root_path
     end
   end
+
 end

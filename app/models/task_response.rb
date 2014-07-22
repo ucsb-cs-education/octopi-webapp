@@ -6,7 +6,7 @@ class TaskResponse < ActiveRecord::Base
   validate :task_is_unlocked
 
   def task_is_unlocked
-    errors.add(:taskresponse, "must be unlocked") unless unlock
+    errors.add(:taskresponse, "must be unlocked") unless unlock || task.prerequisites.empty?
   end
 
   def unlock_dependencies

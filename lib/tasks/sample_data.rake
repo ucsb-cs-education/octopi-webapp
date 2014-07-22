@@ -52,9 +52,6 @@ namespace :db do
     School.first.curriculum_pages << CurriculumPage.first
     School.first.school_classes.first.module_pages << CurriculumPage.first.module_pages.first
 
-    Unlock.create(unlockable:Task.find(1).becomes(Task),school_class: School.first.school_classes.first,student:Student.find(4),hidden:false )
-    Unlock.create(unlockable:ActivityPage.find(3),school_class: School.first.school_classes.first,student:Student.find(4),hidden:false )
-
     Task.find(2).depend_on(Task.find(1))
     Task.find(3).depend_on(Task.find(1))
     Task.find(4).depend_on(Task.find(2))
