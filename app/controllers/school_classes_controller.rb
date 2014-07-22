@@ -1,5 +1,5 @@
 class SchoolClassesController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :school_class
   load_and_authorize_resource :school, only: [:index, :new, :create]
   before_action :load_school, only: [:edit]
 
@@ -69,17 +69,21 @@ class SchoolClassesController < ApplicationController
     end
   end
 
-  def activity_page
-    @activity_page = ActivityPage.find(params[:school_class_id])
-    @tasks= @activity_page.tasks
-    @unlocks = Unlock.where(student: @school_class.students, school_class: @school_class)
-    @responses = TaskResponse.where(student: @school_class.students, school_class: @school_class)
-
-  end
-
   # POST /school_classes/:school_class_id/manual_unlock
   def manual_unlock
+    @school_class.students.each { |x|
+      if Unlock.find_by(student: x,
+                        school_class: @school_class,
+                        unlockable_type: Task,
+                        unlockable_id: params[:students][:unlockable_id]).nil?
 
+        @unlock = Unlock.create(student: x,
+                                school_class: @school_class,
+                                unlockable_id: params[:students][:unlockable_id],
+                                unlockable_type: params[:students][:unlockable_type])
+      end
+    }
+    redirect_to @school_class
   end
 
   def update

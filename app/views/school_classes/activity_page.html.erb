@@ -1,7 +1,7 @@
 <div class = "activity-title-box">
   <%= @activity_page.title %>
 </div>
-<%= link_to 'Back', school_class_path, class: "btn btn-default" %>
+<%= link_to 'Back', school_class_path(@school_class), class: "btn btn-default" %>
 <hr>
 <table class="table table-striped table-bordered">
   <%= render partial: "task_table_entry", collection: @tasks, as: "task" %>

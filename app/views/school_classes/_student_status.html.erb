@@ -1,21 +1,23 @@
 <% status = task.get_visibility_status_for(student, @school_class) %>
 <% if status == :locked %>
-    <div class="student-status">
+    <div id="task_<%= task.id %>_student_<%= student.id %>" class="student-status">
       <%= student.name %>: <span class="locked-span"> LOCKED </span>
+
       <div class="unlock-button">
-        <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
-            <%#= f.hidden_field :unlockable, value = task %>
-            <%#= f.hidden_field :student, value = student %>
-            <%= f.submit 'Unlock', class:"btn btn-xs btn-default" %>
+        <%= simple_form_for [@school_class, @unlocks.build], html: {method: :post}, remote: true do |f| %>
+            <%= f.hidden_field :unlockable_id, value: task.id %>
+            <%= f.hidden_field :student_id, value: student.id %>
+            <%= f.hidden_field :unlockable_type, value: Task %>
+            <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
         <% end %>
       </div>
     </div>
-<% elsif status == :completed %>
-    <div class="student-status">
+<% elsif status == :completed || false%>
+    <div id="task_<%= task.id %>_student_<%= student.id %>" class="student-status">
       <%= student.name %>: <span class="completed-span"> <u>Complete</u> </span>
     </div>
 <% else %>
-    <div class="student-status">
+    <div id="task_<%= task.id %>_student_<%= student.id %>" class="student-status">
       <%= student.name %>: <span class="unlocked-span"> Not yet complete. </span>
     </div>
 <% end %>

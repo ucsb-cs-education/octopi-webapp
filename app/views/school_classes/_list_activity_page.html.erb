@@ -2,7 +2,7 @@
   <td>
     <%= activity_page.title %>
     <br>
-    <%= link_to "View student progress", school_class_activity_path(activity_page, @school_class) %>
+    <%= link_to "View class progress", school_class_activity_path(@school_class,activity_page) %>
   </td>
   <td>
     Unlocked by <%= percent_unlocked(activity_page) %>%

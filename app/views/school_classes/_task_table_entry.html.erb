@@ -1,14 +1,8 @@
-<tr
+<tr id  = "task_<%=task.id%>"
 <%= 'class="warning"'.html_safe if unlocked_count(task) == 0 %>
 <%= 'class="success"'.html_safe if completed_count(task) == @school_class.students.count %>>
   <td>
     <%= task.title %>
-  </td>
-  <td>
-    Unlocked by <%= percent_unlocked(task) %>%
-    (<%= unlocked_count(task) %>/<%= student_count %>) of students. <br>
-    Completed by <%= percent_completed(task) %>%
-    (<%= completed_count(task) %>/<%= student_count %>) of students.
   </td>
   <% if completed_count(task) == student_count %>
       <td>
@@ -16,13 +10,18 @@
       </td>
   <% else %>
       <td>
+        Unlocked by <%= percent_unlocked(task) %>%
+        (<%= unlocked_count(task) %>/<%= student_count %>) of students. <br>
+        Completed by <%= percent_completed(task) %>%
+        (<%= completed_count(task) %>/<%= student_count %>) of students.
+        <hr>
         Student Progress:
-        <%= render partial: "student_status", collection: @school_class.students, locals: {task: task}, as: "student" %>
+        <%= render partial: "student_status", collection: @students, locals: {task: task}, as: "student" %>
         <% unless unlocked_count(task) == student_count %>
             <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
-                <%#= f.hidden_field :unlockable, value = task %>
-                <%#= f.hidden_field :student, value = student %>
-                <%= f.submit 'Unlock All', class:"btn btn-medium btn-warning" %>
+                <%= f.hidden_field :unlockable_id, value: task.id %>
+                <%= f.hidden_field :unlockable_type, value: Task%>
+                <%= f.submit 'Unlock All', class:"btn btn-warning" %>
             <% end %>
         <% end %>
       </td>

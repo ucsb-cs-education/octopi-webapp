@@ -46,18 +46,19 @@ OctopiWebapp::Application.routes.draw do
   end
 
 
-
-
-
-
   resources :schools, only: [:show, :index], shallow: true do
     resources :students, except: [:update, :edit, :destroy]
     resources :school_classes do
       member do
         post 'add_new_student'
         post 'add_student'
+        get 'unlock_pages'
+        post 'manual_unlock'
       end
+      get '/activities/:id', to: 'school_classes#activity_page', as: 'activity'
     end
+
+
   end
   root 'static_pages#home'
   get 'home', to: 'static_pages#home'
@@ -76,7 +77,6 @@ OctopiWebapp::Application.routes.draw do
     post 'staff', to: 'staff/registrations#create', as: 'staff_registration'
   end
   ActiveAdmin.routes(self)
-
 
 
   scope module: 'pages' do
