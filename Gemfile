@@ -21,9 +21,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 # gem "browserify-rails", "~> 0.3"
 
-# Needed for analysis
-gem 'execjs', '~> 2.2.1'
-
 # Allows for easily paginating lists
 # gem 'will_paginate', '~> 3.0.5'
 #Dont use will_paginate, use kaminari, for active_admin supoort
