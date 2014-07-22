@@ -1,4 +1,4 @@
-<% if child.get_locked_status_for(current_student, current_school_class) %>
+<% if child.get_visibility_status_for(current_student, current_school_class) == :locked %>
     <div class="child-link locked">
       <%= image_tag("padlock.png", size: "21") %>
       <%= child.title %>

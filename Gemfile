@@ -21,6 +21,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 # gem "browserify-rails", "~> 0.3"
 
+# Needed for analysis
+gem 'execjs', '~> 2.2.1'
 
 # Allows for easily paginating lists
 # gem 'will_paginate', '~> 3.0.5'
@@ -123,7 +125,11 @@ end
 # gem 'therubyracer', platforms: :ruby
 
 # Use unicorn as the app server
-# gem 'unicorn'
+gem 'unicorn'
+
+gem 'resque'
+gem 'resque-web', require: 'resque_web'
+
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development

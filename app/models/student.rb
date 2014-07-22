@@ -5,6 +5,7 @@ class Student < User
   validates :school, presence: true
   before_save { login_name.downcase! }
   before_create :create_remember_token
+  attr_accessor :current_class
 
   has_secure_password
 
@@ -28,5 +29,9 @@ class Student < User
     def verify_classes school_class
       raise ActiveRecord::RecordInvalid.new(self) if school_class.school_id != self.school_id
     end
+
+  def self.role_adapter
+    self.superclass.role_adapter
+  end
 
 end

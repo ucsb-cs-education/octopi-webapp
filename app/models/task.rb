@@ -35,7 +35,11 @@ class Task < ActiveRecord::Base
   end
 
   def find_unlock_for(student, school_class)
-    Unlock.find_for(student, school_class, self)
+    unlock = Unlock.find_for(student, school_class, self)
+    if unlock.nil? && prerequisites.empty?
+      unlock = Unlock.create(student: student, school_class: school_class, unlockable: self)
+    end
+    unlock
   end
 
 end

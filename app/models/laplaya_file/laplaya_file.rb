@@ -2,6 +2,8 @@ require 'xml'
 class LaplayaFile < ActiveRecord::Base
   resourcify
   validates :file_name, presence: true, length: {maximum: 100}, allow_blank: false
+  belongs_to :user
+  alias_attribute :owner, :user
   before_validation :update_thumbnail_and_note
 
   def to_s
@@ -15,6 +17,7 @@ class LaplayaFile < ActiveRecord::Base
                        thumbnail: other_file.thumbnail,
                        note: other_file.note
     )
+    self
   end
 
   # def owners

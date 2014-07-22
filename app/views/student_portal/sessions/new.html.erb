@@ -6,7 +6,7 @@
           <% selected_school_id = School.first.id %>
           <%= f.input :school, include_blank: false,
                       collection: School.all.to_a, selected: selected_school_id %>
-          <%= f.input :school_class, collection: School.find(selected_school_id).school_classes, label: "Class name",
+          <%= f.input :school_class, collection: School.find(selected_school_id).school_classes, label: "Class",
                       include_blank: 'Please select a class', selected: 0,
                       input_html: {
                               'data-option-dependent' => true,
