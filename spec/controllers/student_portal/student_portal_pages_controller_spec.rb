@@ -4,6 +4,8 @@ describe StudentPortal::PagesController, type: :controller do
   let(:school_class) { FactoryGirl.create(:school_class) }
   let(:new_student) { FactoryGirl.create(:student, school: school_class.school, school_class: school_class) }
   let(:prerequisite_task) { FactoryGirl.create(:assessment_task) }
+  let(:dependant_task) { FactoryGirl.create(:assessment_task, activity_page: task.activity_page) }
+  let(:dependant_activity) { FactoryGirl.create(:activity_page, module_page: task.activity_page.module_page) }
 
 
   before(:each) do
@@ -64,7 +66,6 @@ describe StudentPortal::PagesController, type: :controller do
         end
         describe 'that has a dependency' do
           describe 'that is a task dependant' do
-            let(:dependant_task) { FactoryGirl.create(:assessment_task) }
 
             before do
               dependant_task.depend_on(task)
@@ -96,10 +97,9 @@ describe StudentPortal::PagesController, type: :controller do
             end
           end
           describe 'that is an activity dependant' do
-            let(:dependant) { FactoryGirl.create(:activity_page) }
 
             before do
-              dependant.depend_on(task)
+              dependant_activity.depend_on(task)
             end
 
             it 'should create a new task response' do
@@ -201,7 +201,6 @@ describe StudentPortal::PagesController, type: :controller do
         end
         describe 'that has a dependency' do
           describe 'that is a task dependant' do
-            let(:dependant_task) { FactoryGirl.create(:assessment_task) }
 
             before do
               dependant_task.depend_on(task)
@@ -235,10 +234,9 @@ describe StudentPortal::PagesController, type: :controller do
           end
         end
         describe 'that is an activity dependant' do
-          let(:dependant) { FactoryGirl.create(:activity_page) }
 
           before do
-            dependant.depend_on(task)
+            dependant_activity.depend_on(task)
           end
 
           it 'should not create a new task response' do
