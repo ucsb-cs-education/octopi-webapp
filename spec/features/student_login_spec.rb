@@ -47,7 +47,7 @@ describe "For the student portal,", js: true, type: :feature do
       before do
         select school_class.school, from: 'School'
         wait_for_ajax
-        select school_class.name, from: 'Class name'
+        select school_class.name, from: 'Class'
         wait_for_ajax
         select new_student.login_name, from: 'Login name'
         fill_in "Password", with: "wrong"
@@ -59,18 +59,18 @@ describe "For the student portal,", js: true, type: :feature do
       before do
         select school_class.school, from: 'School'
         wait_for_ajax
-        select school_class.name, from: 'Class name'
+        select school_class.name, from: 'Class'
         wait_for_ajax
       end
       it do
         #have select is exact! should_not is here for completeness sake
-        should have_select('Class name', options: [class_prompt, second_school_class.name, school_class.name])
-        should_not have_select('Class name', options: [class_prompt, second_school_class.name])
+        should have_select('Class', options: [class_prompt, second_school_class.name, school_class.name])
+        should_not have_select('Class', options: [class_prompt, second_school_class.name])
         should have_select('Login name', options: [login_prompt, new_student.login_name])
       end
       describe " and the same when switching the class" do
         before do
-          select second_school_class.name, from: 'Class name'
+          select second_school_class.name, from: 'Class'
           wait_for_ajax
         end
         it do
@@ -84,11 +84,11 @@ describe "For the student portal,", js: true, type: :feature do
         wait_for_ajax
       end
       it do
-        should have_select('Class name', options: [class_prompt, third_school_class.name])
+        should have_select('Class', options: [class_prompt, third_school_class.name])
         should have_select('Login name', options: [login_prompt])
       end
       describe " and should show the student when clicking the class" do
-        before { select third_school_class.name, from: 'Class name' }
+        before { select third_school_class.name, from: 'Class' }
         it do
           should have_select('Login name', options: [login_prompt, third_new_student.login_name])
         end

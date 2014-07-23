@@ -85,7 +85,7 @@ describe "student portal", type: :feature do
       before do
         visit(student_portal_module_path(module_page_not_in_class))
       end
-      it { should have_selector("div[class='alert alert-warning']") }
+      it { should have_warning_message('You do not have permission to visit that page.')}
     end
   end
 
@@ -152,13 +152,13 @@ describe "student portal", type: :feature do
         before do
           visit(student_portal_activity_path(activity_page_not_in_class))
         end
-        it { should have_selector("div[class='alert alert-warning']") }
+        it { should have_warning_message('You do not have permission to visit that page.')}
       end
       describe "that is a locked page" do
         before do
           visit(student_portal_activity_path(activity_page_locked))
         end
-        it { should have_selector("div[class='alert alert-warning']") }
+        it { should have_warning_message('You do not have permission to visit that page.')}
       end
     end
   end
@@ -252,13 +252,13 @@ describe "student portal", type: :feature do
         before do
           visit(student_portal_assessment_task_path(assessment_task_not_in_class))
         end
-        it { should have_selector("div[class='alert alert-warning']") }
+        it { should have_warning_message('You do not have permission to visit that page.')}
       end
       describe "that is a locked page" do
         before do
           visit(student_portal_assessment_task_path(assessment_task_locked))
         end
-        it { should have_selector("div[class='alert alert-warning']") }
+        it { should have_warning_message('You do not have permission to visit that page.')}
       end
     end
   end
