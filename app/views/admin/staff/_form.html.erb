@@ -1,5 +1,5 @@
 <%= semantic_form_for [:admin, @staff] do |f| %>
-    <%= f.inputs "Staff Details #{ @testvar } XX " do %>
+    <%= f.inputs 'Staff Details' do %>
         <%= f.input :first_name %>
         <%= f.input :last_name %>
         <%= f.input :email %>
@@ -12,6 +12,7 @@
         <% if @staff == current_staff %>
             <%= f.input :current_password %>
         <% else %>
+            <%= f.input :roles, as: :select, collection: Role.global, label: "Global roles" %>
         <% end %>
 
 

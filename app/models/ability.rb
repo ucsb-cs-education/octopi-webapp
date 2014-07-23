@@ -89,33 +89,38 @@ class Ability
   def school_admin(user)
     schools = School.with_role(:school_admin, user)
     school_ids = schools.pluck(:id)
-    can [:read_update, :add_teacher, :add_school_admin], School, :id => school_ids
+    cannot :read, School, :id => School.pluck(:id) - schools
+    can [:read_update, :add_teacher, :add_school_admin], School, id: school_ids
 
     can :crud, Student, :id => Student.where(school_id: school_ids).pluck(:id)
     can :create, Student
+    school_classes = SchoolClass.where(school_id: school_ids)
 
-    can [:crud, :add_class_teacher], SchoolClass, :id => SchoolClass.where(school_id: school_ids).pluck(:id)
+    can [:crud, :add_class_teacher, :add_new_student, :add_student], SchoolClass, id: school_classes.pluck(:id)
     can :create, SchoolClass
 
     can :crud, Staff, :id => schools.map { |school| school.users }.flatten(1).map { |x| x.id }.uniq
+    can :create, Staff
+
+
     can :see_user_admin_menu
   end
 
   def teacher(user)
     schools = School.with_role(:teacher, user).pluck(:id)
+    cannot :read, School, :id => School.pluck(:id) - schools
     can :read, School, :id => schools
-    can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
+    can :crud, Student, :id => Student.where(school_id: schools).pluck(:id)
 
     school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
     #Need to assign school_class to a curriculum/module
     page_ids = CurriculumPage.all.pluck(:id)
-    can :read_update, SchoolClass, :id => school_classes
-    can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
+    can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
+    # can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
     can :read, Page, :curriculum_id => page_ids
     can :read, Task, :curriculum_id => page_ids
     can :read, AssessmentQuestion, :curriculum_id => page_ids
     can :show, LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
-
     can :create, Student
   end
 

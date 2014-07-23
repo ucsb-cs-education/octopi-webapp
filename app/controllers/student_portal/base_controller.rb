@@ -16,4 +16,12 @@ class StudentPortal::BaseController < ApplicationController
     current_student
   end
 
+  def user_for_paper_trail
+    if signed_in_student?
+      current_student.id
+    else
+      super
+    end
+  end
+
 end

@@ -1,10 +1,26 @@
 ActiveAdmin.register Staff do
-
+  filter :roles
   remove_filter :users_roles
   permit_params :first_name, :last_name, :email, :password, :password_confirmation, :current_password, :super_staff, basic_roles: []
   menu if: proc {
     authorized?(:see_user_admin_menu)
   }
+
+  batch_action :confirmed do |selection|
+    Staff.find(selection).each do |t|
+      t.confirm!
+      t.save
+    end
+    redirect_to :back
+  end
+  batch_action :unconfirmed do |selection|
+    Staff.find(selection).each do |t|
+      t.confirmed_at = nil
+      t.save
+    end
+    redirect_to :back
+  end
+
 
   index do
     selectable_column
@@ -20,7 +36,13 @@ ActiveAdmin.register Staff do
 
   show do |user|
 
-    attributes_table do
+    attributes_table :first_name, :last_name, :email do
+      table_for staff.roles do
+        column "Roles" do |role|
+          role.to_label
+        end
+      end
+
       # [:id, :first_name, :last_name, :email, :reset_password_sent_at User.attribute_names.each do |attribute|
       #   row attribute
       row :email

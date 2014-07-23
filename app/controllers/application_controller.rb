@@ -40,9 +40,15 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
   def current_user
     current_staff
+  end
+  def user_for_paper_trail
+    if staff_signed_in?
+      current_staff.id
+    else
+      'User not logged in'
+    end
   end
 
   protected
