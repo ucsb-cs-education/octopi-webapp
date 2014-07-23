@@ -10,5 +10,6 @@ class CreateUnlocks < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :unlocks, [:unlockable_id, :unlockable_type, :student_id, :school_class_id], unique: true, name: "unlock_index"
   end
 end

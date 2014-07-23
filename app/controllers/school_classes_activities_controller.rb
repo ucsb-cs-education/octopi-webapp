@@ -4,9 +4,14 @@ class SchoolClassesActivitiesController < SchoolClassesController
   def activity_page
     @activity_page = ActivityPage.find(params[:id])
     @tasks= @activity_page.tasks
-    @unlocks = Unlock.where(student: @school_class.students, school_class: @school_class)
+    #TODO: preload all task visibililties so that they do not need to be found when loading the page?
+    @activity_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable: @activity_page)
+    # BUG: https://github.com/rails/rails/issues/15920
+    # Have to pluck unlockables until fixed
+    @task_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable_type: "Task", unlockable_id: @tasks.pluck(:id))
     @responses = TaskResponse.where(student: @school_class.students, school_class: @school_class)
     @students = @school_class.students.order(:last_name)
   end
 
 end
+

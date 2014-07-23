@@ -5,8 +5,8 @@
     <%= link_to "View class progress", school_class_activity_path(@school_class,activity_page) %>
   </td>
   <td>
-    Unlocked by <%= percent_unlocked(activity_page) %>%
-    (<%= unlocked_count(activity_page) %>/<%= student_count %>) of students.
+    Unlocked by <%= percent_unlocked(activity_page, @unlocks) %>%
+    (<%= unlocked_count(activity_page, @unlocks) %>/<%= student_count %>) of students.
   </td>
   <td>
     Info about overall student progress<br>through the activity.

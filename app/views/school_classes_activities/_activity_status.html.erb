@@ -1,12 +1,12 @@
-<div id="activity_<%= @activity_page.id %>_student_<%= student.id %>">
+<div id="activity_<%= activity.id %>_student_<%= student.id %>">
   <%= student.name %>:
-  <% if student_has_unlocked_activity(student, @activity_page)==true %>
+  <% if student_has_unlocked_activity(student, activity)==true %>
       Unlocked
   <% else %>
       LOCKED
       <div class="unlock-button">
-        <%= simple_form_for [@school_class, @unlocks.build], html: {method: :post}, remote: true do |f| %>
-            <%= f.hidden_field :unlockable_id, value: @activity_page.id %>
+        <%= simple_form_for [@school_class, @activity_unlocks.build], html: {method: :post}, remote: true do |f| %>
+            <%= f.hidden_field :unlockable_id, value: activity.id %>
             <%= f.hidden_field :student_id, value: student.id %>
             <%= f.hidden_field :unlockable_type, value: Page %>
             <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>

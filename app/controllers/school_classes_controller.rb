@@ -30,7 +30,7 @@ class SchoolClassesController < ApplicationController
   # GET /school_classes/1
   def show
     @module_pages = @school_class.module_pages.includes(activity_pages: [:tasks])
-    @unlocks = Unlock.where(student: @school_class.students)
+    @unlocks = Unlock.where(school_class:@school_class, student: @school_class.students)
   end
 
   # GET /school_classes/1/edit
@@ -83,7 +83,7 @@ class SchoolClassesController < ApplicationController
                                 unlockable_type: params[:students][:unlockable_type])
       end
     }
-    redirect_to @school_class
+    redirect_to(:back)
   end
 
   def update
