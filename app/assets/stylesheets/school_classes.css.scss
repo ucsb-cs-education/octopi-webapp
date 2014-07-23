@@ -51,24 +51,33 @@ body.school_classes {
     }
   }
 }
-#curriculum-div{
-  font-size:180%;
-  margin-top:10px;
-  margin-bottom:-10px;
+
+#curriculum-div {
+  font-size: 180%;
+  margin-top: 10px;
+  margin-bottom: -10px;
 }
 
 .module-title-box {
   font-size: 110%;
   margin-top: 2px;
 }
+
 .activity-title-box {
   font-size: 180%;
   margin: 8px
 }
 
-.unlock-button{
-  display:inline-block;
-  paddinbg:-10px;
-  margin:0px;
-  max-height:2em;
+.unlock-button {
+  display: inline-block;
+  paddinbg: -10px;
+  margin: 0px;
+  max-height: 2em;
+}
+
+#activity-progress-div {
+  border: 1px solid lightgrey;
+  border-radius: 8px;
+  margin: 2px;
+  padding: .5em;
 }

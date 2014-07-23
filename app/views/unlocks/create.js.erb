@@ -1,2 +1,8 @@
+<% if @unlock.unlockable_type == "Page" %>
+$("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").replaceWith(
+        "<%= j render partial:"school_classes/activity_status", locals: {student: @unlock.student}%>");
+
+<%else%>
 $("#task_<%=@unlock.unlockable_id %>_student_<%= @unlock.student_id%>").replaceWith(
-        "<%= j render partial:"school_classes/student_status", locals:{task: @unlock.unlockable, student: @unlock.student}%>");
+        "<%= j render partial:"school_classes/student_status", locals: {task: @unlock.unlockable, student: @unlock.student}%>");
+<%end%>

@@ -74,7 +74,7 @@ class SchoolClassesController < ApplicationController
     @school_class.students.each { |x|
       if Unlock.find_by(student: x,
                         school_class: @school_class,
-                        unlockable_type: Task,
+                        unlockable_type: params[:students][:unlockable_type],
                         unlockable_id: params[:students][:unlockable_id]).nil?
 
         @unlock = Unlock.create(student: x,

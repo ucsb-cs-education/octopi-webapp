@@ -150,7 +150,10 @@ class Ability
     can :read, Page, :curriculum_id => page_ids
     can :read, Task, :curriculum_id => page_ids
     can :read, AssessmentQuestion, :curriculum_id => page_ids
-    can :read, LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
+    can :show, LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
+    can :manual_unlock, SchoolClass, :id => school_classes
+    can :activity_page
+
     can :create, Student
   end
 

@@ -1,5 +1,6 @@
 class UnlocksController < ApplicationController
   load_and_authorize_resource :school_class
+  load_and_authorize_resource :activity_page
 
   def create
     if @unlock = Unlock.create(student_id: params[:unlock][:student_id],

@@ -18,4 +18,8 @@ module SchoolClassesHelper
   def percent_completed(task)
     (100.0*(completed_count(task).to_f/ @school_class.students.count)).to_s[0...4]
   end
+
+  def student_has_unlocked_activity(student, activity)
+    @unlocks.find_by(student: student,unlockable: activity).nil? ? false : true
+  end
 end
