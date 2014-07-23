@@ -1,10 +1,10 @@
 class StudentPortal::Laplaya::LaplayaBaseController < StudentPortal::BaseController
   protect_from_forgery with: :null_session
+  before_action :force_trailing_slash, only: [:laplaya]
+  before_action :force_no_trailing_slash, only: [:laplaya_file]
   before_action :build_session_params
   before_action :set_fileid_in_session, only: [:laplaya_file]
   before_action :build_laplaya_params, only: [:laplaya, :laplaya_file]
-  before_action :force_trailing_slash, only: [:laplaya]
-  before_action :force_no_trailing_slash, only: [:laplaya_file]
   before_action :temp_signed_in_student, only: [:laplaya]
   respond_to :json
 
