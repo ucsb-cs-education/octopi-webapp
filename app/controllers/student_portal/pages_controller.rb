@@ -15,6 +15,10 @@ class StudentPortal::PagesController < StudentPortal::BaseController
       :laplaya_task_response,
       :assessment_response
   ]
+  before_action :build_laplaya_task_response, only: [
+      :laplaya_task,
+      :laplaya_task_response
+  ]
 
   after_action :set_module_cookie, only: [:module_page]
 
@@ -118,13 +122,16 @@ class StudentPortal::PagesController < StudentPortal::BaseController
             school_class: current_school_class,
             task: @laplaya_task
         )
-        @laplaya_task_response ||= LaplayaTaskResponse.new_response(
-            current_student,
-            current_school_class,
-            @laplaya_task
-        )
       else
     end
+  end
+
+  def build_laplaya_task_response
+    @laplaya_task_response ||= LaplayaTaskResponse.new_response(
+        current_student,
+        current_school_class,
+        @laplaya_task
+    )
   end
 
   def verify_valid_module
@@ -161,13 +168,20 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   end
 
   def redirect_to_first_module_page
-    redirect_module = current_school_class.module_pages.first
-    if redirect_module
-      flash[:warning]='You do not have permission to visit that page.'
-      redirect_to student_portal_module_path(redirect_module)
-    else
-      flash[:alert]='There are no modules for that class.'
-      redirect_to student_portal_root_path
+    respond_to do |format|
+      format.html do
+        redirect_module = current_school_class.module_pages.first
+        if redirect_module
+          flash[:warning]='You do not have permission to visit that page.'
+          redirect_to student_portal_module_path(redirect_module)
+        else
+          flash[:alert]='There are no modules for that class.'
+          redirect_to student_portal_root_path
+        end
+      end
+      format.js do
+        render text: 'You tried to access an inaccessible page', status: :bad_request
+      end
     end
   end
 
