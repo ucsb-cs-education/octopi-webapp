@@ -159,7 +159,7 @@ describe "page", type: :feature do
       it { should_not have_css("li.page-child-li") }
     end
 
-    describe "after clicking the add child button", js: true do
+    describe "after clicking the add child button", js: true, driver: :selenium do
       before do
         click_button("Add a new", match: :first)
         wait_for_ajax
