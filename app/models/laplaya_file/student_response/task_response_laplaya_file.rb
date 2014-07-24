@@ -4,11 +4,16 @@ class StudentResponse::TaskResponseLaplayaFile < StudentResponse::StudentRespons
 
   def trigger_analysis
     if project_changed?
-      Resque.enqueue_to('normal', 'process_laplaya_file',
-                        {
-                            processor: laplaya_task_response.task.laplaya_analysis_file.data,
-                            project: project
-                        }.to_json)
+      if true
+        Resque.enqueue_to('normal', 'process_laplaya_file_by_id',
+                          id, laplaya_task_response.task.laplaya_analysis_file.id)
+      else
+        Resque.enqueue_to('normal', 'process_laplaya_file',
+        {
+            processor: laplaya_task_response.task.laplaya_analysis_file.data,
+            project: project
+        }.to_json)
+      end
     end
   end
 
