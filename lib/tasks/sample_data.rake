@@ -28,7 +28,7 @@ namespace :db do
         2.times do
           c = FactoryGirl.create(:activity_page, module_page: b)
           2.times do
-            d = FactoryGirl.create(:laplaya_task, activity_page: c,)
+            d = FactoryGirl.create(:laplaya_task, activity_page: c)
           end
           2.times do
             e = FactoryGirl.create(:assessment_task, activity_page: c)
@@ -58,5 +58,9 @@ namespace :db do
     Task.find(4).depend_on(Task.find(3))
     Task.find(5).depend_on(Task.find(4))
     ActivityPage.find(4).depend_on(Task.find(4))
+
+    starwars_task = FactoryGirl.create(:laplaya_task, activity_page: ActivityPage.first, laplaya_file: false)
+    FactoryGirl.create(:task_base_laplaya_file, :star_wars, notes: 'Made by Calixtemayoraz', laplaya_task: starwars_task)
+
   end
 end

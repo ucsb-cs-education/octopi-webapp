@@ -5,6 +5,9 @@ FactoryGirl.define do
   sequence :file_name do |n|
     "Laplaya_File #{n}"
   end
+  sequence :star_wars_file_name do |n|
+    "Star Wars Laplaya_File #{n}"
+  end
   factory :laplaya_file, :class => LaplayaFile do
     ignore do
       file_name_for_template { generate :file_name }
@@ -20,12 +23,12 @@ FactoryGirl.define do
 
     trait :star_wars do
       ignore do
-        file = File.open("#{Rails.root}/public/laplaya_test_files/starwars.xml", 'r')
-        project_data file.read
-        file.close
+        file_name_for_template { generate :star_wars_file_name }
+        notes_for_template { "Some notes for #{file_name_for_template}. \n:)" }
+        project_template_file File.open("#{Rails.root}/lib/laplaya_test_files/starwars_project.xml.erb").read
+        media_template_file File.open("#{Rails.root}/lib/laplaya_test_files/starwars_media.xml.erb").read
+        owner nil
       end
-      project { project_data }
-      media { nil }
     end
 
     after(:create) do |laplaya_file, evaluator|

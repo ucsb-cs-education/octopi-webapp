@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140721225050) do
+ActiveRecord::Schema.define(version: 20140723214149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,13 @@ ActiveRecord::Schema.define(version: 20140721225050) do
   create_table "curriculum_pages_schools", id: false, force: true do |t|
     t.integer "school_id",          null: false
     t.integer "curriculum_page_id", null: false
+  end
+
+  create_table "laplaya_analysis_files", force: true do |t|
+    t.binary   "data"
+    t.integer  "task_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "laplaya_files", force: true do |t|

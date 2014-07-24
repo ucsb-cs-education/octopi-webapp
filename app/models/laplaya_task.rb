@@ -1,5 +1,6 @@
 class LaplayaTask < Task
   has_one :task_base_laplaya_file, foreign_key: :parent_id
+  has_one :laplaya_analysis_file, foreign_key: :task_id
   alias_attribute :children, :task_base_laplaya_file
   validates :title, presence: true
 

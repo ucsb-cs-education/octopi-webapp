@@ -15,7 +15,6 @@ class LaplayaTaskResponse < TaskResponse
       student.add_role :owner, response.laplaya_file.becomes(LaplayaFile)
       response
     end
-
   end
 
 end

@@ -14,11 +14,12 @@ FactoryGirl.define do
       end
       #set to false if you don't want it to create a laplaya_file
       laplaya_file true
+      laplaya_analysis true
     end
 
     sequence(:title) { |n| "SampleLaplayaTask #{n}" }
 
-    student_body  <<-eos
+    student_body <<-eos
 <h1>This is a test body for the student page of a laplaya task.</h1>
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -27,7 +28,7 @@ dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla par
 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     eos
 
-    teacher_body  <<-eos
+    teacher_body <<-eos
 This is a test body for the teacher page of a laplaya task!
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -38,6 +39,7 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
     after :create do |task, evaluator|
       FactoryGirl.create(:task_base_laplaya_file, laplaya_task: task) if evaluator.laplaya_file
+      FactoryGirl.create(:laplaya_analysis_file, laplaya_task: task) if evaluator.laplaya_analysis
     end
 
     after(:build) do |task, evaluator|
