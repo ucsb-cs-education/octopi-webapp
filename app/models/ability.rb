@@ -44,6 +44,7 @@ class Ability
 
       files = LaplayaFile.with_role(:owner, user).pluck(:id)
       can :crud, LaplayaFile, :id => files
+      can :crud, LaplayaFile, user_id: user.id
       can :create, LaplayaFile
 
       if user.class == Staff

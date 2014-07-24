@@ -19,3 +19,4 @@ doc/
 .secret
 .env
 node_modules
+public/static/laplaya

@@ -18,7 +18,11 @@
 //= require ckeditor/init
 //= require bootstrap
 //= require paloma
-//= require_tree .
+//= require_tree ./ckeditor
+//= require_tree ./pages
+//= require_tree ./student_portal
+//= require active_admin
+//= require school_classes
 
 var updateDropDowns = function () {
     $('select[data-option-dependent=true]').each(function (i) {
@@ -57,3 +61,4 @@ var updateDropDowns = function () {
 };
 
 $(document).ready(updateDropDowns);
+

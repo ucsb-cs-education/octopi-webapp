@@ -14,7 +14,6 @@ FactoryGirl.define do
       notes_for_template { "Some notes for #{file_name_for_template}. \n:)" }
       project_template_file File.open("#{Rails.root}/lib/laplaya_test_files/testproj_project.xml.erb").read
       media_template_file File.open("#{Rails.root}/lib/laplaya_test_files/testproj_media.xml.erb").read
-      owner nil
     end
 
     project { ErbalT::render_from_hash(project_template_file, {file_name: file_name_for_template, notes: notes_for_template}) }
@@ -28,13 +27,6 @@ FactoryGirl.define do
         project_template_file File.open("#{Rails.root}/lib/laplaya_test_files/starwars_project.xml.erb").read
         media_template_file File.open("#{Rails.root}/lib/laplaya_test_files/starwars_media.xml.erb").read
         owner nil
-      end
-    end
-
-    after(:create) do |laplaya_file, evaluator|
-      if evaluator.owner
-        evaluator.owner.add_role :owner, laplaya_file
-      else
       end
     end
 

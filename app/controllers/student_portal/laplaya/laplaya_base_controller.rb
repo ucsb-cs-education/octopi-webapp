@@ -9,6 +9,7 @@ class StudentPortal::Laplaya::LaplayaBaseController < StudentPortal::BaseControl
   respond_to :json
 
   def laplaya
+    js false
     render layout: false
   end
 
@@ -32,6 +33,7 @@ class StudentPortal::Laplaya::LaplayaBaseController < StudentPortal::BaseControl
     if staff_signed_in? && Ability.new(current_staff).can?(:see_developer_view, LaplayaFile)
       laplaya_ide_params['developerMode'] = true
     end
+    laplaya_ide_params['root_path'] = '/static/laplaya/'
     @laplaya_ide_params = laplaya_ide_params.to_json
   end
 

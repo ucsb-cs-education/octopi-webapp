@@ -6,7 +6,7 @@ class StudentResponse::TaskResponseLaplayaFile < StudentResponse::StudentRespons
     if project_changed?
       if true
         Resque.enqueue_to('normal', 'process_laplaya_file_by_id',
-                          id, laplaya_task_response.task.laplaya_analysis_file.id)
+                          id, laplaya_task_response.task.laplaya_analysis_file.id, parent_id)
       else
         Resque.enqueue_to('normal', 'process_laplaya_file',
         {

@@ -19,7 +19,6 @@ gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
-# gem "browserify-rails", "~> 0.3"
 
 # Allows for easily paginating lists
 # gem 'will_paginate', '~> 3.0.5'
@@ -40,7 +39,7 @@ gem 'jquery-turbolinks'
 #gem 'jbuilder', '~> 1.2'
 
 #Easy hook to strip whitespace before validations
-gem "auto_strip_attributes", "~> 2.0"
+gem 'auto_strip_attributes', '~> 2.0'
 
 # Use postgres as the database for Active Record
 gem 'pg', '~> 0.17.1'
@@ -118,13 +117,14 @@ group :development do
 
 end
 
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
 # Use unicorn as the app server
 gem 'unicorn'
 
 gem 'resque'
+gem 'resque-loner'
+
 gem 'resque-web', require: 'resque_web'
 
 

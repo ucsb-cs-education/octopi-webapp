@@ -1,5 +1,6 @@
 class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::LaplayaBaseController
   load_and_authorize_resource :laplaya_file
+  before_action :confirm_unlocked, [:show, :update]
   js false
 
   def index
@@ -23,9 +24,9 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
   end
 
   def create
+    @laplaya_file.owner = current_user
     if @laplaya_file.save
-      current_user.add_role(:owner, @laplaya_file)
-      create_post_success_response(:created, laplaya_file_url(@laplaya_file),@laplaya_file.id)
+      create_post_success_response(:created, laplaya_file_url(@laplaya_file), @laplaya_file.id)
     else
       render text: @laplaya_file.errors, status: :bad_request
     end
@@ -43,6 +44,23 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
       avail_params << :public
     end
     params.require(:laplaya_file).permit(*avail_params)
+  end
+
+  def confirm_unlocked
+    case @laplaya_file.type
+      when 'StudentResponse::TaskResponseLaplayaFile'
+        unless @laplaya_file.laplaya_task_response.task.is_accessible?
+          raise CanCan::AccessDenied
+        end
+      when 'StudentResponse::ProjectResponseLaplayaFile',
+          'StudentResponse::SandboxResponseLaplayaFile',
+          'SandboxBaseLaplayaFile'
+        unless current_school_class.module_pages.include?(@laplaya_file.module_page)
+          raise CanCan::AccessDenied
+        end
+      else
+        # type code here
+    end
   end
 
 end
