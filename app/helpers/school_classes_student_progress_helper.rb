@@ -11,7 +11,7 @@ module SchoolClassesStudentProgressHelper
     (100.0*(@responses.where(completed: true).count.to_f/ number_of_tasks)).to_s[0...4]
   end
 
-  def student_has_unlocked_activity?(activity)
+  def this_student_has_unlocked_this_activity?(activity)
     @unlocks.find_by(student: @student, unlockable: activity).nil? ? false : true
   end
 end

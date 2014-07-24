@@ -1,0 +1,9 @@
+<% @student = @unlock.student %>
+<% if @unlock.unlockable_type == "Page" %>
+$("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").replaceWith(
+        "<%= j render partial:"school_classes_student_progress/activity_list_element", locals: {activity_page: @unlock.unlockable}%>");
+
+<%else%>
+$("#task_<%=@unlock.unlockable_id %>_student_<%= @student.id%>").replaceWith(
+        "<%= j render partial:"school_classes_student_progress/task_list_element", locals: {task: @unlock.unlockable}%>");
+<%end%>

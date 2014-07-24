@@ -1,6 +1,6 @@
 <% status = task.get_visibility_status_for(@student, @school_class) %>
 <% if status == :locked %>
-    <li class="locked-task">
+    <li class="locked-task" id="task_<%= task.id %>_student_<%= @student.id %>">
       <%= image_tag("padlock.png", size: "15") %>
       <%= task.title %>
       <div class="unlock-button">
@@ -8,16 +8,18 @@
             <%= f.hidden_field :unlockable_id, value: task.id %>
             <%= f.hidden_field :student_id, value: @student.id %>
             <%= f.hidden_field :unlockable_type, value: Task %>
+            <%= f.hidden_field :from_student_view, value: true %>
             <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
         <% end %>
       </div>
     </li>
 <% elsif status == :completed %>
-    <li class="completed-task">
+    <li class="completed-task" id="task_<%= task.id %>_student_<%= @student.id %>">
       <%= task.title %> - Completed
     </li>
 <% else %>
-    <li class="unlocked-task">
+    <li class="unlocked-task" id="task_<%= task.id %>_student_<%= @student.id %>">
       <%= task.title %>
     </li>
 <% end %>
+
