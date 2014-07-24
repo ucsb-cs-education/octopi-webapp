@@ -45,6 +45,7 @@ OctopiWebapp::Application.routes.draw do
   resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, controller: 'student_portal/laplaya/laplaya_files' do
   end
 
+  #match '/school_classes/:school_class_id/activities/:id', to: 'school_classes#activity_page', via: 'get', as: 'activity'
 
   resources :schools, only: [:show, :index], shallow: true do
     resources :students, except: [:update, :edit, :destroy]
@@ -52,8 +53,7 @@ OctopiWebapp::Application.routes.draw do
       member do
         post 'add_new_student'
         post 'add_student'
-        get 'unlock_pages'
-        post 'manual_unlock'
+        post 'manual_unlock', format: false
       end
       get '/activities/:id', to: 'school_classes#activity_page', as: 'activity'
     end

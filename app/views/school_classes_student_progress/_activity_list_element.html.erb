@@ -1,0 +1,24 @@
+<% if student_has_unlocked_activity?(activity_page) %>
+    <li>
+      <%= activity_page.title %>
+      <ul class="task-ul">
+        <%= render partial: "task_list_element", collection: activity_page.tasks, as: "task" %>
+      </ul>
+    </li>
+<% else %>
+    <li class="locked-activity">
+      <%= image_tag("padlock.png", size: "20") %>
+      <%= activity_page.title %>
+      <div class="unlock-button">
+        <%= simple_form_for [@school_class, @unlocks.build], html: {method: :post}, remote: true do |f| %>
+            <%= f.hidden_field :unlockable_id, value: activity_page.id %>
+            <%= f.hidden_field :student_id, value: @student.id %>
+            <%= f.hidden_field :unlockable_type, value: Page %>
+            <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
+        <% end %>
+      </div>
+      <ul class="task-ul">
+        <%= render partial: "task_list_element", collection: activity_page.tasks, as: "task" %>
+      </ul>
+    </li>
+<% end %>

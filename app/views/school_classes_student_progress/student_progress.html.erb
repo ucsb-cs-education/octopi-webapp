@@ -1,0 +1,15 @@
+<div id="student-name">
+  <%= @student.name %>
+</div>
+<%= percent_done %>% of tasks completed.<br>
+<%= link_to "Back", @school_class, class: "btn btn-default" %>
+<div id="progress-summary">
+  Here there will be some kind of cool bar graph or whatever. But until then:<br>
+  <%= @student.name %> has completed <%= number_of_tasks_completed %> out of <%= number_of_tasks %> tasks!
+</div>
+<hr>
+<div id="curriculum-list">
+  <ul class="module-page-ul">
+    <%= render partial: "module_list_element", collection: @module_pages, as: "module_page" %>
+  </ul>
+</div>

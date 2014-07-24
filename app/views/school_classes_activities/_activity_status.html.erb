@@ -1,6 +1,6 @@
 <div id="activity_<%= activity.id %>_student_<%= student.id %>">
   <%= student.name %>:
-  <% if student_has_unlocked_activity(student, activity)==true %>
+  <% if student_has_unlocked_activity?(student, activity)==true %>
       Unlocked
   <% else %>
       LOCKED

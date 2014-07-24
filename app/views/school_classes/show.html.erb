@@ -24,7 +24,7 @@
         <td><%= s.first_name %></td>
         <td><%= s.last_name %></td>
         <td><%= s.login_name %></td>
-        <td></td>
+        <td><%= link_to "View Progress", school_class_student_progress_path(@school_class,s)%></td>
       </tr>
   <% end %>
 </table>

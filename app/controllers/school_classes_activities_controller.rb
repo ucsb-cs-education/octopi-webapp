@@ -10,7 +10,7 @@ class SchoolClassesActivitiesController < SchoolClassesController
     # Have to pluck unlockables until fixed
     @task_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable_type: "Task", unlockable_id: @tasks.pluck(:id))
     @responses = TaskResponse.where(student: @school_class.students, school_class: @school_class)
-    @students = @school_class.students.order(:last_name)
+    @students = @school_class.students.order(:last_name).order(:first_name)
   end
 
 end

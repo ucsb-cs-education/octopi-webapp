@@ -9,7 +9,7 @@ class UnlocksController < ApplicationController
                               unlockable_id: params[:unlock][:unlockable_id])
       if @unlock.errors.empty?
         respond_to do |format|
-          format.html { redirect_to @unlock }
+          format.html { redirect_to (@unlock) }
           format.js do
             js false
           end
