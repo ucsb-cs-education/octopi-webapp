@@ -1,0 +1,153 @@
+require 'spec_helper'
+
+describe "teacher view of an activity page", type: :feature do
+  subject { page }
+  let(:school_class) { FactoryGirl.create(:school_class) }
+  let(:teacher) { FactoryGirl.create(:staff, :teacher) }
+  let(:activity_page) { FactoryGirl.create(:activity_page) }
+  let(:task_one) { FactoryGirl.create(:assessment_task, activity_page: activity_page) }
+  let(:task_two) { FactoryGirl.create(:laplaya_task, activity_page: activity_page) }
+  let(:student_one) { FactoryGirl.create(:student, school: school_class.school, school_class: school_class) }
+  let(:student_two) { FactoryGirl.create(:student, school: school_class.school, school_class: school_class) }
+
+  before(:each) do
+    school_class
+    student_one
+    student_two
+    activity_page.tasks << task_one
+    activity_page.tasks << task_two
+    task_two.depend_on(task_one)
+    activity_page.find_unlock_for(student_one, school_class)
+    activity_page.find_unlock_for(student_two, school_class)
+    sign_in_as(teacher)
+    visit(school_class_activity_path(school_class, activity_page))
+  end
+
+  describe "with valid content" do
+    it { should have_content(activity_page.title) }
+    it { should have_css("div.student-status", :count => 4) }
+    it { should have_css("div.unlock-button", :count => 2) }
+  end
+
+  describe "that correctly links back" do
+    before do
+      click_on "Back"
+    end
+    it "should link to the school class" do
+      expect(current_path).to eq(school_class_path(school_class))
+    end
+  end
+
+  describe "with correctly working unlock buttons", js: true do
+    describe "when a single unlock button is pressed" do
+      it "should create a single unlock" do
+        expect do
+          first("input[value='Unlock']").click
+          wait_for_ajax
+        end.to change(Unlock, :count).by(1)
+      end
+      describe "that updates the page correctly" do
+        before do
+          first("input[value='Unlock']").click
+          wait_for_ajax
+        end
+        describe "should remove one unlock button" do
+          it { should have_css("div.unlock-button", :count => 1) }
+        end
+      end
+    end
+    describe "when unlock all is pressed" do
+      it "should create multiple unlocks" do
+        expect do
+          click_on "Unlock All"
+          wait_for_ajax
+        end.to change(Unlock, :count).by(2)
+      end
+      describe "that updates the page correctly" do
+        before do
+          click_on "Unlock All"
+          wait_for_ajax
+        end
+        describe "should remove both unlock buttons" do
+          it { should_not have_css("div.unlock-button") }
+        end
+      end
+    end
+  end
+
+  describe "that shows student status correctly" do
+    describe "before a student completes a task" do
+      it { should_not have_css("span.completed-span") }
+      it { should have_css("span.unlocked-span", :count => 2) }
+      it { should have_css("span.locked-span", :count => 2) }
+    end
+    describe "after a student completed a task" do
+      before do
+        TaskResponse.create(school_class: school_class, student: student_one, task: task_one, completed: true)
+        visit(school_class_activity_path(school_class, activity_page))
+      end
+      it { should have_css("span.completed-span", :count => 1) }
+      it { should have_css("span.unlocked-span", :count => 2) }
+      it { should have_css("span.locked-span", :count => 1) }
+    end
+    describe "after all students have completed a task" do
+      before do
+        TaskResponse.create(school_class: school_class, student: student_one, task: task_one, completed: true)
+        TaskResponse.create(school_class: school_class, student: student_two, task: task_one, completed: true)
+        visit(school_class_activity_path(school_class, activity_page))
+      end
+      it { should have_content("All Students have completed this task.") }
+      it { should_not have_css("span.completed-span") }
+      it { should have_css("span.unlocked-span", :count => 2) }
+      it { should_not have_css("span.locked-span") }
+    end
+  end
+
+  describe "when in an activity no students have unlocked" do
+    let(:locked_activity_page) { FactoryGirl.create(:activity_page, module_page: activity_page.module_page) }
+    before do
+      locked_activity_page.depend_on(task_two)
+      visit(school_class_activity_path(school_class, locked_activity_page))
+    end
+    describe "with correct content" do
+      it { should have_css("div.unlock-button", :count => 2) }
+      it { should_not have_css("div.student-status") }
+    end
+    describe "with correctly working unlock buttons", js: true do
+      describe "when a single unlock button is pressed" do
+        it "should create a single unlock" do
+          expect do
+            first("input[value='Unlock']").click
+            wait_for_ajax
+          end.to change(Unlock, :count).by(1)
+        end
+        describe "that updates the page correctly" do
+          before do
+            first("input[value='Unlock']").click
+            wait_for_ajax
+          end
+          describe "should remove one unlock button" do
+            it { should have_css("div.unlock-button", :count => 1) }
+          end
+        end
+      end
+      describe "when unlock all is pressed" do
+        it "should create multiple unlocks" do
+          expect do
+            click_on "Unlock All"
+            wait_for_ajax
+          end.to change(Unlock, :count).by(2)
+        end
+        describe "that updates the page correctly" do
+          before do
+            click_on "Unlock All"
+            wait_for_ajax
+          end
+          describe "should remove both unlock buttons" do
+            it { should_not have_css("div.unlock-button") }
+          end
+        end
+      end
+    end
+  end
+end
