@@ -72,16 +72,10 @@ class SchoolClassesController < ApplicationController
   # POST /school_classes/:school_class_id/manual_unlock
   def manual_unlock
     @school_class.students.each { |x|
-      if Unlock.find_by(student: x,
-                        school_class: @school_class,
-                        unlockable_type: params[:students][:unlockable_type],
-                        unlockable_id: params[:students][:unlockable_id]).nil?
-
-        @unlock = Unlock.create(student: x,
+        @unlock = Unlock.where(student: x,
                                 school_class: @school_class,
                                 unlockable_id: params[:students][:unlockable_id],
-                                unlockable_type: params[:students][:unlockable_type])
-      end
+                                unlockable_type: params[:students][:unlockable_type]).first_or_create
     }
     redirect_to(:back)
   end

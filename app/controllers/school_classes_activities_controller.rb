@@ -3,6 +3,7 @@ class SchoolClassesActivitiesController < SchoolClassesController
 
   def activity_page
     #this is not very fast! How to speed up?
+
     @activity_page = ActivityPage.find(params[:id])
     @tasks= @activity_page.tasks
     #TODO: preload all task visibililties so that they do not need to be found when loading the page?
