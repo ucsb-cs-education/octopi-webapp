@@ -7,11 +7,19 @@ module SchoolClassesStudentProgressHelper
     @tasks.count
   end
 
-  def percent_done
-    (100.0*(@responses.where(completed: true).count.to_f/ number_of_tasks)).to_s[0...4]
+  def number_unlocked
+    @unlocks.where(unlockable_type: Task).count
   end
 
-  def this_student_has_unlocked_this_activity?(activity)
+  def number_of_tasks_in_progress
+    number_unlocked - number_of_tasks_completed
+  end
+
+  def number_of_locked_tasks
+    number_of_tasks - number_unlocked
+  end
+
+  def student_has_unlocked_activity?(activity)
     @unlocks.find_by(student: @student, unlockable: activity).nil? ? false : true
   end
 end

@@ -1,11 +1,13 @@
 <div id="student-name">
   <%= @student.name %>
 </div>
-<%= percent_done %>% of tasks completed.<br>
 <%= link_to "Back", @school_class, class: "btn btn-default" %>
 <div id="progress-summary">
-  Here there will be some kind of cool bar graph or whatever. But until then:<br>
-  <%= @student.name %> has completed <%= number_of_tasks_completed %> out of <%= number_of_tasks %> tasks!
+  <%= pie_chart ({"Completed tasks".to_sym => number_of_tasks_completed,
+                  "In progress tasks".to_sym => number_of_tasks_in_progress,
+                  "Locked tasks".to_sym => number_of_locked_tasks}),
+                colors: ["#57AB1E", "lightsteelblue", "#444"],
+                height: "200px" %>
 </div>
 <hr>
 <div id="curriculum-list">

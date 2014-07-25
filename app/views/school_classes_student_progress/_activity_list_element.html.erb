@@ -1,4 +1,4 @@
-<% if this_student_has_unlocked_this_activity?(activity_page) %>
+<% if student_has_unlocked_activity?(activity_page) %>
     <li id="activity_<%= activity_page.id %>_student_<%= @student.id %>">
       <%= activity_page.title %>
       <ul class="task-ul">
@@ -14,7 +14,7 @@
             <%= f.hidden_field :unlockable_id, value: activity_page.id %>
             <%= f.hidden_field :student_id, value: @student.id %>
             <%= f.hidden_field :unlockable_type, value: Page %>
-            <%= f.hidden_field :from_student_view, value: true %>
+            <%= f.hidden_field :from_student_progress_view, value: true %>
             <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
         <% end %>
       </div>

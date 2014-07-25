@@ -19,7 +19,7 @@ module SchoolClassesHelper
     (100.0*(completed_count(task).to_f/ @school_class.students.count)).to_s[0...4]
   end
 
-  def student_has_unlocked_activity?(student, activity)
-    @activity_unlocks.find_by(student: student, unlockable: activity).nil? ? false : true
+  def student_has_unlocked_activity?(student)
+    @activity_unlocks.find_by(student: student, unlockable: @activity_page).nil? ? false : true
   end
 end

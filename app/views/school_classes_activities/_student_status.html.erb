@@ -8,6 +8,7 @@
             <%= f.hidden_field :unlockable_id, value: task.id %>
             <%= f.hidden_field :student_id, value: student.id %>
             <%= f.hidden_field :unlockable_type, value: Task %>
+            <%= f.hidden_field :from_student_progress_view, value: false %>
             <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
         <% end %>
       </div>

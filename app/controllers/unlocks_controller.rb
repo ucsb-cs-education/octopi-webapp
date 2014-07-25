@@ -10,13 +10,13 @@ class UnlocksController < ApplicationController
       if @unlock.errors.empty?
         respond_to do |format|
           format.html { redirect_to (@unlock) }
-          if params[:unlock][:from_student_view].nil?
+          unless params[:unlock][:from_student_progress_view] == "true"
             format.js do
               js false
             end
           else
             format.js do
-              render :action => "student_progress_create"
+              render :action => "create_from_student_progress_view"
               js false
             end
           end

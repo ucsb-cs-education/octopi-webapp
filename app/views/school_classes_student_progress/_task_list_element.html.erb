@@ -8,12 +8,12 @@
             <%= f.hidden_field :unlockable_id, value: task.id %>
             <%= f.hidden_field :student_id, value: @student.id %>
             <%= f.hidden_field :unlockable_type, value: Task %>
-            <%= f.hidden_field :from_student_view, value: true %>
+            <%= f.hidden_field :from_student_progress_view, value: true %>
             <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
         <% end %>
       </div>
     </li>
-<% elsif status == :completed %>
+<% elsif status == :completed || status == false %>
     <li class="completed-task" id="task_<%= task.id %>_student_<%= @student.id %>">
       <%= task.title %> - Completed
     </li>

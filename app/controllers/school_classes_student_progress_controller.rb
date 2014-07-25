@@ -9,6 +9,7 @@ class SchoolClassesStudentProgressController < SchoolClassesController
     #done to get a count of all tasks in the modules in the class
     @tasks = Task.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
     #TODO: load all visibility statuses for tasks here?
+
     @responses = TaskResponse.where(student: @student, school_class: @school_class)
   end
 

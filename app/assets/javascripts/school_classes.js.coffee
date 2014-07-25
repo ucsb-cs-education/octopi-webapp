@@ -30,3 +30,4 @@ SchoolClassesActivitiesController = Paloma.controller('SchoolClassesActivities')
 SchoolClassesActivitiesController.prototype.activity_page = () ->
   $(".unlock-all").click ->
     confirm "This will unlock the task for all students and cannot be undone.\nDo you wish to continue?"
+

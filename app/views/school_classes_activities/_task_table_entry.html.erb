@@ -11,11 +11,6 @@
       </td>
   <% else %>
       <td>
-        Unlocked by <%= percent_unlocked(task, @task_unlocks) %>%
-        (<%= unlocked_count(task, @task_unlocks) %>/<%= student_count %>) of students. <br>
-        Completed by <%= percent_completed(task) %>%
-        (<%= completed_count(task) %>/<%= student_count %>) of students.
-        <hr>
         Student Progress:
         <%= render partial: "student_status", collection: @students, html: {class: 'unlock-all'}, locals: {task: task}, as: "student" %>
         <% unless unlocked_count(task, @task_unlocks) == student_count %>

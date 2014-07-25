@@ -4,7 +4,6 @@ ruby '2.0.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.1'
 
-
 # Use bcrypt for password hashing
 gem 'bcrypt', '~> 3.1.5'
 
@@ -67,6 +66,10 @@ gem 'paperclip', '~> 4.1.1'
 
 # Restrict javascript to a specific controller, within assett pipeline
 gem 'paloma', '~> 4.1.0'
+
+#draw charts for the teacher view
+gem "chartkick", '~> 1.3.2'
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
