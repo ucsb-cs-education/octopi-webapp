@@ -24,7 +24,7 @@
         <td><%= s.first_name %></td>
         <td><%= s.last_name %></td>
         <td><%= s.login_name %></td>
-        <td><%= link_to "View Progress", school_class_student_progress_path(@school_class,s)%></td>
+        <td><%= link_to "View Progress", school_class_student_progress_path(@school_class, s) %></td>
       </tr>
   <% end %>
 </table>
@@ -36,10 +36,11 @@
   Curriculum:
 </div>
 <hr>
-<div id = "overall progress">
-  <hr>
-    Perhaps some kind of overall progress tracker goes where, such as an average percent completion or an activities unlocked bar graph.
-  <hr>
+<div id="overall progress">
+  <%= bar_chart ({"Completed %".to_sym => average_task_completion*100,"Unlocked %".to_sym => average_task_unlock*100}),
+                max: 101,
+                height: "100px",
+                library: {hAxis: {title: "Percent of tasks completed and unlocked, averaged over all students"}}%>
 </div>
 <%= render partial: "list_module_page", collection: @module_pages, as: "module_page" %>
 <br>

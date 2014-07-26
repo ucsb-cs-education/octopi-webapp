@@ -31,6 +31,10 @@ class SchoolClassesController < ApplicationController
   def show
     @module_pages = @school_class.module_pages.includes(:activity_pages)
     @unlocks = Unlock.where(school_class:@school_class, student: @school_class.students)
+
+    #these two are entirely for the average completion bar
+    @tasks = Task.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
+    @responses = TaskResponse.where(student: @school_class.students, school_class: @school_class)
   end
 
   # GET /school_classes/1/edit

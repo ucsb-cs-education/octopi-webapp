@@ -3,15 +3,17 @@
   <%= @activity_page.title %>
 </div>
 <%= link_to 'Back', school_class_path(@school_class), class: "btn btn-default" %>
-<%= column_chart (@tasks.group(:title, :id).map { |task| {name: task.title, data: {
-        Unlocked: unlocked_count(task, @task_unlocks),
-        Completed: completed_count(task)}
-} }) %>
 
-<%= bar_chart ([{name: "Unlocked by", data: @tasks.map { |task| {task.title.to_sym => unlocked_count(task, @task_unlocks)} }.reduce({}, :merge)},
-                {name: "Completed by", data: @tasks.map { |task| {task.title.to_sym => completed_count(task)} }.reduce({}, :merge)}]),
-              colors: ['#CCC', 'rgb(202, 255, 202)'],
-              max: @students.count %>
+<%= column_chart ([{name: "Completed by", data: @tasks.map { |task| {task.title.to_sym => completed_count(task)} }.reduce({}, :merge)},
+                {name: "Unlocked by", data: @tasks.map { |task| {task.title.to_sym => (unlocked_count(task, @task_unlocks)-completed_count(task))} }.reduce({}, :merge)}]),
+              colors: ['rgb(202, 255, 202)', '#CCC'],
+              max: @students.count+1,
+              :library => {:isStacked => true} %>
+
+<%= bar_chart ([{name: "Completed by", data: @tasks.map { |task| {task.title.to_sym => completed_count(task)} }.reduce({}, :merge)},
+                {name: "Unlocked by", data: @tasks.map { |task| {task.title.to_sym => unlocked_count(task, @task_unlocks)} }.reduce({}, :merge)}]),
+              colors: ['rgb(202, 255, 202)', '#CCC'],
+              max: @students.count+1 %>
 
 <div id="activity-progress-div">
   Unlocked by <%= percent_unlocked(@activity_page, @activity_unlocks) %>%
