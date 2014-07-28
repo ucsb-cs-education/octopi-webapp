@@ -1,9 +1,16 @@
 <div class="row" id="base_laplaya_files">
-  <div class="base_laplaya_file col-md-12">
+  <div class="base_laplaya_file col-md-6">
     <h2>Task Base LaPlaya File</h2>
     <%= render partial: 'laplaya_file_form', locals: {
             laplaya_file: @page.task_base_laplaya_file,
             clone_url: clone_laplaya_task_path(page),
             laplaya_files_collection: @user_laplaya_files} %>
+  </div>
+  <div class="laplaya-analysis col-md-6">
+    <h2>Analysis file</h2>
+    <%= simple_form_for @laplaya_task.laplaya_analysis_file, url: analysis_file_laplaya_task_path(@laplaya_task), remote: true do |f| %>
+        <%= f.file_field :data %>
+    <% end %>
+
   </div>
 </div>

@@ -11,6 +11,8 @@ class Pages::LaplayaTasksController < Pages::TasksController
     @activity_dependants = @laplaya_task.activity_dependants
     @task_dependants = @laplaya_task.dependants
     @relatable_tasks = Task.where(activity_page: ModulePage.find(@laplaya_task.activity_page.module_page).activity_pages) - (@laplaya_task.prerequisites.to_ary.push(@laplaya_task))
+
+    @laplaya_analysis_file = @laplaya_task.laplaya_analysis_file
   end
 
   def update
@@ -39,6 +41,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
         @laplaya_task.parent = @activity_page
         @laplaya_task.save!
         laplaya_file = TaskBaseLaplayaFile.new_base_file(@laplaya_task)
+        @laplaya_task.build_laplaya_analysis_file
       end
     rescue ActiveRecord::RecordInvalid
       render text: @laplaya_task.errors, status: :bad_request
@@ -69,6 +72,10 @@ class Pages::LaplayaTasksController < Pages::TasksController
       flash[:danger] = "Invalid selection for Laplaya File cloning!"
     end
     redirect_to @laplaya_task
+  end
+
+  def update_laplaya_analysis_file
+    @laplaya_task.laplaya_analysis_file.update_attributes!(params.require(:laplaya_analysis_file).permit(:data))
   end
 
   private
