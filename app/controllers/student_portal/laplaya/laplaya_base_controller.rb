@@ -5,7 +5,7 @@ class StudentPortal::Laplaya::LaplayaBaseController < StudentPortal::BaseControl
   before_action :build_session_params
   before_action :set_fileid_in_session, only: [:laplaya_file]
   before_action :build_laplaya_params, only: [:laplaya, :laplaya_file]
-  before_action :temp_signed_in_student, only: [:laplaya]
+  before_action :temp_signed_in_student, only: [:laplaya, :laplaya_file]
   respond_to :json
   js false
 
