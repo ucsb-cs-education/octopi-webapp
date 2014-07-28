@@ -1,7 +1,5 @@
 ActiveAdmin.register Student do
-  config.action_items.delete_if { |item|
-    item.display_on?(:index)
-  }
+  actions :all, except: [:new]
   filter :school, :collection => proc {School.accessible_by(current_ability, :read)}
   filter :school_classes, :collection => proc {SchoolClass.where(school: School.accessible_by(current_ability, :read))}
 
@@ -18,7 +16,7 @@ ActiveAdmin.register Student do
   end
 
   show do
-    attributes_table :first_name, :last_name, :login_name, :id, :school do
+    attributes_table :first_name, :last_name, :login_name, :school do
       table_for student.school_classes do
         column "School Classes" do |school_class|
             link_to school_class.name, [:admin, school_class]

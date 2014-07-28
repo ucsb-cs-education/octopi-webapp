@@ -1,7 +1,5 @@
 ActiveAdmin.register SchoolClass do
-  config.action_items.delete_if { |item|
-    item.display_on?(:index)
-  }
+  actions :all, except: [:edit, :new]
   permit_params :name, :ip_range, :student_remote_access_allowed,students: []
   filter :school, :collection=> proc{School.accessible_by(current_ability, :read)}
   # remove_filter :schoolclasses_students

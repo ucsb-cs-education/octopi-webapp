@@ -1,5 +1,5 @@
 ActiveAdmin.register LaplayaFile do
-
+  actions :all, except: [:new, :edit]
   filter :versions
   filter :file_name
   filter :public

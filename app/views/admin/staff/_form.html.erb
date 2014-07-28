@@ -12,7 +12,15 @@
         <% if @staff == current_staff %>
             <%= f.input :current_password %>
         <% else %>
-            <%= f.input :roles, as: :select, collection: Role.global, label: "Global roles" %>
+            <% if current_staff.school_admin?%>
+                <%= f.input :roles, as: :select, collection: Role.all, label: "Global roles" %>
+                <%= f.input :roles, as: :select, collection: School.with_role(:school_admin,current_staff) +
+                        School.with_role(:school_admin,current_staff).map {|school| school.school_classes.map {|school_class|
+                          school_class}.flatten(1)}.flatten(1),label: "Schools and Classes"%>
+            <% else %>
+                <%= f.input :roles, as: :select, collection: Role.all, label: "Global roles"%>
+                <%= f.input :roles, as: :select, collection: School.all + SchoolClass.all,label: "Schools and Classes"%>
+            <% end %>
         <% end %>
 
 

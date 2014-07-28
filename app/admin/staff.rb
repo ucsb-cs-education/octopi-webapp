@@ -112,7 +112,6 @@ ActiveAdmin.register Staff do
     end
 
     def update_resource(object, attributes)
-      staff_params = attributes[0]
       if attributes.first[:password].present? || attributes.first[:current_password].present?
         object.update_attributes(*attributes)
       else

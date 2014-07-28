@@ -99,23 +99,37 @@ class Ability
     can [:crud, :add_class_teacher, :add_new_student, :add_student], SchoolClass, id: school_classes.pluck(:id)
     can :create, SchoolClass
 
-    can :crud, Staff, :id => schools.map { |school| school.users }.flatten(1).map { |x| x.id }.uniq
+    can :read, Staff, :id=> schools.map{ |school| school.users}.flatten(1).map {|x| x.id}.uniq
+    can :crud, Staff, :id => schools.map { |school| Staff.with_any_role({name: :teacher, resource: school})}.flatten(1).map { |x| x.id }.uniq
+    #can :crud, Staff, :id => schools.map {|school| school.school_classes.map {
+    #    |school_class| Staff.with_any_role({name: :teacher, resource: school_class}).flatten(1).map {|x| x.id}}.flatten(1)}.flatten(1).uniq
+    can :crud, Staff, :id => schools.map {|school| school.school_classes.map {|school_class|
+         Staff.with_any_role({name: :teacher, resource: school_class})}.flatten(1)}.flatten(1).map {|x| x.id}.uniq
     can :create, Staff
-
-
     can :see_user_admin_menu
   end
 
   def teacher(user)
-    schools = School.with_role(:teacher, user).pluck(:id)
-    cannot :read, School, :id => School.pluck(:id) - schools
-    can :read, School, :id => schools
-    can :crud, Student, :id => Student.where(school_id: schools).pluck(:id)
-
     school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
+    school_classes_teacher = SchoolClass.with_role(:teacher, user).pluck(:school_id)
+    schools_teacher = School.with_role(:teacher, user).pluck(:id)
+    if School.with_role(:teacher, user) != []
+      cannot :read, School, :id => School.pluck(:id) - schools_teacher
+      can :read, School, :id => schools_teacher
+      can :crud, Student, :id => Student.where(school_id: schools_teacher).pluck(:id)
+      can [:read_update, :add_new_student, :add_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
+    else
+      cannot :read, School, :id => School.pluck(:id) - school_classes_teacher
+      can :read, School, :id => school_classes_teacher
+      can [:read, :update], Student, :id=> Student.where(school_id: school_classes_teacher).pluck(:id)
+      can :crud, Student, :id => SchoolClass.with_role(:teacher, user).map{|school_class| school_class.students.map {
+          |student| student.id}.flatten(1)}.flatten(1).uniq
+      can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
+    end
+    #school_classes = SchoolClass.with_role(:teacher, user).school.pluck(:id)
     #Need to assign school_class to a curriculum/module
     page_ids = CurriculumPage.all.pluck(:id)
-    can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
+    #can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
     # can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
     can :read, Page, :curriculum_id => page_ids
     can :read, Task, :curriculum_id => page_ids

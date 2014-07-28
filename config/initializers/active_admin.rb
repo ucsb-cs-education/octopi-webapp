@@ -240,6 +240,7 @@ ActiveAdmin.setup do |config|
   #
   # config.filters = true
 
+
   ActiveAdmin::BaseController::Authorization::ACTIONS_DICTIONARY[:index] = :index
   ActiveAdmin::BaseController::Authorization::ACTIONS_DICTIONARY[:show] = :show
   require 'active_admin/paloma_restriction'
