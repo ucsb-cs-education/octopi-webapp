@@ -4,8 +4,8 @@ class StudentResponse::TaskResponseLaplayaFile < StudentResponse::StudentRespons
 
   def trigger_analysis
     if project_changed?
-      Resque.enqueue_to('normal', 'process_laplaya_file_by_id',
-                        id, laplaya_task_response.task.laplaya_analysis_file.id, parent_id)
+      Resque.enqueue(ProcessLaplayaFileById,
+                     id, laplaya_task_response.task.laplaya_analysis_file.id, parent_id)
     end
   end
 
