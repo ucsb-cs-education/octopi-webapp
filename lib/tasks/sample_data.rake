@@ -60,7 +60,7 @@ namespace :db do
     ActivityPage.find(4).depend_on(Task.find(4))
 
     starwars_task = FactoryGirl.create(:laplaya_task, activity_page: ActivityPage.first, laplaya_file: false)
-    FactoryGirl.create(:task_base_laplaya_file, :star_wars, notes: 'Made by Calixtemayoraz', laplaya_task: starwars_task)
+    FactoryGirl.create(:task_base_laplaya_file, :star_wars, note: 'Made by Calixtemayoraz', laplaya_task: starwars_task)
 
   end
 end

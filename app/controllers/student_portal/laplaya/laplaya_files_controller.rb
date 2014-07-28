@@ -1,6 +1,6 @@
 class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::LaplayaBaseController
   load_and_authorize_resource :laplaya_file
-  before_action :confirm_unlocked, [:show, :update]
+  before_action :confirm_unlocked, only: [:show, :update]
   js false
 
   def index
@@ -49,7 +49,7 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
   def confirm_unlocked
     case @laplaya_file.type
       when 'StudentResponse::TaskResponseLaplayaFile'
-        unless @laplaya_file.laplaya_task_response.task.is_accessible?
+        unless @laplaya_file.laplaya_task_response.task.is_accessible?(current_student, current_school_class)
           raise CanCan::AccessDenied
         end
       when 'StudentResponse::ProjectResponseLaplayaFile',

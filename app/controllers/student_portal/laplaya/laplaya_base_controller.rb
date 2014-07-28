@@ -7,9 +7,9 @@ class StudentPortal::Laplaya::LaplayaBaseController < StudentPortal::BaseControl
   before_action :build_laplaya_params, only: [:laplaya, :laplaya_file]
   before_action :temp_signed_in_student, only: [:laplaya]
   respond_to :json
+  js false
 
   def laplaya
-    js false
     render layout: false
   end
 

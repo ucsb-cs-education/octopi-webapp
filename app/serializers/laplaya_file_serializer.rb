@@ -1,5 +1,5 @@
 class LaplayaFileSerializer < ActiveModel::Serializer
-  attributes :file_id, :file_name, :public, :note, :updated_at, :project, :media, :can_update
+  attributes :file_id, :file_name, :public, :note, :updated_at, :project, :media, :can_update, :instructions, :analysis_processor
   # has_many :owners
 
   def file_id
@@ -10,5 +10,23 @@ class LaplayaFileSerializer < ActiveModel::Serializer
     Ability.new(scope).can?(:update, object)
   end
 
+  def instructions
+    if object.type == 'StudentResponse::TaskResponseLaplayaFile'
+      (object.becomes(StudentResponse::TaskResponseLaplayaFile)).laplaya_task_response.task.student_body
+    end
+  end
+
+  def analysis_processor
+    if object.type == 'StudentResponse::TaskResponseLaplayaFile'
+      (object.becomes(StudentResponse::TaskResponseLaplayaFile)).laplaya_task_response.task.laplaya_analysis_file.data
+    end
+  end
+
+  def filter(keys)
+    unless object.type == 'StudentResponse::TaskResponseLaplayaFile'
+      keys = keys - [:analysis_processor, :instructions]
+    end
+    keys
+  end
 
 end
