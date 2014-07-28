@@ -43,7 +43,7 @@ class Ability
       can :create_public_laplaya_files, LaplayaFile
 
       files = LaplayaFile.with_role(:owner, user).pluck(:id)
-      can :crud, LaplayaFile, :id => files
+      can :crud, LaplayaFile, id: files
       can :crud, LaplayaFile, user_id: user.id
       can :create, LaplayaFile
 

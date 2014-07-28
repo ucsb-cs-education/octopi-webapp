@@ -12,15 +12,15 @@ class LaplayaFileSerializer < ActiveModel::Serializer
 
   def instructions
     if object.type == 'StudentResponse::TaskResponseLaplayaFile'
-      object = object.becomes(StudentResponse::TaskResponseLaplayaFile)
-      object.laplaya_task_response.task.student_body
+      response = object.becomes(StudentResponse::TaskResponseLaplayaFile)
+      response.laplaya_task_response.task.student_body
     end
   end
 
   def analysis_processor
     if object.type == 'StudentResponse::TaskResponseLaplayaFile'
-      object = object.becomes(StudentResponse::TaskResponseLaplayaFile)
-      analysis_file = object.laplaya_task_response.task.laplaya_analysis_file
+      response = object.becomes(StudentResponse::TaskResponseLaplayaFile)
+      analysis_file = response.laplaya_task_response.task.laplaya_analysis_file
       if analysis_file
         analysis_file.data
       else
