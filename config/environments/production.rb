@@ -63,7 +63,7 @@ OctopiWebapp::Application.configure do
   # config.assets.precompile += %w( search.js )
   config.assets.precompile += Ckeditor.assets
   config.assets.precompile += %w(ckeditor/*)
-  config.assets.precompile += %w( laplaya.js )
+  config.assets.precompile += %w( laplaya_application.js )
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

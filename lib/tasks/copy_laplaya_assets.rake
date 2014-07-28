@@ -10,7 +10,6 @@ Sounds/*.mp3 Sounds/*.wav Sounds/index.html
 Costumes/*.gif Costumes/*.png Costumes/index.html
 Backgrounds/*.jpg Backgrounds/*.gif Backgrounds/index.html
 ).map{|x| asset_path+x}
-    $stderr.puts(files)
     for file in Dir.glob(files,0)
       dest = file.sub asset_regex, dest_path
       dirname = File.dirname dest
