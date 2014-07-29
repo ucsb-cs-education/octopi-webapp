@@ -12,7 +12,8 @@ class LaplayaTaskResponse < TaskResponse
           completed: false
       )
       response.build_student_response_task_response_laplaya_file.clone(laplaya_task.task_base_laplaya_file)
-      response.owner = student
+      response.student_response_task_response_laplaya_file.owner = student
+      response.student_response_task_response_laplaya_file.save!
       response.save!
       response
     end
