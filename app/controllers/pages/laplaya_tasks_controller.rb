@@ -41,7 +41,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
         @laplaya_task.parent = @activity_page
         @laplaya_task.save!
         laplaya_file = TaskBaseLaplayaFile.new_base_file(@laplaya_task)
-        @laplaya_task.build_laplaya_analysis_file
+        @laplaya_task.create_laplaya_analysis_file
       end
     rescue ActiveRecord::RecordInvalid
       render text: @laplaya_task.errors, status: :bad_request
@@ -75,7 +75,14 @@ class Pages::LaplayaTasksController < Pages::TasksController
   end
 
   def update_laplaya_analysis_file
-    @laplaya_task.laplaya_analysis_file.update_attributes!(params.require(:laplaya_analysis_file).permit(:data))
+    data = params[:laplaya_analysis_file][:data].read
+    @laplaya_task.laplaya_analysis_file.update_attributes!(data: data)
+    flash[:success] = "Laplaya analysis file successfully uploaded."
+    redirect_to @laplaya_task
+  end
+
+  def get_laplaya_analysis_file
+    send_data @laplaya_task.laplaya_analysis_file.data, filename: "processor_#{@laplaya_task.id}.js.octopi", disposition: :attachment
   end
 
   private

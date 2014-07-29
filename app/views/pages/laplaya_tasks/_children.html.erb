@@ -6,11 +6,17 @@
             clone_url: clone_laplaya_task_path(page),
             laplaya_files_collection: @user_laplaya_files} %>
   </div>
-  <div class="laplaya-analysis col-md-6">
+  <div class="laplaya-analysis-file col-md-6">
     <h2>Analysis file</h2>
-    <%= simple_form_for @laplaya_task.laplaya_analysis_file, url: analysis_file_laplaya_task_path(@laplaya_task), remote: true do |f| %>
-        <%= f.file_field :data %>
+    <%= link_to 'Download current file', analysis_file_laplaya_task_path(@laplaya_task) if @laplaya_task.laplaya_analysis_file.data.present? %>
+    <%= simple_form_for @laplaya_task.laplaya_analysis_file, url: analysis_file_laplaya_task_path(@laplaya_task) do |f| %>
+        <div class="form-inputs">
+          <%= f.file_field :data, accept: 'application/javascript' %>
+          File must have .js extension.
+        </div>
+        <div class="form-actions">
+          <%= f.submit class: 'btn btn-primary' %>
+        </div>
     <% end %>
-
   </div>
 </div>

@@ -20,7 +20,7 @@ body.pages {
       padding-bottom: 0px;
     }
     #delete-page-link {
-      width: 60%;
+      width: 20%;
       color: inherit;
       &:visited, &:hover, &:active {
         color: #ffffff;
@@ -56,16 +56,19 @@ body.pages {
       }
     }
     #base_laplaya_files {
-      margin-left: 0px;
-      margin-right: 0px;
-      margin-top: 5px;
-      .base_laplaya_file {
+      .base_laplaya_file, .laplaya-analysis-file {
         h2 {
           text-align: left;
         }
         border: 1px solid $gray-lighter;
       }
-      margin-bottom: 20px;
+      .laplaya-analysis-file {
+        div.form-inputs{
+          margin-top: 5px;
+          margin-bottom: 15px;
+        }
+      }
+      margin: 5px 0px 20px;
     }
   }
 }

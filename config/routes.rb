@@ -92,6 +92,7 @@ OctopiWebapp::Application.routes.draw do
             member do
               patch :clone
               patch :analysis_file, to: :update_laplaya_analysis_file
+              get :analysis_file, to: :get_laplaya_analysis_file
             end
             resources :task_dependencies, only: [:destroy, :create]
             resources :activity_dependencies, only: [:destroy, :create]
