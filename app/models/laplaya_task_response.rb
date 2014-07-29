@@ -12,7 +12,8 @@ class LaplayaTaskResponse < TaskResponse
           completed: false
       )
       response.build_student_response_task_response_laplaya_file.clone(laplaya_task.task_base_laplaya_file)
-      student.add_role :owner, response.laplaya_file.becomes(LaplayaFile)
+      response.owner = student
+      response.save!
       response
     end
   end

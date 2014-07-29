@@ -16,10 +16,6 @@ namespace :db do
 
     a = FactoryGirl.create(:laplaya_file, owner: Student.first)
 
-    Staff.first.add_role :owner, a
-    Student.last.add_role :owner, a
-
-
     2.times do
       puts "Creating Curriculum Page and children..."
       a = FactoryGirl.create(:curriculum_page)

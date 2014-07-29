@@ -4,7 +4,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
   before_filter :set_page_variable
   # GET /activity/:id
   def show
-    @user_laplaya_files = LaplayaFile.with_role(:owner, current_user) if current_user.has_role? :super_staff
+    @user_laplaya_files = LaplayaFile.where(owner: current_user) if current_user.has_role? :super_staff
     @user_laplaya_files ||= LaplayaFile.accessible_by(current_ability, :index)
 
     @task_dependencies = @laplaya_task.task_dependencies

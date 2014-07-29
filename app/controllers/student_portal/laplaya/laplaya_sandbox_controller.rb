@@ -6,14 +6,14 @@ class StudentPortal::Laplaya::LaplayaSandboxController < StudentPortal::Laplaya:
 
   def index
     #Following line needed to prevent super_staff from crashing server during index
-    @laplaya_files = ::StudentResponse::SandboxResponseLaplayaFile.where(module_page: @module_page).with_role(:owner, current_user)
+    @laplaya_files = ::StudentResponse::SandboxResponseLaplayaFile.where(module_page: @module_page).where(owner: current_user)
     render json: @laplaya_files, each_serializer: LaplayaFileIndexSerializer
   end
 
   def create
     @laplaya_file = ::StudentResponse::SandboxResponseLaplayaFile.new(laplaya_file_params)
+    @laplaya_file.owner = current_user
     if @laplaya_file.save
-      current_user.add_role(:owner, @laplaya_file.becomes(LaplayaFile))
       create_post_success_response(:created, laplaya_file_url(@laplaya_file), @laplaya_file.id)
     else
       render text: @laplaya_file.errors, status: :bad_request

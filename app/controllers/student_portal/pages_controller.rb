@@ -102,7 +102,8 @@ class StudentPortal::PagesController < StudentPortal::BaseController
           @project_laplaya_file ||= ::StudentResponse::ProjectResponseLaplayaFile.create(
               owner: current_student,
               module_page: @module_page).clone(@module_page.project_base_laplaya_file)
-          current_user.add_role :owner, @project_laplaya_file.becomes(LaplayaFile)
+          @project_laplaya_file.owner = current_user
+          @project_laplaya_file.save!
         end
       when :laplaya_sandbox
         @module_page = ModulePage.find(params[:id])
