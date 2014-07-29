@@ -1,5 +1,5 @@
 namespace :laplaya do
-  desc 'Create nondigest versions of some ckeditor assets (e.g. moono skin png)'
+  desc 'Copy static laplaya assets to the public directory'
   task :copy_static_assets do
     asset_path = 'lib/assets/javascripts/laplaya/'
     asset_regex = /lib\/assets\/javascripts\/laplaya\//
