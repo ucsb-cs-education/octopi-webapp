@@ -1,4 +1,4 @@
-<% status = task.get_visibility_status_for(student,@school_class) %>
+<% status = get_visibility_of(student,task) %>
 <% if status == :locked %>
     <div id="task_<%= task.id %>_student_<%= student.id %>" class="student-status">
       <%= student.name %>: <span class="locked-span"> LOCKED </span>
@@ -13,7 +13,7 @@
         <% end %>
       </div>
     </div>
-<% elsif status == :completed || status == false%>
+<% elsif status == :completed%>
     <div id="task_<%= task.id %>_student_<%= student.id %>" class="student-status">
       <%= student.name %>: <span class="completed-span"> <u>Complete</u> </span>
     </div>

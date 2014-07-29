@@ -85,7 +85,19 @@ body.school_classes {
 #student-name {
   font-size: 200%;
   margin: 8px;
-  margin-left:0px;
+  margin-left: 0px;
+}
+
+.task-name-div{
+  margin-top: -60px;
+  padding-top: 60px;
+}
+
+#progress-chart {
+  text[text-anchor="middle"]:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 }
 
 #curriculum-list {
@@ -112,12 +124,11 @@ body.school_classes {
     }
   }
 
-  .locked-task, .locked-activity{
+  .locked-task, .locked-activity {
     background-color: rgba(169, 169, 169, 0.55);
   }
 
-  .completed-task{
+  .completed-task {
     background-color: rgba(144, 245, 144, 0.40);
   }
-
 }

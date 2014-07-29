@@ -1,4 +1,4 @@
-class SchoolClassesStudentProgressController < SchoolClassesController
+class SchoolClasses::SchoolClassesStudentProgressController < SchoolClassesController
   load_and_authorize_resource :school_class
 
   def student_progress

@@ -18,6 +18,10 @@ describe "a teacher view of a student page", type: :feature do
     activity_page.find_unlock_for(student, school_class)
     school_class.module_pages << activity_page.module_page
     sign_in_as(teacher)
+
+    #need the relevant unlocks to exist
+    task_one.get_visibility_status_for(student,school_class)
+    task_two.get_visibility_status_for(student,school_class)
     visit(school_class_student_progress_path(school_class, student))
   end
 

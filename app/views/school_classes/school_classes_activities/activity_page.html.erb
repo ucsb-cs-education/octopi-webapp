@@ -1,19 +1,10 @@
-<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 <div class="activity-title-box">
   <%= @activity_page.title %>
 </div>
 <%= link_to 'Back', school_class_path(@school_class), class: "btn btn-default" %>
 
-<%= column_chart ([{name: "Completed by", data: @tasks.map { |task| {task.title.to_sym => completed_count(task)} }.reduce({}, :merge)},
-                {name: "Unlocked by", data: @tasks.map { |task| {task.title.to_sym => (unlocked_count(task, @task_unlocks)-completed_count(task))} }.reduce({}, :merge)}]),
-              colors: ['rgb(202, 255, 202)', '#CCC'],
-              max: @students.count+1,
-              :library => {:isStacked => true} %>
+<%= render partial: "graph", locals: {graph_info: @graph_info} %>
 
-<%= bar_chart ([{name: "Completed by", data: @tasks.map { |task| {task.title.to_sym => completed_count(task)} }.reduce({}, :merge)},
-                {name: "Unlocked by", data: @tasks.map { |task| {task.title.to_sym => unlocked_count(task, @task_unlocks)} }.reduce({}, :merge)}]),
-              colors: ['rgb(202, 255, 202)', '#CCC'],
-              max: @students.count+1 %>
 
 <div id="activity-progress-div">
   Unlocked by <%= percent_unlocked(@activity_page, @activity_unlocks) %>%
@@ -32,4 +23,3 @@
 <table class="table table-striped table-bordered">
   <%= render partial: "task_table_entry", collection: @tasks, as: "task" %>
 </table>
-<%#@tasks.map{|x|  {unlocked: unlocked_count(x,@task_unlocks), completed: completed_count(x)}}%>

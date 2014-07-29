@@ -2,7 +2,7 @@
     <li id="activity_<%= activity_page.id %>_student_<%= @student.id %>">
       <%= activity_page.title %>
       <ul class="task-ul">
-        <%= render partial: "school_classes_student_progress/task_list_element", collection: activity_page.tasks, as: "task" %>
+        <%= render partial: "school_classes/school_classes_student_progress/task_list_element", collection: activity_page.tasks, as: "task" %>
       </ul>
     </li>
 <% else %>

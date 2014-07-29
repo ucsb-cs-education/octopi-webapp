@@ -31,4 +31,12 @@ module SchoolClassesHelper
     @activity_unlocks.find_by(student: student, unlockable: @activity_page).nil? ? false : true
   end
 
+  def get_visibility_of(student, task)
+    if @task_unlocks.find_by(student: student, unlockable: task).nil?
+      :locked
+    else
+      @responses.find_by(student: student, task: task, completed: true).nil? ? :visible : :completed
+    end
+  end
+
 end

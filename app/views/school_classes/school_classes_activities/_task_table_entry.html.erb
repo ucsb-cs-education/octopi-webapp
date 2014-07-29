@@ -1,9 +1,12 @@
-
 <tr id="task_<%= task.id %>"
     <%= 'class="warning"'.html_safe if unlocked_count(task, @task_unlocks) == 0 %>
     <%= 'class="success"'.html_safe if completed_count(task) == student_count %>>
   <td>
-    <%= task.title %>
+    <div id="<%= task.title %>" class="task-name-div">
+      <%= task.title %>
+      <br>
+      <a href="#">Back to top</a>
+    </div>
   </td>
   <% if completed_count(task) == student_count %>
       <td>
@@ -23,4 +26,3 @@
       </td>
   <% end %>
 </tr>
-

@@ -37,7 +37,7 @@
 </div>
 <hr>
 <div id="overall progress">
-  <%= bar_chart ({"Completed %".to_sym => average_task_completion*100,"Unlocked %".to_sym => average_task_unlock*100}),
+  <%= bar_chart ({"Completed %" => average_task_completion*100,"Unlocked %" => average_task_unlock*100}),
                 max: 101,
                 height: "100px",
                 library: {hAxis: {title: "Percent of tasks completed and unlocked, averaged over all students"}}%>

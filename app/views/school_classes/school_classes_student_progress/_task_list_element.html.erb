@@ -1,4 +1,4 @@
-<% status = task.get_visibility_status_for(@student, @school_class) %>
+<% status = get_visibility_for_student_of(task) %>
 <% if status == :locked %>
     <li class="locked-task" id="task_<%= task.id %>_student_<%= @student.id %>">
       <%= image_tag("padlock.png", size: "15") %>
@@ -13,7 +13,7 @@
         <% end %>
       </div>
     </li>
-<% elsif status == :completed || status == false %>
+<% elsif status == :completed %>
     <li class="completed-task" id="task_<%= task.id %>_student_<%= @student.id %>">
       <%= task.title %> - Completed
     </li>

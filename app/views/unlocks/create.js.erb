@@ -1,9 +1,13 @@
 <% if @unlock.unlockable_type == "Page" %>
-    <% @activity_page = @unlock.unlockable %>
-    $("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").replaceWith(
-            "<%= j render partial:"school_classes_activities/activity_status", locals: {activity: @unlock.unlockable, student: @unlock.student}%>");
+<% @activity_page = @unlock.unlockable %>
+$("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").replaceWith(
+        "<%= j render partial:"school_classes/school_classes_activities/activity_status", locals: {activity: @unlock.unlockable, student: @unlock.student}%>");
 
 <%else%>
-    $("#task_<%=@unlock.unlockable_id %>_student_<%= @unlock.student_id%>").replaceWith(
-            "<%= j render partial:"school_classes_activities/student_status", locals: {task: @unlock.unlockable, student: @unlock.student}%>");
+$("#task_<%=@unlock.unlockable_id %>_student_<%= @unlock.student_id%>").replaceWith(
+        "<%= j render partial:"school_classes/school_classes_activities/student_status", locals: {task: @unlock.unlockable, student: @unlock.student}%>");
+
+$("#progress-chart").replaceWith(
+        "<%= j render partial:"school_classes/school_classes_activities/graph", locals:{graph_info: @school_class.activity_progress_graph_array_for(@unlock.unlockable.activity_page)} %>"
+);
 <%end%>

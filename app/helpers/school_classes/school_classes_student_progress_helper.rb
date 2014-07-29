@@ -1,4 +1,4 @@
-module SchoolClassesStudentProgressHelper
+module SchoolClasses::SchoolClassesStudentProgressHelper
   def number_of_tasks_completed
     @responses.where(completed: true).count
   end
@@ -21,5 +21,13 @@ module SchoolClassesStudentProgressHelper
 
   def student_has_unlocked_activity?(activity)
     @unlocks.find_by(student: @student, unlockable: activity).nil? ? false : true
+  end
+
+  def get_visibility_for_student_of(task)
+    if @unlocks.find_by(unlockable: task).nil?
+      :locked
+    else
+      @responses.find_by(task: task, completed: true).nil? ? :visible : :completed
+    end
   end
 end
