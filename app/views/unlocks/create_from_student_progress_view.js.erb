@@ -7,4 +7,8 @@ $("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").repl
 <%else%>
 $("#task_<%=@unlock.unlockable_id %>_student_<%= @student.id%>").replaceWith(
         "<%= j render partial:"school_classes/school_classes_student_progress/task_list_element", locals: {task: @unlock.unlockable}%>");
+
+$("#progress-chart").replaceWith(
+        "<%= j render partial:"school_classes/school_classes_student_progress/graph", locals:{graph_info: @school_class.student_progress_graph_array_for(@unlock.student)} %>"
+);
 <%end%>

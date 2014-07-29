@@ -4,7 +4,7 @@
       <%= student.name %>: <span class="locked-span"> LOCKED </span>
 
       <div class="unlock-button">
-        <%= simple_form_for [@school_class, @task_unlocks.build], html: {method: :post}, remote: true do |f| %>
+        <%= simple_form_for [@school_class, task.unlocks.build], html: {method: :post}, remote: true do |f| %>
             <%= f.hidden_field :unlockable_id, value: task.id %>
             <%= f.hidden_field :student_id, value: student.id %>
             <%= f.hidden_field :unlockable_type, value: Task %>

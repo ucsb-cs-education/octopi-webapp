@@ -12,6 +12,7 @@ class SchoolClasses::SchoolClassesStudentProgressController < SchoolClassesContr
     #TODO: load all visibility statuses for tasks here?
 
     @responses = TaskResponse.where(student: @student, school_class: @school_class)
+    @graph_info = @school_class.student_progress_graph_array_for(@student)
   end
 
 end

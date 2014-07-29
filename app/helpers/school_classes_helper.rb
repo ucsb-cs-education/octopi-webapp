@@ -8,19 +8,23 @@ module SchoolClassesHelper
   end
 
   def average_task_unlock
-    @unlocks.where(unlockable_type: Task).count/(@tasks.count * @school_class.students.count).to_f
+    @unlocks.where(unlockable_type: Task).count/( @tasks.count * @school_class.students.count).to_f
   end
 
   def unlocked_count(task, collection)
     collection.where(unlockable: task).count
   end
 
+  def task_unlocked_count(task)
+    task.unlocks.count
+  end
+
   def percent_unlocked(task, collection)
     (100.0*(unlocked_count(task, collection).to_f/ @school_class.students.count)).to_s[0...4]
   end
 
-  def completed_count(task)
-    @responses.where(task: task, completed: true).count
+  def completed?(task)
+    TaskResponse.where(task: task, school_class: @school_class, completed: true)==@students.count
   end
 
   def percent_completed(task)
@@ -28,14 +32,18 @@ module SchoolClassesHelper
   end
 
   def student_has_unlocked_activity?(student)
-    @activity_unlocks.find_by(student: student, unlockable: @activity_page).nil? ? false : true
+    @activity_unlocks.exists?(student: student, unlockable: @activity_page) ? true : false
+  end
+
+  def repeated_name?(task)
+    @activity_page.tasks.where(title: task.title).count>1 ? true : false
   end
 
   def get_visibility_of(student, task)
-    if @task_unlocks.find_by(student: student, unlockable: task).nil?
+    unless task.unlocks.exists?(student: student, unlockable: task, school_class: @school_class)
       :locked
     else
-      @responses.find_by(student: student, task: task, completed: true).nil? ? :visible : :completed
+      student.task_responses.exists?(school_class: @school_class, task: task, completed: true) ? :completed : :visible
     end
   end
 

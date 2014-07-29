@@ -31,8 +31,12 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
   $(".unlock-all").click ->
     confirm "This will unlock the task for all students and cannot be undone.\nDo you wish to continue?"
 
-  $("#progress-chart").hover ->
-    $(this).find("text[text-anchor=\"middle\"]").on "click", (d) ->
-      document.location.href = "#" + $(this).text()
+  $(document).on "click", ".charts-tooltip", ->
+    document.location.href = "#" + $(this).find("div").text()
+    return
+
+  $(document).on "click", "text[text-anchor=\"middle\"]", ->
+    document.location.href = "#" + $(this).text()
+    return
 
 

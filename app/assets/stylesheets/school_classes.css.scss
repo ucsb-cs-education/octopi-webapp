@@ -88,6 +88,7 @@ body.school_classes {
   margin-left: 0px;
 }
 
+//Make the header not cover task name when the page jumps to it in the activity class progress view
 .task-name-div{
   margin-top: -60px;
   padding-top: 60px;
@@ -97,6 +98,15 @@ body.school_classes {
   text[text-anchor="middle"]:hover {
     cursor: pointer;
     text-decoration: underline;
+  }
+}
+
+.charts-tooltip{
+  div{
+    text-decoration: underline;
+  }
+  div:hover {
+    cursor: pointer;
   }
 }
 

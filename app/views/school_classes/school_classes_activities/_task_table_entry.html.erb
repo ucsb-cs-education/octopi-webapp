@@ -1,14 +1,15 @@
 <tr id="task_<%= task.id %>"
-    <%= 'class="warning"'.html_safe if unlocked_count(task, @task_unlocks) == 0 %>
-    <%= 'class="success"'.html_safe if completed_count(task) == student_count %>>
+    <%= 'class="warning"'.html_safe if task_unlocked_count(task) == 0 %>
+    <%= 'class="success"'.html_safe if completed?(task) %>>
   <td>
-    <div id="<%= task.title %>" class="task-name-div">
+    <div id="<%= (repeated_name?(task) ?
+            task.title+"("+task.id.to_s+")" : task.title) %>" class="task-name-div">
       <%= task.title %>
       <br>
       <a href="#">Back to top</a>
     </div>
   </td>
-  <% if completed_count(task) == student_count %>
+  <% if completed?(task) %>
       <td>
         All Students have completed this task.
       </td>
@@ -16,7 +17,7 @@
       <td>
         Student Progress:
         <%= render partial: "student_status", collection: @students, html: {class: 'unlock-all'}, locals: {task: task}, as: "student" %>
-        <% unless unlocked_count(task, @task_unlocks) == student_count %>
+        <% unless task_unlocked_count(task) == student_count %>
             <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
                 <%= f.hidden_field :unlockable_id, value: task.id %>
                 <%= f.hidden_field :unlockable_type, value: Task %>

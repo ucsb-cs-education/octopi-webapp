@@ -3,11 +3,7 @@
 </div>
 <%= link_to "Back", @school_class, class: "btn btn-default" %>
 <div id="progress-summary">
-  <%= pie_chart ({"Completed tasks" => number_of_tasks_completed,
-                  "In progress tasks" => number_of_tasks_in_progress,
-                  "Locked tasks" => number_of_locked_tasks}),
-                colors: ["#57AB1E", "lightsteelblue", "#444"],
-                height: "200px" %>
+<%= render partial: "graph", locals:{graph_info: @graph_info} %>
 </div>
 <hr>
 <div id="curriculum-list">
