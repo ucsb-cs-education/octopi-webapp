@@ -7,13 +7,13 @@
 
 
 <div id="activity-progress-div">
-  Unlocked by <%= percent_unlocked(@activity_page, @activity_unlocks) %>%
-  (<%= unlocked_count(@activity_page, @activity_unlocks) %>/<%= student_count %>) of students.
+
+  Unlocked by (<%= @info[:counts][:unlocked_count] %>/<%= @info[:counts][:student_count] %>) of students.
   <hr>
-  <%= render partial: "activity_status", collection: @students, locals: {activity: @activity_page}, as: "student" %>
-  <% unless unlocked_count(@activity_page, @activity_unlocks) == student_count %>
+  <%= render partial: "activity_status", collection: @info[:students].to_a, locals: {activity: @info[:activity]}, as: "student" %>
+  <% unless unlocked_count(@info[:activity][:id], @activity_unlocks) == student_count %>
       <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
-          <%= f.hidden_field :unlockable_id, value: @activity_page.id %>
+          <%= f.hidden_field :unlockable_id, value: @info[:activity][:id] %>
           <%= f.hidden_field :unlockable_type, value: "Page" %>
           <%= f.submit 'Unlock All', class: "btn btn-warning unlock-all" %>
       <% end %>
