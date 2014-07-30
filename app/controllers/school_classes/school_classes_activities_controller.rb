@@ -10,7 +10,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
       {unlock.student_id => :unlocked}
     }.reduce({}, :merge)},
              :tasks => @activity_page.tasks.map { |task|
-               {title: task.title, statuses: @students.map { |student|
+               {id: task.id, title: task.title, statuses: @students.map { |student|
                  {student.id => task.get_visibility_status_for(student, @school_class)}
                }.reduce({}, :merge)} },
              :students => @students.map { |student|
