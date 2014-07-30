@@ -56,9 +56,21 @@ body.pages {
       }
     }
     #base_laplaya_files {
+      div.files-header {
+        margin-top: 10px;
+        min-height: 45px;
+      }
+      .col-md-4, .col-md-6 {
+        min-height: 270px;
+      }
+      form {
+        width: 100%;
+      }
       .base_laplaya_file, .laplaya-analysis-file {
-        h2 {
+        h2, h3 {
           text-align: left;
+          margin-bottom: 0px;
+          margin-top: 0px;
         }
         border: 1px solid $gray-lighter;
       }

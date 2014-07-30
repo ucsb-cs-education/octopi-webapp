@@ -1,14 +1,33 @@
 <div class="row" id="base_laplaya_files">
-  <div class="base_laplaya_file col-md-6">
-    <h2>Task Base LaPlaya File</h2>
+  <div class="base_laplaya_file col-md-4">
+    <div class="files-header">
+      <h2>Starting File</h2>
+    </div>
     <%= render partial: 'laplaya_file_form', locals: {
             laplaya_file: @page.task_base_laplaya_file,
             clone_url: clone_laplaya_task_path(page),
-            laplaya_files_collection: @user_laplaya_files} %>
+            laplaya_files_collection: @user_laplaya_files,
+            clone_direct: {id: @page.task_completed_laplaya_file.id, button_label: 'Clone from solution file'}
+    } %>
+  </div>
+  <div class="base_laplaya_file col-md-4">
+    <div class="files-header">
+      <h2>Solution File</h2>
+
+      <h3>Only used by designers and teachers, not for analysis</h3>
+    </div>
+    <%= render partial: 'laplaya_file_form', locals: {
+            laplaya_file: @page.task_completed_laplaya_file,
+            clone_url: clone_completed_laplaya_task_path(page),
+            laplaya_files_collection: @user_laplaya_files,
+            clone_direct: {id: @page.task_base_laplaya_file.id, button_label: 'Clone from starting file'}
+    } %>
   </div>
   <% if can? :update, @page %>
-      <div class="laplaya-analysis-file col-md-6">
-        <h2>Analysis file</h2>
+      <div class="laplaya-analysis-file col-md-4">
+        <div class="files-header">
+          <h2>Analysis file</h2>
+        </div>
         <%= link_to 'Download current file', analysis_file_laplaya_task_path(@laplaya_task) if @laplaya_task.laplaya_analysis_file.data.present? %>
         <%= simple_form_for @laplaya_task.laplaya_analysis_file, url: analysis_file_laplaya_task_path(@laplaya_task) do |f| %>
             <div class="form-inputs">

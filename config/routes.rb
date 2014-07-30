@@ -91,6 +91,7 @@ OctopiWebapp::Application.routes.draw do
           resources :laplaya_tasks, except: [:index, :edit], shallow: true do
             member do
               patch :clone
+              patch :clone_completed
               patch :analysis_file, to: :update_laplaya_analysis_file
               get :analysis_file, to: :get_laplaya_analysis_file
             end

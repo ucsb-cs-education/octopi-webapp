@@ -2,7 +2,7 @@ class ActivityPage < Page
   resourcify
   belongs_to :module_page, foreign_key: :page_id
   acts_as_list scope: [:type, :page_id]
-  has_many :tasks, -> { order('position ASC') }, foreign_key: :page_id
+  has_many :tasks, -> { order('position ASC') }, foreign_key: :page_id, dependent: :destroy
 
   has_many :activity_dependencies, foreign_key: :activity_dependant_id, dependent: :destroy
   has_many :prerequisites, :through => :activity_dependencies, source: :task_prerequisite

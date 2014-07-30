@@ -41,8 +41,9 @@ class Pages::ModulePagesController < Pages::PagesController
       ModulePage.transaction do
         @module_page.parent = @curriculum_page
         @module_page.save!
-        sandbox_laplaya_file = SandboxBaseLaplayaFile.new_base_file(@module_page)
-        project_laplaya_file = ProjectBaseLaplayaFile.new_base_file(@module_page)
+        @module_page.create_sandbox_base_laplaya_file(file_name: 'New Project')
+        @module_page.create_project_base_laplaya_file(file_name: 'New Project')
+        @module_page.save!
       end
     rescue ActiveRecord::RecordInvalid
       render text: @module_page.errors, status: :bad_request
@@ -91,6 +92,6 @@ class Pages::ModulePagesController < Pages::PagesController
   end
 
   def module_page_params
-    params.require(:module_page).permit(:title, :'teacher_body', :'student_body')
+    params.require(:module_page).permit(:title, :'teacher_body', :'student_body', :'designer_note')
   end
 end

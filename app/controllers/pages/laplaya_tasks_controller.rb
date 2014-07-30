@@ -40,8 +40,10 @@ class Pages::LaplayaTasksController < Pages::TasksController
       LaplayaTask.transaction do
         @laplaya_task.parent = @activity_page
         @laplaya_task.save!
-        laplaya_file = TaskBaseLaplayaFile.new_base_file(@laplaya_task)
+        @laplaya_task.create_task_base_laplaya_file(file_name: 'New Project')
+        @laplaya_task.create_task_completed_laplaya_file(file_name: 'New Project Solution')
         @laplaya_task.create_laplaya_analysis_file
+        @laplaya_task.save!
       end
     rescue ActiveRecord::RecordInvalid
       render text: @laplaya_task.errors, status: :bad_request
@@ -63,15 +65,11 @@ class Pages::LaplayaTasksController < Pages::TasksController
   end
 
   def clone
-    if params[:laplaya_file] && params[:laplaya_file][:laplaya_file] && params[:laplaya_file][:laplaya_file].present?
-      laplaya_file = LaplayaFile.find(params[:laplaya_file][:laplaya_file])
-      authorize! :show, laplaya_file
-      @laplaya_task.task_base_laplaya_file.clone(laplaya_file)
-      flash[:success] = "Laplaya File successfully cloned!"
-    else
-      flash[:danger] = "Invalid selection for Laplaya File cloning!"
-    end
-    redirect_to @laplaya_task
+    clone_helper(@laplaya_task.task_base_laplaya_file)
+  end
+
+  def clone_completed
+    clone_helper(@laplaya_task.task_completed_laplaya_file)
   end
 
   def update_laplaya_analysis_file
@@ -86,13 +84,25 @@ class Pages::LaplayaTasksController < Pages::TasksController
   end
 
   private
+  def clone_helper(file_to_clone_to)
+    if params[:laplaya_file] && params[:laplaya_file][:laplaya_file] && params[:laplaya_file][:laplaya_file].present?
+      laplaya_file = LaplayaFile.find(params[:laplaya_file][:laplaya_file])
+      authorize! :show, laplaya_file
+      file_to_clone_to.clone(laplaya_file)
+      flash[:success] = "Laplaya File successfully cloned!"
+    else
+      flash[:danger] = "Invalid selection for Laplaya File cloning!"
+    end
+    redirect_to @laplaya_task
+  end
+
   def set_page_variable
     @page = @laplaya_task if @laplaya_task
     @pages = @laplaya_tasks if @laplaya_tasks
   end
 
   def laplaya_task_params
-    params.require(:laplaya_task).permit(:title, :teacher_body, :student_body)
+    params.require(:laplaya_task).permit(:title, :teacher_body, :student_body, :'designer_note')
   end
 
 end

@@ -2,7 +2,7 @@ class ModulePage < Page
   resourcify
   belongs_to :curriculum_page, foreign_key: :page_id
   acts_as_list scope: [:type, :page_id]
-  has_many :activity_pages, -> { order('position ASC') },  foreign_key: :page_id
+  has_many :activity_pages, -> { order('position ASC') },  foreign_key: :page_id, dependent: :destroy
   has_and_belongs_to_many :school_classes, join_table: :module_pages_school_classes
   has_one :project_base_laplaya_file, foreign_key: :parent_id
   has_one :sandbox_base_laplaya_file, foreign_key: :parent_id

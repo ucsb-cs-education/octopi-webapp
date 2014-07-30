@@ -1,6 +1,7 @@
 class LaplayaTask < Task
-  has_one :task_base_laplaya_file, foreign_key: :parent_id
-  has_one :laplaya_analysis_file, foreign_key: :task_id
+  has_one :task_base_laplaya_file, foreign_key: :parent_id, dependent: :destroy
+  has_one :task_completed_laplaya_file, foreign_key: :parent_id, dependent: :destroy
+  has_one :laplaya_analysis_file, foreign_key: :task_id, dependent: :destroy
   alias_attribute :children, :task_base_laplaya_file
   validates :title, presence: true
 

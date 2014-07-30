@@ -1,9 +1,9 @@
-<%= link_to "#{(can? :update, @page) ? 'Edit' : 'Open'} LaPlaya file",
+<%= link_to "#{(can? :update, @page) ? 'Edit' : 'Open'} file in LaPlaya",
             student_portal_laplaya_file_path(laplaya_file) %>
 <% if can? :update, @page %>
     <div class="laplaya-clone">
       Clone from one of your existing LaPlaya projects:
-      <%= simple_form_for :laplaya_file, url: clone_url , method: :patch do |f| %>
+      <%= simple_form_for :laplaya_file, url: clone_url, method: :patch do |f| %>
           <div class="form-inputs">
             <%= f.input :laplaya_file,
                         collection: laplaya_files_collection,
@@ -14,8 +14,14 @@
           </div>
 
           <div class="form-actions">
-            <%= f.button :submit, "Clone" %>
+            <%= f.button :submit, 'Clone from your file' %>
           </div>
       <% end %>
     </div>
+<% end %>
+<% if clone_direct ||= false %>
+    <%= simple_form_for :laplaya_file, url: clone_url, method: :patch do |f| %>
+        <%= f.hidden_field :laplaya_file, value: clone_direct[:id] %>
+        <%= f.submit clone_direct[:button_label], class: 'btn btn-default' %>
+    <% end %>
 <% end %>

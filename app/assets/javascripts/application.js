@@ -23,6 +23,7 @@
 //= require_tree ./student_portal
 //= require active_admin
 //= require school_classes
+//= require sorttable
 
 var updateDropDowns = function () {
     $('select[data-option-dependent=true]').each(function (i) {

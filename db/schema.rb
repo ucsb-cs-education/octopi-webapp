@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140729153634) do
+ActiveRecord::Schema.define(version: 20140730205206) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(version: 20140729153634) do
     t.integer  "curriculum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "designer_note"
   end
 
   add_index "pages", ["position"], name: "index_pages_on_position", using: :btree
@@ -193,6 +194,7 @@ ActiveRecord::Schema.define(version: 20140729153634) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "curriculum_id"
+    t.text     "designer_note"
   end
 
   create_table "unlocks", force: true do |t|

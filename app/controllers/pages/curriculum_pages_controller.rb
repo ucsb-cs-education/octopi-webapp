@@ -62,7 +62,7 @@ class Pages::CurriculumPagesController < Pages::PagesController
   end
 
   def curriculum_page_params
-    params.require(:curriculum_page).permit(:title, :'teacher_body', :'student_body')
+    params.require(:curriculum_page).permit(:title, :'teacher_body', :'student_body', :'designer_note')
   end
 
 end

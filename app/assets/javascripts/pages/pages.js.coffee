@@ -48,6 +48,7 @@ PagesController.prototype.show = () ->
     submitFunction = () ->
       teacher_body = $('#teacher-body').html()
       student_body = $('#student-body').html()
+      designer_note = $('#designer-note').html()
 
       title = $('#page-title').html()
       children = $("#children")
@@ -57,6 +58,7 @@ PagesController.prototype.show = () ->
           $(this).find('.children_order').val(children.sortable('serialize'))
         $(this).find('.teacher_body').val(teacher_body)
         $(this).find('.student_body').val(student_body)
+        $(this).find('.designer_note').val(designer_note)
         $(this).find('.title').val(title)
         return true;
       else

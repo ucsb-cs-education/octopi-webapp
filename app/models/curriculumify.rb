@@ -11,7 +11,7 @@ module Curriculumify
 
   private
   def has_title?
-    (type =~ /(Task|Project|Sandbox)BaseLaplayaFile/).nil?
+    (type =~ /((Task|Project|Sandbox)Base|TaskCompleted)LaplayaFile/).nil?
   end
 
   def curriculum_page?
