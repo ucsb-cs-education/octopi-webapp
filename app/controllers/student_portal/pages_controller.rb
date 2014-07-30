@@ -51,7 +51,13 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #GET /student_portal/laplaya_tasks/:id
   #student_portal_laplaya_task_path
   def laplaya_task
-    redirect_to student_portal_laplaya_file_path(@laplaya_task_response.laplaya_file)
+    js false
+    laplaya_ide_params = {}
+    laplaya_ide_params['root_path'] = '/static/laplaya/'
+    laplaya_ide_params['fileID'] = @laplaya_task_response.laplaya_file.id
+    @laplaya_ide_params = laplaya_ide_params.to_json
+    render 'student_portal/laplaya/laplaya_base/laplaya', layout: false
+    # redirect_to student_portal_laplaya_file_path(@laplaya_task_response.laplaya_file)
   end
 
   #POST /student_portal/assessment_tasks/:id

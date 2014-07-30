@@ -24,11 +24,11 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
       sign_in_student student, school_class
       redirect_back_or student_portal_root_url
     elsif student.nil? || school_class.nil?
-      flash.now[:danger] = 'Please select a class and/or login name'
-      render 'new', layout: 'layouts/devise'
+      flash[:danger] = 'Please select a class and/or login name'
+      redirect_to action: 'new'
     else
-      flash.now[:danger] = 'Invalid login/password combination'
-      render 'new', layout: 'layouts/devise'
+      flash[:danger] = 'Invalid login/password combination'
+      redirect_to action: 'new'
     end
   end
 

@@ -21,11 +21,22 @@
   <%= @module_page.student_body.html_safe %>
 </div>
 
+<div id="other-links">
+  <div id="sandbox">
+    <%= link_to image_tag('75px-Sandbox.png'), student_portal_module_sandbox_path(@module_page), id: 'sandbox-link' %>
+    <p>
+      Sandbox
+    </p>
+  </div>
+  <div id="project">
+    <%= link_to image_tag('375px-Open_book_nae_02.svg.png'), student_portal_laplaya_file_path(@project_laplaya_file), id: 'main-project-link' %>
+    <p>
+      Design Think Project
+    </p>
+  </div>
+</div>
+
 <div id="children-pages">
   <%= render partial: "student_portal/pages/module_page/children", collection: @module_page.children, as: :child %>
 </div>
 
-<div id="other-links">
-  <%= link_to image_tag('75px-Sandbox.png'), student_portal_module_sandbox_path(@module_page), id: 'sandbox-link' %>
-  <%= link_to image_tag('375px-Open_book_nae_02.svg.png'), student_portal_laplaya_file_path(@project_laplaya_file), id: 'main-project-link' %>
-</div>

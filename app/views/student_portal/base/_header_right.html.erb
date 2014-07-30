@@ -5,10 +5,12 @@
         <li><%= link_to 'Get started!', student_portal_module_path(current_school_class.module_pages.first) %></li>
     <% end %>
     <li><%= link_to 'Help', student_portal_help_path %></li>
-    <% if staff_signed_in? %>
-        <li><%= link_to 'Non-Student Portal', main_app.home_path %></li>
-    <% else %>
-        <li><%= link_to 'Non-Student Portal', new_staff_session_path %></li>
+    <% unless signed_in_student? %>
+        <% if staff_signed_in? %>
+            <li><%= link_to 'Non-Student Portal', main_app.home_path %></li>
+        <% else %>
+            <li><%= link_to 'Non-Student Portal', new_staff_session_path %></li>
+        <% end %>
     <% end %>
     <% if signed_in_student? %>
         <li id="fat-menu" class="dropdown">

@@ -1,7 +1,7 @@
 <div id="tabs">
   <ul>
-    <li><a href="#teacher-body">Teacher Body</a></li>
-    <li><a href="#student-body">Student Body</a></li>
+    <li><a href="#teacher-body">Teacher Instructions</a></li>
+    <li><a href="#student-body">Student Instructions</a></li>
   </ul>
   <div id="teacher-body" <%= "class=octopieditable" if can? :update, @page%>>
     <%= page.teacher_body.html_safe if page.teacher_body.present? %>

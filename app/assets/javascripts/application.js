@@ -31,7 +31,20 @@ var updateDropDowns = function () {
         var url_mask = $(this).data('option-url');
         var key_method = $(this).data('option-key-method');
         var value_method = $(this).data('option-value-method');
-        var prompt = $(this).has('option[value=\'\']').size() ? $(this).find('option[value=\'\']') : $('<option value=\"\">').text('Please select from the above drop down first');
+        var prompt = $(this).data('option-placeholder');
+        if (typeof(prompt) == 'undefined') {
+            prompt = $(this).has('option[value=\'\']').size() ?
+                $(this).find('option[value=\'\']') :
+                $('<option value=\"\">').text('Please select from the above drop down first');
+        } else {
+            prompt = $('<option value=\"\">').text(prompt);
+        }
+        var empty_prompt = $(this).data('option-empty-placeholder');
+        if (typeof(empty_prompt) == 'undefined') {
+            empty_prompt = prompt;
+        } else {
+            empty_prompt = $('<option value=\"\">').text(empty_prompt);
+        }
         var regexp = /:[0-9a-zA-Z_]+:/g;
         var observer = $('select#' + observer_dom_id);
         var observed = $('#' + observed_dom_id);
@@ -54,7 +67,7 @@ var updateDropDowns = function () {
                     });
                 });
             } else {
-                observer.append(prompt);
+                observer.append(empty_prompt);
             }
         });
     });

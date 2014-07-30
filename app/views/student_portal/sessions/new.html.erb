@@ -15,12 +15,14 @@
                               'data-option-key-method' => :id,
                               'data-option-value-method' => :name}
           %>
-          <%= f.input :login_name, collection: School.find(selected_school_id).students.pluck(:login_name),
-                      include_blank: 'Please select a login name', selected: 0,
+          <%= f.input :login_name, collection: [],
+                      include_blank: 'Please select a class first', selected: 0,
                       input_html: {
                               'data-option-dependent' => true,
                               'data-option-observed' => 'session_school_class',
                               'data-option-url' => '/school_classes/:school_class_id:/student_logins.json',
+                              'data-option-placeholder' => 'Please select a login name',
+                              'data-option-empty-placeholder' => 'Please select a class first',
                               'data-option-key-method' => :login_name,
                               'data-option-value-method' => :login_name}
           %>
