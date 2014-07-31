@@ -14,7 +14,7 @@
         <% end %>
       </div>
     </div>
-<% elsif status == :completed%>
+<% elsif status == :completed || status == false%>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
       <span class="completed-span"> <b>Complete</b> </span>
     </div>

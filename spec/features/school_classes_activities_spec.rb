@@ -62,17 +62,17 @@ describe "teacher view of an activity page", type: :feature do
         end
       end
     end
-    describe "when unlock all is pressed" do
+    describe "when unlock for all is pressed" do
       describe "when no students have unlocked the task" do
         it "should create multiple unlocks" do
           expect do
-            click_on "Unlock All"
+            click_on "Unlock For All"
             wait_for_ajax
           end.to change(Unlock, :count).by(2)
         end
         describe "that updates the page correctly" do
           before do
-            click_on "Unlock All"
+            click_on "Unlock For All"
             wait_for_ajax
           end
           describe "should remove both unlock buttons" do
@@ -87,7 +87,7 @@ describe "teacher view of an activity page", type: :feature do
         end
         it "should create one unlock" do
           expect do
-            click_on "Unlock All"
+            click_on "Unlock For All"
             wait_for_ajax
           end.to change(Unlock, :count).by(1)
         end
@@ -95,7 +95,7 @@ describe "teacher view of an activity page", type: :feature do
           before do
             first("input[value='Unlock']").click
             wait_for_ajax
-            click_on "Unlock All"
+            click_on "Unlock For All"
             wait_for_ajax
           end
           describe "should remove th unlock button" do
@@ -121,17 +121,6 @@ describe "teacher view of an activity page", type: :feature do
       it { should have_css("span.unlocked-span", :count => 2) }
       it { should have_css("span.locked-span", :count => 1) }
     end
-    describe "after all students have completed a task" do
-      before do
-        TaskResponse.create(school_class: school_class, student: student_one, task: task_one, completed: true)
-        TaskResponse.create(school_class: school_class, student: student_two, task: task_one, completed: true)
-        visit(school_class_activity_path(school_class, activity_page))
-      end
-      it { should have_content("All Students have completed this task.") }
-      it { should_not have_css("span.completed-span") }
-      it { should have_css("span.unlocked-span", :count => 2) }
-      it { should_not have_css("span.locked-span") }
-    end
   end
 
   describe "when in an activity no students have unlocked" do
@@ -148,13 +137,13 @@ describe "teacher view of an activity page", type: :feature do
       describe "when a single unlock button is pressed" do
         it "should create a single unlock" do
           expect do
-            first("input[value='Unlock']").click
+            first("input[value='Unlock']").trigger('click')
             wait_for_ajax
           end.to change(Unlock, :count).by(1)
         end
         describe "that updates the page correctly" do
           before do
-            first("input[value='Unlock']").click
+            first("input[value='Unlock']").trigger('click')
             wait_for_ajax
           end
           describe "should remove one unlock button" do
@@ -162,16 +151,16 @@ describe "teacher view of an activity page", type: :feature do
           end
         end
       end
-      describe "when unlock all is pressed" do
+      describe "when unlock for all is pressed" do
         it "should create multiple unlocks" do
           expect do
-            click_on "Unlock All"
+            click_on "Unlock For All"
             wait_for_ajax
           end.to change(Unlock, :count).by(2)
         end
         describe "that updates the page correctly" do
           before do
-            click_on "Unlock All"
+            click_on "Unlock For All"
             wait_for_ajax
           end
           describe "should remove both unlock buttons" do

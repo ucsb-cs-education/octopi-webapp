@@ -4,7 +4,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
   def activity_page
     @activity_page = ActivityPage.includes(tasks: [:unlocks]).find(params[:id])
     @activity_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable: @activity_page)
-    @students = @school_class.students.order(:last_name).order(:first_name).includes(:task_responses)
+    @students = @school_class.students.includes(:task_responses)
 
     @info = {:activity => {title: @activity_page.title, id: @activity_page.id, students_who_unlocked: @activity_unlocks.map { |unlock|
       {unlock.student_id => :unlocked}
