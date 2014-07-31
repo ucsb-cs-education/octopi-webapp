@@ -71,9 +71,9 @@ class Ability
   def curriculum_designer(user)
     page_ids = CurriculumPage.with_role(:curriculum_designer, user).pluck(:id)
     can :crud, Page, :curriculum_id => page_ids
-    can [:crud, :clone, :update_laplaya_analysis_file, :get_laplaya_analysis_file], Task, :curriculum_id => page_ids
+    can [:crud, :clone, :clone_completed, :update_laplaya_analysis_file, :get_laplaya_analysis_file], Task, :curriculum_id => page_ids
     can :crud, AssessmentQuestion, :curriculum_id => page_ids
-    can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => ["TaskBaseLaplayaFile", "SandboxBaseLaplayaFile", "ProjectBaseLaplayaFile"]}
+    can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => ["TaskBaseLaplayaFile", "SandboxBaseLaplayaFile", "ProjectBaseLaplayaFile", "TaskCompletedLaplayaFile"]}
     can [:create, :clone_project, :clone_sandbox], ModulePage
     can :create, ActivityPage
     can :create, LaplayaTask

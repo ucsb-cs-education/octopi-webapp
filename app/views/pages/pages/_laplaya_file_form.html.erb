@@ -1,3 +1,7 @@
+<div class="laplaya-file-title">
+  <p>Title: <%= laplaya_file.file_name %></p>
+</div>
+
 <%= link_to "#{(can? :update, @page) ? 'Edit' : 'Open'} file in LaPlaya",
             student_portal_laplaya_file_path(laplaya_file) %>
 <% if can? :update, @page %>
