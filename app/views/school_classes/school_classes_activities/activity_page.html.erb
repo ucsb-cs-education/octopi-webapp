@@ -5,21 +5,7 @@
 
 <%= render partial: "graph", locals: {graph_info: @graph_info} %>
 
-
-<div id="activity-progress-div">
-
-  Unlocked by (<%= @info[:counts][:unlocked_count] %>/<%= @info[:counts][:student_count] %>) of students.
-  <hr>
-  <%= render partial: "activity_status", collection: @info[:students].to_a, locals: {activity: @info[:activity]}, as: "student" %>
-  <% unless unlocked_count(@info[:activity][:id], @activity_unlocks) == student_count %>
-      <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
-          <%= f.hidden_field :unlockable_id, value: @info[:activity][:id] %>
-          <%= f.hidden_field :unlockable_type, value: "Page" %>
-          <%= f.submit 'Unlock All', class: "btn btn-warning unlock-all" %>
-      <% end %>
-  <% end %>
-</div>
 <hr>
-<table class="table table-striped table-bordered">
-  <%= render partial: "task_table_entry", collection: @info[:tasks].to_a, as: "task" %>
-</table>
+<div id="progress-table-div">
+  <%= render partial: "progress_table" %>
+</div>

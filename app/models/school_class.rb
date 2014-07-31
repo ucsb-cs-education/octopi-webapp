@@ -20,7 +20,6 @@ class SchoolClass < ActiveRecord::Base
     @unlocks = Unlock.where(student: students, school_class: self, unlockable_type: "Task", unlockable_id: @activity_page.tasks.pluck(:id))
     @responses = TaskResponse.where(student: students, school_class: self)
 
-    #graph_info_for_school_class_activities_controller(@tasks,@unlocks,@responses)
     [{name: "Completed by", data: @activity_page.tasks.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
         task.title+"("+task.id.to_s+")" : task.title) => @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
      {name: "Unlocked by", data: @activity_page.tasks.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?

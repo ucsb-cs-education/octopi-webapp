@@ -39,4 +39,38 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
     document.location.href = "#" + $(this).text()
     return
 
+  $("#name-header").wrapInner("<span title=\"Click to sort\"/>").each ->
+    th = $(this)
+    thIndex = th.index()
+    inverse = false
+    th.click ->
+      $("#tasks-table").find("td").not(".button-td").filter(->
+        $(this).index() is thIndex
+      ).sortElements ((a, b) ->
+        (if $.text([a]) > $.text([b]) then (if inverse then -1 else 1) else (if inverse then 1 else -1))  unless @parentNode is $("#button-tr")
+      ), ->
+        @parentNode
+
+      inverse = not inverse
+      return
+
+    return
+
+  $("#progress-header").wrapInner("<span title=\"Click to sort\"\"/>").each ->
+    th = $(this)
+    thIndex = th.index()
+    inverse = false
+    th.click ->
+      $("#tasks-table").find("td").not(".button-td").filter(->
+        $(this).index() is thIndex
+      ).sortElements ((a, b) ->
+        (if parseInt($.text([a])) > parseInt($.text([b])) then (if inverse then -1 else 1) else (if inverse then 1 else -1))  unless @parentNode is $("#button-tr")
+      ), ->
+        @parentNode
+
+      inverse = not inverse
+      return
+
+    return
+
 

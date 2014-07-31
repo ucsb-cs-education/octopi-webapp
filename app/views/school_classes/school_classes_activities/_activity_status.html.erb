@@ -1,8 +1,14 @@
 <% student = student[1] %>
-<div id="activity_<%= activity[:id] %>_student_<%= student[:id] %>">
-  <%= student[:name] %>:
+<td class="student-name-col" id="activity_<%= activity[:id] %>_student_<%= student[:id] %>">
+  <div class="student-name-div">
+    <span title="<%= student[:name] %>">
+      <%= link_to student[:name], school_class_student_progress_path(@school_class, student[:id]) %>
+    </span>
+  </div>
+</td>
+<td class="student-progress-col">
   <% unless activity[:students_who_unlocked][student[:id]].nil? %>
-      <%= (student[:percent_done]*100).to_s[0..1] %>% Completed
+      <%= (student[:percent_done]*100).to_s[0..1] %>% Complete
   <% else %>
       <div class="unlock-button">
         <%= simple_form_for [@school_class, @activity_unlocks.build], html: {method: :post}, remote: true do |f| %>
@@ -14,4 +20,4 @@
         <% end %>
       </div>
   <% end %>
-</div>
+</td>

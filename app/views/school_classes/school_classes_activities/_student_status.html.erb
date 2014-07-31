@@ -2,7 +2,7 @@
 <% status = task[:statuses][student[:id]] %>
 <% if status == :locked %>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
-      <%= student[:name] %>: <span class="locked-span"> LOCKED </span>
+      <span class="locked-span"> LOCKED </span>
 
       <div class="unlock-button">
         <%= simple_form_for [@school_class, @activity_unlocks.build], html: {method: :post}, remote: true do |f| %>
@@ -16,10 +16,10 @@
     </div>
 <% elsif status == :completed%>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
-      <%= student[:name] %>: <span class="completed-span"> <u>Complete</u> </span>
+      <span class="completed-span"> <b>Complete</b> </span>
     </div>
 <% else %>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
-      <%= student[:name] %>: <span class="unlocked-span"> Not yet complete. </span>
+      <span class="unlocked-span"> In progress </span>
     </div>
 <% end %>

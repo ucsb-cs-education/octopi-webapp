@@ -1,5 +1,5 @@
 <%= column_chart (graph_info),
                  colors: ['rgb(202, 255, 202)', '#CCC'],
-                 max: @school_class.students.count+1, #+1 because it does not actually show the highest number
+                 max: @school_class.students.count, #+1 because it does not actually show the highest number
                  stacked: true,
                  id: "progress-chart" %>

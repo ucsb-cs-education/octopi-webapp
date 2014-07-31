@@ -70,28 +70,21 @@ body.school_classes {
 
 .unlock-button {
   display: inline-block;
-  paddinbg: -10px;
   margin: 0px;
-  max-height: 2em;
+  max-height: 1em;
 }
 
-#activity-progress-div {
-  border: 1px solid lightgrey;
-  border-radius: 8px;
-  margin: 2px;
-  padding: .5em;
+.unlock-all {
+  display: inline-block;
+  margin: 0px;
+  max-height: 2em;
+
 }
 
 #student-name {
   font-size: 200%;
   margin: 8px;
   margin-left: 0px;
-}
-
-//Make the header not cover task name when the page jumps to it in the activity class progress view
-.task-name-div{
-  margin-top: -60px;
-  padding-top: 60px;
 }
 
 #progress-chart {
@@ -101,8 +94,12 @@ body.school_classes {
   }
 }
 
-.charts-tooltip{
-  div{
+#name-header:hover, #progress-header:hover{
+  cursor: pointer;
+}
+
+.charts-tooltip {
+  div {
     text-decoration: underline;
   }
   div:hover {
@@ -110,6 +107,37 @@ body.school_classes {
   }
 }
 
+.student-name-div{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 18em;
+}
+
+#progress-table-div {
+  width: auto;
+  overflow-x: scroll;
+  margin-left: 25em;
+  overflow-y: visible;
+  padding-bottom: 1px;
+}
+
+#tasks-table {
+  td, th {
+    white-space: nowrap;
+  }
+  .student-name-col, .headcol {
+    margin-left:-30em;
+    position: absolute;
+    width: 20em;
+    top: auto;
+  }
+  .student-progress-col {
+    margin-left:-10em;
+    position: absolute;
+    width: 10em;
+    top: auto;
+  }
+}
 #curriculum-list {
   ul {
     list-style: none;
