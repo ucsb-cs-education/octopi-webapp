@@ -1,8 +1,5 @@
 ActiveAdmin.register School do
 
-  # See permitted parameters documentation:
-  # https://github.com/gregbell/active_admin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
   permit_params :name, :ip_range, :student_remote_access_allowed,curriculum_page_ids: []
 
   index do
@@ -38,8 +35,6 @@ ActiveAdmin.register School do
     f.actions
   end
 
-  #Can't filter as checkboxes due to activeadmin bug https://github.com/gregbell/active_admin/issues/2565
-  # filter :curriculum_pages, as: :check_boxes, collection: CurriculumPage.all, label: 'Curriculums'
   filter :curriculum_pages, label: 'Curriculums'
 
 

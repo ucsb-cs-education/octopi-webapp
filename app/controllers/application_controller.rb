@@ -53,8 +53,8 @@ class ApplicationController < ActionController::Base
 
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :password, :password_confirmation, :first_name, :last_name,roles: [role_ids: []]) }
-    devise_parameter_sanitizer.for(:account_update){|u| u.permit(:email, :password, :password_confirmation, :first_name, :last_name, :current_password, roles: [],role_ids: [])}
+    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :password, :password_confirmation, :super_staff, :school_admin, :teacher,:first_name, :last_name,roles: [],role_ids: [], school_id: []) }
+    devise_parameter_sanitizer.for(:account_update){|u| u.permit(:email,:super_staff, :school_admin, :teacher,:password, :password_confirmation, :first_name, :last_name, :current_password, roles: [],role_ids: [], school_id: [])}
   end
 
 end

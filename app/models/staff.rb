@@ -48,6 +48,12 @@ class Staff < User
   def super_staff
     super_staff?
   end
+  def school_admin
+    school_admin?
+  end
+  def teacher
+    teacher?
+  end
 
   def super_staff=(bool)
     if bool == true || bool == '1'

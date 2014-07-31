@@ -42,33 +42,8 @@ ActiveAdmin.register Staff do
           role.to_label
         end
       end
-
-      # [:id, :first_name, :last_name, :email, :reset_password_sent_at User.attribute_names.each do |attribute|
-      #   row attribute
-      row :email
-      row :first_name
-      row :last_name
-      # table_for user.roles.where(name: Role.main_roles) do
-      #   column "Role" {|role| role.name }
-      # end
-      # row :roles do
-      # end
-      # table_for user.roles.where(role) do
-      #   column "Role" do |role|
-      #     role.name
-      #   end
-      #   column
-      # end
-
-      # active_admin_comments
     end
   end
-
-# filter :roles, collection: [
-# filter :email
-# filter :current_sign_in_at
-# filter :sign_in_count
-# filter :created_at
   scope :all, :default => true
   scope :unconfirmed
   scope :confirmed
