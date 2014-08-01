@@ -55,8 +55,8 @@ module ValidUserRequestHelper
   end
 
   def sign_in_as_a_valid_student_helper
-    post_via_redirect student_portal_sessions_path, 'student[school]' =>@student.school, 'student[login_name]' =>@student.login_name,
-                      'student[school_classes]' =>@student.school_classes, 'student[password]' =>@student.password
+    post_via_redirect student_portal_sessions_path, 'student[school]' => @student.school, 'student[login_name]' => @student.login_name,
+                      'student[school_classes]' => @student.school_classes, 'student[password]' => @student.password
   end
 
 end
@@ -67,20 +67,21 @@ module ValidUserFeatureHelper
   # for use in feature specs
   def sign_in_as_a_valid_staff_helper
     visit new_staff_session_path
-    fill_in 'Email',    with: @staff.email
+    fill_in 'Email', with: @staff.email
     fill_in 'Password', with: @staff.password
     click_button 'Sign in'
   end
 
   def sign_in_as_a_valid_student_helper
+    Capybara.current_driver = Capybara.javascript_driver
     visit student_portal_signin_path
     select @student.school.name, from: 'School', match: :prefer_exact
     wait_for_ajax
     select @student.school_classes.first.name, from: 'Class'
     wait_for_ajax
     select @student.login_name, from: 'Login name'
-    fill_in "Password", with: @student.password
-    click_button "Sign in"
+    fill_in 'Password', with: @student.password
+    click_button 'Sign in'
   end
 
 end
