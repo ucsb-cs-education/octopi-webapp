@@ -1,7 +1,13 @@
 ActiveAdmin.register Staff do
   filter :roles
   remove_filter :users_roles
-  permit_params :first_name, :last_name, :email, :password, :password_confirmation, :current_password, :super_staff, basic_roles: []
+  permit_params do
+    params = [:first_name, :last_name, :email, :password, :password_confirmation, :current_password]
+    params.push basic_roles: [] if can?([:add_teacher, :add_school_admin, :add_designer], [School, CurriculumPage])
+    params.push :super_staff if can? :create_super_staff
+    params
+  end
+
   menu if: proc {
     authorized?(:see_user_admin_menu)
   }
@@ -38,12 +44,13 @@ ActiveAdmin.register Staff do
 
     attributes_table :first_name, :last_name, :email do
       table_for staff.roles do
-        column "Roles" do |role|
+        column 'Roles' do |role|
           role.to_label
         end
       end
     end
   end
+
   scope :all, :default => true
   scope :unconfirmed
   scope :confirmed
@@ -87,11 +94,22 @@ ActiveAdmin.register Staff do
     end
 
     def update_resource(object, attributes)
-      if attributes.first[:password].present? || attributes.first[:current_password].present?
-        object.update_attributes(*attributes)
+      staff_params = attributes.first
+      if object == current_staff
+        if staff_params[:password].present? || staff_params[:current_password].present?
+          if object.update_with_password(staff_params)
+            sign_in(object, bypass: true)
+          end
+        else
+          staff_params.delete(:current_password)
+          object.update_without_password(staff_params)
+        end
       else
-        attributes.first.delete(:current_password)
-        object.update_without_password(*attributes)
+        unless staff_params[:password].present?
+          staff_params.delete(:password)
+          staff_params.delete(:password_confirmation) unless staff_params[:password_confirmation].present?
+        end
+        object.update_attributes(staff_params)
       end
     end
 

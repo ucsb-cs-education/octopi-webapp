@@ -94,15 +94,24 @@ class Ability
 
     can :crud, Student, :id => Student.where(school_id: school_ids).pluck(:id)
     can :create, Student
-    school_classes = SchoolClass.where(school_id: school_ids)
 
-    can [:crud, :add_class_teacher, :add_new_student, :add_student], SchoolClass, id: school_classes.pluck(:id)
+    school_classes = SchoolClass.where(school_id: school_ids)
+    school_classes_ids = school_classes.pluck(:id)
+    can [:crud, :add_class_teacher, :add_new_student, :add_student], SchoolClass, id: school_classes_ids
     can :create, SchoolClass
 
-    can [:create, :read], Staff, :id=> schools.map{ |school| school.users}.flatten(1).map {|x| x.id}.uniq
-    can :crud, Staff, :id => schools.map { |school| Staff.with_any_role({name: :teacher, resource: school})}.flatten(1).map { |x| x.id }.uniq
-    can :crud, Staff, :id => schools.map {|school| school.school_classes.map {|school_class|
-         Staff.with_any_role({name: :teacher, resource: school_class})}.flatten(1)}.flatten(1).map {|x| x.id}.uniq
+    staff_school_roles = Role.where(name: [:teacher, :school_admin], resource_type: 'School', resource_id: school_ids)
+    staff_school_class_roles = Role.where(name: [:teacher], resource_type: 'SchoolClass', resource_id: school_classes_ids)
+    roles = []
+    [staff_school_roles, staff_school_class_roles].each do |staff_roles|
+      roles.push *(staff_roles.map{|x| {name: x.name, resource: x.resource}})
+    end
+    staff_ids = []
+    roles.each do |role|
+      staff_ids.push *(Staff.with_role(role[:name], role[:resource]).pluck(:id))
+    end
+    staff_ids.uniq!
+    can :crud, Staff, id: staff_ids
     can :create, Staff
 
     page_ids = CurriculumPage.all.pluck(:id)

@@ -5,22 +5,12 @@
         <%= f.input :email %>
         <% if devise_mapping.confirmable? && @staff.pending_reconfirmation? %>
             <li>Currently waiting confirmation for: <%= resource.unconfirmed_email %>
-              . <%= link_to "Resend confirmation", staff_confirmation_path, data: {method: :post} %></li>
+              . <%= link_to 'Resend confirmation', staff_confirmation_path, data: {method: :post} %></li>
         <% end %>
-        <%= f.input :password, required: false, label: "New password" %>
-        <%= f.input :password_confirmation, label: "New password confirmation" %>
+        <%= f.input :password, required: false, label: 'New password' %>
+        <%= f.input :password_confirmation, label: 'New password confirmation' %>
         <% if @staff == current_staff %>
-            <%= f.input :current_password %>
-        <% else %>
-            <% if current_staff.school_admin?%>
-                <%= f.input :roles, as: :select, collection: Role.all, label: "Global roles" %>
-                <%= f.input :roles, as: :select, collection: School.with_role(:school_admin,current_staff) +
-                        School.with_role(:school_admin,current_staff).map {|school| school.school_classes.map {|school_class|
-                          school_class}.flatten(1)}.flatten(1),label: "Schools and Classes"%>
-            <% else %>
-                <%= f.input :roles, as: :select, collection: Role.all, label: "Global roles"%>
-                <%= f.input :roles, as: :select, collection: School.all + SchoolClass.all,label: "Schools and Classes"%>
-            <% end %>
+            <%= f.input :current_password, hint: 'Required when changing your password' %>
         <% end %>
 
 
