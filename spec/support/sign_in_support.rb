@@ -73,7 +73,9 @@ module ValidUserFeatureHelper
   end
 
   def sign_in_as_a_valid_student_helper
-    Capybara.current_driver = Capybara.javascript_driver
+    unless [:selenium, :poltergeist].include? Capybara.current_driver
+      Capybara.current_driver = Capybara.javascript_driver
+    end
     visit student_portal_signin_path
     select @student.school.name, from: 'School', match: :prefer_exact
     wait_for_ajax
