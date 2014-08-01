@@ -9,8 +9,8 @@ Bundler.require(*Rails.groups)
 module OctopiWebapp
   class Application < Rails::Application
     config.autoload_paths += Dir[
-        Rails.root.join("app", "models", "ckeditor"),
-        Rails.root.join("app", "models", "laplaya_file")]
+        Rails.root.join('app', 'models', 'ckeditor'),
+        Rails.root.join('app', 'models', 'laplaya_file')]
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -23,7 +23,7 @@ module OctopiWebapp
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    config.browserify_rails.commandline_options = "-t coffeeify --extension=\".js.coffee\"" if config.respond_to? :browserify_rails
+    config.browserify_rails.commandline_options = '-t coffeeify --extension=".js.coffee"' if config.respond_to? :browserify_rails
 
     config.generators do |g|
       g.test_framework :rspec
