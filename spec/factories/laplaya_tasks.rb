@@ -39,6 +39,7 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
     after :create do |task, evaluator|
       FactoryGirl.create(:task_base_laplaya_file, laplaya_task: task) if evaluator.laplaya_file
+      FactoryGirl.create(:task_completed_laplaya_file, laplaya_task: task) if evaluator.laplaya_file
       FactoryGirl.create(:laplaya_analysis_file, laplaya_task: task) if evaluator.laplaya_analysis
     end
 

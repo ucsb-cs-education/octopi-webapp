@@ -42,6 +42,18 @@ FactoryGirl.define do
       end
     end
 
+    factory :task_completed_laplaya_file, class: TaskCompletedLaplayaFile do
+      ignore do
+        laplaya_task { FactoryGirl.create(:laplaya_task, laplaya_file: false ) }
+      end
+
+      public false
+
+      after(:build) do |laplaya_file, evaluator|
+        laplaya_file.laplaya_task = evaluator.laplaya_task
+      end
+    end
+
     factory :project_base_laplaya_file, class: ProjectBaseLaplayaFile do
       ignore do
         module_page { FactoryGirl.create(:module_page, laplaya_file: false ) }
