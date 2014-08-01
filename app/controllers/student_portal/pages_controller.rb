@@ -1,6 +1,8 @@
 require 'laplaya_module'
 class StudentPortal::PagesController < StudentPortal::BaseController
   include LaplayaModule
+  include ::Pages::PagesHelper
+
   before_action :force_no_trailing_slash, only: [:laplaya_task, :laplaya_sandbox_file, :design_thinking_project]
   before_action :force_trailing_slash, only: [:laplaya_sandbox]
   before_action :signed_in_student
@@ -62,6 +64,8 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #student_portal_laplaya_task_path
   def laplaya_task
     @laplaya_ide_params[:fildID] = @laplaya_task_response.laplaya_file.id
+    @laplaya_ide_params[:prevTask] = get_path_for_task(@laplaya_task.higher_item)
+    @laplaya_ide_params[:nextTask] = get_path_for_task(@laplaya_task.lower_item)
     laplaya_helper
   end
 
@@ -108,7 +112,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def laplaya_sandbox_file
     @laplaya_file = StudentResponse::SandboxResponseLaplayaFile.find(params[:file_id])
     unless current_school_class && current_school_class.module_pages.include?(@laplaya_file.module_page) &&
-        @laplaya_file.owner ==  current_student
+        @laplaya_file.owner == current_student
       raise CanCan::AccessDenied
     end
     sandboxmode = {}

@@ -12,7 +12,7 @@ class Task < ActiveRecord::Base
   #before_save :check_dependants
 
 
-  acts_as_list scope: [:type, :page_id]
+  acts_as_list scope: [:page_id]
   # include CustomModelNaming
   # self.param_key = :feed
   # self.route_key = :feeds
