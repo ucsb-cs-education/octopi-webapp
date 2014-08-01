@@ -1,14 +1,17 @@
 <table class="table table-striped table-bordered" id="tasks-table">
   <thead>
   <tr>
-    <th class="headcol" id="name-header">
-      <b><%= @info[:activity][:title] %></b> <span id="name-header-span" width="1em">&#x25A0;</span>
+    <th id="name-header">
+      <b>First Name</b>
+    </th>
+    <th id="name-header">
+      <b>Last Name</b>
     </th>
     <th class="student-progress-col" id="progress-header">
-      <b>Activity Progress</b> <span id="progress-header-span">&#x25A0;</span>
+      <b>Activity Progress</b>
     </th>
     <% @info[:tasks].each { |task| %>
-        <th id="<%= task[:unique_title] %>">
+        <th>
           <b><%= link_to task[:title], task[:type]=="LaplayaTask" ? laplaya_task_path(task[:id]) : assessment_task_path(task[:id]) %></b>
         </th>
     <% } %>
@@ -26,8 +29,8 @@
       </tr>
   <% } %>
   <tr id="button-tr">
-    <td class="headcol button-td">
-      <% unless @info[:counts][:unlocked_count] == @info[:counts][:student_count] %>
+    <td class="button-td">
+      <% unless @info[:counts][:unlocked_count] === @info[:counts][:student_count] %>
           <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
               <%= f.hidden_field :unlockable_id, value: @info[:activity][:id] %>
               <%= f.hidden_field :unlockable_type, value: "Page" %>
@@ -35,7 +38,9 @@
           <% end %>
       <% end %>
     </td>
-    <td class="student-progress-col button-td">
+    <td class="button-td">
+    </td>
+    <td class="button-td">
     </td>
     <% @info[:tasks].each { |task| %>
         <td class="button-td">

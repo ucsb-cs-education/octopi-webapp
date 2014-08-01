@@ -13,7 +13,6 @@
 //= require jsapi
 //= require chartkick
 //= require jquery
-//= require dragscrollable
 //= require jquery_ujs
 //= require jquery-ui/sortable
 //= require jquery-ui/tabs

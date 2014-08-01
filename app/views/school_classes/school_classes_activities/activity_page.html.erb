@@ -6,125 +6,23 @@
 <%= render partial: "graph", locals: {graph_info: @graph_info} %>
 
 <hr>
-<div id="outer-progress-table-div">
-  <div id="progress-table-div">
-    <%= render partial: "progress_table" %>
-  </div>
+<div id="progress-table-div">
+  <%= render partial: "progress_table" %>
 </div>
 
 <script>
 
     new Grid("progress-table-div", {
-        srcType : "dom",
-        srcData : "tasks-table",
-        allowGridResize : false,
-        allowColumnResize : false,
-        allowClientSideSorting : true,
-        colSortType:["string","number"],
-        allowSelections : false,
-        allowMultipleSelections : true,
-        showSelectionColumn : true,
-        fixedCols : 1
-    });
-
-   /* $('#tasks-table').each(function () {
-        var table = $(this),
-                fixedCol = table.clone(true),
-                fixedWidth = table.find('th').eq(0).width(),
-                tablePos = table.position();
-        // Remove all but the first column from the cloned table
-        fixedCol.find('th').not(':eq(0)').remove();
-        fixedCol.find('tbody tr').each(function () {
-            $(this).find('td').not(':eq(0)').remove();
-        });
-        // Set positioning so that cloned table overlays
-        // first column of original table
-        fixedCol.addClass('fixedCol');
-        fixedCol.attr("id", "tasks-table-fixed-col")
-        fixedCol.css({
-            left: tablePos.left,
-            top: tablePos.top
-        });
-        // Match column width with that of original table
-        fixedCol.find('th,td').css('width', fixedWidth + 'px');
-        $('#outer-progress-table-div ').append(fixedCol);
-    });
-
-    $("#progress-table-div").dragscrollable();
-*/
-    $("#progress-header").wrapInner("<span title=\"Click to sort\"\"/>").each(function () {
-        var inverse, th, thIndex;
-        th = $(this);
-        thIndex = th.index();
-        inverse = false;
-        th.click(function () {
-            $("#tasks-table").find("td").not(".button-td").filter(function () {
-                return $(this).index() === thIndex;
-            }).sortElements((function (a, b) {
-                if (this.parentNode !== $("#button-tr")) {
-                    if (parseInt($(a).attr("value")) > parseInt($(b).attr("value"))) {
-                        return inverse ? -1 : 1;
-                    } else {
-                        return inverse ? 1 : -1;
-                    }
-                }
-            }), function () {
-                return this.parentNode;
-            });
-            inverse = !inverse;
-            $()
-            //edit the fixed column and arrows
-            $("#tasks-table-fixed-col td").each(function (index) {
-                $(this).html($($("#tasks-table tbody td:nth-child(1)")[index]).html());
-            })
-            $("#tasks-table-fixed-col #name-header-span").html('&#x25A0');
-            $("#progress-header-span").html(inverse ? '&#x25b2;' : '&#x25bc;');
-        });
-    });
-
-    $("#tasks-table-fixed-col th").wrapInner("<span title=\"Click to sort\"\"/>").each(function () {
-        var inverse, th, thIndex, first_name;
-        th = $(this);
-        thIndex = th.index();
-        inverse = false,
-                first_name = false;
-
-        th.click(function () {
-            $("#tasks-table").find("td").not(".button-td").filter(function () {
-                return $(this).index() === thIndex;
-            }).sortElements((function (a, b) {
-                if (this.parentNode !== $("#button-tr")) {
-                    if (!first_name) {
-                        if ($(a).attr("value") > $(b).attr("value")) {
-                            return inverse ? -1 : 1;
-                        } else {
-                            return inverse ? 1 : -1;
-                        }
-                    } else {
-                        if ($(a).text() > $(b).text()) {
-                            return inverse ? -1 : 1;
-                        } else {
-                            return inverse ? 1 : -1;
-                        }
-                    }
-                }
-            }), function () {
-                return this.parentNode;
-            });
-            inverse = !inverse;
-
-            $()
-            //edit the fixed column
-            $("#tasks-table-fixed-col td").each(function (index) {
-                $(this).html($($("#tasks-table tbody td:nth-child(1)")[index]).html());
-            })
-            $("#progress-header-span").html('&#x25A0');
-            $("#tasks-table-fixed-col #name-header-span").html(inverse ?
-                    (first_name ? "(First Name)" : "(Last Name)" ) + '&#x25b2;'
-                    : (first_name ? "(First Name)" : "(Last Name)" ) + '&#x25bc;');
-            //switch between sorting first name and sorting last name
-            if (!inverse) first_name = !first_name
-        });
+        srcType: "dom",
+        srcData: "tasks-table",
+        allowGridResize: false,
+        allowColumnResize: false,
+        allowClientSideSorting: true,
+        colSortType: ["string", "string", "number"],
+        allowSelections: true,
+        allowMultipleSelections: false,
+        showSelectionColumn: false,
+        fixedCols: 2
     });
 
 </script>

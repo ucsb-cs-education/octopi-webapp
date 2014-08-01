@@ -17,6 +17,7 @@ describe "Assessment question page", type: :feature do
     it { should have_content("Add New Answer Choice") }
     it { should have_content("One Correct") }
     it { should have_content("Multiple Correct") }
+    it { should have_content("Free Response") }
   end
 
   describe "answer tests" do
@@ -48,6 +49,18 @@ describe "Assessment question page", type: :feature do
     it { should have_selector('input[type=checkbox]', :count => 5) }
     it { should_not have_selector('div.ischecked') }
     it { should have_selector('div.isNotchecked') }
+  end
+  describe "after choosing free response", js: true do
+    before do
+      click_button("Add New Answer Choice")
+      select('Free Response', :from => 'ansType')
+    end
+    it { should_not have_selector('input[type=radio]') }
+    it { should_not have_selector('input[type=checkbox]') }
+    it { should_not have_selector('div.ischecked') }
+    it { should_not have_selector('div.isNotchecked') }
+    it { should_not have_selector('#addAns')}
+    it { should have_selector('#free-response-note')}
   end
 
   describe "update question", js: true do
@@ -141,6 +154,24 @@ describe "Assessment question page", type: :feature do
         wait_for_ajax
         assessment_question.reload
       end.not_to change(assessment_question, :question_body)
+    end
+  end
+
+  describe "after attempting to update a free response question", js:true do
+    before do
+      click_button("Add New Answer Choice")
+      select('Free Response', :from => 'ansType')
+      question = find("#question-body")
+      question.click
+      question.native.send_keys("While there are no answers, this should correctly update")
+    end
+
+    it "should successfully update", driver: :selenium do
+      expect do
+        click_button("Save changes to")
+        wait_for_ajax
+        assessment_question.reload
+      end.to change(assessment_question, :question_body)
     end
   end
 

@@ -87,30 +87,10 @@ body.school_classes {
   margin-left: 0px;
 }
 
-#progress-chart {
-  text[text-anchor="middle"]:hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
-}
-
-#name-header:hover, #progress-header:hover {
-  cursor: pointer;
-}
-
-.charts-tooltip {
-  div {
-    text-decoration: underline;
-  }
-  div:hover {
-    cursor: pointer;
-  }
-}
-
 .student-name-div {
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 18em;
+  width: 10em;
 }
 
 #progress-header-span {
@@ -118,42 +98,10 @@ body.school_classes {
   width: 1em;
 }
 
-#outer-progress-table-div {
-  height:400px;
-
-  #tasks-table, #tasks-table-fixed-col {
-    td, th {
-      white-space: nowrap;
-      height: 45px;
-    }
-    tbody tr#button-tr td {
-      height: 40px;
-      form {
-        margin-bottom: 0px;
-      }
-    }
-  }
-
-  .table.fixedCol {
-    width: auto;
-    position: absolute;
-    -webkit-border-top-right-radius: 0px;
-    -webkit-border-bottom-right-radius: 0px;
-    -moz-border-radius-topright: 0px;
-    -moz-border-radius-bottomright: 0px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-  }
-  .table.fixedCol th,
-  .table.fixedCol:nth-child(even) {
-    background: white;
-  }
-
-  #progress-table-div {
-    width: auto;
-    height:400px;
-    padding-bottom: 1px;
-  }
+#progress-table-div {
+  width: auto;
+  height: 400px;
+  padding-bottom: 1px;
 }
 
 #curriculum-list {

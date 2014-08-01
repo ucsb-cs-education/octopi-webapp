@@ -10,14 +10,12 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
       {unlock.student_id => :unlocked}
     }.reduce({}, :merge)},
              :tasks => @activity_page.tasks.map { |task|
-               {id: task.id, unique_title: (@activity_page.tasks.where(title: task.title).count>1 ?
-                   task.title+"("+task.id.to_s+")" : task.title),
-                title: task.title, type: (task.is_a?(AssessmentTask) ? "AssessmentTask" : "LaplayaTask"),
+               {id: task.id, title: task.title, type: (task.is_a?(AssessmentTask) ? "AssessmentTask" : "LaplayaTask"),
                 statuses: @students.map { |student|
                   {student.id => task.get_visibility_status_for(student, @school_class)}
                 }.reduce({}, :merge)} },
              :students => @students.map { |student|
-               {student.id => {id: student.id, name: student.name, last_name: student.last_name,
+               {student.id => {id: student.id, name: student.name, first_name: student.first_name, last_name: student.last_name,
                                #Must pluck id's from the task due to a bug
                                #https://github.com/rails/rails/issues/15920
                                percent_done: (@activity_unlocks.find_by(student: student).nil? ?

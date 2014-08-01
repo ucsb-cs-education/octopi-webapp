@@ -46,22 +46,26 @@ class AssessmentQuestion < ActiveRecord::Base
 
   def an_answer_exists
     has_answer = false
-    @info_array.each do |x|
-      if x['correct']
-        has_answer = true
-      end
-    end
-    if has_answer
+    if question_type == "freeResponse"
       true
     else
-      errors.add(:answers, 'must have at least one correct answer')
-      false
+      @info_array.each do |x|
+        if x['correct']
+          has_answer = true
+        end
+      end
+      if has_answer
+        true
+      else
+        errors.add(:answers, 'must have at least one correct answer')
+        false
+      end
     end
   end
 
   def valid_answer_type
-    unless question_type == "singleAnswer" || question_type == "multipleAnswers"
-      errors.add(:answers, 'answer type must be singleAnswer or multipleAnswers')
+    unless (question_type == "singleAnswer" || question_type == "multipleAnswers" || question_type == "freeResponse")
+      errors.add(:answers, 'answer type must be singleAnswer or multipleAnswers or freeResponse')
     end
   end
 

@@ -30,15 +30,3 @@ SchoolClassesActivitiesController = Paloma.controller('SchoolClasses/SchoolClass
 SchoolClassesActivitiesController.prototype.activity_page = () ->
   $(".unlock-all").click ->
     confirm "This will unlock the task for all students and cannot be undone.\nDo you wish to continue?"
-
-  $(document).on "click", ".charts-tooltip", ->
-    id = $(this).find("div").text()
-    $("#progress-table-div").scrollLeft 0
-    $("#progress-table-div").scrollLeft $(document.getElementById(id)).offset().left - $("#tasks-tasks-table-fixed-col").offset().left
-    return
-
-  $(document).on "click", "text[text-anchor=\"middle\"]", ->
-    id = $(this).text()
-    $("#progress-table-div").scrollLeft 0
-    $("#progress-table-div").scrollLeft $(document.getElementById(id)).offset().left - $("#progress-table-div").offset().left
-    return

@@ -80,6 +80,9 @@ PagesController.prototype.show = () ->
     $("#ansType").change ->
       window.enableUpdateButton()
       if $(this).val() is "singleAnswer"
+        $("#answerList").show()
+        $("#addAns").show().removeClass("hidden")
+        $("#free-response-note").hide()
         $(".answerHead input").each ->
           $(this).attr "type", "radio"
           $(this).prop "checked", false
@@ -87,6 +90,18 @@ PagesController.prototype.show = () ->
           return
 
       else if $(this).val() is "multipleAnswers"
+        $("#answerList").show()
+        $("#addAns").show().removeClass("hidden")
+        $("#free-response-note").hide()
+        $(".answerHead input").each ->
+          $(this).attr "type", "checkbox"
+          $(this).prop "checked", false
+          switchClass $(this).parent(), "ischecked", "isNotchecked"
+
+      else if $(this).val() is "freeResponse"
+        $("#answerList").hide()
+        $("#addAns").hide()
+        $("#free-response-note").show().removeClass("hidden")
         $(".answerHead input").each ->
           $(this).attr "type", "checkbox"
           $(this).prop "checked", false
@@ -107,20 +122,24 @@ PagesController.prototype.show = () ->
       question_type = $('#ansType').val();
       hasAnAnswer = false
       ansArray = []
-      $(".choices").each ->
-        ansObj =
-          text: ""
-          correct: false
 
-        if $(this).prop("checked") is true
-          ansObj.correct = true
-          hasAnAnswer = true
-        ansArray.push ansObj
-        return
+      if question_type is "freeResponse"
+        hasAnAnswer = true
+      else
+        $(".choices").each ->
+          ansObj =
+            text: ""
+            correct: false
 
-      $(".answerText").each (index) ->
-        ansArray[index].text = $(this).html()
-        return
+          if $(this).prop("checked") is true
+            ansObj.correct = true
+            hasAnAnswer = true
+          ansArray.push ansObj
+          return
+
+        $(".answerText").each (index) ->
+          ansArray[index].text = $(this).html()
+          return
 
       nonemptyTitle = false
       title = $('#page-title').html()
