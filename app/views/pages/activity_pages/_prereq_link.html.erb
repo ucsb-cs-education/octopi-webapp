@@ -4,7 +4,7 @@
       <% if can? :update, @page %>
           <%= form_for dependency,
                        html: {method: :delete}, remote: true do |f| %>
-              <%= f.submit "Remove", class: "remove-button" %>
+              <%= f.submit 'Remove', class: 'remove-button' %>
           <% end %>
       <% end %>
     </li>

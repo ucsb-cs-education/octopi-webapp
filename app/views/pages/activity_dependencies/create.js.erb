@@ -1,2 +1,2 @@
-$('#task-prerequisites').append("<%= escape_javascript(render partial: "pages/activity_pages/prereq_link", object: @dependency, as: :dependency ) %>");
-$('#activity_dependency_task_prerequisite_id option[value = <%= @dependency.task_prerequisite.id%>]').remove();
+$('#task-prerequisites').append("<%= escape_javascript(render partial: 'pages/activity_pages/prereq_link', object: @dependency, as: :dependency ) %>");
+$('#activity_dependency_task_prerequisite_id').find('option[value = <%= @dependency.task_prerequisite.id %>]').remove();

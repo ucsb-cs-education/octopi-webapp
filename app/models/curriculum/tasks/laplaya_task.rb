@@ -3,7 +3,6 @@ class LaplayaTask < Task
   has_one :task_completed_laplaya_file, foreign_key: :parent_id, dependent: :destroy
   has_one :laplaya_analysis_file, foreign_key: :task_id, dependent: :destroy
   alias_attribute :children, :task_base_laplaya_file
-  validates :title, presence: true
 
   def is_accessible?(student, school_class)
     status = get_visibility_status_for(student, school_class)

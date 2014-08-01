@@ -1,5 +1,5 @@
 <ul id="children" <%= 'class=octopisortable' if can? :update, page%> >
-  <%= render partial: "page", collection: page.children %>
+  <%= render partial: 'page', collection: page.children %>
 </ul>
 <% if can? :update, @page %>
     <%= simple_form_for( [page, page.children.build(type: 'LaplayaTask')], html: {class: 'new_child_page'}, remote: true) do |f| %>
@@ -7,13 +7,20 @@
         <%= f.hidden_field :teacher_body, value: '<p></p>' %>
         <%= f.hidden_field :student_body, value: '<p></p>' %>
         <%= f.hidden_field :designer_note, value: '<p></p>' %>
-        <%= f.submit "Add a new LaPlaya Task", class: "btn btn-default", id:"add-new-child-btn" %>
+        <%= f.submit 'Add a new LaPlaya Task', class: 'btn btn-default', id: 'add-new-child-btn' %>
     <% end %>
     <%= simple_form_for( [page, page.children.build(type: 'AssessmentTask').becomes(AssessmentTask)], html: {class: 'new_child_page'}, remote: true) do |f| %>
         <%= f.hidden_field :title, value: 'New AssessmentTask' %>
         <%= f.hidden_field :teacher_body, value: '<p></p>' %>
         <%= f.hidden_field :student_body, value: '<p></p>' %>
         <%= f.hidden_field :designer_note, value: '<p></p>' %>
-        <%= f.submit "Add a new Assessment Task", class: "btn btn-default", id:"add-new-assessment-child-btn" %>
+        <%= f.submit 'Add a new Assessment Task', class: 'btn btn-default', id: 'add-new-assessment-child-btn' %>
+    <% end %>
+    <%= simple_form_for( [page, page.children.build(type: 'OfflineTask').becomes(OfflineTask)], html: {class: 'new_child_page'}, remote: true) do |f| %>
+        <%= f.hidden_field :title, value: 'New OfflineTask' %>
+        <%= f.hidden_field :teacher_body, value: '<p></p>' %>
+        <%= f.hidden_field :student_body, value: '<p></p>' %>
+        <%= f.hidden_field :designer_note, value: '<p></p>' %>
+        <%= f.submit 'Add a new Offline Task', class: 'btn btn-default', id: 'add-new-offline-child-btn' %>
     <% end %>
 <% end %>

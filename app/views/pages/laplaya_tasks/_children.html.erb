@@ -28,6 +28,7 @@
         <div class="files-header">
           <h2>Analysis file</h2>
         </div>
+        <p>Updated at: <%= get_time(@laplaya_task.laplaya_analysis_file) %></p>
         <%= link_to 'Download current file', analysis_file_laplaya_task_path(@laplaya_task) if @laplaya_task.laplaya_analysis_file.data.present? %>
         <%= simple_form_for @laplaya_task.laplaya_analysis_file, url: analysis_file_laplaya_task_path(@laplaya_task) do |f| %>
             <div class="form-inputs">

@@ -77,6 +77,7 @@ class Ability
     can [:create, :clone_project, :clone_sandbox], ModulePage
     can :create, ActivityPage
     can :create, LaplayaTask
+    can :create, OfflineTask
     can :create, AssessmentQuestion
     can :create, AssessmentTask
     can :see_developer_view, LaplayaFile

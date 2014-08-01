@@ -10,7 +10,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
     @task_dependencies = @laplaya_task.task_dependencies
     @activity_dependants = @laplaya_task.activity_dependants
     @task_dependants = @laplaya_task.dependants
-    @relatable_tasks = Task.where(activity_page: ModulePage.find(@laplaya_task.activity_page.module_page).activity_pages) - (@laplaya_task.prerequisites.to_ary.push(@laplaya_task))
+    @relatable_tasks = Task.where(activity_page: @laplaya_task.activity_page.module_page.activity_pages).where.not(id: @laplaya_task.prerequisites.pluck(:id)<<@laplaya_task.id)
 
     @laplaya_analysis_file = @laplaya_task.laplaya_analysis_file
   end
@@ -18,13 +18,6 @@ class Pages::LaplayaTasksController < Pages::TasksController
   def update
     updated = @laplaya_task.update(laplaya_task_params)
     respond_to do |format|
-      format.html do
-        if updated
-          redirect_to @laplaya_task, notice: 'Task was successfully updated.'
-        else
-          render action: 'edit'
-        end
-      end
       format.js do
         response.location = laplaya_file_url(@laplaya_task)
         js false

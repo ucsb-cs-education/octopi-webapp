@@ -1,6 +1,5 @@
-<% path = (child.is_a? AssessmentTask) ? student_portal_assessment_task_path(child) : student_portal_laplaya_task_path(child) %>
-
-<% if (status = child.get_visibility_status_for(current_student, current_school_class)) %>
+<% path = get_path_for_task(child)%>
+<% if status = child.get_visibility_status_for(current_student, current_school_class) %>
     <% if status == :locked %>
         <div class="child-link locked">
           <%= image_tag("padlock.png", size: "21") %>

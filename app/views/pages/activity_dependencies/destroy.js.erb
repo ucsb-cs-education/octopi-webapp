@@ -1,4 +1,4 @@
-$('#prerequisite-id-<%= @dependency.task_prerequisite.id%>').remove();;
+$('#prerequisite-id-<%= @dependency.task_prerequisite.id %>').remove();
 $('#activity_dependency_task_prerequisite_id').append($('<option>', {
     value: <%= @dependency.task_prerequisite.id%>,
     text: '<%= @dependency.task_prerequisite.title%>'

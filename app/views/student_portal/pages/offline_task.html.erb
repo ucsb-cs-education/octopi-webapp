@@ -1,0 +1,12 @@
+<div id="page-title">
+  <%= @offline_task.title %>
+</div>
+
+<div id='parent-link'>
+  <%= link_to "Return to #{@activity_page.title}", student_portal_activity_path(@activity_page) %>
+</div>
+
+<div class="student-body">
+  <%= @offline_task.student_body.html_safe %>
+</div>
+

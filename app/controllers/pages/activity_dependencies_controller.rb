@@ -5,6 +5,7 @@ class Pages::ActivityDependenciesController < ApplicationController
   def create
     @prereq = Task.find(params[:activity_dependency][:task_prerequisite_id])
     @dependant = ActivityPage.find(params[:activity_page_id])
+    @page = @dependant
     @dependency = @dependant.depend_on(@prereq)
     respond_to do |format|
       format.html { redirect_to @dependency }

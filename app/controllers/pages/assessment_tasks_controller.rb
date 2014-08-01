@@ -8,10 +8,11 @@ class Pages::AssessmentTasksController < Pages::TasksController
     @task_dependencies = @assessment_task.task_dependencies
     @activity_dependants = @assessment_task.activity_dependants
     @task_dependants = @assessment_task.dependants
-    @relatable_tasks = Task.where(activity_page: ModulePage.find(@assessment_task.activity_page.module_page).activity_pages) - (@assessment_task.prerequisites.to_ary.push(@assessment_task))
+    @relatable_tasks = Task.where(activity_page: @assessment_task.activity_page.module_page.activity_pages).where.not(id: @assessment_task.prerequisites.pluck(:id)<<@assessment_task.id)
   end
 
   def update
+    ids = nil
     ids = CGI.parse(params[:children_order])['assessment_question[]'] if params[:children_order].present?
     if ids
       updated = @assessment_task.update_with_children(assessment_task_params, ids)
@@ -20,13 +21,6 @@ class Pages::AssessmentTasksController < Pages::TasksController
     end
 
     respond_to do |format|
-      format.html do
-        if updated
-          redirect_to @assessment_task, notice: "Successfully updated"
-        else
-          render action: edit
-        end
-      end
       format.js do
         response.location = curriculum_page_url(@assessment_task)
         js false

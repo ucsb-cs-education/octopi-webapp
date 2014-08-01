@@ -36,6 +36,11 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     @tasks = @activity_page.tasks
   end
 
+  #GET /student_portal/offline_tasks/:id
+  #student_portal_offline_task_path
+  def offline_task
+  end
+
   #GET /student_portal/assessment_tasks/:id
   #student_portal_assessment_task_path
   def assessment_task
@@ -115,6 +120,10 @@ class StudentPortal::PagesController < StudentPortal::BaseController
         @module_page = ModulePage.find(params[:id])
       when :activity_page
         @activity_page = ActivityPage.find(params[:id])
+        @module_page = @activity_page.module_page
+      when :offline_task
+        @offline_task = OfflineTask.find(params[:id])
+        @activity_page = @offline_task.activity_page
         @module_page = @activity_page.module_page
       when :assessment_task, :assessment_response
         @assessment_task = AssessmentTask.find(params[:id])

@@ -11,7 +11,7 @@ module OctopiWebapp
     config.autoload_paths += Dir[
         Rails.root.join('app', 'models', 'ckeditor'),
         Rails.root.join('app', 'models', 'curriculum', 'page'),
-        Rails.root.join('app', 'models', 'curriculum', 'task'),
+        Rails.root.join('app', 'models', 'curriculum', 'tasks'),
         Rails.root.join('app', 'models', 'curriculum'),
         Rails.root.join('app', 'models', 'ckeditor'),
         Rails.root.join('app', 'models', 'laplaya_file')]

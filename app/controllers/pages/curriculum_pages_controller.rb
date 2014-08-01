@@ -30,6 +30,7 @@ class Pages::CurriculumPagesController < Pages::PagesController
   end
 
   def update
+    ids = nil
     ids = CGI.parse(params[:children_order])['module_page[]'] if params[:children_order].present?
     if ids
       updated = @curriculum_page.update_with_children(curriculum_page_params, ids)
@@ -38,13 +39,6 @@ class Pages::CurriculumPagesController < Pages::PagesController
     end
 
     respond_to do |format|
-      format.html do
-        if updated
-          redirect_to @curriculum_page, notice: "Successfully updated"
-        else
-          render action: edit
-        end
-      end
       format.js do
         response.location = curriculum_page_url(@curriculum_page)
         js false

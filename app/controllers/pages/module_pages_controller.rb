@@ -10,6 +10,7 @@ class Pages::ModulePagesController < Pages::PagesController
   end
 
   def update
+    ids = nil
     ids = CGI.parse(params[:children_order])['activity_page[]'] if params[:children_order].present?
     if ids
       updated = @module_page.update_with_children(module_page_params, ids)
@@ -18,13 +19,6 @@ class Pages::ModulePagesController < Pages::PagesController
     end
 
     respond_to do |format|
-      format.html do
-        if updated
-          redirect_to @module_page, notice: "Successfully updated"
-        else
-          render action: edit
-        end
-      end
       format.js do
         response.location = module_page_url(@module_page)
         js false
@@ -36,7 +30,6 @@ class Pages::ModulePagesController < Pages::PagesController
   end
 
   def create
-
     begin
       ModulePage.transaction do
         @module_page.parent = @curriculum_page

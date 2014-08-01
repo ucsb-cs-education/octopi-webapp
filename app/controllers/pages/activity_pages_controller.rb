@@ -10,7 +10,10 @@ class Pages::ActivityPagesController < Pages::PagesController
   end
 
   def update
-    ids = CGI.parse(params[:children_order].gsub("laplaya_task","task").gsub("assessment_task","task"))['task[]'] if params[:children_order].present?
+    ids = nil
+    ids = CGI.parse(params[:children_order].
+                        gsub(/(laplaya|assessment|offline)_/,''))['task[]'] if params[:children_order].present?
+
     if ids
       updated = @activity_page.update_with_children(activity_page_params, ids)
     else
@@ -18,13 +21,6 @@ class Pages::ActivityPagesController < Pages::PagesController
     end
 
     respond_to do |format|
-      format.html do
-        if updated
-          redirect_to @activity_page, notice: "Successfully updated"
-        else
-          render action: edit
-        end
-      end
       format.js do
         response.location = activity_page_url(@activity_page)
         js false

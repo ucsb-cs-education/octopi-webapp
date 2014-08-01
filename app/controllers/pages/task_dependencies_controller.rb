@@ -3,7 +3,8 @@ class Pages::TaskDependenciesController < ApplicationController
 
   def create
     @prereq = Task.find(params[:task_dependency][:prerequisite_id])
-    @dependant = Task.find(params[:assessment_task_id] || params[:laplaya_task_id])
+    @dependant = Task.find(params[:assessment_task_id] || params[:laplaya_task_id] || params[:offline_task_id])
+    @page = @dependant
     @dependency = @dependant.depend_on(@prereq)
     respond_to do |format|
       format.html { redirect_to @dependency }

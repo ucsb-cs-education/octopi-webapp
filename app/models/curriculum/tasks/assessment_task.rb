@@ -1,5 +1,4 @@
 class AssessmentTask < Task
-  resourcify
   has_many :assessment_questions, -> { order('position ASC') }, foreign_key: :assessment_task_id
   alias_attribute :children, :assessment_questions
 

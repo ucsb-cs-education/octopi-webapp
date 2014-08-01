@@ -12,13 +12,6 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
     @assessment_question = AssessmentQuestion.find(params[:id])
     updated = @assessment_question.update(assessment_question_params)
     respond_to do |format|
-      format.html do
-        if updated
-          redirect_to @assessment_question, notice: "Successfully updated"
-        else
-          render action: edit
-        end
-      end
       format.js do
         response.location = assessment_question_url(@assessment_question)
         js false
@@ -30,15 +23,21 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
   end
 
   def create
-    @assessment_question.assessment_task = @assessment_task
-    @assessment_question.update_attributes!({title: 'New Question', question_body: '<p></p>', answers: '[{"text":"<p></p>","correct":true}]', question_type: 'singleAnswer'})
+    begin
+      AssessmentQuestion.transaction do
+        @assessment_question.assessment_task = @assessment_task
+        @assessment_question.save!
+      end
+    rescue ActiveRecord::RecordInvalid
+      render text: @assessment_question.errors, status: :bad_request
+      return
+    end
     respond_to do |format|
-      format.html { redirect_to @assessment_task }
       format.js {
         js false
+        render status: :created
       }
     end
-    @assessment_question.save
   end
 
   def destroy
