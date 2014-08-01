@@ -30,8 +30,8 @@ OctopiWebapp::Application.routes.draw do
 
     get '/activities/:id', to: 'pages#activity_page', as: 'activity'
 
-    get '/assessment_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
-    post '/assessment_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
+    get '/question_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
+    post '/question_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
 
     get '/laplaya_tasks/:id', to: 'pages#laplaya_task', as: 'laplaya_task'
     post '/laplaya_tasks/:id', to: 'pages#laplaya_task_response', as: 'laplaya_task_response'

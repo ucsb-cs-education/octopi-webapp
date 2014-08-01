@@ -9,10 +9,6 @@ module SchoolClasses::SchoolClassesStudentProgressHelper
     number_unlocked - number_of_tasks_completed
   end
 
-  def student_has_unlocked_activity?(activity)
-    @unlocks.find_by(student: @student, unlockable: activity).nil? ? false : true
-  end
-
   def get_visibility_for_student_of(task)
     if @unlocks.find_by(unlockable: task).nil?
       :locked

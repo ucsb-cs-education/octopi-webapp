@@ -1,6 +1,6 @@
 <li class = "module-page-li">
-  <%= module_page.title %>
+  <%= module_page[:title] %>
   <ul class="activity-page-ul">
-    <%= render partial: "activity_list_element", collection: module_page.activity_pages, as: "activity_page" %>
+    <%= render partial: "activity_list_element", collection: module_page[:activity_pages], as: "activity_page" %>
   </ul>
 </li>

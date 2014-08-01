@@ -6,13 +6,28 @@
 <%= render partial: "graph", locals: {graph_info: @graph_info} %>
 
 <hr>
-<div id="progress-table-div">
-  <%= render partial: "progress_table" %>
+<div id="outer-progress-table-div">
+  <div id="progress-table-div">
+    <%= render partial: "progress_table" %>
+  </div>
 </div>
 
 <script>
 
-    $('#progress-table-div table').each(function () {
+    new Grid("progress-table-div", {
+        srcType : "dom",
+        srcData : "tasks-table",
+        allowGridResize : false,
+        allowColumnResize : false,
+        allowClientSideSorting : true,
+        colSortType:["string","number"],
+        allowSelections : false,
+        allowMultipleSelections : true,
+        showSelectionColumn : true,
+        fixedCols : 1
+    });
+
+   /* $('#tasks-table').each(function () {
         var table = $(this),
                 fixedCol = table.clone(true),
                 fixedWidth = table.find('th').eq(0).width(),
@@ -32,11 +47,11 @@
         });
         // Match column width with that of original table
         fixedCol.find('th,td').css('width', fixedWidth + 'px');
-        $('#progress-table-div ').append(fixedCol);
+        $('#outer-progress-table-div ').append(fixedCol);
     });
 
     $("#progress-table-div").dragscrollable();
-
+*/
     $("#progress-header").wrapInner("<span title=\"Click to sort\"\"/>").each(function () {
         var inverse, th, thIndex;
         th = $(this);

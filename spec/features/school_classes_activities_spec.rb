@@ -151,16 +151,16 @@ describe "teacher view of an activity page", type: :feature do
           end
         end
       end
-      describe "when unlock for all is pressed" do
+      describe "when unlock for all is pressed", js: true do
         it "should create multiple unlocks" do
           expect do
-            click_on "Unlock For All"
+            first("input[value='Unlock For All']").trigger('click')
             wait_for_ajax
           end.to change(Unlock, :count).by(2)
         end
         describe "that updates the page correctly" do
           before do
-            click_on "Unlock For All"
+            first("input[value='Unlock For All']").trigger('click')
             wait_for_ajax
           end
           describe "should remove both unlock buttons" do

@@ -1,8 +1,12 @@
 <% @student = @unlock.student %>
 <% if @unlock.unlockable_type == "Page" %>
-    <% load_unlocks %>
-$("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").replaceWith(
-        "<%= j render partial:"school_classes/school_classes_student_progress/activity_list_element", locals: {activity_page: @unlock.unlockable}%>");
+var activity_element = $("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>")
+var activity_tasks = $("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").find("ul").detach()
+activity_element.replaceWith(
+        "<%= j render partial:"school_classes/school_classes_student_progress/activity_list_element", locals: {activity_page: {
+        title: @unlock.unlockable.title, id: @unlock.unlockable.id, unlocked: true
+        }}%>")
+$("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").append(activity_tasks);
 
 <%else%>
 $("#task_<%=@unlock.unlockable_id %>_student_<%= @student.id%>").replaceWith(

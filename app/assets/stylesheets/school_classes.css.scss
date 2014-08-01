@@ -113,25 +113,27 @@ body.school_classes {
   width: 18em;
 }
 
-#progress-table-div {
-  width: auto;
-  overflow-x: scroll;
-  overflow-y: visible;
-  padding-bottom: 1px;
+#progress-header-span {
+  display: inline-block;
+  width: 1em;
+}
+
+#outer-progress-table-div {
+  height:400px;
 
   #tasks-table, #tasks-table-fixed-col {
     td, th {
       white-space: nowrap;
-      height:45px;
+      height: 45px;
     }
     tbody tr#button-tr td {
       height: 40px;
-      //    padding: 0px;
       form {
         margin-bottom: 0px;
       }
     }
   }
+
   .table.fixedCol {
     width: auto;
     position: absolute;
@@ -145,6 +147,12 @@ body.school_classes {
   .table.fixedCol th,
   .table.fixedCol:nth-child(even) {
     background: white;
+  }
+
+  #progress-table-div {
+    width: auto;
+    height:400px;
+    padding-bottom: 1px;
   }
 }
 

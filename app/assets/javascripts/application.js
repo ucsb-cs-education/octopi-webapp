@@ -21,6 +21,7 @@
 //= require ckeditor/init
 //= require bootstrap
 //= require paloma
+//= require Grid
 //= require_tree ./ckeditor
 //= require_tree ./pages
 //= require_tree ./student_portal

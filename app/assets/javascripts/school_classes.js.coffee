@@ -33,7 +33,8 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
 
   $(document).on "click", ".charts-tooltip", ->
     id = $(this).find("div").text()
-    $("#progress-table-div").scrollLeft $(document.getElementById(id)).offset().left - $("#progress-table-div").offset().left
+    $("#progress-table-div").scrollLeft 0
+    $("#progress-table-div").scrollLeft $(document.getElementById(id)).offset().left - $("#tasks-tasks-table-fixed-col").offset().left
     return
 
   $(document).on "click", "text[text-anchor=\"middle\"]", ->

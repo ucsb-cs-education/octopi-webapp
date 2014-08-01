@@ -1,17 +1,17 @@
-<% if student_has_unlocked_activity?(activity_page) %>
-    <li id="activity_<%= activity_page.id %>_student_<%= @student.id %>">
-      <%= activity_page.title %>
+<% if activity_page[:unlocked] %>
+    <li id="activity_<%= activity_page[:id] %>_student_<%= @student.id %>">
+      <%= activity_page[:title] %>
       <ul class="task-ul">
-        <%= render partial: "school_classes/school_classes_student_progress/task_list_element", collection: activity_page.tasks, as: "task" %>
+        <%= render partial: "school_classes/school_classes_student_progress/task_list_element", collection: activity_page[:tasks], as: "task" %>
       </ul>
     </li>
 <% else %>
-    <li class="locked-activity" id="activity_<%= activity_page.id %>_student_<%= @student.id %>">
+    <li class="locked-activity" id="activity_<%= activity_page[:id] %>_student_<%= @student.id %>">
       <%= image_tag("padlock.png", size: "20") %>
-      <%= activity_page.title %>
+      <%= activity_page[:title] %>
       <div class="unlock-button">
         <%= simple_form_for [@school_class, @unlocks.build], html: {method: :post}, remote: true do |f| %>
-            <%= f.hidden_field :unlockable_id, value: activity_page.id %>
+            <%= f.hidden_field :unlockable_id, value: activity_page[:id] %>
             <%= f.hidden_field :student_id, value: @student.id %>
             <%= f.hidden_field :unlockable_type, value: Page %>
             <%= f.hidden_field :from_student_progress_view, value: true %>
@@ -19,7 +19,7 @@
         <% end %>
       </div>
       <ul class="task-ul">
-        <%= render partial: "task_list_element", collection: activity_page.tasks, as: "task" %>
+        <%= render partial: "task_list_element", collection: activity_page[:tasks], as: "task" %>
       </ul>
     </li>
 <% end %>
