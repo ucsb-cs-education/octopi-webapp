@@ -8,8 +8,8 @@ class Staff < User
   # ,:timeoutable # disabled until we test and figure out a way to keep users logged in while in Snap
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
-  validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX },
-            uniqueness: { case_sensitive: false }, length: {maximum: 254 } #Max possible email length
+  validates :email, presence: true, format: {with: VALID_EMAIL_REGEX},
+            uniqueness: {case_sensitive: false}, length: {maximum: 254} #Max possible email length
   scope :unconfirmed, -> { where(confirmed_at: nil) }
   scope :confirmed, -> { where.not(confirmed_at: nil) }
 
@@ -49,11 +49,25 @@ class Staff < User
     super_staff?
   end
 
-  def super_staff= bool
-    if bool == true || bool == "1"
+  def super_staff=(bool)
+    if bool == true || bool == '1'
       add_role :super_staff unless super_staff?
     else
       remove_role :super_staff if super_staff?
+    end
+  end
+
+  def basic_roles
+    roles.where(name: Role.basic_role_syms)
+  end
+
+  def basic_roles=(new_roles)
+    new_roles = Role.array_to_roles(new_roles).
+        select { |x| Role.basic_role_strs.include?(x.name) && x.resource.present? }
+    if self.roles.empty?
+      self.roles << new_roles
+    else
+      self.roles = (self.roles - basic_roles) + new_roles
     end
   end
 

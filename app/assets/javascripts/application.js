@@ -24,55 +24,6 @@
 //= require active_admin
 //= require school_classes
 //= require sorttable
+//= require dependant_dropdowns
 
-var updateDropDowns = function () {
-    $('select[data-option-dependent=true]').each(function (i) {
-        var observer_dom_id = $(this).attr('id');
-        var observed_dom_id = $(this).data('option-observed');
-        var url_mask = $(this).data('option-url');
-        var key_method = $(this).data('option-key-method');
-        var value_method = $(this).data('option-value-method');
-        var prompt = $(this).data('option-placeholder');
-        if (typeof(prompt) == 'undefined') {
-            prompt = $(this).has('option[value=\'\']').size() ?
-                $(this).find('option[value=\'\']') :
-                $('<option value=\"\">').text('Please select from the above drop down first');
-        } else {
-            prompt = $('<option value=\"\">').text(prompt);
-        }
-        var empty_prompt = $(this).data('option-empty-placeholder');
-        if (typeof(empty_prompt) == 'undefined') {
-            empty_prompt = prompt;
-        } else {
-            empty_prompt = $('<option value=\"\">').text(empty_prompt);
-        }
-        var regexp = /:[0-9a-zA-Z_]+:/g;
-        var observer = $('select#' + observer_dom_id);
-        var observed = $('#' + observed_dom_id);
-
-        if (!observer.val() && observed.size() > 1) {
-            observer.attr('disabled', true);
-        }
-
-        observed.on('change', function () {
-            observer.empty();
-            observer.change();
-            if (observed.val()) {
-                observer.append($('<option value=\"\">').text('Loading...'));
-                url = url_mask.replace(regexp, observed.val());
-                $.getJSON(url, function (data) {
-                    observer.empty().append(prompt);
-                    $.each(data, function (i, object) {
-                        observer.append($('<option>').attr('value', object[key_method]).text(object[value_method]));
-                        observer.attr('disabled', false);
-                    });
-                });
-            } else {
-                observer.append(empty_prompt);
-            }
-        });
-    });
-};
-
-$(document).ready(updateDropDowns);
 

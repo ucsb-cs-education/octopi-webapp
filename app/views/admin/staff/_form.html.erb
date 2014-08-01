@@ -1,19 +1,36 @@
 <%= semantic_form_for [:admin, @staff] do |f| %>
-    <%= f.inputs "Staff Details" do %>
+    <%= f.inputs "Staff Details #{ @testvar } XX " do %>
         <%= f.input :first_name %>
         <%= f.input :last_name %>
         <%= f.input :email %>
         <% if devise_mapping.confirmable? && @staff.pending_reconfirmation? %>
-            <li>Currently waiting confirmation for: <%= resource.unconfirmed_email %>. <%= link_to "Resend confirmation", staff_confirmation_path, data: { method: :post } %></li>
+            <li>Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+              . <%= link_to "Resend confirmation", staff_confirmation_path, data: {method: :post} %></li>
         <% end %>
         <%= f.input :password, required: false, label: "New password" %>
         <%= f.input :password_confirmation, label: "New password confirmation" %>
         <% if @staff == current_staff %>
             <%= f.input :current_password %>
         <% else %>
-            <%= f.input :roles, as: :select, collection: Role.globa, label: "Global roles" %>
         <% end %>
+
+
         <%= f.input :super_staff, as: :boolean if can? :create_super_staff, User %>
+        <%= f.input :basic_roles, label: 'Roles', as: :check_boxes, :input_html => {checked: 'checked'}, collection: @staff.basic_roles %>
+        <li class="select input optional" id="new-role-select">
+          <%= label_tag :new_roles, 'Add a new role' %>
+          <%= select_tag :new_roles, options_from_collection_for_select(@new_role_names, 'id', 'name') %>
+          <%= select_tag :new_role_resources, options_from_collection_for_select(@new_role_values, 'id', 'name'),
+                         'data-option-dependent' => true,
+                         'data-option-observed' => 'new_roles',
+                         'data-option-url' => '/admin/staff/roles/:role_name:.json',
+                         'data-option-placeholder' => 'Please select a resource',
+                         'data-option-empty-placeholder' => 'Please select a role first',
+                         'data-option-key-method' => :id,
+                         'data-option-value-method' => :name
+          %>
+          <%= button_tag 'Add the role', type: 'button', disabled: true %>
+        </li>
     <% end %>
     <%= f.actions do %>
         <%= f.action :submit %>

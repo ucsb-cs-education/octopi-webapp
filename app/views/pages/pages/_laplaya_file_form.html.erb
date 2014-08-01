@@ -1,5 +1,6 @@
 <div class="laplaya-file-title">
   <p>Title: <%= laplaya_file.file_name %></p>
+  <p>Updated at: <%= get_time(laplaya_file) %></p>
 </div>
 
 <%= link_to "#{(can? :update, @page) ? 'Edit' : 'Open'} file in LaPlaya",

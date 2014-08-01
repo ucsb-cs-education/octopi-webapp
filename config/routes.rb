@@ -44,10 +44,6 @@ OctopiWebapp::Application.routes.draw do
   end
 
 
-
-
-
-
   resources :schools, only: [:show, :index], shallow: true do
     resources :students, except: [:update, :edit, :destroy]
     resources :school_classes do
@@ -62,6 +58,8 @@ OctopiWebapp::Application.routes.draw do
   get '/help', to: 'static_pages#help'
   get '/sign_in', to: redirect('/student_portal/signin')
   get '/signin', to: redirect('/student_portal/signin')
+  get '/admin/staff/roles/:role_name', to: 'roles#get_resources', format: true
+  get '/admin/staff/roles/:role_name/:resource_name/:resource_id', to: 'roles#get_roles', format: true
   namespace :staff do
     root 'static_pages#home'
     get 'home', to: 'static_pages#home'
@@ -72,7 +70,6 @@ OctopiWebapp::Application.routes.draw do
     post 'staff', to: 'staff/registrations#create', as: 'staff_registration'
   end
   ActiveAdmin.routes(self)
-
 
 
   scope module: 'pages' do

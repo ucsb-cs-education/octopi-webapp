@@ -28,7 +28,7 @@ class School < ActiveRecord::Base
   end
 
   def to_s
-    return self.name
+    self.name
   end
 
 end

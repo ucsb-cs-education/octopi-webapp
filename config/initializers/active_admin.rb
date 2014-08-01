@@ -139,7 +139,8 @@ ActiveAdmin.setup do |config|
   # You can add before, after and around filters to all of your
   # Active Admin resources and pages from here.
   #
-  # config.before_filter :do_something_awesome
+  config.before_filter do
+  end
 
 
   # == Setting a Favicon
@@ -242,4 +243,7 @@ ActiveAdmin.setup do |config|
 
   ActiveAdmin::BaseController::Authorization::ACTIONS_DICTIONARY[:index] = :index
   ActiveAdmin::BaseController::Authorization::ACTIONS_DICTIONARY[:show] = :show
+  require 'active_admin/paloma_restriction'
+  ActiveAdmin::BaseController.send(:include, ActiveAdmin::PalomaRestriction)
 end
+

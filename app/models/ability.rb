@@ -70,7 +70,7 @@ class Ability
 
   def curriculum_designer(user)
     page_ids = CurriculumPage.with_role(:curriculum_designer, user).pluck(:id)
-    can :crud, Page, :curriculum_id => page_ids
+    can [:crud, :add_designer], Page, :curriculum_id => page_ids
     can [:crud, :clone, :clone_completed, :update_laplaya_analysis_file, :get_laplaya_analysis_file], Task, :curriculum_id => page_ids
     can :crud, AssessmentQuestion, :curriculum_id => page_ids
     can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => ["TaskBaseLaplayaFile", "SandboxBaseLaplayaFile", "ProjectBaseLaplayaFile", "TaskCompletedLaplayaFile"]}
@@ -89,12 +89,12 @@ class Ability
   def school_admin(user)
     schools = School.with_role(:school_admin, user)
     school_ids = schools.pluck(:id)
-    can :read_update, School, :id => school_ids
+    can [:read_update, :add_teacher, :add_school_admin], School, :id => school_ids
 
     can :crud, Student, :id => Student.where(school_id: school_ids).pluck(:id)
     can :create, Student
 
-    can :crud, SchoolClass, :id => SchoolClass.where(school_id: school_ids).pluck(:id)
+    can [:crud, :add_class_teacher], SchoolClass, :id => SchoolClass.where(school_id: school_ids).pluck(:id)
     can :create, SchoolClass
 
     can :crud, Staff, :id => schools.map { |school| school.users }.flatten(1).map { |x| x.id }.uniq
