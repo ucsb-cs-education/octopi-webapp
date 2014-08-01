@@ -4,7 +4,7 @@ ActiveAdmin.register Staff do
   permit_params do
     params = [:first_name, :last_name, :email, :password, :password_confirmation, :current_password]
     params.push basic_roles: [] if can?([:add_teacher, :add_school_admin, :add_designer], [School, CurriculumPage])
-    params.push :super_staff if can? :create_super_staff
+    params.push :super_staff if can? :create_super_staff, :any
     params
   end
 
