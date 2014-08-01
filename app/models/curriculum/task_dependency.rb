@@ -6,6 +6,6 @@ class TaskDependency < ActiveRecord::Base
   validate :within_same_module
 
   def within_same_module
-    errors.add(:tasks,"must be in the same module.") unless prerequisite.activity_page.module_page == dependant.activity_page.module_page
+    errors.add(:tasks, 'must be in the same module.') unless prerequisite.activity_page.module_page == dependant.activity_page.module_page
   end
 end
