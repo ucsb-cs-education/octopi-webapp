@@ -44,7 +44,7 @@ FactoryGirl.define do
 
     factory :task_completed_laplaya_file, class: TaskCompletedLaplayaFile do
       ignore do
-        laplaya_task { FactoryGirl.create(:laplaya_task, laplaya_file: false ) }
+        laplaya_task { FactoryGirl.create(:laplaya_task, laplaya_completed: false ) }
       end
 
       public false

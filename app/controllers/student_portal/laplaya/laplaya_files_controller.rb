@@ -55,7 +55,7 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
       when 'StudentResponse::ProjectResponseLaplayaFile',
           'StudentResponse::SandboxResponseLaplayaFile',
           'SandboxBaseLaplayaFile'
-        unless current_school_class.module_pages.include?(@laplaya_file.module_page)
+        unless current_school_class && current_school_class.module_pages.include?(@laplaya_file.module_page)
           raise CanCan::AccessDenied
         end
       else

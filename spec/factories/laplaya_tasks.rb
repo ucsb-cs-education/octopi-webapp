@@ -15,6 +15,7 @@ FactoryGirl.define do
       #set to false if you don't want it to create a laplaya_file
       laplaya_file true
       laplaya_analysis true
+      laplaya_completed true
     end
 
     sequence(:title) { |n| "SampleLaplayaTask #{n}" }
@@ -39,7 +40,7 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
     after :create do |task, evaluator|
       FactoryGirl.create(:task_base_laplaya_file, laplaya_task: task) if evaluator.laplaya_file
-      FactoryGirl.create(:task_completed_laplaya_file, laplaya_task: task) if evaluator.laplaya_file
+      FactoryGirl.create(:task_completed_laplaya_file, laplaya_task: task) if evaluator.laplaya_completed
       FactoryGirl.create(:laplaya_analysis_file, laplaya_task: task) if evaluator.laplaya_analysis
     end
 
