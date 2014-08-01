@@ -17,10 +17,11 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
                   {student.id => task.get_visibility_status_for(student, @school_class)}
                 }.reduce({}, :merge)} },
              :students => @students.map { |student|
-               {student.id => {id: student.id, name: student.name,
+               {student.id => {id: student.id, name: student.name, last_name: student.last_name,
                                #Must pluck id's from the task due to a bug
                                #https://github.com/rails/rails/issues/15920
-                               percent_done: (student.task_responses.where(task: @activity_page.tasks.all.pluck(:id)).where(completed: true).count.to_f/@activity_page.tasks.count)}}
+                               percent_done: (@activity_unlocks.find_by(student: student).nil? ?
+                                   -1 : student.task_responses.where(task: @activity_page.tasks.all.pluck(:id)).where(completed: true).count.to_f/@activity_page.tasks.count)}}
              }.reduce({}, :merge),
              :counts => {unlocked_count: @activity_unlocks.count, student_count: @students.count}
     }

@@ -20,7 +20,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 
 # Allows for easily paginating lists
-# gem 'will_paginate', '~> 3.0.5'
+gem 'will_paginate', '~> 3.0.5'
 #Dont use will_paginate, use kaminari, for active_admin supoort
 # gem 'bootstrap-will_paginate', '~> 0.0.10'
 

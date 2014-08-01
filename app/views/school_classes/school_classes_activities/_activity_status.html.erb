@@ -1,12 +1,12 @@
 <% student = student[1] %>
-<td class="student-name-col" id="activity_<%= activity[:id] %>_student_<%= student[:id] %>">
+<td value = "<%=student[:last_name]%>" class="student-name-col" id="activity_<%= activity[:id] %>_student_<%= student[:id] %>">
   <div class="student-name-div">
     <span title="<%= student[:name] %>">
       <%= link_to student[:name], school_class_student_progress_path(@school_class, student[:id]) %>
     </span>
   </div>
 </td>
-<td class="student-progress-col">
+<td value="<%= student[:percent_done]*100 %>" class="student-progress-col">
   <% unless activity[:students_who_unlocked][student[:id]].nil? %>
       <%= (student[:percent_done]*100).to_s[0..1] %>% Complete
   <% else %>

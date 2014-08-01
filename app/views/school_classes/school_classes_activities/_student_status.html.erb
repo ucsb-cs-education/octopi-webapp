@@ -2,7 +2,7 @@
 <% status = task[:statuses][student[:id]] %>
 <% if status == :locked %>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
-      <span class="locked-span"> LOCKED </span>
+      <span class="locked-span"></span>
 
       <div class="unlock-button">
         <%= simple_form_for [@school_class, @activity_unlocks.build], html: {method: :post}, remote: true do |f| %>

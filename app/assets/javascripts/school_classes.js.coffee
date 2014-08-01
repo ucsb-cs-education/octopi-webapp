@@ -33,7 +33,6 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
 
   $(document).on "click", ".charts-tooltip", ->
     id = $(this).find("div").text()
-    $("#progress-table-div").scrollLeft 0
     $("#progress-table-div").scrollLeft $(document.getElementById(id)).offset().left - $("#progress-table-div").offset().left
     return
 
@@ -42,39 +41,3 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
     $("#progress-table-div").scrollLeft 0
     $("#progress-table-div").scrollLeft $(document.getElementById(id)).offset().left - $("#progress-table-div").offset().left
     return
-
-  $("#name-header").wrapInner("<span title=\"Click to sort\"/>").each ->
-    th = $(this)
-    thIndex = th.index()
-    inverse = false
-    th.click ->
-      $("#tasks-table").find("td").not(".button-td").filter(->
-        $(this).index() is thIndex
-      ).sortElements ((a, b) ->
-        (if $.text([a]) > $.text([b]) then (if inverse then -1 else 1) else (if inverse then 1 else -1))  unless @parentNode is $("#button-tr")
-      ), ->
-        @parentNode
-
-      inverse = not inverse
-      return
-
-    return
-
-  $("#progress-header").wrapInner("<span title=\"Click to sort\"\"/>").each ->
-    th = $(this)
-    thIndex = th.index()
-    inverse = false
-    th.click ->
-      $("#tasks-table").find("td").not(".button-td").filter(->
-        $(this).index() is thIndex
-      ).sortElements ((a, b) ->
-        (if (parseInt($.text([a]))+1 || -1) > (parseInt($.text([b]))+1 || -1) then (if inverse then -1 else 1) else (if inverse then 1 else -1))  unless @parentNode is $("#button-tr")
-      ), ->
-        @parentNode
-
-      inverse = not inverse
-      return
-
-    return
-
-
