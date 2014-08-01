@@ -1,5 +1,10 @@
-class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::LaplayaBaseController
+require 'student_signin_module'
+
+class LaplayaFilesController < ApplicationController
+  include StudentSigninModule
   load_and_authorize_resource :laplaya_file
+  protect_from_forgery with: :null_session
+  before_action :signed_in_user
   before_action :confirm_unlocked, only: [:show, :update]
   js false
 
@@ -38,6 +43,14 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
   end
 
   private
+  def signed_in_user
+    authenticate_staff! unless current_staff || current_student
+  end
+
+  def current_user
+    current_staff || current_student
+  end
+
   def laplaya_file_params
     avail_params = [:project, :media]
     if can? :create_public_laplaya_files, LaplayaFile
@@ -47,20 +60,27 @@ class StudentPortal::Laplaya::LaplayaFilesController < StudentPortal::Laplaya::L
   end
 
   def confirm_unlocked
-    case @laplaya_file.type
-      when 'StudentResponse::TaskResponseLaplayaFile'
-        unless @laplaya_file.laplaya_task_response.task.is_accessible?(current_student, current_school_class)
-          raise CanCan::AccessDenied
-        end
-      when 'StudentResponse::ProjectResponseLaplayaFile',
-          'StudentResponse::SandboxResponseLaplayaFile',
-          'SandboxBaseLaplayaFile'
-        unless current_school_class && current_school_class.module_pages.include?(@laplaya_file.module_page)
-          raise CanCan::AccessDenied
-        end
-      else
-        # type code here
+    if signed_in_student?
+      case @laplaya_file.type
+        when 'StudentResponse::TaskResponseLaplayaFile'
+          unless @laplaya_file.laplaya_task_response.task.is_accessible?(current_student, current_school_class)
+            raise CanCan::AccessDenied
+          end
+        when 'StudentResponse::ProjectResponseLaplayaFile',
+            'StudentResponse::SandboxResponseLaplayaFile',
+            'SandboxBaseLaplayaFile'
+          unless current_school_class && current_school_class.module_pages.include?(@laplaya_file.module_page)
+            raise CanCan::AccessDenied
+          end
+        else
+          # type code here
+      end
     end
+  end
+
+  protected
+  def create_post_success_response (status, location, file_id)
+    render json: {success: true, location: location, file_id: file_id}, location: location, status: status
   end
 
 end

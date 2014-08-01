@@ -4,7 +4,7 @@
 </div>
 
 <%= link_to "#{(can? :update, @page) ? 'Edit' : 'Open'} file in LaPlaya",
-            student_portal_laplaya_file_path(laplaya_file) %>
+            open_url %>
 <% if can? :update, @page %>
     <div class="laplaya-clone">
       Clone from one of your existing LaPlaya projects:

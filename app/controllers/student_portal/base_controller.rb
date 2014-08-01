@@ -1,8 +1,7 @@
+require 'student_signin_module'
 class StudentPortal::BaseController < ApplicationController
-  include StudentPortal::BaseHelper
+  include StudentSigninModule
   after_action :update_autosignout_time
-  alias_method :current_user, :current_student
-
 
   def exception_redirect_path(login_dependent=false)
     if signed_in_student? || !login_dependent
@@ -11,6 +10,7 @@ class StudentPortal::BaseController < ApplicationController
       main_app.student_portal_signin_path
     end
   end
+
 
   def current_user
     current_student
@@ -22,6 +22,19 @@ class StudentPortal::BaseController < ApplicationController
     else
       super
     end
+  end
+
+  def redirect_back_or(default)
+    redirect_to (
+                    if session[:return_to]
+                      session[:return_to]
+                    elsif cookies.signed[:student_last_module]
+                      student_portal_module_path(cookies.signed[:student_last_module])
+                    else
+                      default
+                    end
+                )
+    session.delete(:return_to)
   end
 
 end

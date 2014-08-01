@@ -1,6 +1,13 @@
+require 'laplaya_module'
 class Pages::ModulePagesController < Pages::PagesController
   load_and_authorize_resource
   load_and_authorize_resource :curriculum_page, only: [:new, :create]
+
+  include LaplayaModule
+  before_action :setup_laplaya, only: [:show_project_file, :show_sandbox_file]
+  before_action :force_no_trailing_slash, only: [:show_project_file, :show_sandbox_file]
+  before_action :set_developer_mode, only: [:show_project_file, :show_sandbox_file]
+  before_action :set_staff_laplaya_file_base_path, only: [:show_project_file, :show_sandbox_file]
   before_filter :set_page_variable
 
   # GET /modules/:id
@@ -63,6 +70,16 @@ class Pages::ModulePagesController < Pages::PagesController
 
   def clone_sandbox
     clone_helper(@module_page.sandbox_base_laplaya_file)
+  end
+
+  def show_project_file
+    @laplaya_ide_params[:fileID] = @module_page.project_base_laplaya_file.id
+    laplaya_helper
+  end
+
+  def show_sandbox_file
+    @laplaya_ide_params[:fileID] = @module_page.sandbox_base_laplaya_file.id
+    laplaya_helper
   end
 
 

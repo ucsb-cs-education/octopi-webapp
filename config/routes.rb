@@ -1,4 +1,4 @@
-require "resque_web"
+require 'resque_web'
 
 OctopiWebapp::Application.routes.draw do
 
@@ -22,9 +22,11 @@ OctopiWebapp::Application.routes.draw do
     scope 'modules' do
       get ':id', to: 'pages#module_page', as: 'module'
       get ':id/laplaya_sandbox', to: 'pages#laplaya_sandbox', as: 'module_sandbox'
+      get ':id/design_thinking_project', to: 'pages#design_thinking_project', as: 'module_project'
+      get ':id/laplaya_sandbox/:file_id', to: 'pages#laplaya_sandbox_file', as: 'module_sandbox_laplaya_file'
       scope module: 'laplaya' do
-        get ':module_page_id/laplaya_files', to: 'laplaya_sandbox#index', as: 'module_sandbox_files'
-        post ':module_page_id/laplaya_files', to: 'laplaya_sandbox#create'
+        get ':module_page_id/laplaya_files', to: '/laplaya_sandbox#index', as: 'module_sandbox_files'
+        post ':module_page_id/laplaya_files', to: '/laplaya_sandbox#create'
       end
     end
 
@@ -42,7 +44,7 @@ OctopiWebapp::Application.routes.draw do
   match '/schools/:school_id/school_classes.json', to: 'student_portal/sessions#list_school_classes', format: false, via: 'get'
 
 
-  resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, controller: 'student_portal/laplaya/laplaya_files' do
+  resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false do
   end
 
 
@@ -65,6 +67,8 @@ OctopiWebapp::Application.routes.draw do
   namespace :staff do
     root 'static_pages#home'
     get 'home', to: 'static_pages#home'
+    get 'laplaya', to: 'static_pages#laplaya'
+    get 'laplaya/:id', to: 'static_pages#laplaya_file'
   end
   devise_for :staff, controllers: {sessions: 'staff/sessions', confirmations: 'staff/confirmations'}, skip: [:registrations]
   as :staff do
@@ -80,6 +84,8 @@ OctopiWebapp::Application.routes.draw do
       end
       resources :module_pages, path: 'modules', except: [:index, :edit], shallow: true do
         member do
+          get :project_file, to: :show_project_file
+          get :sandbox_base_file, to: :show_sandbox_file
           patch :clone_sandbox
           patch :clone_project
         end
@@ -93,6 +99,8 @@ OctopiWebapp::Application.routes.draw do
           end
           resources :laplaya_tasks, except: [:index, :edit], shallow: true do
             member do
+              get :base_file, to: :show_base_file
+              get :solution_file, to: :show_completed_file
               patch :clone
               patch :clone_completed
               patch :analysis_file, to: :update_laplaya_analysis_file

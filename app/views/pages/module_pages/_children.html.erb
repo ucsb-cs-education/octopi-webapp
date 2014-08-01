@@ -12,17 +12,23 @@
 <% end %>
 <div class="row" id="base_laplaya_files">
   <div id="project_base" class="col-md-6 base_laplaya_file">
-    <h2>Design Thinking Project File</h2>
+    <div class="files-header">
+      <h2>Design Thinking Project File</h2>
+    </div>
     <%= render partial: 'laplaya_file_form', locals: {
             laplaya_file: @page.project_base_laplaya_file,
+            open_url: project_file_module_page_path(@page),
             clone_url: clone_project_module_page_path(page),
             laplaya_files_collection: @user_laplaya_files} %>
   </div>
 
   <div id="sandbox_base" class="col-md-6 base_laplaya_file">
-    <h2>Sandbox File</h2>
+    <div class="files-header">
+      <h2>Sandbox File</h2>
+    </div>
     <%= render partial: 'laplaya_file_form', locals: {
             laplaya_file: @page.sandbox_base_laplaya_file,
+            open_url: sandbox_base_file_module_page_path(@page),
             clone_url: clone_sandbox_module_page_path(page),
             laplaya_files_collection: @user_laplaya_files} %>
   </div>

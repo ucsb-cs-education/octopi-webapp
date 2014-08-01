@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <%= javascript_include_tag "laplaya_application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag 'laplaya_application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
   <title>LaPlaya</title>
   <script type="text/javascript">
       var world;
       window.onload = function () {
           world = new WorldMorph(document.getElementById('world'));
-          new IDE_Morph(<%= raw @laplaya_ide_params %>).openIn(world);
+          new IDE_Morph(<%= raw @laplaya_ide_params.to_json %>).openIn(world);
           setInterval(loop, 1);
       };
       function loop() {

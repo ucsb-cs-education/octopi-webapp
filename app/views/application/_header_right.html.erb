@@ -4,7 +4,7 @@
     <li><%= link_to 'Help', help_path %></li>
     <% if staff_signed_in? %>
         <li><%= link_to 'Curriculum', curriculum_pages_path %></li>
-        <li><%= link_to 'LaPlaya', student_portal_laplaya_path %></li>
+        <li><%= link_to 'LaPlaya', staff_laplaya_path %></li>
     <% end %>
     <li><%= link_to 'Student Portal', student_portal_root_path %></li>
     <li id="fat-menu" class="dropdown">

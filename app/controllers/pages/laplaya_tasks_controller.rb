@@ -1,6 +1,13 @@
+require 'laplaya_module'
 class Pages::LaplayaTasksController < Pages::TasksController
   load_and_authorize_resource
   load_and_authorize_resource :activity_page, only: [:new, :create]
+
+  include LaplayaModule
+  before_action :setup_laplaya, only: [:show_base_file, :show_completed_file]
+  before_action :force_no_trailing_slash, only: [:show_base_file, :show_completed_file]
+  before_action :set_developer_mode, only: [:show_base_file, :show_completed_file]
+  before_action :set_staff_laplaya_file_base_path, only: [:show_base_file, :show_completed_file]
   before_filter :set_page_variable
   # GET /activity/:id
   def show
@@ -68,12 +75,22 @@ class Pages::LaplayaTasksController < Pages::TasksController
   def update_laplaya_analysis_file
     data = params[:laplaya_analysis_file][:data].read
     @laplaya_task.laplaya_analysis_file.update_attributes!(data: data)
-    flash[:success] = "Laplaya analysis file successfully uploaded."
+    flash[:success] = 'Laplaya analysis file successfully uploaded.'
     redirect_to @laplaya_task
   end
 
   def get_laplaya_analysis_file
     send_data @laplaya_task.laplaya_analysis_file.data, filename: "processor_#{@laplaya_task.id}.js.txt", disposition: :attachment
+  end
+
+  def show_base_file
+    @laplaya_ide_params[:fileID] = @laplaya_task.task_base_laplaya_file.id
+    laplaya_helper
+  end
+
+  def show_completed_file
+    @laplaya_ide_params[:fileID] = @laplaya_task.task_completed_laplaya_file.id
+    laplaya_helper
   end
 
   private
@@ -82,9 +99,9 @@ class Pages::LaplayaTasksController < Pages::TasksController
       laplaya_file = LaplayaFile.find(params[:laplaya_file][:laplaya_file])
       authorize! :show, laplaya_file
       file_to_clone_to.clone(laplaya_file)
-      flash[:success] = "Laplaya File successfully cloned!"
+      flash[:success] = 'Laplaya File successfully cloned!'
     else
-      flash[:danger] = "Invalid selection for Laplaya File cloning!"
+      flash[:danger] = 'Invalid selection for Laplaya File cloning!'
     end
     redirect_to @laplaya_task
   end

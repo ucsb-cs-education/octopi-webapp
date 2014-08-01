@@ -5,6 +5,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  def set_staff_laplaya_file_base_path
+    @laplaya_ide_params[:pushStateBase] = staff_laplaya_path + '/'
+  end
+
   def exception_redirect_path(login_dependent=false)
     if staff_signed_in? || !login_dependent
       main_app.root_path

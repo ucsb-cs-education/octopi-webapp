@@ -5,6 +5,7 @@
     </div>
     <%= render partial: 'laplaya_file_form', locals: {
             laplaya_file: @page.task_base_laplaya_file,
+            open_url: base_file_laplaya_task_path(@page),
             clone_url: clone_laplaya_task_path(page),
             laplaya_files_collection: @user_laplaya_files,
             clone_direct: {id: @page.task_completed_laplaya_file.id, button_label: 'Clone from solution file'}
@@ -18,6 +19,7 @@
     </div>
     <%= render partial: 'laplaya_file_form', locals: {
             laplaya_file: @page.task_completed_laplaya_file,
+            open_url: solution_file_laplaya_task_path(@page),
             clone_url: clone_completed_laplaya_task_path(page),
             laplaya_files_collection: @user_laplaya_files,
             clone_direct: {id: @page.task_base_laplaya_file.id, button_label: 'Clone from starting file'}

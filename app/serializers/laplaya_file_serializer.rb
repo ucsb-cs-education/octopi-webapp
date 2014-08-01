@@ -11,26 +11,39 @@ class LaplayaFileSerializer < ActiveModel::Serializer
   end
 
   def instructions
-    if object.type == 'StudentResponse::TaskResponseLaplayaFile'
-      response = object.becomes(StudentResponse::TaskResponseLaplayaFile)
-      response.laplaya_task_response.task.student_body
-    end
+    task =
+        case object.type
+          when 'StudentResponse::TaskResponseLaplayaFile'
+            object.becomes(StudentResponse::TaskResponseLaplayaFile).laplaya_task_response.task
+          when 'TaskBaseLaplayaFile'
+            object.becomes(TaskBaseLaplayaFile).laplaya_task
+          when 'TaskCompletedLaplayaFile'
+            object.becomes(TaskCompletedLaplayaFile).laplaya_task
+          else
+            nil
+        end
+    task.student_body
   end
 
   def analysis_processor
-    if object.type == 'StudentResponse::TaskResponseLaplayaFile'
-      response = object.becomes(StudentResponse::TaskResponseLaplayaFile)
-      analysis_file = response.laplaya_task_response.task.laplaya_analysis_file
-      if analysis_file
-        analysis_file.data
-      else
-        nil
-      end
-    end
+    task =
+        case object.type
+          when 'StudentResponse::TaskResponseLaplayaFile'
+            object.becomes(StudentResponse::TaskResponseLaplayaFile).laplaya_task_response.task
+          when 'TaskBaseLaplayaFile'
+            object.becomes(TaskBaseLaplayaFile).laplaya_task
+          when 'TaskCompletedLaplayaFile'
+            object.becomes(TaskCompletedLaplayaFile).laplaya_task
+          else
+            nil
+        end
+    task.laplaya_analysis_file.data
   end
 
   def filter(keys)
-    unless object.type == 'StudentResponse::TaskResponseLaplayaFile'
+    unless object.type == 'StudentResponse::TaskResponseLaplayaFile' ||
+        object.type == 'TaskBaseLaplayaFile' ||
+        object.type == 'TaskCompletedLaplayaFile'
       keys = keys - [:analysis_processor, :instructions]
     end
     keys

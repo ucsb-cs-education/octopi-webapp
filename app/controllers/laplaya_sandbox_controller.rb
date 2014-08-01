@@ -1,4 +1,4 @@
-class StudentPortal::Laplaya::LaplayaSandboxController < StudentPortal::Laplaya::LaplayaFilesController
+class LaplayaSandboxController < LaplayaFilesController
   before_action :signed_in_student
   before_action :load_module
   # authorize_resource :laplaya_file
