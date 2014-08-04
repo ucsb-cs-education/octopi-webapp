@@ -3,6 +3,7 @@ require 'laplaya_module'
 class Staff::StaticPagesController < ApplicationController
   before_action :authenticate_staff!
   before_action :setup_laplaya, only: [:laplaya, :laplaya_file]
+  before_action :set_developer_mode, only: [:laplaya, :laplaya_file]
   before_action :force_trailing_slash, only: [:laplaya]
   before_action :force_no_trailing_slash, only: [:laplaya_file]
   include LaplayaModule
