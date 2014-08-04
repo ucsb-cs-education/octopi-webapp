@@ -21,7 +21,7 @@ class SchoolClass < ActiveRecord::Base
     @responses = TaskResponse.where(student: students, school_class: self)
 
     [{name: "Completed by", data: @activity_page.tasks.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
-        task.title+"("+task.id.to_s+")" : task.title) => @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
+        task.title+"("+task.id.to_s+")" : task.title)=> @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
      {name: "Unlocked by", data: @activity_page.tasks.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
          task.title+"("+task.id.to_s+")" : task.title) => (@unlocks.where(unlockable: task).count-@responses.where(task: task, completed: true).count)} }.reduce({}, :merge)}]
   end

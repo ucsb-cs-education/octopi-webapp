@@ -78,6 +78,7 @@
 	top : 0px;
 	left : 0px;
 	overflow : hidden;
+    outline: 1px solid #DDD;
 }
 .g_BodyFixed {
 	/* Base body fixed container if fixedCols > 0 */
@@ -87,6 +88,7 @@
 	top : 0px;
 	left : 0px;
 	overflow : hidden;
+    outline: 1px solid #DDD;
 }
 .g_BodyFixed2 {
 	/* Inner base body fixed container if fixedCols > 0. Used for IE7 support */
@@ -111,6 +113,10 @@
 	zoom : 1;
 	vertical-align : top;
 	overflow : hidden;
+    outline: 1px solid #DDD;
+}
+.g_Cl .g_C:nth-child(odd){
+    background:#EEE;
 }
 .g_HR {
 	/* Grid header cell */

@@ -40,7 +40,7 @@ describe "Assessment question page", type: :feature do
     end
   end
 
-  describe "change question type", js: true do
+  describe "after changing question type to Multiple Correct", js: true do
     before do
       click_button("Add New Answer Choice")
       select('Multiple Correct', :from => 'ansType')
@@ -50,7 +50,7 @@ describe "Assessment question page", type: :feature do
     it { should_not have_selector('div.ischecked') }
     it { should have_selector('div.isNotchecked') }
   end
-  describe "after choosing free response", js: true do
+  describe "after changing question type to Free Response", js: true do
     before do
       click_button("Add New Answer Choice")
       select('Free Response', :from => 'ansType')

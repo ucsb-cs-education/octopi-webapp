@@ -1,30 +1,18 @@
 <% student = student[1] %>
-<td class="student-progress-col" id="activity_<%= activity[:id] %>_student_<%= student[:id] %>">
+<td>
   <div class="student-name-div">
     <span title="<%= student[:name] %>">
       <%= link_to student[:first_name], school_class_student_progress_path(@school_class, student[:id]) %>
     </span>
   </div>
 </td>
-<td class="student-progress-col">
+<td>
   <div class="student-name-div">
-    <span title="<%= student[:last_name] %>">
+    <span value = "<%= student[:last_name] %>" title="<%= student[:name] %>">
       <%= link_to student[:last_name], school_class_student_progress_path(@school_class, student[:id]) %>
     </span>
   </div>
 </td>
-<td value="<%= student[:percent_done]*100 %>" class="student-progress-col">
-  <% unless activity[:students_who_unlocked][student[:id]].nil? %>
-      <%= (student[:percent_done]*100).to_s[0..1] %>% Complete
-  <% else %>
-      <div class="unlock-button">
-        <%= simple_form_for [@school_class, @activity_unlocks.build], html: {method: :post}, remote: true do |f| %>
-            <%= f.hidden_field :unlockable_id, value: activity[:id] %>
-            <%= f.hidden_field :student_id, value: student[:id] %>
-            <%= f.hidden_field :unlockable_type, value: Page %>
-            <%= f.hidden_field :from_student_progress_view, value: false %>
-            <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
-        <% end %>
-      </div>
-  <% end %>
+<td>
+  <%= render partial: "percent_completed", locals: {activity: activity, student: student} %>
 </td>

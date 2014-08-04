@@ -110,7 +110,7 @@ describe "teacher view of an activity page", type: :feature do
     describe "before a student completes a task" do
       it { should_not have_css("span.completed-span") }
       it { should have_css("span.unlocked-span", :count => 2) }
-      it { should have_css("span.locked-span", :count => 2) }
+      it { should have_css("div.unlock-button", :count => 2) }
     end
     describe "after a student completed a task" do
       before do
@@ -119,7 +119,7 @@ describe "teacher view of an activity page", type: :feature do
       end
       it { should have_css("span.completed-span", :count => 1) }
       it { should have_css("span.unlocked-span", :count => 2) }
-      it { should have_css("span.locked-span", :count => 1) }
+      it { should have_css("div.unlock-button", :count => 1) }
     end
   end
 

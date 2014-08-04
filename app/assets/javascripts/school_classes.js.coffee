@@ -30,3 +30,20 @@ SchoolClassesActivitiesController = Paloma.controller('SchoolClasses/SchoolClass
 SchoolClassesActivitiesController.prototype.activity_page = () ->
   $(".unlock-all").click ->
     confirm "This will unlock the task for all students and cannot be undone.\nDo you wish to continue?"
+
+  new Grid("progress-table-div",
+    srcType: "dom"
+    srcData: "tasks-table"
+    allowGridResize: false
+    allowColumnResize: false
+    allowClientSideSorting: true
+    colSortType: [
+      "string"
+      "string"
+      "number"
+    ]
+    allowSelections: true
+    allowMultipleSelections: false
+    showSelectionColumn: false
+    fixedCols: 2
+    )

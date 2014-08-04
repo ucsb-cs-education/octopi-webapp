@@ -1,9 +1,7 @@
 <% if @unlock.unlockable_type == "Page" %>
-var td = $("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>")
-        td.parent().find(".student-progress-col").remove()
-        td.replaceWith(
-        "<%= j render partial:"school_classes/school_classes_activities/activity_status", locals: {student: [0,{id: @unlock.student.id,name: @unlock.student.name, percent_done: 0.00}],
-        activity: {id: @unlock.unlockable_id,students_who_unlocked: {@unlock.student.id => :unlocked}}}%>");
+$("#activity_<%= @unlock.unlockable_id%>_student_<%=@unlock.student_id %>").replaceWith(
+        "<%= j render partial:"school_classes/school_classes_activities/percent_completed", locals: {student: {id: @unlock.student.id,name: @unlock.student.name, percent_done: 0.00},
+        activity: {id: @unlock.unlockable_id,students_who_unlocked: [@unlock.student.id]}}%>");
 
 <%else%>
 $("#task_<%=@unlock.unlockable_id %>_student_<%= @unlock.student_id%>").replaceWith(

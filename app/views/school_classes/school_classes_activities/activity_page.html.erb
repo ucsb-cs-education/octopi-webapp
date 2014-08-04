@@ -9,20 +9,3 @@
 <div id="progress-table-div">
   <%= render partial: "progress_table" %>
 </div>
-
-<script>
-
-    new Grid("progress-table-div", {
-        srcType: "dom",
-        srcData: "tasks-table",
-        allowGridResize: false,
-        allowColumnResize: false,
-        allowClientSideSorting: true,
-        colSortType: ["string", "string", "number"],
-        allowSelections: true,
-        allowMultipleSelections: false,
-        showSelectionColumn: false,
-        fixedCols: 2
-    });
-
-</script>

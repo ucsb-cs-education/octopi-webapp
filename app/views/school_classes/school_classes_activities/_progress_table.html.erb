@@ -1,13 +1,13 @@
-<table class="table table-striped table-bordered" id="tasks-table">
+<table id="tasks-table">
   <thead>
   <tr>
-    <th id="name-header">
+    <th>
       <b>First Name</b>
     </th>
-    <th id="name-header">
+    <th>
       <b>Last Name</b>
     </th>
-    <th class="student-progress-col" id="progress-header">
+    <th>
       <b>Activity Progress</b>
     </th>
     <% @info[:tasks].each { |task| %>
@@ -30,6 +30,10 @@
   <% } %>
   <tr id="button-tr">
     <td class="button-td">
+    </td>
+    <td class="button-td">
+    </td>
+    <td class="button-td">
       <% unless @info[:counts][:unlocked_count] === @info[:counts][:student_count] %>
           <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
               <%= f.hidden_field :unlockable_id, value: @info[:activity][:id] %>
@@ -37,10 +41,6 @@
               <%= f.submit 'Unlock For All', class: "btn btn-xs btn-warning unlock-all" %>
           <% end %>
       <% end %>
-    </td>
-    <td class="button-td">
-    </td>
-    <td class="button-td">
     </td>
     <% @info[:tasks].each { |task| %>
         <td class="button-td">
