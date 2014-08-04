@@ -36,4 +36,32 @@ module LaplayaModule
     end
   end
 
+  def get_path_for_task(task, options = {})
+    if task
+      if options[:developer] && options[:developer] == true
+        case task.type
+          when 'AssessmentTask'
+            assessment_task_path(task)
+          when 'LaplayaTask'
+            laplaya_task_path(task)
+          when 'OfflineTask'
+            offline_task_path(task)
+          else
+            nil
+        end
+      else
+        case task.type
+          when 'AssessmentTask'
+            student_portal_assessment_task_path(task)
+          when 'LaplayaTask'
+            student_portal_laplaya_task_path(task)
+          when 'OfflineTask'
+            student_portal_offline_task_path(task)
+          else
+            nil
+        end
+      end
+    end
+  end
+
 end

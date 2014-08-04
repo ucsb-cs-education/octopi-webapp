@@ -85,11 +85,17 @@ class Pages::LaplayaTasksController < Pages::TasksController
 
   def show_base_file
     @laplaya_ide_params[:fileID] = @laplaya_task.task_base_laplaya_file.id
+    @laplaya_ide_params[:prevTask] = get_path_for_task(@laplaya_task.higher_item, developer: true)
+    @laplaya_ide_params[:nextTask] = get_path_for_task(@laplaya_task.lower_item, developer: true)
+    @laplaya_ide_params[:returnPath] = get_path_for_task(@laplaya_task)
     laplaya_helper
   end
 
   def show_completed_file
     @laplaya_ide_params[:fileID] = @laplaya_task.task_completed_laplaya_file.id
+    @laplaya_ide_params[:prevTask] = get_path_for_task(@laplaya_task.higher_item, developer: true)
+    @laplaya_ide_params[:nextTask] = get_path_for_task(@laplaya_task.lower_item, developer: true)
+    @laplaya_ide_params[:returnPath] = get_path_for_task(@laplaya_task)
     laplaya_helper
   end
 
