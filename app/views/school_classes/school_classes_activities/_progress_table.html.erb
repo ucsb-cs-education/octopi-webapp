@@ -1,0 +1,59 @@
+<table id="tasks-table">
+  <thead>
+  <tr>
+    <th>
+      <b>First Name</b>
+    </th>
+    <th>
+      <b>Last Name</b>
+    </th>
+    <th>
+      <b>Activity Progress</b>
+    </th>
+    <% @info[:tasks].each { |task| %>
+        <th>
+          <b><%= link_to task[:title], task[:type]=="LaplayaTask" ? laplaya_task_path(task[:id]) : assessment_task_path(task[:id]) %></b>
+        </th>
+    <% } %>
+  </tr>
+  </thead>
+  <tbody>
+  <% @info[:students].to_a.each { |student| %>
+      <tr>
+        <%= render partial: "activity_status", locals: {student: student, activity: @info[:activity]} %>
+        <% @info[:tasks].each { |task| %>
+            <td>
+              <%= render partial: "student_status", locals: {task: task, student: student}, as: "student" %>
+            </td>
+        <% } %>
+      </tr>
+  <% } %>
+  <tr id="button-tr">
+    <td class="button-td">
+    </td>
+    <td class="button-td">
+    </td>
+    <td class="button-td">
+      <% unless @info[:counts][:unlocked_count] === @info[:counts][:student_count] %>
+          <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
+              <%= f.hidden_field :unlockable_id, value: @info[:activity][:id] %>
+              <%= f.hidden_field :unlockable_type, value: "Page" %>
+              <%= f.submit 'Unlock For All', class: "btn btn-xs btn-warning unlock-all" %>
+          <% end %>
+      <% end %>
+    </td>
+    <% @info[:tasks].each { |task| %>
+        <td class="button-td">
+          <% if task[:statuses].has_value?(:locked) %>
+              <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
+                  <%= f.hidden_field :unlockable_id, value: task[:id] %>
+                  <%= f.hidden_field :unlockable_type, value: Task %>
+                  <%= f.submit 'Unlock For All', class: "btn btn-warning btn-xs unlock-all" %>
+              <% end %>
+          <% end %>
+        </td>
+    <% } %>
+  </tr>
+  </tbody>
+  <tfoot></tfoot>
+</table>

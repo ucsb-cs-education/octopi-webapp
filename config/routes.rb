@@ -30,8 +30,8 @@ OctopiWebapp::Application.routes.draw do
 
     get '/activities/:id', to: 'pages#activity_page', as: 'activity'
 
-    get '/assessment_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
-    post '/assessment_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
+    get '/question_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
+    post '/question_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
 
     get '/laplaya_tasks/:id', to: 'pages#laplaya_task', as: 'laplaya_task'
     post '/laplaya_tasks/:id', to: 'pages#laplaya_task_response', as: 'laplaya_task_response'
@@ -45,6 +45,7 @@ OctopiWebapp::Application.routes.draw do
   resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, controller: 'student_portal/laplaya/laplaya_files' do
   end
 
+  #match '/school_classes/:school_class_id/activities/:id', to: 'school_classes#activity_page', via: 'get', as: 'activity'
 
   resources :schools, only: [:show, :index], shallow: true do
     resources :students, except: [:update, :edit, :destroy]
@@ -52,8 +53,14 @@ OctopiWebapp::Application.routes.draw do
       member do
         post 'add_new_student'
         post 'add_student'
+        post 'manual_unlock', format: false
       end
+      resources :unlocks, only: [:destroy, :create]
+      get '/activities/:id', to: 'school_classes/school_classes_activities#activity_page', as: 'activity'
+      get '/student/:id', to: 'school_classes/school_classes_student_progress#student_progress', as: 'student_progress'
     end
+
+
   end
   root 'static_pages#home'
   get 'home', to: 'static_pages#home'
@@ -122,58 +129,58 @@ OctopiWebapp::Application.routes.draw do
     mount ResqueWeb::Engine => '/resque_web'
   end
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
+# The priority is based upon order of creation: first created -> highest priority.
+# See how all your routes lay out with "rake routes".
 
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+# You can have the root of your site routed with "root"
+# root 'welcome#index'
 
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
+# Example of regular route:
+#   get 'products/:id' => 'catalog#view'
 
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+# Example of named route that can be invoked with purchase_url(id: product.id)
+#   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
+# Example resource route (maps HTTP verbs to controller actions automatically):
+#   resources :products
 
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
+# Example resource route with options:
+#   resources :products do
+#     member do
+#       get 'short'
+#       post 'toggle'
+#     end
+#
+#     collection do
+#       get 'sold'
+#     end
+#   end
 
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
+# Example resource route with sub-resources:
+#   resources :products do
+#     resources :comments, :sales
+#     resource :seller
+#   end
 
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
+# Example resource route with more complex sub-resources:
+#   resources :products do
+#     resources :comments
+#     resources :sales do
+#       get 'recent', on: :collection
+#     end
+#   end
 
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
+# Example resource route with concerns:
+#   concern :toggleable do
+#     post 'toggle'
+#   end
+#   resources :posts, concerns: :toggleable
+#   resources :photos, concerns: :toggleable
 
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
+# Example resource route within a namespace:
+#   namespace :admin do
+#     # Directs /admin/products/* to Admin::ProductsController
+#     # (app/controllers/admin/products_controller.rb)
+#     resources :products
+#   end
 end

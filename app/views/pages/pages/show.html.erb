@@ -5,7 +5,6 @@
         <h1>
           <span id="page-title" <%=  'contenteditable=true' if can? :update, @page%> ><%= @page.title %></span>
         </h1>
-        <p>Last updated: <%= get_time(@page) %></p>
         <% if @page.respond_to? :parent %>
             <div class='parent'>
               <%= link_to "return to parent (#{@page.parent.title})", @page.parent %>

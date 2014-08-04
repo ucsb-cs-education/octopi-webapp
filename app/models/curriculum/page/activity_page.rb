@@ -39,6 +39,10 @@ class ActivityPage < Page
     unlock
   end
 
+  def depends_on?(prereq)
+    self.prerequisites.include?(prereq)
+  end
+
   def is_accessible?(student, school_class)
     status = get_visibility_status_for(student, school_class)
     status == :visible

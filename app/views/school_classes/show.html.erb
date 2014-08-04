@@ -12,30 +12,44 @@
 <body>
 <table id="classlist" class="sortable" style="width:1140px">
   <thead>
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Login Name</th>
-        <th>Progress</th>
-      </tr>
+  <tr>
+    <th>First Name</th>
+    <th class = "sorttable_alpha">Last Name</th>
+    <th class = "sorttable_alpha">Login Name</th>
+    <th>Progress</th>
+  </tr>
   </thead>
+  <tbody>
   <% @school_class.students.each do |s| %>
       <tr>
         <td><%= s.first_name %></td>
         <td><%= s.last_name %></td>
         <td><%= s.login_name %></td>
-        <td></td>
+        <td><%= link_to "View Progress", school_class_student_progress_path(@school_class, s) %></td>
       </tr>
-  <%end%>
+  <% end %>
+  </tbody>
+  <tfoot></tfoot>
 </table>
 
 </body>
 
 
+<div id="curriculum-div">
+  Curriculum:
+</div>
+<hr>
+<div id="overall progress">
+  <%= bar_chart ({"Completed %" => average_task_completion*100, "Unlocked %" => average_task_unlock*100}),
+                max: 101,
+                height: "100px",
+                library: {hAxis: {title: "Percent of tasks completed and unlocked, averaged over all students"}} %>
+</div>
+<%= render partial: "list_module_page", collection: @module_pages, as: "module_page" %>
+<br>
 <br>
 <p>
 
   <%= link_to 'Back', school_school_classes_path(@school_class.school), class: "btn btn-default" %>
-  <%= link_to 'Edit Students', edit_school_class_path, class: "btn btn-primary"  %>
+  <%= link_to 'Edit Students', edit_school_class_path, class: "btn btn-primary" %>
 </p>
-

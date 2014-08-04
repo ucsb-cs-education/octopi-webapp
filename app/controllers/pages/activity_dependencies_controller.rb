@@ -17,6 +17,7 @@ class Pages::ActivityDependenciesController < ApplicationController
 
   def destroy
     @dependency = ActivityDependency.find(params[:id])
+    @return = @dependency.task_prerequisite
     @dependency.destroy
     respond_to do |format|
       format.html { redirect_to @dependency }

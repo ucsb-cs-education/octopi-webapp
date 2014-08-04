@@ -207,6 +207,8 @@ ActiveRecord::Schema.define(version: 20140730205206) do
     t.datetime "updated_at"
   end
 
+  add_index "unlocks", ["unlockable_id", "unlockable_type", "student_id", "school_class_id"], name: "unlock_index", unique: true, using: :btree
+
   create_table "users", force: true do |t|
     t.string   "type"
     t.string   "first_name",             default: "", null: false

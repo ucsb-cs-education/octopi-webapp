@@ -1,5 +1,5 @@
 class SchoolClassesController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :school_class
   load_and_authorize_resource :school, only: [:index, :new, :create]
   before_action :load_school, only: [:edit]
 
@@ -29,6 +29,12 @@ class SchoolClassesController < ApplicationController
   #Shallow actions
   # GET /school_classes/1
   def show
+    @module_pages = @school_class.module_pages.includes(:activity_pages)
+    @unlocks = Unlock.where(school_class: @school_class, student: @school_class.students)
+
+    #these two are entirely for the average completion bar
+    @tasks = Task.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
+    @responses = TaskResponse.where(student: @school_class.students, school_class: @school_class)
   end
 
   # GET /school_classes/1/edit
@@ -65,6 +71,17 @@ class SchoolClassesController < ApplicationController
         js false
       end
     end
+  end
+
+  # POST /school_classes/:school_class_id/manual_unlock
+  def manual_unlock
+    @school_class.students.each { |x|
+      @unlock = Unlock.where(student: x,
+                             school_class: @school_class,
+                             unlockable_id: params[:students][:unlockable_id],
+                             unlockable_type: params[:students][:unlockable_type]).first_or_create
+    }
+    redirect_to(:back)
   end
 
   def update
