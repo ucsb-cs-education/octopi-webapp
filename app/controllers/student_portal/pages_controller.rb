@@ -63,9 +63,10 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #GET /student_portal/laplaya_tasks/:id
   #student_portal_laplaya_task_path
   def laplaya_task
-    @laplaya_ide_params[:fildID] = @laplaya_task_response.laplaya_file.id
+    @laplaya_ide_params[:fileID] = @laplaya_task_response.laplaya_file.id
     @laplaya_ide_params[:prevTask] = get_path_for_task(@laplaya_task.higher_item)
     @laplaya_ide_params[:nextTask] = get_path_for_task(@laplaya_task.lower_item)
+    @laplaya_ide_params[:returnPath] = student_portal_activity_path(@activity_page)
     laplaya_helper
   end
 
