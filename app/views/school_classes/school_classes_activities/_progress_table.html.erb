@@ -12,7 +12,7 @@
     </th>
     <% @info[:tasks].each { |task| %>
         <th>
-          <b><%= link_to task[:title], task[:type]=="LaplayaTask" ? laplaya_task_path(task[:id]) : assessment_task_path(task[:id]) %></b>
+          <b><%= link_to task[:title], task[:type]=='LaplayaTask' ? laplaya_task_path(task[:id]) : assessment_task_path(task[:id]) %></b>
         </th>
     <% } %>
   </tr>
@@ -20,10 +20,10 @@
   <tbody>
   <% @info[:students].to_a.each { |student| %>
       <tr>
-        <%= render partial: "activity_status", locals: {student: student, activity: @info[:activity]} %>
+        <%= render partial: 'activity_status', locals: {student: student, activity: @info[:activity]} %>
         <% @info[:tasks].each { |task| %>
             <td>
-              <%= render partial: "student_status", locals: {task: task, student: student}, as: "student" %>
+              <%= render partial: 'student_status', locals: {task: task, student: student}, as: 'student' %>
             </td>
         <% } %>
       </tr>
@@ -37,8 +37,8 @@
       <% unless @info[:counts][:unlocked_count] === @info[:counts][:student_count] %>
           <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
               <%= f.hidden_field :unlockable_id, value: @info[:activity][:id] %>
-              <%= f.hidden_field :unlockable_type, value: "Page" %>
-              <%= f.submit 'Unlock For All', class: "btn btn-xs btn-warning unlock-all" %>
+              <%= f.hidden_field :unlockable_type, value: Page.to_s %>
+              <%= f.submit 'Unlock For All', class: 'btn btn-xs btn-warning unlock-all' %>
           <% end %>
       <% end %>
     </td>
@@ -47,8 +47,8 @@
           <% if task[:statuses].has_value?(:locked) %>
               <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
                   <%= f.hidden_field :unlockable_id, value: task[:id] %>
-                  <%= f.hidden_field :unlockable_type, value: Task %>
-                  <%= f.submit 'Unlock For All', class: "btn btn-warning btn-xs unlock-all" %>
+                  <%= f.hidden_field :unlockable_type, value: Task.to_s %>
+                  <%= f.submit 'Unlock For All', class: 'btn btn-warning btn-xs unlock-all' %>
               <% end %>
           <% end %>
         </td>

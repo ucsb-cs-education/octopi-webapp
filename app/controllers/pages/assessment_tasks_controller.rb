@@ -21,13 +21,6 @@ class Pages::AssessmentTasksController < Pages::TasksController
     end
 
     respond_to do |format|
-      format.html do
-        if updated
-          redirect_to @assessment_task, notice: "Successfully updated"
-        else
-          render action: edit
-        end
-      end
       format.js do
         response.location = assessment_task_url(@assessment_task)
         js false
@@ -42,7 +35,6 @@ class Pages::AssessmentTasksController < Pages::TasksController
     @assessment_task.parent = @activity_page
     if @assessment_task.save
       respond_to do |format|
-        format.html { redirect_to @activity_page }
         format.js {
           js false
           render status: :created

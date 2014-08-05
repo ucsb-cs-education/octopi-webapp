@@ -4,7 +4,7 @@ Ckeditor.setup do |config|
   # Load and configure the ORM. Supports :active_record (default), :mongo_mapper and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
-  require "ckeditor/orm/active_record"
+  require 'ckeditor/orm/active_record'
 
   # Allowed image file types for upload.
   # Set to nil or [] (empty array) for all file types
@@ -32,6 +32,6 @@ Ckeditor.setup do |config|
   # By default: nil
   # config.asset_path = "http://www.example.com/assets/ckeditor/"
   config.assets_languages = ['en']
-  config.assets_plugins = ['image', 'smiley']
+  config.assets_plugins = %w(image smiley openlink)
 
 end
