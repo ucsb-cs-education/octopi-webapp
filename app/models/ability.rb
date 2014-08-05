@@ -41,7 +41,7 @@ class Ability
     alias_action :read, :update, :to => :read_update
     if user
       can :create_public_laplaya_files, LaplayaFile
-
+      can :access, :ckeditor
       files = LaplayaFile.with_role(:owner, user).pluck(:id)
       can :crud, LaplayaFile, id: files
       can :crud, LaplayaFile, user_id: user.id
@@ -50,7 +50,10 @@ class Ability
       if user.class == Staff
         #All users can edit themselves
         can :crud, Staff, :id => user.id
-        can :read, ActiveAdmin::Page, :name => "Dashboard"
+        can :read, ActiveAdmin::Page, :name => 'Dashboard'
+        can [:read, :create, :destroy], Ckeditor::Picture
+        can [:read, :create, :destroy], Ckeditor::AttachmentFile
+
 
         cannot :update, Staff.with_role(:super_staff).where.not(id: user)
         cannot :destroy, Staff.with_role(:super_staff).where.not(id: user)

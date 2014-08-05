@@ -26,13 +26,6 @@ class Pages::LaplayaTasksController < Pages::TasksController
   def update
     updated = @laplaya_task.update(laplaya_task_params)
     respond_to do |format|
-      format.html do
-        if updated
-          redirect_to @laplaya_task, notice: 'Task was successfully updated.'
-        else
-          render action: 'edit'
-        end
-      end
       format.js do
         response.location = laplaya_file_url(@laplaya_task)
         js false
@@ -58,7 +51,6 @@ class Pages::LaplayaTasksController < Pages::TasksController
       return
     end
     respond_to do |format|
-      format.html { redirect_to @laplaya_task }
       format.js {
         js false
         response.status = :created

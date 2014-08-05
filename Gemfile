@@ -61,14 +61,14 @@ gem 'libxml-ruby', '~> 2.7.0'
 gem 'activeadmin', github: 'gregbell/active_admin'
 
 gem 'acts_as_list', '~> 0.4.0'
-gem 'ckeditor', '~> 4.0.11'
+gem 'ckeditor', '~> 4.1.0'
 gem 'paperclip', '~> 4.1.1'
 
 # Restrict javascript to a specific controller, within assett pipeline
 gem 'paloma', '~> 4.1.0'
 
 #draw charts for the teacher view
-gem "chartkick", '~> 1.3.2'
+gem 'chartkick', '~> 1.3.2'
 
 
 group :doc do
