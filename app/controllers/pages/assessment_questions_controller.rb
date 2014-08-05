@@ -16,7 +16,7 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
         response.location = assessment_question_url(@assessment_question)
         js false
         unless updated
-          head :bad_request, location: assessment_question_url(@assessment_question)
+          bad_request_with_errors @assessment_question, assessment_question_url(@assessment_question)
         end
       end
     end
@@ -29,7 +29,7 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
         @assessment_question.save!
       end
     rescue ActiveRecord::RecordInvalid
-      render text: @assessment_question.errors, status: :bad_request
+      bad_request_with_errors @assessment_question
       return
     end
     respond_to do |format|

@@ -29,7 +29,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
         response.location = laplaya_file_url(@laplaya_task)
         js false
         unless updated
-          render text: @laplaya_task.errors, status: :bad_request, location: laplaya_file_url(@laplaya_task)
+          bad_request_with_errors @laplaya_task, laplaya_task_url(@laplaya_task)
         end
       end
     end
@@ -46,7 +46,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
         @laplaya_task.save!
       end
     rescue ActiveRecord::RecordInvalid
-      render text: @laplaya_task.errors, status: :bad_request
+      bad_request_with_errors @laplaya_task
       return
     end
     respond_to do |format|

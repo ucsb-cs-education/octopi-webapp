@@ -15,10 +15,9 @@ class Pages::OfflineTasksController < Pages::TasksController
     updated = @offline_task.update(offline_task_params)
     respond_to do |format|
       format.js do
-        response.location = laplaya_file_url(@offline_task)
         js false
         unless updated
-          render text: @offline_task.errors, status: :bad_request, location: laplaya_file_url(@offline_task)
+          bad_request_with_errors @offline_task, offline_task_url(@offline_task)
         end
       end
     end
@@ -31,7 +30,7 @@ class Pages::OfflineTasksController < Pages::TasksController
         @offline_task.save!
       end
     rescue ActiveRecord::RecordInvalid
-      render text: @offline_task.errors, status: :bad_request
+      bad_request_with_errors @offline_task
       return
     end
     respond_to do |format|

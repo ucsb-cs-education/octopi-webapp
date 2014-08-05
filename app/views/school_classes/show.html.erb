@@ -12,12 +12,12 @@
 <body>
 <table id="classlist" class="sortable" style="width:1140px">
   <thead>
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Login Name</th>
-        <th>Progress</th>
-      </tr>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Login Name</th>
+    <th>Progress</th>
+  </tr>
   </thead>
   <% @school_class.students.each do |s| %>
       <tr>
@@ -26,7 +26,7 @@
         <td><%= s.login_name %></td>
         <td></td>
       </tr>
-  <%end%>
+  <% end %>
 </table>
 
 </body>
@@ -35,7 +35,7 @@
 <br>
 <p>
 
-  <%= link_to 'Back', school_school_classes_path(@school_class.school), class: "btn btn-default" %>
-  <%= link_to 'Edit Students', edit_school_class_path, class: "btn btn-primary"  %>
+  <%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
+  <%= link_to 'Edit Class', edit_school_class_path, class: 'btn btn-primary' %>
 </p>
 

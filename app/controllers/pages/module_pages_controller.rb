@@ -30,7 +30,7 @@ class Pages::ModulePagesController < Pages::PagesController
         response.location = module_page_url(@module_page)
         js false
         unless updated
-          head :bad_request, location: module_page_url(@module_page)
+          bad_request_with_errors @module_page, module_page_url(@module_page)
         end
       end
     end
@@ -46,7 +46,7 @@ class Pages::ModulePagesController < Pages::PagesController
         @module_page.save!
       end
     rescue ActiveRecord::RecordInvalid
-      render text: @module_page.errors, status: :bad_request
+      bad_request_with_errors @module_page
       return
     end
     respond_to do |format|

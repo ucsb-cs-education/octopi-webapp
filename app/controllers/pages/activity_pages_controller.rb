@@ -25,7 +25,7 @@ class Pages::ActivityPagesController < Pages::PagesController
         response.location = activity_page_url(@activity_page)
         js false
         unless updated
-          head :bad_request, location: activity_page_url(@activity_page)
+          bad_request_with_errors @activity_page, activity_page_url(@activity_page)
         end
       end
     end
@@ -48,7 +48,7 @@ class Pages::ActivityPagesController < Pages::PagesController
         }
       end
     else
-      render text: @activity_page.errors, status: :bad_request
+      bad_request_with_errors @activity_page
     end
 
 

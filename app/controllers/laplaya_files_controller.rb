@@ -24,7 +24,7 @@ class LaplayaFilesController < ApplicationController
     if params.any? && @laplaya_file.update_attributes(params)
       head :no_content, location: laplaya_file_url(@laplaya_file)
     else
-      render text: @laplaya_file.errors, status: :bad_request
+      bad_request_with_errors @laplaya_file
     end
   end
 
@@ -33,7 +33,7 @@ class LaplayaFilesController < ApplicationController
     if @laplaya_file.save
       create_post_success_response(:created, laplaya_file_url(@laplaya_file), @laplaya_file.id)
     else
-      render text: @laplaya_file.errors, status: :bad_request
+      bad_request_with_errors @laplaya_file
     end
   end
 

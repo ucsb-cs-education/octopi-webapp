@@ -23,7 +23,7 @@
         <tr>
           <td><%= s.first_name %></td>
           <td><%= s.last_name %></td>
-          <td><%= s.login_name %></td>
+          <td><%= link_to s.login_name, edit_admin_student_path(s) %></td>
         </tr>
     <% end %>
   </table>

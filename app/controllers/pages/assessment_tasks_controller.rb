@@ -22,10 +22,10 @@ class Pages::AssessmentTasksController < Pages::TasksController
 
     respond_to do |format|
       format.js do
-        response.location = curriculum_page_url(@assessment_task)
+        response.location = assessment_task_url(@assessment_task)
         js false
         unless updated
-          head :bad_request, location: curriculum_page_url(@assessment_task)
+          bad_request_with_errors @assessment_task, assessment_task_url(@assessment_task)
         end
       end
     end
@@ -42,7 +42,7 @@ class Pages::AssessmentTasksController < Pages::TasksController
         }
       end
     else
-      render text: @assessment_task.errors, status: :bad_request
+      bad_request_with_errors @assessment_task
     end
   end
 

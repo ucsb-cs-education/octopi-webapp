@@ -16,7 +16,7 @@ class LaplayaSandboxController < LaplayaFilesController
     if @laplaya_file.save
       create_post_success_response(:created, laplaya_file_url(@laplaya_file), @laplaya_file.id)
     else
-      render text: @laplaya_file.errors, status: :bad_request
+      bad_request_with_errors @laplaya_file
     end
   end
 
