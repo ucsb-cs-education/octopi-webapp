@@ -14,6 +14,7 @@ describe "teacher view of an activity page", type: :feature do
     school_class
     student_one
     student_two
+    school_class.module_pages << task_one.activity_page.module_page
     activity_page.tasks << task_one
     activity_page.tasks << task_two
     task_two.depend_on(task_one)
@@ -98,7 +99,7 @@ describe "teacher view of an activity page", type: :feature do
             click_on "Unlock For All"
             wait_for_ajax
           end
-          describe "should remove th unlock button" do
+          describe "should remove the unlock button" do
             it { should_not have_css("div.unlock-button") }
           end
         end
