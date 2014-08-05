@@ -40,11 +40,11 @@ class UnlocksController < ApplicationController
       error = 'Unlockable type is not a valid type (Page, Task)'
     end
 
-    if error || @unlocks.errors.any?
+    if error || @unlock.errors.any?
       if error
         render text: error, status: :bad_request
       else
-        bad_request_with_errors @unlocks
+        bad_request_with_errors @unlock
       end
     else
       respond_to do |format|
