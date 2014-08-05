@@ -8,12 +8,13 @@
           <select id="ansType">
             <option value="singleAnswer">One Correct</option>
             <option value="multipleAnswers">Multiple Correct</option>
+            <option value="freeResponse">Free Response</option>
           </select>
         </form>
       </div>
     </td>
     <td>
-      <button type="button" id="addAns">
+      <button <%= 'class="hidden"'.html_safe if @assessment_question.question_type=="freeResponse" %> type="button" id="addAns">
         Add New Answer Choice
       </button>
     </td>

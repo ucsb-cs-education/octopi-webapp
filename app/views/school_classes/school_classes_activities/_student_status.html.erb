@@ -1,0 +1,23 @@
+<% student = student[1] %>
+<% status = task[:statuses][student[:id]] %>
+<% if status == :locked %>
+    <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
+      <div class="unlock-button">
+        <%= simple_form_for [@school_class, @activity_unlocks.build], html: {method: :post}, remote: true do |f| %>
+            <%= f.hidden_field :unlockable_id, value: task[:id] %>
+            <%= f.hidden_field :student_id, value: student[:id] %>
+            <%= f.hidden_field :unlockable_type, value: Task.to_s %>
+            <%= f.hidden_field :from_student_progress_view, value: false %>
+            <%= f.submit 'Unlock', class: 'btn btn-xs btn-default' %>
+        <% end %>
+      </div>
+    </div>
+<% elsif status == :completed || status == false%>
+    <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
+      <span class="completed-span"> <b>Complete</b> </span>
+    </div>
+<% else %>
+    <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
+      <span class="unlocked-span"> In progress </span>
+    </div>
+<% end %>

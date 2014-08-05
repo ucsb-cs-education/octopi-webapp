@@ -41,7 +41,7 @@ class Ability
     alias_action :read, :update, :to => :read_update
     if user
       can :create_public_laplaya_files, LaplayaFile
-
+      can :access, :ckeditor
       files = LaplayaFile.with_role(:owner, user).pluck(:id)
       can :crud, LaplayaFile, id: files
       can :crud, LaplayaFile, user_id: user.id
@@ -50,7 +50,10 @@ class Ability
       if user.class == Staff
         #All users can edit themselves
         can :crud, Staff, :id => user.id
-        can :read, ActiveAdmin::Page, :name => "Dashboard"
+        can :read, ActiveAdmin::Page, :name => 'Dashboard'
+        can [:read, :create, :destroy], Ckeditor::Picture
+        can [:read, :create, :destroy], Ckeditor::AttachmentFile
+
 
         cannot :update, Staff.with_role(:super_staff).where.not(id: user)
         cannot :destroy, Staff.with_role(:super_staff).where.not(id: user)
@@ -126,6 +129,10 @@ class Ability
   end
 
   def teacher(user)
+    schools = School.with_role(:teacher, user).pluck(:id)
+    can :read, School, :id => schools
+    can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
+
     school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
     school_classes_teacher = SchoolClass.with_role(:teacher, user).pluck(:school_id)
     schools_teacher = School.with_role(:teacher, user).pluck(:id)
@@ -143,10 +150,15 @@ class Ability
       can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
     end
     page_ids = CurriculumPage.all.pluck(:id)
+    can :read_update, SchoolClass, :id => school_classes
+    can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
     can :read, Page, :curriculum_id => page_ids
     can :read, Task, :curriculum_id => page_ids
     can :read, AssessmentQuestion, :curriculum_id => page_ids
-    can :read, LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
+    can :show, LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
+    can :manual_unlock, SchoolClass, :id => school_classes
+    can :activity_page
+
     can :create, Student
   end
 

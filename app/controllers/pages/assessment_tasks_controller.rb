@@ -35,7 +35,6 @@ class Pages::AssessmentTasksController < Pages::TasksController
     @assessment_task.parent = @activity_page
     if @assessment_task.save
       respond_to do |format|
-        format.html { redirect_to @activity_page }
         format.js {
           js false
           render status: :created
@@ -58,6 +57,7 @@ class Pages::AssessmentTasksController < Pages::TasksController
     # @page = @assessment_task.becomes(Task) if @assessment_task
     # @pages = @assessment_tasks.map{|x| x.becomes(Task)} if @assessment_tasks
   end
+
 
 
   def assessment_task_params

@@ -14,7 +14,7 @@ body.school_classes {
     #edit_school_class_submit {
       width: auto;
     }
-    div.check_boxes div.checkbox{
+    div.check_boxes div.checkbox {
       @extend .col-md-4;
       margin-top: 5px;
     }
@@ -23,19 +23,17 @@ body.school_classes {
     margin-left: 15px;
     width: 90%;
     thead {
-      background-color:#B2B2FF;
-      color:#666666;
+      background-color: #B2B2FF;
+      color: #666666;
       font-weight: bold;
       cursor: default;
     }
-    &,th,td
-    {
-      border:1px solid black;
-      border-collapse:collapse;
+    &, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
     }
-    th,td
-    {
-      padding:5px;
+    th, td {
+      padding: 5px;
     }
   }
   #existing_student {
@@ -53,4 +51,84 @@ body.school_classes {
     }
   }
 
+  #curriculum-div {
+    font-size: 180%;
+    margin-top: 10px;
+    margin-bottom: -10px;
+  }
+
+  .module-title-box {
+    font-size: 110%;
+    margin-top: 2px;
+  }
+
+  .activity-title-box {
+    font-size: 180%;
+    margin: 8px
+  }
+
+  .unlock-button {
+    display: inline-block;
+    margin: 0px;
+    max-height: 1em;
+  }
+
+  .unlock-all {
+    display: inline-block;
+    margin: 0px;
+    max-height: 2em;
+
+  }
+
+  #student-name {
+    font-size: 200%;
+    margin: 8px;
+    margin-left: 0px;
+  }
+
+  .student-name-div {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 10em;
+  }
+
+  #progress-table-div {
+    width: auto;
+    height: 400px;
+    padding-bottom: 1px;
+  }
+
+  #curriculum-list {
+    ul {
+      list-style: none;
+    }
+    li {
+      border: 1px solid rgba(0, 0, 0, 0.18);
+      margin: 2px;
+      padding: .25em;
+    }
+    .module-page-ul {
+      font-size: 150%;
+      padding: .5em;
+      .activity-page-ul {
+        font-size: 80%;
+        padding: .25em;
+        .task-ul {
+          font-size: 80%;
+        }
+      }
+      .module-page-li {
+        margin-bottom: 16px;
+      }
+    }
+
+    .locked-task, .locked-activity {
+      background-color: rgba(169, 169, 169, 0.55);
+    }
+
+    .completed-task {
+      background-color: rgba(144, 245, 144, 0.40);
+    }
+
+  }
 }

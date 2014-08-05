@@ -10,20 +10,20 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require googleapis/jsapi
+//= require chartkick
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui/sortable
 //= require jquery-ui/tabs
-//= require ckeditor/override
 //= require ckeditor/init
+//= require ckeditor/basepath
 //= require bootstrap
 //= require paloma
-//= require_tree ./ckeditor
+//= require Grid
 //= require_tree ./pages
 //= require_tree ./student_portal
 //= require active_admin
 //= require school_classes
 //= require sorttable
 //= require dependant_dropdowns
-
-

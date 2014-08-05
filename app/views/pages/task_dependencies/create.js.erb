@@ -1,2 +1,2 @@
-$('#task-prerequisites').append("<%= escape_javascript(render partial: "pages/tasks/prereq_link", object: @dependency, as: :dependency ) %>");
+$('#task-prerequisites').append("<%= escape_javascript(render partial: 'pages/tasks/prereq_link', object: @dependency, as: :dependency ) %>");
 $('#task_dependency_prerequisite_id').find('option[value = <%= @dependency.prerequisite.id%>]').remove();

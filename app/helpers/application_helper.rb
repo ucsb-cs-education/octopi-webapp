@@ -1,6 +1,6 @@
 module ApplicationHelper
   def full_title(page_title)
-    base_title = "Octopi"
+    base_title = 'Octopi'
     if page_title.empty?
       base_title
     else
@@ -14,8 +14,8 @@ module ApplicationHelper
   end
 
   def controller_classes
-    current_path = ""
-    controller_path.split('/').map{|x| (current_path.empty?) ? current_path = x : current_path += "-" + x  }.join(" ")
+    current_path = ''
+    controller_path.split('/').map{|x| (current_path.empty?) ? current_path = x : current_path += '-' + x  }.join(' ')
   end
 
 end

@@ -1,3 +1,6 @@
 [submodule "lib/assets/javascripts/laplaya"]
     path = lib/assets/javascripts/laplaya
     url = https://octopi-deploy:9c50a4d3b062eedcfbb09429870005553733be31@github.com/ucsb-cs-education/laplaya.git
+[submodule "app/assets/javascripts/ckeditor/plugins/openlink"]
+	path = app/assets/javascripts/ckeditor/plugins/openlink
+	url = https://github.com/mlewand/ckeditor-plugin-openlink

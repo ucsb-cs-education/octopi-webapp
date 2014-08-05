@@ -9,6 +9,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
   before_action :set_developer_mode, only: [:show_base_file, :show_completed_file]
   before_action :set_staff_laplaya_file_base_path, only: [:show_base_file, :show_completed_file]
   before_filter :set_page_variable
+
   # GET /activity/:id
   def show
     @user_laplaya_files = LaplayaFile.where(owner: current_user) if current_user.has_role? :super_staff
@@ -50,7 +51,6 @@ class Pages::LaplayaTasksController < Pages::TasksController
       return
     end
     respond_to do |format|
-      format.html { redirect_to @laplaya_task }
       format.js {
         js false
         response.status = :created
@@ -112,6 +112,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
     redirect_to @laplaya_task
   end
 
+  private
   def set_page_variable
     @page = @laplaya_task if @laplaya_task
     @pages = @laplaya_tasks if @laplaya_tasks
@@ -120,5 +121,6 @@ class Pages::LaplayaTasksController < Pages::TasksController
   def laplaya_task_params
     params.require(:laplaya_task).permit(:title, :teacher_body, :student_body, :'designer_note')
   end
+
 
 end
