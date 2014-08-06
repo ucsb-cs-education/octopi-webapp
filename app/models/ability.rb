@@ -124,7 +124,7 @@ class Ability
     can :read, Page, :curriculum_id => page_ids
     can :read, Task, :curriculum_id => page_ids
     can :read, AssessmentQuestion, :curriculum_id => page_ids
-    can :read, LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
+    can :read, LaplayaFile, {:curriculum_id => page_ids, :type => 'TaskBaseLaplayaFile'}
     can :see_user_admin_menu
   end
 
@@ -155,7 +155,7 @@ class Ability
     can :read, Page, :curriculum_id => page_ids
     can :read, Task, :curriculum_id => page_ids
     can :read, AssessmentQuestion, :curriculum_id => page_ids
-    can :show, LaplayaFile, {:curriculum_id => page_ids, :type => "TaskBaseLaplayaFile"}
+    can :show, LaplayaFile, {:curriculum_id => page_ids, :type => 'TaskBaseLaplayaFile'}
     can :manual_unlock, SchoolClass, :id => school_classes
     can :activity_page
 
@@ -165,7 +165,10 @@ class Ability
   def student(user)
     can :read, Student, id: user
     if (user.respond_to? :current_class) && (user.current_class.present?)
-      can :show, LaplayaFile, id: SandboxBaseLaplayaFile.where(parent_id: user.current_class.module_pages.pluck(:id)).pluck(:id)
+      module_page_ids = user.current_class.module_pages
+      can :show, LaplayaFile, id: SandboxBaseLaplayaFile.where(parent_id: module_page_ids).pluck(:id)
+      demoLaplayaTasks = LaplayaTask.where(demo: true, page_id: ActivityPage.where(page_id: module_page_ids).pluck(:id))
+      can :show, LaplayaFile, id: TaskCompletedLaplayaFile.where(laplaya_task: demoLaplayaTasks).pluck(:id)
     end
   end
 

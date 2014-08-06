@@ -1,15 +1,17 @@
 <div id="select-module">
   <div class="form-group" id="module-list">
-    <form id="change-module" action="<%= @module_page.id %>">
-      <label for="modules" class="select required control-label">Select a different module</label>
-      <select id="modules" class="form-control">
-        <%= render partial: "student_portal/pages/module_page/module_options", collection: current_school_class.module_pages, as: :module_page %>
-      </select>
+    <% if current_school_class.module_pages.count > 1 %>
+        <form id="change-module" action="<%= @module_page.id %>">
+          <label for="modules" class="select required control-label">Select a different module</label>
+          <select id="modules" class="form-control">
+            <%= render partial: 'student_portal/pages/module_page/module_options', collection: current_school_class.module_pages, as: :module_page %>
+          </select>
 
-      <div class="form-actions">
-        <input type="submit" class="btn btn-primary" value="Switch Modules" id="change-module-button">
-      </div>
-    </form>
+          <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="Switch Modules" id="change-module-button">
+          </div>
+        </form>
+    <% end %>
   </div>
 </div>
 

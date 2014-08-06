@@ -7,32 +7,37 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   before_action :force_trailing_slash, only: [:laplaya_sandbox]
   before_action :signed_in_student
   before_action :load_variables
-  before_action :verify_valid_module
+  before_action :verify_valid_module, unless: :json_request?
   before_action :verify_valid_activity, only: [
       :activity_page,
       :laplaya_task,
       :assessment_task,
       :laplaya_task_response,
       :assessment_response
-  ]
+  ], unless: :json_request?
   before_action :verify_valid_task, only: [
       :laplaya_task,
       :assessment_task,
       :laplaya_task_response,
       :assessment_response
-  ]
+  ], unless: :json_request?
   before_action :build_laplaya_task_response, only: [
       :laplaya_task,
       :laplaya_task_response
-  ]
-  before_action :setup_laplaya, only: [:laplaya_task, :laplaya_sandbox, :laplaya_sandbox_file, :design_thinking_project]
+  ], unless: :json_request?
+  before_action :setup_laplaya, only: [:laplaya_task, :laplaya_sandbox, :laplaya_sandbox_file, :design_thinking_project],
+                unless: :json_request?
 
   after_action :set_module_cookie, only: [:module_page]
 
   #GET /student_portal/modules/:id
   #student_portal_module_path
   def module_page
-    @unlocks = Unlock.find_for(current_student, current_school_class, @module_page.activity_pages)
+    respond_to do |format|
+      format.html do
+        @unlocks = Unlock.find_for(current_student, current_school_class, @module_page.activity_pages)
+      end
+    end
   end
 
   #GET /student_portal/activities/:id
@@ -40,88 +45,141 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def activity_page
     # we should try to do some eager loading. It'd make things faster. But I don't think this works
     # @tasks = @activity_page.tasks.includes(:unlocks).where("unlocks.student_id" => current_student.id, "unlocks.school_class_id" => current_school_class.id)
-    @tasks = @activity_page.tasks
+    respond_to do |format|
+      format.html do
+        @tasks = @activity_page.tasks
+      end
+    end
   end
 
   #GET /student_portal/offline_tasks/:id
   #student_portal_offline_task_path
   def offline_task
+    respond_to do |format|
+      format.html do
+      end
+      format.json do
+        unlocked = @offline_task.get_visibility_status_for(current_student, current_school_class) != :locked
+        render json: {unlocked: unlocked}
+      end
+    end
   end
 
   #GET /student_portal/assessment_tasks/:id
   #student_portal_assessment_task_path
   def assessment_task
-    @task_response = AssessmentTaskResponse.new(
-        student: current_student,
-        school_class: current_school_class,
-        task: @assessment_task)
-    @assessment_task.children.each do |x|
-      @task_response.assessment_question_responses.build(assessment_question: x)
+    respond_to do |format|
+      format.html do
+        @task_response = AssessmentTaskResponse.new(
+            student: current_student,
+            school_class: current_school_class,
+            task: @assessment_task)
+        @assessment_task.children.each do |x|
+          @task_response.assessment_question_responses.build(assessment_question: x)
+        end
+      end
+      format.json do
+        unlocked = @assessment_task.get_visibility_status_for(current_student, current_school_class) != :locked
+        render json: {unlocked: unlocked}
+      end
     end
   end
 
   #GET /student_portal/laplaya_tasks/:id
   #student_portal_laplaya_task_path
   def laplaya_task
-    @laplaya_ide_params[:fileID] = @laplaya_task_response.laplaya_file.id
-    @laplaya_ide_params[:prevTask] = get_path_for_task(@laplaya_task.higher_item)
-    @laplaya_ide_params[:nextTask] = get_path_for_task(@laplaya_task.lower_item)
-    @laplaya_ide_params[:returnPath] = student_portal_activity_path(@activity_page)
-    laplaya_helper
+    respond_to do |format|
+      format.html do
+        if @laplaya_task.demo?
+          @laplaya_ide_params[:fileID] = @laplaya_task.task_completed_laplaya_file.id
+          @laplaya_ide_params[:demoMode] = true
+        else
+          @laplaya_ide_params[:fileID] = @laplaya_task_response.laplaya_file.id
+        end
+        @laplaya_ide_params[:prevTask] = get_path_for_task(@laplaya_task.higher_item)
+        @laplaya_ide_params[:nextTask] = get_path_for_task(@laplaya_task.lower_item)
+        @laplaya_ide_params[:returnPath] = student_portal_activity_path(@activity_page)
+        laplaya_helper
+      end
+      format.json do
+        unlocked = @laplaya_task.get_visibility_status_for(current_student, current_school_class) != :locked
+        render json: {unlocked: unlocked}
+      end
+    end
   end
 
   #POST /student_portal/assessment_tasks/:id
   #student_portal_assessment_task_response_path
   def assessment_response
-    task_response = AssessmentTaskResponse.create(assessment_response_params)
-    if task_response.errors.empty?
-      redirect_to student_portal_activity_path(@assessment_task.activity_page)
-    else
-      head :bad_request
+    respond_to do |format|
+      format.html do
+        task_response = AssessmentTaskResponse.create(assessment_response_params)
+        if task_response.errors.empty?
+          redirect_to student_portal_activity_path(@assessment_task.activity_page)
+        else
+          bad_request_with_errors task_response
+        end
+      end
     end
   end
 
   #POST /student_portal/laplaya_tasks/:id
   #student_portal_laplaya_task_response_path
   def laplaya_task_response
-    @laplaya_task_response.completed = true
-    @laplaya_task_response.save
+    respond_to do |format|
+      format.html do
+        @laplaya_task_response.completed = true
+        @laplaya_task_response.save
 
-    if @laplaya_task_response.errors.empty?
-      redirect_to student_portal_activity_path(@laplaya_task.activity_page)
-    else
-      head :bad_request
+        if @laplaya_task_response.errors.empty?
+          redirect_to student_portal_activity_path(@laplaya_task.activity_page)
+        else
+          head :bad_request
+        end
+      end
     end
   end
 
   #GET /student_portal/modules/:id/laplaya_sandbox
   def laplaya_sandbox
-    sandboxmode = {}
-    sandboxmode['modulePath_URL'] = student_portal_module_sandbox_files_path(@module_page)
-    sandboxmode['baseFile_ID'] = @module_page.sandbox_base_laplaya_file.id
-    @laplaya_ide_params[:sandboxMode] = sandboxmode
-    laplaya_helper
+    respond_to do |format|
+      format.html do
+        sandboxmode = {}
+        sandboxmode['modulePath_URL'] = student_portal_module_sandbox_files_path(@module_page)
+        sandboxmode['baseFile_ID'] = @module_page.sandbox_base_laplaya_file.id
+        @laplaya_ide_params[:sandboxMode] = sandboxmode
+        laplaya_helper
+      end
+    end
   end
 
   #GET /student_portal/modules/:id/laplaya_sandbox
   def design_thinking_project
-    @laplaya_ide_params[:fileID] = @project_laplaya_file.id
-    laplaya_helper
+    respond_to do |format|
+      format.html do
+        @laplaya_ide_params[:fileID] = @project_laplaya_file.id
+        laplaya_helper
+      end
+    end
   end
 
   #GET /student_portal/modules/:id/laplaya_sandbox/:file_id
   def laplaya_sandbox_file
-    @laplaya_file = StudentResponse::SandboxResponseLaplayaFile.find(params[:file_id])
-    unless current_school_class && current_school_class.module_pages.include?(@laplaya_file.module_page) &&
-        @laplaya_file.owner == current_student
-      raise CanCan::AccessDenied
+    respond_to do |format|
+      format.html do
+        @laplaya_file = StudentResponse::SandboxResponseLaplayaFile.find(params[:file_id])
+        unless current_school_class && current_school_class.module_pages.include?(@laplaya_file.module_page) &&
+            @laplaya_file.owner == current_student
+          raise CanCan::AccessDenied
+        end
+        sandboxmode = {}
+        sandboxmode['modulePath_URL'] = student_portal_module_sandbox_files_path(@module_page)
+        sandboxmode['baseFile_ID'] = @module_page.sandbox_base_laplaya_file.id
+        @laplaya_ide_params[:fileID] = params[:file_id]
+        @laplaya_ide_params[:sandboxMode] = sandboxmode
+        laplaya_helper
+      end
     end
-    sandboxmode = {}
-    sandboxmode['modulePath_URL'] = student_portal_module_sandbox_files_path(@module_page)
-    sandboxmode['baseFile_ID'] = @module_page.sandbox_base_laplaya_file.id
-    @laplaya_ide_params[:fileID] = params[:file_id]
-    @laplaya_ide_params[:sandboxMode] = sandboxmode
-    laplaya_helper
   end
 
   private
@@ -164,7 +222,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
         @laplaya_task = LaplayaTask.find(params[:id])
         @activity_page = @laplaya_task.activity_page
         @module_page = @activity_page.module_page
-        @laplaya_task_response = LaplayaTaskResponse.find_by(
+        @laplaya_task_response = @laplaya_task.demo? || LaplayaTaskResponse.find_by(
             student: current_student,
             school_class: current_school_class,
             task: @laplaya_task
@@ -230,6 +288,10 @@ class StudentPortal::PagesController < StudentPortal::BaseController
         render text: 'You tried to access an inaccessible page', status: :bad_request
       end
     end
+  end
+
+  def json_request?
+    request.format.json?
   end
 
 end

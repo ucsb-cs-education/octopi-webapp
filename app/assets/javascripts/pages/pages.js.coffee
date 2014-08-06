@@ -7,7 +7,7 @@ PagesController.prototype.show = () ->
   enableSubmitButton = () ->
     $('.page-form input[type=submit]').removeAttr('disabled');
   $('#page-title').blur(enableSubmitButton)
-
+  $('#visibility-select').change(enableSubmitButton)
 
   addPageViewSelectorCallback = () ->
     CKEDITOR.disableAutoInline = true;
@@ -36,7 +36,7 @@ PagesController.prototype.show = () ->
             editor = inline(this)
           )
     });
-    $("#children.octopisortable").each(() ->
+    $("#children").find(".octopisortable").each(() ->
       $(this).sortable({
         placeholder: "ui-state-highlight",
         axis: 'y',
@@ -44,6 +44,19 @@ PagesController.prototype.show = () ->
       });
       $(this).disableSelection();
     )
+
+    disableLaplayaChild = () ->
+      $(this).find('input,select,a,abbr').attr('disabled','')
+      $(this).addClass('demo-disabled')
+
+    enableLaplayaChild = () ->
+      $(this).find('input,select,a,abbr').removeAttr('disabled')
+      $(this).removeClass('demo-disabled')
+
+    demoCheckboxListener = () ->
+      method = if this.checked then disableLaplayaChild else enableLaplayaChild
+      $('#child-pages').find('#base-file, #analysis-file').each(method)
+
 
     submitFunction = () ->
       teacher_body = $('#teacher-body').html()
@@ -65,9 +78,14 @@ PagesController.prototype.show = () ->
         alert "Title cannot be blank"
         return false
 
-    $('.page form ').submit(submitFunction)
+
+    $('#laplaya_task_demo').each(demoCheckboxListener)
+    $('#laplaya_task_demo').change(demoCheckboxListener)
+    $('form.page-form').submit(submitFunction)
+    $('#laplaya_task_demo').change(enableSubmitButton)
 
 
   $(document).ready(addPageViewSelectorCallback);
+  $(document).ready();
   $(document).ready()
 

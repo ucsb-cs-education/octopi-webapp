@@ -11,7 +11,6 @@ class Task < ActiveRecord::Base
   has_many :unlocks, as: :unlockable
   #before_save :check_dependants
 
-
   acts_as_list scope: [:page_id]
   # include CustomModelNaming
   # self.param_key = :feed
@@ -35,6 +34,5 @@ class Task < ActiveRecord::Base
     end
     unlock
   end
-
 
 end

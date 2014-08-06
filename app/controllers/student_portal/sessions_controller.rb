@@ -22,6 +22,7 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
 
     if student && school_class && student.authenticate(password)
       sign_in_student student, school_class
+      sign_out(current_staff) if current_staff
       redirect_back_or student_portal_root_url
     elsif student.nil? || school_class.nil?
       flash[:danger] = 'Please select a class and/or login name'

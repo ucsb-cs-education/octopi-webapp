@@ -89,9 +89,9 @@ class Pages::ModulePagesController < Pages::PagesController
       laplaya_file = LaplayaFile.find(params[:laplaya_file][:laplaya_file])
       authorize! :show, laplaya_file
       file_to_clone_to.clone(laplaya_file)
-      flash[:success] = "Laplaya File successfully cloned!"
+      flash[:success] = 'Laplaya File successfully cloned!'
     else
-      flash[:danger] = "Invalid selection for Laplaya File cloning!"
+      flash[:danger] = 'Invalid selection for Laplaya File cloning!'
     end
     redirect_to @module_page
   end
@@ -102,6 +102,6 @@ class Pages::ModulePagesController < Pages::PagesController
   end
 
   def module_page_params
-    params.require(:module_page).permit(:title, :'teacher_body', :'student_body', :'designer_note')
+    params.require(:module_page).permit(:title, :teacher_body, :student_body, :designer_note, :visible_to)
   end
 end

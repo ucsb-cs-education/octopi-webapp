@@ -1,5 +1,5 @@
 <div class="row" id="base_laplaya_files">
-  <div class="base_laplaya_file col-md-4">
+  <div class="base_laplaya_file col-md-4" id="base-file">
     <div class="files-header">
       <h2>Starting File</h2>
     </div>
@@ -11,7 +11,7 @@
             clone_direct: {id: @page.task_completed_laplaya_file.id, button_label: 'Clone from solution file'}
     } %>
   </div>
-  <div class="base_laplaya_file col-md-4">
+  <div class="base_laplaya_file col-md-4" id="solution-file">
     <div class="files-header">
       <h2>Solution File</h2>
 
@@ -26,7 +26,7 @@
     } %>
   </div>
   <% if can? :update, @page %>
-      <div class="laplaya-analysis-file col-md-4">
+      <div class="laplaya-analysis-file col-md-4" id="analysis-file">
         <div class="files-header">
           <h2>Analysis file</h2>
         </div>

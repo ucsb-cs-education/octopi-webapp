@@ -62,7 +62,7 @@ class Pages::ActivityPagesController < Pages::PagesController
   end
 
   def activity_page_params
-    params.require(:activity_page).permit(:title, :'teacher_body', :'student_body', :'designer_note')
+    params.require(:activity_page).permit(:title, :teacher_body, :student_body, :designer_note, :visible_to)
   end
 
 end

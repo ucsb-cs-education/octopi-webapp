@@ -56,7 +56,7 @@ class Pages::OfflineTasksController < Pages::TasksController
   end
 
   def offline_task_params
-    params.require(:offline_task).permit(:title, :teacher_body, :student_body, :'designer_note')
+    params.require(:offline_task).permit(:title, :teacher_body, :student_body, :designer_note, :visible_to)
   end
 
 end

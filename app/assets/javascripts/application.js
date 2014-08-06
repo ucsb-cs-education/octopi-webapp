@@ -23,7 +23,6 @@
 //= require Grid
 //= require_tree ./pages
 //= require_tree ./student_portal
-//= require active_admin
 //= require school_classes
 //= require sorttable
 //= require dependant_dropdowns

@@ -61,6 +61,6 @@ class Pages::AssessmentTasksController < Pages::TasksController
 
 
   def assessment_task_params
-    params.require(:assessment_task).permit(:title, :'teacher_body', :'student_body', :'designer_note')
+    params.require(:assessment_task).permit(:title, :teacher_body, :student_body, :designer_note, :visible_to)
   end
 end

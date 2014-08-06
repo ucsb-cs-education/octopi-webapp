@@ -6,10 +6,17 @@ module Curriculumify
     base.validates :curriculum_id, presence: true, unless: :new_record?
     base.validate :curriculum_id_validator, unless: :new_record?
     base.validate :title, presence: true, if: :has_title?
+    base.before_save :set_visibility_statuses, if: :has_visibility_status?
+    base.after_initialize :initialize_visible_to, if: :has_visibility_status?
+    attr_accessor :visible_to
 
   end
 
   private
+  def has_visibility_status?(type = self.type)
+    (type =~ /((Task|Project|Sandbox)Base|TaskCompleted)LaplayaFile|CurriculumPage/).nil?
+  end
+
   def has_title?
     (type =~ /((Task|Project|Sandbox)Base|TaskCompleted)LaplayaFile/).nil?
   end
@@ -29,11 +36,11 @@ module Curriculumify
   def curriculum_id_validator
     if curriculum_page?
       unless id == curriculum_id
-        errors.add(:curriculum_id, "must be equal to id")
+        errors.add(:curriculum_id, 'must be equal to id')
       end
     else
       unless parent.curriculum_id == curriculum_id
-        errors.add(:curriculum_id, "must be equal to parent curriculum_id")
+        errors.add(:curriculum_id, 'must be equal to parent curriculum_id')
       end
     end
   end
@@ -54,5 +61,40 @@ module Curriculumify
     extra_items = difference_between_arrays(array1, array2)
     missing_items = difference_between_arrays(array2, array1)
     extra_items.empty? & missing_items.empty?
+  end
+  private
+  def initialize_visible_to
+    if visible_to_teachers
+      if visible_to_students
+        self.visible_to = :all
+      else
+        self.visible_to = :teachers
+      end
+    else
+      self.visible_to = :none
+    end
+  end
+
+  private
+  def set_visibility_statuses
+    visible_to = self.visible_to.to_sym
+    if [:all, :teachers, :none].include? visible_to
+      unless visible_to_teachers_changed?
+        new_val = (visible_to == :all || visible_to == :teachers)
+        if visible_to_teachers != new_val
+          self.visible_to_teachers = new_val
+        end
+      end
+      unless visible_to_students_changed?
+        new_val = (visible_to == :all)
+        if visible_to_students != new_val
+          self.visible_to_students = new_val
+        end
+      end
+      true
+    else
+      self.errors.add :visible_to, 'must be either :all, :teachers, or :none'
+      false
+    end
   end
 end

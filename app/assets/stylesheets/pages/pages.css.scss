@@ -27,7 +27,32 @@ body.pages {
       }
     }
     form {
+      #demo-mode-checkbox label {
+        margin-left: 6px;
+        margin-bottom: 15px;
+        padding: 0px;
+        label {
+          margin: 0px 3px 0px 0px;
+        }
+        input {
+          margin: 0px;
+        }
+      }
+
       width: 60%;
+      .visible-fields {
+        select {
+          width: auto;
+          margin-left: 15px;
+        }
+        input {
+          margin-left: 15px;
+        }
+        label {
+          text-align: left;
+          padding-right: 0px;
+        }
+      }
     }
 
     .new_child_page {
@@ -56,6 +81,23 @@ body.pages {
       }
     }
     #base_laplaya_files {
+      .demo-disabled {
+        opacity: 0.3;
+        background-color: $gray-lighter;
+        a {
+          color: $gray-light;
+          pointer-events: none;
+          cursor: default;
+        }
+        input.btn-primary {
+          background-color: $gray-light;
+          border-color: $gray-light;
+        }
+        select, abbr {
+          cursor: default;
+          pointer-events: none;
+        }
+      }
       div.files-header {
         margin-top: 10px;
         min-height: 45px;

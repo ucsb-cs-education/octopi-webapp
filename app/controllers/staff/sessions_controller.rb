@@ -1,4 +1,6 @@
+require 'student_signin_module'
 class Staff::SessionsController < Devise::SessionsController
+  include StudentSigninModule
 
   def after_sign_in_path_for(resource)
     if Rails.env.production?
@@ -10,5 +12,11 @@ class Staff::SessionsController < Devise::SessionsController
     redirect_url = super if redirect_url == sign_in_url
     redirect_url = staff_root_path if redirect_url == sign_in_url
     redirect_url
+  end
+
+  def create
+    super do
+      sign_out_student(current_student) if signed_in_student?
+    end
   end
 end

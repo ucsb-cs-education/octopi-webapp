@@ -3,8 +3,9 @@
   <%= div_for @page, class: 'page', :'data-update-url' => url_for(@page) do %>
       <div class="page-header">
         <h1>
-          <span id="page-title" <%=  'contenteditable=true' if can? :update, @page%> ><%= @page.title %></span>
+          <span id="page-title" <%= 'contenteditable=true' if can? :update, @page %> ><%= @page.title %></span>
         </h1>
+
         <p>Last updated: <%= get_time(@page) %></p>
         <% if @page.respond_to? :parent %>
             <div class='parent'>
@@ -22,9 +23,14 @@
           </div>
       <% end %>
       <% if can? :update, @page %>
-          <%= simple_form_for @page, html: {class: 'page-form'}, remote: true do |f| %>
+          <%= simple_form_for @page, html: {class: 'page-form form-horizontal', role: 'form'}, remote: true do |f| %>
               <div class="form-inputs">
-                <%= render 'hidden_fields', f: f %>
+                <div class="hidden-fields">
+                  <%= render partial: 'hidden_fields', locals: {page: @page, f: f} %>
+                </div>
+                <div class="visible-fields">
+                  <%= render partial: 'visible_fields', locals: {page: @page, f: f} %>
+                </div>
               </div>
               <div class="form-actions">
                 <%= f.submit "Save changes to #{@page.title}", class: 'btn btn-primary', id: 'update-page-btn', disabled: true %>
