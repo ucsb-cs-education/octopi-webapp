@@ -16,8 +16,7 @@
 //= require jquery_ujs
 //= require jquery-ui/sortable
 //= require jquery-ui/tabs
-//= require ckeditor/init
-//= require ckeditor/basepath
+//= require ckeditor
 //= require bootstrap
 //= require paloma
 //= require Grid

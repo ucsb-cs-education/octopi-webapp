@@ -12,3 +12,4 @@ CKEDITOR.editorConfig = (config) ->
   config.toolbar = 'Pure'
   config.extraPlugins = 'openlink'
   true
+
