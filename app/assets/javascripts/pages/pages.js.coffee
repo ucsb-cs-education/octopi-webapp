@@ -84,20 +84,31 @@ PagesController.prototype.show = () ->
     $('form.page-form').submit(submitFunction)
     $('#laplaya_task_demo').change(enableSubmitButton)
 
+    addAlert = (alert, success = true) ->
+      $('div.ajax-page-alert').each ->
+        $(this).remove();
+      a = $(alert).prependTo($('#main-body-container'))
+      if success
+        a.delay(4000).fadeOut('2', ->
+          $(this).remove()
+        )
 
     $(".page-form").bind "ajax:success", ->
-      $("<div class = 'alert alert-success'> Success! </div>").prependTo($("div.container:nth-child(2)")).delay(5000).fadeOut("2")
+      alert = "<div class = 'alert alert-success ajax-page-alert'>'" + $('#page-title').text() + "' has been saved.</div>"
+      addAlert(alert, true)
 
     $("form").bind "ajax:error", (jqXHR, textStatus, settings, errorThrown) ->
-      alertdiv = $("<div class = 'alert alert-danger'></div>").prependTo($("div.container:nth-child(2)"))
-      alertarray;
+      alert = "<div class = 'alert alert-danger ajax-page-alert'>"
       try
         alertarray = JSON.parse(textStatus.responseText)
       catch e
-        alertdiv.append "Error: " + textStatus.responseText
+        alert += "An unexpected error occured during saving.</div>"
       if alertarray instanceof Array
+        alert += "An error occured during saving."
         $.each alertarray, (index, value) ->
-          alertdiv.append "Error: " + value + "<br>"
+          alert += "<br/>Error: " + value
+        alert += "</div>"
+      addAlert(alert, false)
 
 
   $(document).ready(addPageViewSelectorCallback);
