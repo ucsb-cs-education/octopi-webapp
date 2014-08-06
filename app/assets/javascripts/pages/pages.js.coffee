@@ -36,7 +36,7 @@ PagesController.prototype.show = () ->
             editor = inline(this)
           )
     });
-    $("#children").find(".octopisortable").each(() ->
+    $("#children.octopisortable").each(() ->
       $(this).sortable({
         placeholder: "ui-state-highlight",
         axis: 'y',
