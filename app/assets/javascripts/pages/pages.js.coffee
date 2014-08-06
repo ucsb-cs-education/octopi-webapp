@@ -87,5 +87,4 @@ PagesController.prototype.show = () ->
 
   $(document).ready(addPageViewSelectorCallback);
   $(document).ready();
-  $(document).ready()
 
