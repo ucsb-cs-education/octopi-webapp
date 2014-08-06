@@ -61,8 +61,6 @@ OctopiWebapp::Application.configure do
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   # config.assets.precompile += %w( search.js )
-  config.assets.precompile += Ckeditor.assets
-  config.assets.precompile += %w(ckeditor/*)
   config.assets.precompile += %w( laplaya_application.js )
   config.assets.precompile += %w( active_admin.js )
 
