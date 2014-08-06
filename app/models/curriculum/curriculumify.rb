@@ -9,10 +9,18 @@ module Curriculumify
     base.before_save :set_visibility_statuses, if: :has_visibility_status?
     base.after_initialize :initialize_visible_to, if: :has_visibility_status?
     attr_accessor :visible_to
+    if is_page_or_task?(base.to_s)
+      base.scope :student_visible, -> { base.where(visible_to_students: true)}
+      base.scope :teacher_visible, -> { base.where(visible_to_students: true)}
+    end
 
   end
 
   private
+  def self.is_page_or_task?(type)
+    type == 'Page' || type == 'Task'
+  end
+
   def has_visibility_status?(type = self.type)
     (type =~ /((Task|Project|Sandbox)Base|TaskCompleted)LaplayaFile|CurriculumPage/).nil?
   end

@@ -2,7 +2,7 @@
 <% if status = child.get_visibility_status_for(current_student, current_school_class) %>
     <% if status == :locked %>
         <div class="child-link locked">
-          <%= image_tag("padlock.png", size: "21") %>
+          <%= image_tag('padlock.png', size: '21') %>
           <%= child.title %>
         </div>
     <% elsif status == :completed %>

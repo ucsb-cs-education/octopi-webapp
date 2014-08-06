@@ -5,8 +5,10 @@ class LaplayaTask < Task
   alias_attribute :children, :task_base_laplaya_file
 
   def is_accessible?(student, school_class)
-    status = get_visibility_status_for(student, school_class)
-    status == :visible || status == :completed
+    if visible_to_students
+      status = get_visibility_status_for(student, school_class)
+      status == :visible || status == :completed
+    end
   end
 
   def get_visibility_status_for(student, school_class)

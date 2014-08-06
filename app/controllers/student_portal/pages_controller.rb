@@ -12,6 +12,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
       :activity_page,
       :laplaya_task,
       :assessment_task,
+      :offline_task,
       :laplaya_task_response,
       :assessment_response
   ], unless: :json_request?
@@ -19,7 +20,8 @@ class StudentPortal::PagesController < StudentPortal::BaseController
       :laplaya_task,
       :assessment_task,
       :laplaya_task_response,
-      :assessment_response
+      :assessment_response,
+      :offline_task
   ], unless: :json_request?
   before_action :build_laplaya_task_response, only: [
       :laplaya_task,
@@ -35,7 +37,8 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def module_page
     respond_to do |format|
       format.html do
-        @unlocks = Unlock.find_for(current_student, current_school_class, @module_page.activity_pages)
+        @activities = @module_page.activity_pages.student_visible
+        @unlocks = Unlock.find_for(current_student, current_school_class, @activities)
       end
     end
   end
@@ -47,7 +50,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     # @tasks = @activity_page.tasks.includes(:unlocks).where("unlocks.student_id" => current_student.id, "unlocks.school_class_id" => current_school_class.id)
     respond_to do |format|
       format.html do
-        @tasks = @activity_page.tasks
+        @tasks = @activity_page.tasks.student_visible
       end
     end
   end
@@ -240,7 +243,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   end
 
   def verify_valid_module
-    unless @module_page && current_school_class.module_pages.include?(@module_page)
+    unless @module_page.is_accessible?(current_student, current_school_class)
       redirect_to_first_module_page
     end
   end
@@ -252,7 +255,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   end
 
   def verify_valid_task
-    task = @assessment_task || @laplaya_task
+    task = @assessment_task || @laplaya_task || @offline_task
     unless task.is_accessible?(current_student, current_school_class)
       redirect_to_first_module_page
     end
@@ -275,7 +278,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def redirect_to_first_module_page
     respond_to do |format|
       format.html do
-        redirect_module = current_school_class.module_pages.first
+        redirect_module = current_school_class.module_pages.student_visible.first
         if redirect_module
           flash[:warning]='You do not have permission to visit that page.'
           redirect_to student_portal_module_path(redirect_module)

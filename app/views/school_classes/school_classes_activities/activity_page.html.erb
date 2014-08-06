@@ -1,11 +1,11 @@
 <div class="activity-title-box">
   <%= @activity_page.title %>
 </div>
-<%= link_to 'Back', school_class_path(@school_class), class: "btn btn-default" %>
+<%= link_to 'Back', school_class_path(@school_class), class: 'btn btn-default' %>
 
-<%= render partial: "graph", locals: {graph_info: @graph_info} %>
+<%= render partial: 'graph', locals: {graph_info: @graph_info} %>
 
 <hr>
 <div id="progress-table-div">
-  <%= render partial: "progress_table" %>
+  <%= render partial: 'progress_table' %>
 </div>

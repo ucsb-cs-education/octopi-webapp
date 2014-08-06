@@ -4,9 +4,10 @@ class TaskResponse < ActiveRecord::Base
   belongs_to :task
   before_save :unlock_dependencies
   validate :task_is_unlocked
+  scope :completed, -> { where(completed: true) }
 
   def task_is_unlocked
-    errors.add(:taskresponse, "must be unlocked") unless unlock
+    errors.add(:taskresponse, 'must be unlocked') unless unlock
   end
 
   def unlock_dependencies

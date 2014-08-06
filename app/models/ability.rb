@@ -110,7 +110,7 @@ class Ability
     staff_school_class_roles = Role.where(name: [:teacher], resource_type: 'SchoolClass', resource_id: school_classes_ids)
     roles = []
     [staff_school_roles, staff_school_class_roles].each do |staff_roles|
-      roles.push *(staff_roles.map{|x| {name: x.name, resource: x.resource}})
+      roles.push *(staff_roles.map { |x| {name: x.name, resource: x.resource} })
     end
     staff_ids = []
     roles.each do |role|
@@ -129,6 +129,8 @@ class Ability
   end
 
   def teacher(user)
+    #this is really awful. We need to clean this up, a lot...
+
     schools = School.with_role(:teacher, user).pluck(:id)
     can :read, School, :id => schools
     can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
@@ -144,19 +146,21 @@ class Ability
     else
       cannot :read, School, :id => School.pluck(:id) - school_classes_teacher
       can :read, School, :id => school_classes_teacher
-      can [:read, :update], Student, :id=> Student.where(school_id: school_classes_teacher).pluck(:id)
-      can :crud, Student, :id => SchoolClass.with_role(:teacher, user).map{|school_class| school_class.students.map {
-          |student| student.id}.flatten(1)}.flatten(1).uniq
+      can [:read, :update], Student, :id => Student.where(school_id: school_classes_teacher).pluck(:id)
+      can :crud, Student, :id => SchoolClass.with_role(:teacher, user).map { |school_class| school_class.students.map {
+          |student| student.id }.flatten(1) }.flatten(1).uniq
       can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
     end
     page_ids = CurriculumPage.all.pluck(:id)
     can :read_update, SchoolClass, :id => school_classes
     can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
-    can :read, Page, :curriculum_id => page_ids
-    can :read, Task, :curriculum_id => page_ids
-    can :read, AssessmentQuestion, :curriculum_id => page_ids
-    can :show, LaplayaFile, {:curriculum_id => page_ids, :type => 'TaskBaseLaplayaFile'}
-    can :manual_unlock, SchoolClass, :id => school_classes
+    can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
+    can :read, Task, {curriculum_id: page_ids, visible_to_teachers: true}
+    assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids)
+    laplaya_task_ids = LapalyaTask.teacher_visible.where(curriculum_id: page_ids)
+    can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
+    can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
+    can :manual_unlock, SchoolClass, id: school_classes
     can :activity_page
 
     can :create, Student
@@ -167,8 +171,8 @@ class Ability
     if (user.respond_to? :current_class) && (user.current_class.present?)
       module_page_ids = user.current_class.module_pages
       can :show, LaplayaFile, id: SandboxBaseLaplayaFile.where(parent_id: module_page_ids).pluck(:id)
-      demoLaplayaTasks = LaplayaTask.where(demo: true, page_id: ActivityPage.where(page_id: module_page_ids).pluck(:id))
-      can :show, LaplayaFile, id: TaskCompletedLaplayaFile.where(laplaya_task: demoLaplayaTasks).pluck(:id)
+      demo_laplaya_tasks = LaplayaTask.where(demo: true, page_id: ActivityPage.where(page_id: module_page_ids).pluck(:id))
+      can :show, LaplayaFile, id: TaskCompletedLaplayaFile.where(laplaya_task: demo_laplaya_tasks).pluck(:id)
     end
   end
 

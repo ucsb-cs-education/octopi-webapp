@@ -1,6 +1,6 @@
 <div id="select-module">
   <div class="form-group" id="module-list">
-    <% if current_school_class.module_pages.count > 1 %>
+    <% if current_school_class.module_pages.student_visible.count > 1 %>
         <form id="change-module" action="<%= @module_page.id %>">
           <label for="modules" class="select required control-label">Select a different module</label>
           <select id="modules" class="form-control">
@@ -39,6 +39,6 @@
 </div>
 
 <div id="children-pages">
-  <%= render partial: "student_portal/pages/module_page/children", collection: @module_page.children, as: :child %>
+  <%= render partial: 'student_portal/pages/module_page/children', collection: @activity_pages, as: :child %>
 </div>
 

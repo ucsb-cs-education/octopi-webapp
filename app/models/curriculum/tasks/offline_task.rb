@@ -1,8 +1,7 @@
 class OfflineTask < Task
 
   def is_accessible?(student, school_class)
-    status = get_visibility_status_for(student, school_class)
-    status == :visible
+    visible_to_students && (:visible == get_visibility_status_for(student, school_class))
   end
 
   def get_visibility_status_for(student, school_class)

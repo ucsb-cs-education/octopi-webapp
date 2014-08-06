@@ -4,6 +4,7 @@ ActiveAdmin.register LaplayaFile do
   filter :file_name
   filter :public
   filter :owner
+  filter :type, as: :select
   filter :created_at
   filter :updated_at
 
@@ -13,6 +14,7 @@ ActiveAdmin.register LaplayaFile do
     id_column
     column :file_name
     column :note
+    column :type
     column :public
     column :owner
     column :created_at

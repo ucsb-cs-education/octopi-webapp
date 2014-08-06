@@ -15,6 +15,10 @@ class ModulePage < Page
     update_with_children_helper(ActivityPage, params, ids)
   end
 
+  def is_accessible?(student, school_class)
+    visible_to_students && school_class.module_pages.student_visible.include?(self)
+  end
+
   private
   def update_curriculum_id
     self.curriculum_id = parent.curriculum_id
