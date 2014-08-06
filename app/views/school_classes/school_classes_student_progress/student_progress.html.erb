@@ -3,11 +3,17 @@
 </div>
 <%= link_to "Back", @school_class, class: "btn btn-default" %>
 <div id="progress-summary">
-<%= render partial: "graph", locals:{graph_info: @graph_info} %>
+  <%= render partial: "graph", locals: {graph_info: @graph_info} %>
 </div>
 <hr>
 <div id="curriculum-list">
   <ul class="module-page-ul">
     <%= render partial: "module_list_element", collection: @info.to_a, as: "module_page" %>
   </ul>
+</div>
+<div id="reset-graph">
+  <%= simple_form_for :student_progress, url: school_class_reset_dependency_graph_path(@school_class), :method => :get do |f| %>
+      <%= f.hidden_field :student_id, value: @student.id %>
+      <%= f.submit "Reevaluate Unlock Progress", class: 'btn btn-warning' %>
+  <% end %>
 </div>

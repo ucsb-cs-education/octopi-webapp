@@ -60,6 +60,7 @@ OctopiWebapp::Application.routes.draw do
       resources :unlocks, only: [:destroy, :create]
       get '/activities/:id', to: 'school_classes/school_classes_activities#activity_page', as: 'activity'
       get '/student/:id', to: 'school_classes/school_classes_student_progress#student_progress', as: 'student_progress'
+      get '/reset_dependency_graph', to: 'school_classes/school_classes_student_progress#reset_dependency_graph'
     end
 
 

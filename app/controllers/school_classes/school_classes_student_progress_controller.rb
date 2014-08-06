@@ -16,5 +16,11 @@ class SchoolClasses::SchoolClassesStudentProgressController < SchoolClassesContr
     @graph_info = @school_class.student_progress_graph_array_for(@student)
   end
 
+  def reset_dependency_graph
+    @student = Student.find(params[:student_progress][:student_id])
+    @student.reset_dependency_graph_for(@school_class)
+    redirect_to(:back)
+  end
+
 end
 
