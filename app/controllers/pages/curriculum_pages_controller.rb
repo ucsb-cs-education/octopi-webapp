@@ -43,7 +43,7 @@ class Pages::CurriculumPagesController < Pages::PagesController
         response.location = curriculum_page_url(@curriculum_page)
         js false
         unless updated
-          head :bad_request, location: curriculum_page_url(@curriculum_page)
+          bad_request_with_errors @curriculum_page, curriculum_page_url(@curriculum_page)
         end
       end
     end

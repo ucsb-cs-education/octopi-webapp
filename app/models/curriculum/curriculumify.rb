@@ -62,7 +62,7 @@ module Curriculumify
     missing_items = difference_between_arrays(array2, array1)
     extra_items.empty? & missing_items.empty?
   end
-  private
+private
   def initialize_visible_to
     if visible_to_teachers
       if visible_to_students
@@ -94,6 +94,28 @@ module Curriculumify
       true
     else
       self.errors.add :visible_to, 'must be either :all, :teachers, or :none'
+      false
+    end
+  end
+
+  def update_with_children_helper(klass, params, ids)
+    begin
+      transaction do
+        child_ids = children.pluck(:id).map { |x| x.to_s }
+        unless same_elements?(child_ids, ids)
+          self.errors.add :children, 'update_children_order ids must match children ids'
+          raise ArgumentError
+        else
+          if child_ids != ids
+            children = {}
+            ids.each_with_index.map { |x, i| children[x] = {position: i+1} }
+            klass.update(children.keys, children.values)
+          end
+          update_attributes!(params)
+        end
+      end
+      true
+    rescue ArgumentError, ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved
       false
     end
   end

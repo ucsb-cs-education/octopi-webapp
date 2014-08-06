@@ -85,6 +85,21 @@ PagesController.prototype.show = () ->
     $('#laplaya_task_demo').change(enableSubmitButton)
 
 
+    $(".page-form").bind "ajax:success", ->
+      $("<div class = 'alert alert-success'> Success! </div>").prependTo($("div.container:nth-child(2)")).delay(5000).fadeOut("2")
+
+    $("form").bind "ajax:error", (jqXHR, textStatus, settings, errorThrown) ->
+      alertdiv = $("<div class = 'alert alert-danger'></div>").prependTo($("div.container:nth-child(2)"))
+      alertarray;
+      try
+        alertarray = JSON.parse(textStatus.responseText)
+      catch e
+        alertdiv.append "Error: " + textStatus.responseText
+      if alertarray instanceof Array
+        $.each alertarray, (index, value) ->
+          alertdiv.append "Error: " + value + "<br>"
+
+
   $(document).ready(addPageViewSelectorCallback);
   $(document).ready();
 
