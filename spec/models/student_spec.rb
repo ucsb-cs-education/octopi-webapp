@@ -210,7 +210,7 @@ describe Student, type: :model do
         response_conflict
       end
 
-      describe "when delete_original_if_conflict is true" do
+      describe "when delete_new__class_data_if_conflict is true" do
         subject { lambda { @student.change_school_class(school_class_1, school_class_2, true) } }
 
         it { should change { TaskResponse.where(school_class: school_class_1).count }.by(-2) }
@@ -242,7 +242,7 @@ describe Student, type: :model do
         it { should_not change { Unlock.where(school_class: @student.school_classes.first).count } }
         it { should_not change { AssessmentQuestionResponse.count } }
       end
-      describe "when delete_original_if_conflict is false" do
+      describe "when delete_new__class_data_if_conflict is false" do
         subject { lambda { @student.change_school_class(school_class_1, school_class_2, false) } }
 
         it { should change { TaskResponse.where(school_class: school_class_1).count }.by(-2) }

@@ -1,4 +1,4 @@
 $(function() {
-    $("#classlist").append('<tr><td><%= @student.first_name %></td><td><%= @student.last_name %></td><td><%= @student.login_name %></td></tr>');
+    $("#classlist").append('<tr><td><%= @student.first_name %></td><td><%= @student.last_name %></td><td><%= @student.login_name %></td><td><%=link_to @student.name, edit_admin_student_path(@student) %></td></tr>');
     $('#existing_student_list option[value="<%= @student.id%>"]').remove();
 });
