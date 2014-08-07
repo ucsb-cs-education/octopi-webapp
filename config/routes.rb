@@ -75,7 +75,7 @@ OctopiWebapp::Application.routes.draw do
     root 'static_pages#home'
     get 'home', to: 'static_pages#home'
     get 'laplaya', to: 'static_pages#laplaya'
-    get 'laplaya/:id', to: 'static_pages#laplaya_file'
+    get 'laplaya/:id', to: 'static_pages#laplaya_file', as: 'laplaya_file'
   end
   devise_for :staff, controllers: {sessions: 'staff/sessions', confirmations: 'staff/confirmations'}, skip: [:registrations]
   as :staff do

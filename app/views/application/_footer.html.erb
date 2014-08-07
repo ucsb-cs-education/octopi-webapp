@@ -1,12 +1,25 @@
 <footer class="footer">
   <small>
-    <a href="https://github.com/ucsb-cs-education/octopi-webapp">Octopi-Webapp</a>
-    by <a href="http://discover.cs.ucsb.edu/research/depict/depict/">UCSB Depict</a>, 2014
+    <span>
+      <a href="https://github.com/ucsb-cs-education/octopi-webapp">Octopi-Webapp</a>
+      by <a href="http://discover.cs.ucsb.edu/research/depict/depict/">UCSB Depict</a>, 2014
+    </span>
   </small>
   <nav>
     <ul>
-      <li><%= link_to "About",   '#' %></li>
-      <li><%= link_to "Contact", '#' %></li>
+      <li><%= link_to 'About', '#' %></li>
+      <li><%= link_to 'Contact', '#' %></li>
     </ul>
   </nav>
+  <div class="nsf-info">
+    <%= image_tag 'nsflogo.jpg', class: 'nsf-logo' %>
+    <small>
+        <span>
+          This material is based upon work supported by the National Science Foundation under Grant No. CNS-0940491 and CNS-1240985.
+        </span>
+        <span>
+          Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
+        </span>
+    </small>
+  </div>
 </footer>

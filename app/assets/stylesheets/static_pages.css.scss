@@ -1,3 +1,39 @@
 // Place all the styles related to the StaticPages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+body.static_pages {
+  padding-top: 50px;
+  .navbar {
+    margin-bottom: 0px;
+  }
+  section.welcome-to-octopi {
+    background: image_url('octopi-welcome-left.png') no-repeat,
+    image_url('octopi_costumes-02.png') no-repeat top 50px right 60px,
+    image_url('octopi-welcome-right.png') no-repeat top right,
+    image_url('octopi-welcome-filler.png') repeat-x;
+    background-size: auto, 320px 320px, auto, auto;
+    height: 600px;
+    div.opacity-filter {
+      background-color: rgba(white, 0.6);
+      height: 100%;
+      div.welcome-content {
+        float: left;
+        margin-top: 190px;
+        margin-left: 220px;
+        h1.tagline {
+          text-align: left;
+          font-size: 28px;
+          span {
+            &.brand {
+//              letter-spacing: 1px;
+              font-size: 42px;
+              font-weight: 600;
+            }
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

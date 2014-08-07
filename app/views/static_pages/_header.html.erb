@@ -1,0 +1,17 @@
+<%= render 'application/header' %>
+<section class="welcome-to-octopi">
+  <div class="opacity-filter">
+    <div class="welcome-content">
+      <h1 class="tagline">
+        <span class="brand">Octopi</span>
+        <span>a platform</span>
+        <span>for learning</span>
+        <span>with LaPlaya</span>
+      </h1>
+      <% if signed_in_student? %>
+      <% else %>
+          <%= link_to 'Sign in!', student_portal_signin_path, class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+  </div>
+</section>

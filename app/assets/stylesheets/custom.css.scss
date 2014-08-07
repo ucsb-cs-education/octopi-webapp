@@ -20,8 +20,9 @@ html {
   overflow-y: scroll;
 }
 
-body {
+body{
   padding-top: 60px;
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif !important;
 }
 
 section {
@@ -38,9 +39,11 @@ textarea {
     margin-bottom: 10px;
   }
 }
+
 div.checkbox label label {
   padding-left: 0px;
 }
+
 form.simple_form div.check_boxes div label input {
   width: inherit;
   height: inherit;
@@ -69,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 3em;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
   margin-bottom: 30px;
   text-align: center;
 }
@@ -97,7 +100,6 @@ p {
   line-height: 1.7em;
 }
 
-
 /* header */
 
 #logo {
@@ -106,7 +108,8 @@ p {
   font-size: 1.7em;
   text-transform: uppercase;
   letter-spacing: -1px;
-  padding-top: 9px;
+  padding-top: 14px;
+  padding-bottom: 0px;
   font-weight: bold;
   line-height: 1;
   &:hover {
@@ -130,6 +133,19 @@ footer {
   }
   small {
     float: left;
+    span {
+      display: block;
+    }
+  }
+  div.nsf-info {
+    float: left;
+    img.nsf-logo {
+      float: left;
+      width: 50px;
+    }
+    small {
+      padding-top: 5px;
+    }
   }
   ul {
     float: right;
@@ -140,7 +156,6 @@ footer {
     }
   }
 }
-
 
 /* forms */
 form {

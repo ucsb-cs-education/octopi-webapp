@@ -6,7 +6,8 @@
           <% selected_school_id = School.first.id %>
           <%= f.input :school, include_blank: false,
                       collection: School.all.to_a, selected: selected_school_id %>
-          <%= f.input :school_class, collection: School.find(selected_school_id).school_classes, label: "Class",
+          <%= # noinspection RubyStringKeysInHashInspection
+              f.input :school_class, collection: School.find(selected_school_id).school_classes, label: 'Class',
                       include_blank: 'Please select a class', selected: 0,
                       input_html: {
                               'data-option-dependent' => true,
@@ -15,7 +16,8 @@
                               'data-option-key-method' => :id,
                               'data-option-value-method' => :name}
           %>
-          <%= f.input :login_name, collection: [],
+          <%= # noinspection RubyStringKeysInHashInspection
+              f.input :login_name, collection: [],
                       include_blank: 'Please select a class first', selected: 0,
                       input_html: {
                               'data-option-dependent' => true,
@@ -29,9 +31,10 @@
           <%= f.input :password, required: false %>
         </div>
         <div class="form-actions">
-          <%= f.button :submit, "Sign in" %>
+          <%= f.button :submit, 'Sign in' %>
         </div>
     <% end %>
+    <%= link_to 'Not a student? Click here.', new_staff_session_path %>
 
 <% else %>
 
