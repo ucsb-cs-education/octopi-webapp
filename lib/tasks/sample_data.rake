@@ -1,10 +1,15 @@
 namespace :db do
-  desc "Fill database with sample data"
-  task fullResetAndPopulate: ['db:drop', 'db:create', 'db:migrate'] do
-    admin = FactoryGirl.create(:staff, :super_staff, email: "super_staff@example.com")
+  # desc 'Reset database and fill database with sample data'
+  task fullReset: %w(db:drop db:create db:migrate) do
+  end
+end
+namespace :db do
+  desc 'Fill database with sample data'
+  task sampleData: ['db:migrate'] do
+    admin = FactoryGirl.create(:staff, :super_staff, email: 'super_staff@example.com')
     school = FactoryGirl.create(:school)
-    school_admin = FactoryGirl.create(:staff, :school_admin, email: "school_admin@example.com")
-    teacher = FactoryGirl.create(:staff, :teacher, school: school, email: "teacher@example.com")
+    school_admin = FactoryGirl.create(:staff, :school_admin, email: 'school_admin@example.com')
+    teacher = FactoryGirl.create(:staff, :teacher, school: school, email: 'teacher@example.com')
     5.times do
       student = FactoryGirl.create(:student, school: school)
     end
@@ -17,7 +22,7 @@ namespace :db do
     a = FactoryGirl.create(:laplaya_file, owner: Student.first)
 
     2.times do
-      puts "Creating Curriculum Page and children..."
+      puts 'Creating Curriculum Page and children...'
       a = FactoryGirl.create(:curriculum_page)
       2.times do
         b = FactoryGirl.create(:module_page, curriculum_page: a)
@@ -36,7 +41,7 @@ namespace :db do
       end
     end
 
-    curriculum_designer = FactoryGirl.create(:staff, :curriculum_designer, curriculum: CurriculumPage.first, email: "curriculum_designer@example.com")
+    curriculum_designer = FactoryGirl.create(:staff, :curriculum_designer, curriculum: CurriculumPage.first, email: 'curriculum_designer@example.com')
     FactoryGirl.create(:laplaya_file, :star_wars, owner: Student.first)
     FactoryGirl.create(:laplaya_file, owner: Staff.first)
     FactoryGirl.create(:laplaya_file, owner: Student.offset(1).first, public: true)
