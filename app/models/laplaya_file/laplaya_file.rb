@@ -5,7 +5,7 @@ class LaplayaFile < ActiveRecord::Base
   belongs_to :user
   alias_attribute :owner, :user
   before_validation :update_thumbnail_and_note
-  has_paper_trail
+  has_paper_trail ignore: [:notes, :thumbnail]
 
   def to_s
     self.file_name
