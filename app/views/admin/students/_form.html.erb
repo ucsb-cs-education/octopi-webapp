@@ -1,0 +1,38 @@
+<%= semantic_form_for [:admin, @student] do |f| %>
+    <%= f.inputs 'Student Details' do %>
+        <%= f.input :first_name %>
+        <%= f.input :last_name %>
+        <%= f.input :login_name %>
+        <%= f.input :password, required: false, label: 'Password' %>
+        <%= f.input :password_confirmation, required: false, label: 'Password confirmation' %>
+
+
+    <% end %>
+    <%= f.actions do %>
+        <%= f.action :submit %>
+        <li class="cancel">
+          <%= link_to 'Cancel', admin_students_path %>
+        </li>
+    <% end %>
+
+
+<% end %>
+<%= semantic_form_for [:admin, @student] do |f| %>
+    <%= f.inputs 'Other Actions' do %>
+        <li class="select input optional" id="change-classes">
+          <%= label_tag :school_classes, 'Transfer student and their data to different class' %>
+          <%= select_tag :current_school_classes, options_from_collection_for_select(@student_current_classes, 'id', 'name') %>
+          <%= select_tag :possible_school_classes, options_from_collection_for_select(@student_noncurrent_classes, 'id', 'name') %>
+          <%= button_tag 'Transfer student', type: 'button', disabled: true %>
+          <%= check_box_tag :preserve_current, true, true %>
+          <span title="Replace any conflicting files/answers with student's current class data?"><u>?</u></span>
+        </li>
+        <li class="select input optional" id="remove-from-class">
+          <%= label_tag :school_classes, 'Remove student from a class' %>
+          <%= select_tag :removable_classes, options_from_collection_for_select(@student_removable_classes, 'id', 'name') %>
+          <%= button_tag 'Remove', type: 'button', disabled: true %>
+          <%= check_box_tag :delete_data, true, true %>
+          <span title="Delete all student answers and files?"><u>?</u></span>
+        </li>
+    <% end %>
+<% end %>

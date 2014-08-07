@@ -23,13 +23,13 @@ class Student < User
     "#{first_name} #{last_name}"
   end
 
-  def change_school_class(original_class, new_class, delete_original_if_conflict)
+  def change_school_class(original_class, new_class, delete_new_class_data_if_conflict)
     task_responses.where(school_class: original_class).each { |response|
       conflict = TaskResponse.find_by(student: self, school_class: new_class, task: response.task)
       if conflict.nil?
         response.update_attribute(:school_class, new_class)
       else
-        if delete_original_if_conflict
+        if delete_new_class_data_if_conflict
           conflict.destroy
           response.update_attribute(:school_class, new_class)
         else
@@ -42,7 +42,7 @@ class Student < User
       if conflict.nil?
         unlock.update_attribute(:school_class, new_class)
       else
-        if delete_original_if_conflict
+        if delete_new_class_data_if_conflict
           conflict.destroy
           unlock.update_attribute(:school_class, new_class)
         else
