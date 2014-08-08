@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-body.pages.pages-assessment_questions {
+#main-body.pages.pages-assessment_questions {
   #choosetype {
     display: inline-block;
     background-color: rgb(250, 250, 250);
@@ -49,14 +49,10 @@ body.pages.pages-assessment_questions {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     margin-top: 5px;
-  }
-
-  .ischecked {
-    background-color: #9fefa6;
-  }
-
-  .isNotchecked {
     background-color: #ED6868;
+    &.checked {
+      background-color: #9fefa6;
+    }
   }
 
   .answerBox {

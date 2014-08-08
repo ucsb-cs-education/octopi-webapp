@@ -24,6 +24,18 @@ class StudentPortal::BaseController < ApplicationController
     end
   end
 
+  def path_for_returning_student
+    if cookies.signed[:student_last_module]
+      student_portal_module_path(cookies.signed[:student_last_module])
+    else
+      if (mod = current_school_class.module_pages.student_visible.first).nil?
+        nil
+      else
+        student_portal_module_path(mod)
+      end
+    end
+  end
+
   def redirect_back_or(default)
     redirect_to (
                     if session[:return_to]

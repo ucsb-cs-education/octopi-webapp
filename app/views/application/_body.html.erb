@@ -1,0 +1,17 @@
+<body <%= content_for?(:body_attributes) ? yield(:body_attributes) : '' %>>
+<%= render 'header' %>
+<%= content_for?(:pre_container) ? yield(:pre_container) : '' %>
+<div class="container">
+  <% if flash.any? %>
+      <div class="flashes">
+        <%= render 'flashes' %>
+      </div>
+  <% end %>
+  <div id="main-body" class="<%= controller_classes %>">
+    <%= yield %>
+  </div>
+  <%= render 'footer' %>
+  <%= debug(params) if Rails.env.development? %>
+</div>
+</body>
+

@@ -8,4 +8,20 @@ class StaticPagesController < ApplicationController
 
   def help
   end
+
+  def contact
+    @contact = Contact.new
+  end
+
+  def send_contact
+    @contact = Contact.new(params[:contact])
+    @contact.request = request
+    if @contact.deliver
+      flash[:notice] = 'Thank you for your message. We will contact you soon!'
+      redirect_to :contact
+    else
+      flash.now[:error] = 'Cannot send message.'
+      render :contact
+    end
+  end
 end

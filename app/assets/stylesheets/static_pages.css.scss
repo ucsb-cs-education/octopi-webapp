@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-body.static_pages {
+#octopi-homepage {
   padding-top: 50px;
   .navbar {
     margin-bottom: 0px;
@@ -15,7 +15,7 @@ body.static_pages {
     background-size: auto, 320px 320px, auto, auto;
     height: 600px;
     div.opacity-filter {
-      background-color: rgba(white, 0.6);
+      background-color: rgba(white, 0.45);
       height: 100%;
       div.welcome-content {
         float: left;
@@ -26,7 +26,7 @@ body.static_pages {
           font-size: 28px;
           span {
             &.brand {
-//              letter-spacing: 1px;
+              //              letter-spacing: 1px;
               font-size: 42px;
               font-weight: 600;
             }
@@ -35,5 +35,14 @@ body.static_pages {
         }
       }
     }
+  }
+  div.flashes {
+    position: absolute;
+    top: 65px;
+    left: 50%;
+    width: inherit;
+    transform: translate(-50%,0);
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }

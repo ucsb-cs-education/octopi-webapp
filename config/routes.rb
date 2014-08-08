@@ -67,6 +67,8 @@ OctopiWebapp::Application.routes.draw do
   root 'static_pages#home'
   get 'home', to: 'static_pages#home'
   get '/help', to: 'static_pages#help'
+  get '/contact', to: 'static_pages#contact'
+  post '/contact', to: 'static_pages#send_contact'
   get '/sign_in', to: redirect('/student_portal/signin')
   get '/signin', to: redirect('/student_portal/signin')
   get '/admin/staff/roles/:role_name', to: 'roles#get_resources', format: true

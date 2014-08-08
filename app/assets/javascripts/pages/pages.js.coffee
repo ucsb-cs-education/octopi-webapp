@@ -1,27 +1,31 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
-PagesController = Paloma.controller('Pages/Pages');
-PagesController.prototype.show = () ->
 
-  enableSubmitButton = () ->
-    $('.page-form input[type=submit]').removeAttr('disabled');
+PagesController = Paloma.controller('Pages/Pages');
+PagesController.prototype.enableSubmitButton = () ->
+  $('.page-form input[type=submit]').removeAttr('disabled');
+
+PagesController.prototype.ckeditor_inline = (element) ->
+  $(element).attr("contenteditable", true)
+  CKEDITOR.inline( element, {
+    toolbar:'Pure',
+    on: {
+      blur: PagesController.prototype.enableSubmitButton
+    }
+  });
+
+PagesController.prototype.show = () ->
+  enableSubmitButton = PagesController.prototype.enableSubmitButton
   $('#page-title').blur(enableSubmitButton)
   $('#visibility-select').change(enableSubmitButton)
 
   addPageViewSelectorCallback = () ->
     CKEDITOR.disableAutoInline = true;
 
-    inline = (element) ->
-      $(element).attr("contenteditable", true)
-      CKEDITOR.inline( element, {
-        toolbar:'Pure',
-        on: {
-          blur: enableSubmitButton
-        }
-      });
+    inline = PagesController.prototype.ckeditor_inline
 
-    $("div.octopieditable").each( () ->
+    $("div.octopieditable").each(() ->
       inline(this)
     )
 
@@ -32,10 +36,11 @@ PagesController.prototype.show = () ->
             instance = CKEDITOR.instances[name]
             instance.destroy()  if ui.newPanel and ui.newPanel.is($(instance.element.$))
           ui.newPanel.attr("contenteditable", true)
-          ui.newPanel.each( () ->
+          ui.newPanel.each(() ->
             editor = inline(this)
           )
     });
+
     $("#children.octopisortable").each(() ->
       $(this).sortable({
         placeholder: "ui-state-highlight",
@@ -46,7 +51,7 @@ PagesController.prototype.show = () ->
     )
 
     disableLaplayaChild = () ->
-      $(this).find('input,select,a,abbr').attr('disabled','')
+      $(this).find('input,select,a,abbr').attr('disabled', '')
       $(this).addClass('demo-disabled')
 
     enableLaplayaChild = () ->
@@ -97,8 +102,8 @@ PagesController.prototype.show = () ->
       alert = "<div class = 'alert alert-success ajax-page-alert'>'" + $('#page-title').text() + "' has been saved.</div>"
       addAlert(alert, true)
 
-    $("form").bind "ajax:error", (jqXHR, textStatus, settings, errorThrown) ->
-      alert = "<div class = 'alert alert-danger ajax-page-alert'>"
+    $(".page-form").bind "ajax:error", (jqXHR, textStatus, settings, errorThrown) ->
+      alert = "<div class = 'alert alert-danger ajax-page-alert alert-dismissible'><button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>"
       try
         alertarray = JSON.parse(textStatus.responseText)
       catch e

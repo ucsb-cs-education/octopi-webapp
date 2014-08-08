@@ -1,9 +1,17 @@
-<%= render partial: "answer_options" if can? :update, @page%>
+<%= render partial: 'answer_options' if can? :update, @page %>
 
-<div id="answerList">
-  <%= render partial: "showAnswer", collection: JSON.parse(@assessment_question.answers), locals: {:question_type => @assessment_question.question_type} %>
+<div id="answerList"
+     <% if @assessment_question.question_type=='freeResponse' %>
+     style='display: none;'
+     <% end %>
+     >
+  <%= render partial: 'showAnswer', collection: JSON.parse(@assessment_question.answers), locals: {:question_type => @assessment_question.question_type} %>
 </div>
-<div id="free-response-note" <%= 'class="hidden"'.html_safe unless @assessment_question.question_type=="freeResponse"%>>
+<div id="free-response-note"
+     <% unless @assessment_question.question_type=='freeResponse' %>
+     style='display: none;'
+     <% end %>
+     >
   <hr>
   This question will be answerable with a free response text box.
   <hr>

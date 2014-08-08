@@ -2,19 +2,12 @@
 <html>
 <head>
   <title><%= full_title(yield(:title)) %></title>
+  <%= favicon_link_tag 'favicon.ico' %>
   <%= stylesheet_link_tag 'application', media: 'all',
                           'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
 </head>
-<body class="<%= controller_classes %>">
-<%= render 'header' %>
-<div class="container" id="main-body-container">
-  <%= render 'flashes' %>
-  <%= yield %>
-  <%= render 'footer' %>
-  <%= debug(params) if Rails.env.development? %>
-</div>
-</body>
+<%= render 'body' %>
 </html>

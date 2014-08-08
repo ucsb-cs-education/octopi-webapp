@@ -1,23 +1,16 @@
-<% inputType = "" %>
-<% isChecked = "" %>
-<% isChecked = "checked" unless showAnswer['correct']==false %>
-<% if question_type=="singleAnswer" %>
-    <% inputType = "radio" %>
-<% else %>
-    <% inputType = "checkbox" %>
-<% end %>
+<% checked = (showAnswer['correct']) ? 'checked' : '' %>
+<% input_type = (question_type=='singleAnswer') ? 'radio' : 'checkbox' %>
 
 <div class='answer'>
-  <div class='answerHead is<%= "Notchecked" unless isChecked==="checked" %><%= isChecked %>'>
-    This answer is correct:<input type='<%= inputType %>' class='choices' name='answerChoice' <%= isChecked %>>
+  <div class='answerHead <%= checked %>'>
+    This answer is correct:<input type='<%= input_type %>' class='choices' name='answerChoice' <%= checked %>>
     <% if can? :update, @page %>
         <button class="deleteAnswer">Remove Answer</button>
     <% end %>
   </div>
   <div class='answerBox'>
-    <div class='<%= "octopieditable" if can? :update, @page %> answerText'>
+    <div class='<%= 'octopieditable' if can? :update, @page %> answerText'>
       <%= showAnswer['text'].html_safe %>
-
     </div>
   </div>
 </div>

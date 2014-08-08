@@ -177,6 +177,9 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mail_form (1.5.0)
+      actionmailer (>= 3.2, < 5)
+      activemodel (>= 3.2, < 5)
     meta_request (0.3.4)
       callsite (~> 0.0, >= 0.0.11)
       rack-contrib (~> 1.1)
@@ -399,6 +402,7 @@ DEPENDENCIES
   launchy
   libxml-ruby (~> 2.7.0)
   lograge
+  mail_form (~> 1.5.0)
   meta_request
   newrelic_rpm
   paloma (~> 4.1.0)

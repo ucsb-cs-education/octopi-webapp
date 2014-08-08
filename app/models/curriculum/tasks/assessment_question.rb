@@ -11,11 +11,17 @@ class AssessmentQuestion < ActiveRecord::Base
 
   private
 
+  def self.answer_types
+    [OpenStruct.new(val: 'singleAnswer', label:'One Correct'),
+     OpenStruct.new(val: 'multipleAnswers', label:'Multiple Correct'),
+     OpenStruct.new(val: 'freeResponse', label: 'Free Response')]
+  end
+
   def JSON_validator
     begin
       @info_array = JSON.parse(answers)
     rescue
-      @info_array = "Bad String"
+      @info_array = 'Bad String'
     end
     if answers_should_be_valid_JSON
       if an_answer_exists
@@ -29,7 +35,7 @@ class AssessmentQuestion < ActiveRecord::Base
   end
 
   def radios_have_one_answer
-    if question_type == "singleAnswer"
+    if question_type == 'singleAnswer'
       num_true = 0
       @info_array.each do |x|
         if x['correct']
@@ -37,7 +43,7 @@ class AssessmentQuestion < ActiveRecord::Base
         end
       end
       if num_true > 1
-        errors.add(:answers, "must only have one answer if its using radios")
+        errors.add(:answers, 'must only have one answer if its using radios')
         return false
       end
     end
@@ -46,7 +52,7 @@ class AssessmentQuestion < ActiveRecord::Base
 
   def an_answer_exists
     has_answer = false
-    if question_type == "freeResponse"
+    if question_type == 'freeResponse'
       true
     else
       @info_array.each do |x|
@@ -64,7 +70,7 @@ class AssessmentQuestion < ActiveRecord::Base
   end
 
   def valid_answer_type
-    unless (question_type == "singleAnswer" || question_type == "multipleAnswers" || question_type == "freeResponse")
+    unless (question_type == 'singleAnswer' || question_type == 'multipleAnswers' || question_type == 'freeResponse')
       errors.add(:answers, 'answer type must be singleAnswer or multipleAnswers or freeResponse')
     end
   end

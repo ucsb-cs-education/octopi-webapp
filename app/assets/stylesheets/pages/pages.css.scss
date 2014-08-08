@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-body.pages {
+#main-body.pages {
   .pages {
     background-color: transparent;
     .page-header {
@@ -184,8 +184,19 @@ body.pages {
     display: inline-block;
   }
 
-  #task-prerequisites {
-
+  #task-prerequisites, #all-dependants {
     list-style-type: none;
+    padding: 0;
+  }
+
+  #no-prereq-message {
+    color: rgba(0, 0, 0, .5);
+  }
+
+  #edit-dependencies {
+    .simple_form {
+      min-width: 20em;
+      max-width: 20em;
+    }
   }
 }

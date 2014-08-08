@@ -3,18 +3,16 @@
     <td>
       <div id="choosetype">
         Answer Options:
-        <form action="">
-          <label for="ansType" class="sr-only">Answer Types</label>
-          <select id="ansType">
-            <option value="singleAnswer">One Correct</option>
-            <option value="multipleAnswers">Multiple Correct</option>
-            <option value="freeResponse">Free Response</option>
-          </select>
-        </form>
+        <label for="ansType" class="sr-only">Answer Types</label>
+        <%= select_tag :answer_types, options_from_collection_for_select(AssessmentQuestion.answer_types, 'val', 'label', @assessment_question.question_type), id: 'ansType' %>
       </div>
     </td>
     <td>
-      <button <%= 'class="hidden"'.html_safe if @assessment_question.question_type=="freeResponse" %> type="button" id="addAns">
+      <button type="button" id="addAns"
+              <% if @assessment_question.question_type=='freeResponse' %>
+              style='display: none;'
+              <% end %>
+              >
         Add New Answer Choice
       </button>
     </td>

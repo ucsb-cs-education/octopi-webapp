@@ -1,0 +1,74 @@
+<% provide(:title, 'Contact') %>
+<h1>
+  Contact Us
+</h1>
+<% #From: http://bootsnipp.com/snippets/featured/contact-us-page %>
+<div class="row">
+  <div class="col-md-8">
+    <h2>
+      Feel free to leave us a message with any comments or concerns
+    </h2>
+    <div class="well well-sm">
+      <%= simple_form_for @contact, url: contact_path(@contact) do |f| %>
+          <div class="row">
+            <div class="col-md-6">
+              <%= f.input :name, required: 'required', placeholder: 'Enter name' %>
+              <div class="form-group">
+                <label for="email">
+                  Email Address</label>
+
+                <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span>
+                                </span>
+                  <%= f.input_field :email, class: 'form-control', placeholder: 'Enter email' %>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <%= f.input :message, as: :text, placeholder: 'Message', input_html: {rows: '7', cols: '25'} %>
+            </div>
+            <div class="hidden">
+              <%= f.input :nickname, :hint => 'Leave this field blank!' %>
+            </div>
+            <div class="col-md-12">
+              <%= f.button :submit, 'Send message', :class => 'btn btn-primary pull-right' %>
+            </div>
+          </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <form>
+      <legend><span class="glyphicon glyphicon-globe"></span>UCSB Octopi Team</legend>
+      <% #This was originally 'our office' section. let's go back to it %>
+      <!--<address>-->
+      <!--<strong>Twitter, Inc.</strong><br>-->
+      <!--795 Folsom Ave, Suite 600<br>-->
+      <!--San Francisco, CA 94107<br>-->
+      <!--<abbr title="Phone">-->
+      <!--P:</abbr>-->
+      <!--(123) 456-7890-->
+      <!--</address>-->
+      <address>
+        <strong>Diana Franklin</strong>: Faculty<br>
+        <a href="mailto:#">franklin@cs.ucsb.edu</a>
+      </address>
+      <address>
+        <strong>Diane Harlow</strong>: Faculty <br>
+        <a href="mailto:#">dharlow@education.ucsb.edu</a>
+      </address>
+      <address>
+        <strong>Charlotte Hill</strong>: Phd Researcher<br>
+        <a href="mailto:#">charlottehill@cs.ucsb.edu</a>
+      </address>
+      <address>
+        <strong>Hilary Dwyer</strong>: Phd Researcher<br>
+        <a href="mailto:#">hdwyer@education.ucsb.edu</a>
+      </address>
+      <address>
+        <strong>Johan Henkens</strong>: Webmaster<br>
+        <a href="mailto:#">jhenkens@cs.ucsb.edu</a>
+      </address>
+    </form>
+  </div>
+</div>

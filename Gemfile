@@ -54,6 +54,8 @@ gem 'rolify', github: 'jhenkens/rolify'
 gem 'cancancan', '~> 1.7.1'
 
 # Use the 3.1.0 RC because it supports BootStrap 3
+gem 'mail_form', '~> 1.5.0'
+
 gem 'simple_form', '~> 3.1.0.rc1'
 
 gem 'libxml-ruby', '~> 2.7.0'

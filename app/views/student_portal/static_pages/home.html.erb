@@ -1,5 +1,18 @@
-<% provide(:title, 'Students home') %>
-<h1>Octopi - Students homepage</h1>
-<p>
-  Hi <%= current_student.name %>! Welcome to Octopi.<br />
-</p>
+<% provide(:title, 'Student Homepage') %>
+<div>
+  <div class="welcome-message">
+    <h1>
+      Welcome to Octopi.
+    </h1>
+
+    <h2>
+      Hi <%= current_student.name %>! <%= 'To get started, click below!' if @path %>
+    </h2>
+
+  </div>
+  <% if @path %>
+      <%= link_to(image_tag('student_laplaya_splash_logo.jpg', class: 'laplaya_splash'), @path) %>
+  <% else %>
+      <%= image_tag('student_laplaya_splash_logo.jpg', class: 'laplaya-splash') %>
+  <% end %>
+</div>

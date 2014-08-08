@@ -2,120 +2,89 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-PagesController = Paloma.controller('Pages/AssessmentQuestion');
-PagesController.prototype.show = () ->
-  enableSubmitButton = () ->
-    $('.page-form input[type=submit]').removeAttr('disabled');
-  window.enableUpdateButton = enableSubmitButton;
+PagesController = Paloma.controller('Pages/Pages')
+AssessmentController = Paloma.controller('Pages/AssessmentQuestion')
+AssessmentController.prototype.show = () ->
+  PagesController.prototype.show()
+  enableSubmitButton = PagesController.prototype.enableSubmitButton
+  inline = PagesController.prototype.ckeditor_inline
 
   addPageViewSelectorCallback = () ->
-    CKEDITOR.disableAutoInline = true;
-
-    inline = (element) ->
-      $(element).attr("contenteditable", true)
-      CKEDITOR.inline(element, {
-        toolbar: 'Pure',
-        on:{
-          blur: enableSubmitButton
-        }
-      });
-
-    window.ckeditor_inline = inline
-
-    $("div.octopieditable").each(() ->
-      inline(this)
-    )
-
-    $("#tabs").tabs({
-      activate: (event, ui) ->
-        if ui.newPanel.attr("contenteditable") is "false"
-          for name of CKEDITOR.instances
-            instance = CKEDITOR.instances[name]
-            instance.destroy()  if ui.newPanel and ui.newPanel.is($(instance.element.$))
-          ui.newPanel.attr("contenteditable", true)
-          ui.newPanel.each(() ->
-            editor = inline(this)
-          )
-    });
-    $("#children").sortable({
-      placeholder: "ui-state-highlight",
-      axis: 'y',
-      update: enableSubmitButton
-    });
-    $("#children").disableSelection();
-
     #add new answer
     $("#addAns").click ->
-      window.enableUpdateButton()
-      str = "<div class = 'answer'> <div class = 'answerHead isNotchecked'>This answer is correct:"
-      if $("#ansType").val() is "singleAnswer"
-        str += "<input type = 'radio' class = 'choices' name='answerChoice'>"
+      enableSubmitButton()
+      str = "<div class = 'answer'> <div class = 'answerHead'>This answer is correct:\n<input type = '"
+      str += if $('#ansType').val() is 'singleAnswer' then 'radio' else 'checkbox'
+      str += "' class = 'choices' name='answerChoice'>
+      <button class='deleteAnswer'>Remove Answer</button>
+      </div>
+      <div class = 'answerBox'>
+      <div class='octopieditable answerText'>
+      <p></p>
+      </div>
+      </div>
+      </div>"
+      node = $("#answerList").append(str)
+      node.children().last().find(".octopieditable").each ->
+        inline(this)
+      node.find('input.choices').change ->
+        choicesChangeListener()
+      node.find('button.deleteAnswer').click ->
+        deleteAnswerListener(this)
+
+    updateHeaderClasses = (obj) ->
+      obj = $(obj)
+      if obj.prop("checked")
+        obj.parent().addClass('checked')
       else
-        str += "<input type = 'checkbox' class = 'choices' name='answerChoice'>"
-      str += "<button class='deleteAnswer'>Remove Answer</button></div> <div class = 'answerBox'> <div class='octopieditable answerText'><p></p></div></div></div>"
-      $("#answerList").append(str).children().last().find(".octopieditable").each ->
-        window.ckeditor_inline this
-        return
+        obj.parent().removeClass('checked')
 
-      return
-
+    choicesChangeListener = () ->
+      $('input.choices').each( ->
+        enableSubmitButton()
+        updateHeaderClasses(this)
+      )
 
     #change color of header
-    $(document).on "change", ".choices", ->
-      window.enableUpdateButton()
-      $(".choices").each ->
-        if $(this).prop("checked") is true
-          switchClass $(this).parent(), "isNotchecked", "ischecked"
-        else
-          switchClass $(this).parent(), "ischecked", "isNotchecked"
-        return
-
-      return
-
-    switchClass = (who, class1, class2) ->
-      $(who).removeClass(class1).addClass class2  if $(who).hasClass(class1)
-      return
+    $('input.choices').change ->
+      choicesChangeListener()
 
     #change question type
     $("#ansType").change ->
-      window.enableUpdateButton()
-      if $(this).val() is "singleAnswer"
-        $("#answerList").show()
-        $("#addAns").show().removeClass("hidden")
-        $("#free-response-note").hide()
-        $(".answerHead input").each ->
-          $(this).attr "type", "radio"
-          $(this).prop "checked", false
-          switchClass $(this).parent(), "ischecked", "isNotchecked"
-          return
+      enableSubmitButton()
+      switch $(this).val()
+        when "singleAnswer"
+          $("#answerList").show()
+          $("#addAns").show()
+          $("#free-response-note").hide()
+          $(".answerHead input").each ->
+            $(this).attr "type", "radio"
+            $(this).prop "checked", false
+            $(this).change()
 
-      else if $(this).val() is "multipleAnswers"
-        $("#answerList").show()
-        $("#addAns").show().removeClass("hidden")
-        $("#free-response-note").hide()
-        $(".answerHead input").each ->
-          $(this).attr "type", "checkbox"
-          $(this).prop "checked", false
-          switchClass $(this).parent(), "ischecked", "isNotchecked"
+        when "multipleAnswers"
+          $("#answerList").show()
+          $("#addAns").show()
+          $("#free-response-note").hide()
+          $(".answerHead input").each ->
+            $(this).attr "type", "checkbox"
+            $(this).prop "checked", false
+            $(this).change()
 
-      else if $(this).val() is "freeResponse"
-        $("#answerList").hide()
-        $("#addAns").hide()
-        $("#free-response-note").show().removeClass("hidden")
-        $(".answerHead input").each ->
-          $(this).attr "type", "checkbox"
-          $(this).prop "checked", false
-          switchClass $(this).parent(), "ischecked", "isNotchecked"
-          return
+        when "freeResponse"
+          $("#answerList").hide()
+          $("#addAns").hide()
+          $("#free-response-note").show().removeClass("hidden")
+        else
 
-      return
-
-    #remove an answer
-    $(document).on "click", ".deleteAnswer", ->
+        #remove an answer
+    deleteAnswerListener = (obj) ->
       if confirm("Are you sure you want to remove this answer?")
-        window.enableUpdateButton()
-        $(this).parent().parent().remove()
-      return
+        enableSubmitButton()
+        $(obj).parent().parent().remove()
+
+    $('button.deleteAnswer').click () ->
+      deleteAnswerListener(this)
 
     submitFunction = () ->
       question_body = $('#question-body').html()
@@ -141,25 +110,22 @@ PagesController.prototype.show = () ->
           ansArray[index].text = $(this).html()
           return
 
-      nonemptyTitle = false
       title = $('#page-title').html()
 
-      if hasAnAnswer is true and title isnt ""
+      if hasAnAnswer and title isnt ""
         $(this).find('.title').val(title)
         $(this).find('.question_body').val(question_body)
         $(this).find('.question_type').val(question_type)
         $(this).find(".answers").val JSON.stringify(ansArray)
       else
-        if hasAnAnswer is false
-          alert "A question must have at least one correct answer."
-          return false
-        else
+        if title is ""
           alert "Title cannot be blank"
-          return false
+        else
+          alert "A question must have at least one correct answer."
+        return false
       return true;
-
-
-    $('.page form ').submit(submitFunction)
+    $('form.page-form').unbind('submit')
+    $('form.page-form').submit(submitFunction)
 
   $(document).ready(addPageViewSelectorCallback);
   $(document).ready()

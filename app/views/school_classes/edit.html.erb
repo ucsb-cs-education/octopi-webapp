@@ -19,13 +19,7 @@
       <th>Last Name</th>
       <th>Login Name</th>
     </tr>
-    <% @school_class.students.each do |s| %>
-        <tr>
-          <td><%= s.first_name %></td>
-          <td><%= s.last_name %></td>
-          <td><%= link_to s.login_name, edit_admin_student_path(s) %></td>
-        </tr>
-    <% end %>
+    <%= render partial: 'student_table_row', collection: @school_class.students, as: :student %>
   </table>
 </div>
 
@@ -35,10 +29,10 @@
   <p><strong>Add an existing student at the school to the class:</strong></p>
   <%= simple_form_for :student, url: add_student_school_class_path(@school_class), method: 'post', remote: true do |f| %>
       <div class="col-md-6 form-inputs">
-        <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected: 0, :input_html => {id: "existing_student_list"}, label: false %>
+        <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected: 0, :input_html => {id: 'existing_student_list'}, label: false %>
       </div>
       <div class="col-md-1 form-actions">
-        <%= f.button :submit, 'Add', id: "add_existing_student_button" %>
+        <%= f.button :submit, 'Add', id: 'add_existing_student_button' %>
       </div>
   <% end %>
 </div>
@@ -51,9 +45,9 @@
 <p></p>
 <div class="row">
   <div class="col-md-6">
-    <%= button_tag :'Add New Student', class: "btn btn-primary", type: "button", id: 'new_student_button' %>
+    <%= button_tag :'Add New Student', class: 'btn btn-primary', type: 'button', id: 'new_student_button' %>
   </div>
 </div>
 
 <p></p>
-<%= link_to 'Back', school_class_path, class: "btn btn-default" %>
+<%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
