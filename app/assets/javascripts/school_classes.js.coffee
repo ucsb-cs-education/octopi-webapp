@@ -30,11 +30,7 @@ SchoolClassesActivitiesController = Paloma.controller('SchoolClasses/SchoolClass
 SchoolClassesActivitiesController.prototype.activity_page = () ->
 
   $(document).on "click", ".unlock-all", ->
-    if confirm("This will unlock the task for all students and cannot be undone.\nDo you wish to continue?")
-      true
-    else
-      false
-
+    confirm("This will unlock for all students in this class and cannot be easily undone.\nDo you wish to continue?")
 
   new Grid("progress-table-div",
     srcType: "dom"
@@ -52,3 +48,10 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
     showSelectionColumn: false
     fixedCols: 2
     )
+
+
+SchoolClassesStudentProgressController = Paloma.controller('SchoolClasses/SchoolClassesStudentProgress')
+SchoolClassesStudentProgressController.prototype.student_progress = () ->
+  $(document).on "click", ".student_progress", ->
+    confirm("This will reset the student's progress to where it currently should be based on what they have completed.
+    Tasks and Activities that were manually unlocked for them and they have not completed or completed the prerequisites of will be locked again.\nContinue?")
