@@ -53,7 +53,7 @@ AdminStudentController.prototype.edit = () ->
         else
           button.attr('disabled', true)
       button.click ->
-        if change_confirm_message()
+        if change_confirm_message($("#current_school_classes option[value="+current_classes_dropdown.val()+"]"),$("#possible_school_classes option[value="+possible_classes_dropdown.val()+"]"))
           url = current_classes_dropdown.val() + '/' + possible_classes_dropdown.val() + '/' + preserve_current.prop('checked')
           $.ajax({
             url: 'change_class/' + url + ".json",
@@ -98,17 +98,17 @@ AdminStudentController.prototype.edit = () ->
               alert(error)
           })
 
-  change_confirm_message = ->
+  change_confirm_message = (old_class, new_class) ->
     if $("#change-classes").find("#preserve_current").prop('checked')
-      confirm("This will transfer a student and all their data to a new class and occur immediately. If data already exists in that class that conflicts with data in their current class it will be replaced. Continue?")
+      confirm("This will transfer "+$("#student_first_name").val()+" "+$("#student_last_name").val()+" and all of their data from "+ old_class.text()+" to "+ new_class.text()+". If data already exists in "+ new_class.text()+" that conflicts with their data in "+ old_class.text()+" it will be replaced.\n This will occur immediately. Continue?")
     else
-      confirm("This will transfer a student and all their data to a new class and occur immediately. If data already exists in that class that conflicts with data in their current class, their data from their current class will be replaced. Continue?")
+      confirm("This will transfer "+$("#student_first_name").val()+" "+$("#student_last_name").val()+" and all of their data from "+ old_class.text()+" to "+ new_class.text()+". If data already exists in "+ new_class.text()+" that conflicts with their data in "+ old_class.text()+", their data in "+ old_class.text()+" will be removed.\n This will occur immediately. Continue?")
 
   remove_confirm_message = ->
     if $("#remove-from-class").find("#delete_data").prop('checked')
-      confirm("This student will be removed from the class and their data in it will be PERMANENTLY deleted. This will occur immediately.\nContinue?")
+      confirm("This will remove "+$("#student_first_name").val()+" "+$("#student_last_name").val()+" from "+$('#removable_classes option[value='+$("#removable_classes").val()+']').text()+" and their data in it will be PERMANENTLY deleted.\nThis will occur immediately. Continue?")
     else
-      confirm("This student will be removed from the class but their data will be preserved and recovered if they are added again. This will occur immediately.\nContinue?");
+      confirm("This will remove "+$("#student_first_name").val()+" "+$("#student_last_name").val()+" from "+$('#removable_classes option[value='+$("#removable_classes").val()+']').text()+" but their data will be preserved and recovered if they are added again.\nThis will occur immediately. Continue?");
 
   $(document).ready transferClassButtonListener
   $(document).ready removeFromClassButtonListener
