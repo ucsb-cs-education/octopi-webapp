@@ -15,18 +15,20 @@
 //
 //   .status_tag { background: #6090DB; }
 
-#new-role-select {
-  select {
-    min-width: 200px;
+body.active_admin {
+  #new-role-select {
+    select {
+      min-width: 200px;
+    }
+    button {
+      margin-left: 20px;
+    }
   }
-  button {
-    margin-left: 20px;
-  }
-}
 
-#other-student-actions {
-  label {
-    font-weight: bold;
-    color: #5e6469;
+  #other-student-actions {
+    label {
+      font-weight: bold;
+      color: #5e6469;
+    }
   }
 }

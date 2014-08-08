@@ -53,5 +53,5 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
 SchoolClassesStudentProgressController = Paloma.controller('SchoolClasses/SchoolClassesStudentProgress')
 SchoolClassesStudentProgressController.prototype.student_progress = () ->
   $(document).on "click", ".student_progress", ->
-    confirm("This will reset the student's progress to where it currently should be based on what they have responded to and what they have completed.
-    Tasks/Activities that were manually unlocked for them and they have not responded to will be locked again.\nContinue?")
+    confirm("This will reset the student's progress to where it currently should be based on what they have completed.
+    Tasks and Activities that were manually unlocked for them and they have not completed or completed the prerequisites of will be locked again.\nContinue?")

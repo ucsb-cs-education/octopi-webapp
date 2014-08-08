@@ -40,7 +40,7 @@ ActiveAdmin.register Student do
       @student_current_classes = [OpenStruct.new({name: 'Move from class', id: nil})]
       @student_removable_classes = [OpenStruct.new({name: 'Remove from class', id: nil})]
       @student_noncurrent_classes = [OpenStruct.new({name: 'To class', id: nil})]
-      if can? :update, School
+      if can? :update, SchoolClass
         @student.school_classes.each { |school_class|
           @student_current_classes.push(*[
               OpenStruct.new({name: school_class.name, id: school_class.id})
