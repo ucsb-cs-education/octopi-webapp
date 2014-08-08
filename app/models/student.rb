@@ -84,12 +84,9 @@ class Student < User
           Unlock.where(school_class: school_class, unlockable: activity_page, student: self).first_or_create
         end
         activity_page.tasks.each { |task|
-          if @response = TaskResponse.find_by(school_class: school_class, task: task, student: self)
-            Unlock.where(school_class: school_class, unlockable: task.activity_page, student: self).first_or_create
+          if @response = TaskResponse.find_by(school_class: school_class, task: task, student: self, completed: true)
             Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
-            if @response.completed
-              @response.unlock_dependants
-            end
+            @response.unlock_dependants
           elsif task.task_dependencies.count == 0
             Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
           end

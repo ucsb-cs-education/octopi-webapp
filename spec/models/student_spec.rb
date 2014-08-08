@@ -134,7 +134,7 @@ describe Student, type: :model do
     end
   end
 
-  describe "when an action affecting their unlocks and responses has happened" do
+  describe 'when an action affecting their unlocks and responses has happened' do
     let(:school_class_1) { FactoryGirl.create(:school_class) }
     let(:school_class_2) { FactoryGirl.create(:school_class) }
     let(:task_1) { FactoryGirl.create(:laplaya_task) }
@@ -175,7 +175,7 @@ describe Student, type: :model do
       @student.school_classes << school_class_1
     end
 
-    describe "after being moved from school_class_1 to school_class_2" do
+    describe 'after being moved from school_class_1 to school_class_2' do
       subject { lambda { @student.change_school_class(school_class_1, school_class_2, true) } }
 
       it { should change { TaskResponse.where(school_class: school_class_1).count }.by(-2) }
@@ -188,20 +188,26 @@ describe Student, type: :model do
       it { should_not change { Unlock.where(school_class: @student.school_classes.first).count } }
 
       it { should_not change { SchoolClass.count } }
-      it "should cause student to have school_class_2 and school_class_2 to have student" do
+      it 'should cause student to have school_class_2' do
         @student.change_school_class(school_class_1, school_class_2, true)
         expect(@student.school_classes).to include(school_class_2)
+      end
+      it 'should cause school_class_2 to have student' do
+        @student.change_school_class(school_class_1, school_class_2, true)
         expect(school_class_2.students).to include(@student)
       end
-      it "should cause student to not have school_class_1 and school_class_1 to not have student" do
+      it 'should cause student to not have school_class_1' do
         @student.change_school_class(school_class_1, school_class_2, true)
         expect(@student.school_classes).to_not include(school_class_1)
+      end
+      it 'should cause school_class_1 to not have student' do
+        @student.change_school_class(school_class_1, school_class_2, true)
         expect(school_class_1.students).to_not include(@student)
       end
 
     end
 
-    describe "after being moved from school_class_1 to school_class_2 with conflicts" do
+    describe 'after being moved from school_class_1 to school_class_2 with conflicts' do
       let(:response_conflict) { AssessmentTaskResponse.create(student: @student, school_class: school_class_2, task: task_2) }
       let(:unlock_conflict) { Unlock.create(school_class: school_class_2, unlockable: task_2, student: @student) }
 
@@ -210,7 +216,7 @@ describe Student, type: :model do
         response_conflict
       end
 
-      describe "when delete_new__class_data_if_conflict is true" do
+      describe 'when delete_new_class_data_if_conflict is true' do
         subject { lambda { @student.change_school_class(school_class_1, school_class_2, true) } }
 
         it { should change { TaskResponse.where(school_class: school_class_1).count }.by(-2) }
@@ -220,20 +226,20 @@ describe Student, type: :model do
         it { should change { Unlock.where(school_class: school_class_2).count }.by(2) }
         it { should change { Unlock.count }.by(-2) }
 
-        it "should replace the conflicting unlock" do
+        it 'should replace the conflicting unlock' do
           @student.change_school_class(school_class_1, school_class_2, true)
           expect(Unlock.find_by(school_class: school_class_2, unlockable: task_2, student: @student).id).to_not eq(unlock_conflict.id)
         end
-        it "should replace the conflicting response" do
+        it 'should replace the conflicting response' do
           @student.change_school_class(school_class_1, school_class_2, true)
           expect(TaskResponse.find_by(school_class: school_class_2, task: task_2, student: @student).id).to_not eq(response_conflict.id)
         end
 
-        it "should not replace a non-conflicting unlock" do
+        it 'should not replace a non-conflicting unlock' do
           @student.change_school_class(school_class_1, school_class_2, true)
           expect(Unlock.find_by(school_class: school_class_2, unlockable: task_1, student: @student).id).to eq(unlock_1.id)
         end
-        it "should not replace a non-conflicting response" do
+        it 'should not replace a non-conflicting response' do
           @student.change_school_class(school_class_1, school_class_2, true)
           expect(TaskResponse.find_by(school_class: school_class_2, task: task_1, student: @student).id).to eq(response_1.id)
         end
@@ -242,7 +248,7 @@ describe Student, type: :model do
         it { should_not change { Unlock.where(school_class: @student.school_classes.first).count } }
         it { should_not change { AssessmentQuestionResponse.count } }
       end
-      describe "when delete_new__class_data_if_conflict is false" do
+      describe 'when delete_new_class_data_if_conflict is false' do
         subject { lambda { @student.change_school_class(school_class_1, school_class_2, false) } }
 
         it { should change { TaskResponse.where(school_class: school_class_1).count }.by(-2) }
@@ -253,20 +259,20 @@ describe Student, type: :model do
         it { should change { Unlock.where(school_class: school_class_2).count }.by(2) }
         it { should change { Unlock.count }.by(-2) }
 
-        it "should not replace the conflicting unlock" do
+        it 'should not replace the conflicting unlock' do
           @student.change_school_class(school_class_1, school_class_2, false)
           expect(Unlock.find_by(school_class: school_class_2, unlockable: task_2, student: @student).id).to eq(unlock_conflict.id)
         end
-        it "should not replace the conflicting response" do
+        it 'should not replace the conflicting response' do
           @student.change_school_class(school_class_1, school_class_2, false)
           expect(TaskResponse.find_by(school_class: school_class_2, task: task_2, student: @student).id).to eq(response_conflict.id)
         end
 
-        it "should not replace a non-conflicting unlock" do
+        it 'should not replace a non-conflicting unlock' do
           @student.change_school_class(school_class_1, school_class_2, false)
           expect(Unlock.find_by(school_class: school_class_2, unlockable: task_1, student: @student).id).to eq(unlock_1.id)
         end
-        it "should not replace a non-conflicting response" do
+        it 'should not replace a non-conflicting response' do
           @student.change_school_class(school_class_1, school_class_2, false)
           expect(TaskResponse.find_by(school_class: school_class_2, task: task_1, student: @student).id).to eq(response_1.id)
         end
@@ -277,7 +283,7 @@ describe Student, type: :model do
       end
     end
 
-    describe "after deleting all data for school_class_1" do
+    describe 'after deleting all data for school_class_1' do
       subject { lambda { @student.delete_all_data_for(school_class_1) } }
 
       it { should change { TaskResponse.where(school_class: school_class_1).count }.by(-2) }
@@ -291,17 +297,17 @@ describe Student, type: :model do
       it { should_not change { Unlock.where(school_class: @student.school_classes.first).count } }
 
       it { should_not change { SchoolClass.count } }
-      it "should cause student to no longer have school_class_1" do
+      it 'should cause student to no longer have school_class_1' do
         @student.delete_all_data_for(school_class_1)
         expect(@student.school_classes).to_not include(school_class_1)
       end
-      it "should cause school_class_1 to no longer have student" do
+      it 'should cause school_class_1 to no longer have student' do
         @student.delete_all_data_for(school_class_1)
         expect(school_class_1.students).to_not include(@student)
       end
     end
 
-    describe "after deleting the student all dependants should be destroyed" do
+    describe 'after deleting the student all dependants should be destroyed' do
       subject { lambda { @student.destroy } }
       it { should change { TaskResponse.count }.by(-3) }
       it { should change { Unlock.count }.by(-5) }
@@ -311,7 +317,7 @@ describe Student, type: :model do
     describe 'after resetting the dependency graph for school_class_1' do
       subject { lambda { @student.reset_dependency_graph_for(school_class_1) } }
 
-      describe "when there are tasks/activities that have been manually unlocked and the prerequisites are not met" do
+      describe 'when there are tasks/activities that have been manually unlocked and the prerequisites are not met' do
         let(:manually_unlocked_task) { FactoryGirl.create(:laplaya_task) }
         let(:manual_unlock) { Unlock.create(school_class: school_class_1, unlockable: manually_unlocked_task, student: @student) }
         let(:manually_unlocked_activity) { FactoryGirl.create(:activity_page) }
@@ -328,27 +334,39 @@ describe Student, type: :model do
           manual_unlock_2
         end
 
-        describe "when the student has not responded to a task in the activity" do
+        describe 'when the student has not responded to a task in the activity' do
           it { should change { Unlock.count }.by(-2) }
-          it { should change { TaskResponse.count }.by(0) }
-          it "should remove the unlocks for tasks/activities with no response and not related to a dependency" do
+          it { should_not change { TaskResponse.count } }
+          it 'should remove the unlock for the task with no response and not related to a dependency' do
             @student.reset_dependency_graph_for(school_class_1)
             expect(Unlock.find_by(school_class: school_class_1, unlockable: manually_unlocked_task, student: @student)).to eq(nil)
+          end
+          it 'should remove the unlock for the activity with no response and not related to a dependency' do
+            @student.reset_dependency_graph_for(school_class_1)
             expect(Unlock.find_by(school_class: school_class_1, unlockable: manually_unlocked_activity, student: @student)).to eq(nil)
           end
-          it "should replace the original unlocks" do
-            @student.reset_dependency_graph_for(school_class_1)
-            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_1, student: @student).id).to_not eq(unlock_1.id)
-            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_2, student: @student).id).to_not eq(unlock_2.id)
-            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_3, student: @student).id).to_not eq(unlock_4.id)
+          describe 'should replace the original unlocks' do
+            before do
+              @student.reset_dependency_graph_for(school_class_1)
+            end
+
+            it 'should change the id of task_1s unlock' do
+              expect(Unlock.find_by(school_class: school_class_1, unlockable: task_1, student: @student).id).to_not eq(unlock_1.id)
+            end
+            it 'should change the id of task_2s unlock' do
+              expect(Unlock.find_by(school_class: school_class_1, unlockable: task_2, student: @student).id).to_not eq(unlock_2.id)
+            end
+            it 'should change the id to task_3s unlock' do
+              expect(Unlock.find_by(school_class: school_class_1, unlockable: task_3, student: @student).id).to_not eq(unlock_4.id)
+            end
           end
-          it "should not replace unlocks in other school_classes" do
+          it 'should not replace unlocks in other school_classes' do
             @student.reset_dependency_graph_for(school_class_1)
             expect(Unlock.find_by(school_class: @student.school_classes.first, unlockable: task_2, student: @student).id).to eq(unlock_3.id)
           end
         end
 
-        describe "when the student has responded to a task in the activity" do
+        describe 'when the student has responded to a task in the activity but not completed it' do
           let(:student_response) { LaplayaTaskResponse.create(completed: false, student: @student, school_class: school_class_1, task: manually_unlocked_task) }
 
           before do
@@ -356,20 +374,44 @@ describe Student, type: :model do
             @student.task_responses << student_response
           end
 
-          it { should_not change { Unlock.count } }
+          it { should change { Unlock.count }.by(-2) }
           it { should_not change { TaskResponse.count } }
-          it "should replace the original unlocks" do
+          it 'should delete the manually unlocked activity unlock' do
             @student.reset_dependency_graph_for(school_class_1)
-            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_1, student: @student).id).to_not eq(unlock_1.id)
-            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_2, student: @student).id).to_not eq(unlock_2.id)
-            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_3, student: @student).id).to_not eq(unlock_4.id)
+            expect(Unlock.find_by(school_class: school_class_1, unlockable: manually_unlocked_activity, student: @student)).to eq(nil)
+          end
+          it 'should delete the manually unlocked task unlock' do
+            @student.reset_dependency_graph_for(school_class_1)
+            expect(Unlock.find_by(school_class: school_class_1, unlockable: manually_unlocked_task, student: @student)).to eq(nil)
+          end
+        end
+
+        describe 'when the student has responded to a task in the activity and completed it' do
+          let(:student_response) { LaplayaTaskResponse.create(completed: true, student: @student, school_class: school_class_1, task: manually_unlocked_task) }
+
+          before do
+            student_response
+            @student.task_responses << student_response
+          end
+
+          it { should change { Unlock.count }.by(-1) }
+          it { should_not change { TaskResponse.count } }
+          it 'should delete the manually unlocked activity unlock' do
+            @student.reset_dependency_graph_for(school_class_1)
+            expect(Unlock.find_by(school_class: school_class_1, unlockable: manually_unlocked_activity, student: @student)).to eq(nil)
+          end
+          it 'should not delete the manually unlocked task unlock' do
+            @student.reset_dependency_graph_for(school_class_1)
+            expect(Unlock.find_by(school_class: school_class_1, unlockable: manually_unlocked_task, student: @student)).to_not eq(nil)
+          end
+          it 'should replace the manually unlocked task unlock' do
+            @student.reset_dependency_graph_for(school_class_1)
             expect(Unlock.find_by(school_class: school_class_1, unlockable: manually_unlocked_task, student: @student).id).to_not eq(manual_unlock.id)
-            expect(Unlock.find_by(school_class: school_class_1, unlockable: manually_unlocked_activity, student: @student).id).to_not eq(manual_unlock_2.id)
           end
         end
       end
 
-      describe "when there are activities that have been unlocked" do
+      describe 'when there are activities that have been unlocked' do
         let(:unlocked_activity) { FactoryGirl.create(:activity_page) }
         let(:activity_unlock) { Unlock.create(student: @student, school_class: school_class_1, unlockable: unlocked_activity) }
         let(:laplaya_task) { FactoryGirl.create(:laplaya_task) }
@@ -388,35 +430,45 @@ describe Student, type: :model do
         end
 
         it { should change { Unlock.count }.by(0) }
-        it "should not lock the activity" do
+        it 'should not lock the activity' do
           @student.reset_dependency_graph_for(school_class_1)
           expect(Unlock.find_by(school_class: school_class_1, unlockable: unlocked_activity, student: @student)).to_not eq(nil)
         end
-        it "should replace original activity unlock" do
+        it 'should replace original activity unlock' do
           @student.reset_dependency_graph_for(school_class_1)
           expect(Unlock.find_by(school_class: school_class_1, unlockable: unlocked_activity, student: @student).id).to_not eq(activity_unlock.id)
         end
       end
 
-      describe "when a student has no responses" do
+      describe 'when a student has no responses' do
         before do
           @student.task_responses.each { |response|
             response.destroy
           }
         end
 
-        it "should have only unlocks in different schools and for thinsg with no prerequisites" do
+        it 'should have only unlocks in different schools and for thinsg with no prerequisites' do
           @student.reset_dependency_graph_for(school_class_1)
           expect(Unlock.count).to eq(3)
         end
-        it "should unlock only things that have no prerequisites" do
-          @student.reset_dependency_graph_for(school_class_1)
-          expect(Unlock.find_by(school_class: school_class_1, unlockable: task_1.activity_page, student: @student)).to_not eq(nil)
-          expect(Unlock.find_by(school_class: school_class_1, unlockable: task_1, student: @student)).to_not eq(nil)
-          expect(Unlock.find_by(school_class: school_class_1, unlockable: task_2, student: @student)).to eq(nil)
-          expect(Unlock.find_by(school_class: school_class_1, unlockable: task_3, student: @student)).to eq(nil)
+        describe 'should unlock only things that have no prerequisites' do
+          before do
+            @student.reset_dependency_graph_for(school_class_1)
+          end
+          it "should delete the first activity's unlock" do
+            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_1.activity_page, student: @student)).to_not eq(nil)
+          end
+          it "should not delete the first task's unlock" do
+            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_1, student: @student)).to_not eq(nil)
+          end
+          it "should delete task_2's unlock" do
+            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_2, student: @student)).to eq(nil)
+          end
+          it "should elete task_3's unlock" do
+            expect(Unlock.find_by(school_class: school_class_1, unlockable: task_3, student: @student)).to eq(nil)
+          end
         end
-        it "should replace the original unlocks" do
+        it 'should replace the original unlocks' do
           @student.reset_dependency_graph_for(school_class_1)
           expect(Unlock.find_by(school_class: school_class_1, unlockable: task_1, student: @student).id).to_not eq(unlock_1.id)
         end
@@ -424,15 +476,15 @@ describe Student, type: :model do
       end
     end
 
-    describe "when a student is soft removed from a school_class_1" do
+    describe 'when a student is soft removed from a school_class_1' do
       subject { lambda { @student.soft_remove_from(school_class_1) } }
 
       it { should_not change { SchoolClass.count } }
-      it "should cause student to no longer have school_class_1" do
+      it 'should cause student to no longer have school_class_1' do
         @student.soft_remove_from(school_class_1)
         expect(@student.school_classes).to_not include(school_class_1)
       end
-      it "should cause school_class_1 to no longer have student" do
+      it 'should cause school_class_1 to no longer have student' do
         @student.soft_remove_from(school_class_1)
         expect(school_class_1.students).to_not include(@student)
       end
