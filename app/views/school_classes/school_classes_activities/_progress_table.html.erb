@@ -12,7 +12,7 @@
     </th>
     <% @info[:tasks].each { |task| %>
         <th>
-          <b><%= link_to task[:title], task[:type]=='LaplayaTask' ? laplaya_task_path(task[:id]) : assessment_task_path(task[:id]) %></b>
+          <b><%= link_to task[:title], get_path_for_task(task)%></b>
         </th>
     <% } %>
   </tr>

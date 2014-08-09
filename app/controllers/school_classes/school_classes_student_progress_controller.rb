@@ -3,11 +3,11 @@ class SchoolClasses::SchoolClassesStudentProgressController < SchoolClassesContr
 
   def student_progress
     @student = Student.find(params[:id])
-    @module_pages = @school_class.module_pages.includes(activity_pages: [:tasks])
+    @module_pages = @school_class.module_pages.student_visible.includes(activity_pages: [:tasks])
     @unlocks = Unlock.where(student: @student, school_class: @school_class)
-    @info = @module_pages.map { |module_page| {title: module_page.title, id: module_page.id, activity_pages: module_page.activity_pages.map {
+    @info = @module_pages.map { |module_page| {title: module_page.title, id: module_page.id, activity_pages: module_page.activity_pages.student_visible.map {
         |activity| {title: activity.title, id: activity.id, unlocked: @unlocks.find_by(student: @student, unlockable: activity).nil? ? false : true,
-                    tasks: activity.tasks.map {
+                    tasks: activity.tasks.student_visible.map {
                         |task| {title: task.title, id: task.id, visibility: task.get_visibility_status_for(@student, @school_class)}
                     }}
     }}

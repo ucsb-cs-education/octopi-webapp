@@ -1,5 +1,5 @@
 <div class="activity-title-box">
-  <%= @activity_page.title %>
+  <%= link_to @activity_page.title, activity_page_path(@activity_page) %>
 </div>
 <%= link_to 'Back', school_class_path(@school_class), class: 'btn btn-default' %>
 
@@ -9,3 +9,4 @@
 <div id="progress-table-div">
   <%= render partial: 'progress_table' %>
 </div>
+<br>

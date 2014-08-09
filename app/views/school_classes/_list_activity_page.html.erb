@@ -1,7 +1,14 @@
-<tr>
-  <td>
-    <%= activity_page.title %>
-    <br>
-    <%= link_to "View Class Progress", school_class_activity_path(@school_class,activity_page) %>
-  </td>
-</tr>
+<% if activity_page.visible_to_teachers %>
+    <tr>
+      <td>
+        <% unless activity_page.visible_to_students %>
+            <%= link_to activity_page.title, activity_page_path(activity_page) %>
+            <div class="teacher-only-note"> Teacher only activity</div>
+        <% else %>
+            <span class="black-link"><%= link_to activity_page.title, activity_page_path(activity_page) %> </span>
+            <br>
+            <%= link_to "View Class Progress", school_class_activity_path(@school_class, activity_page) %>
+        <% end %>
+      </td>
+    </tr>
+<% end %>

@@ -5,5 +5,13 @@ module Pages::PagesHelper
     t.strftime("#{t.day.ordinalize} %B, %Y %I:%M %p")
   end
 
+  def children_visible_to_me(page)
+    if can? :update, @page
+      page.children
+    else
+      page.children.teacher_visible
+    end
+  end
+
 
 end

@@ -2,5 +2,18 @@
     <% if can? :update, @page %>
         <span class='ui-icon ui-icon-arrowthick-2-n-s'></span>
     <% end %>
-    <%= link_to page.title, page %>
+    <% if page.is_a?(AssessmentQuestion) %>
+        <%= link_to page.title, page %>
+    <% else %>
+        <% if page.visible_to_students %>
+            <%= link_to page.title, page %>
+        <% else %>
+            <% if page.visible_to_teachers %>
+                <%= link_to page.title, page %><div class="teacher-div"><span>Teacher</span><span>Only</span></div>
+            <% else %>
+                <%= link_to page.title, page %>
+                <div class="designer-div"><span>Designer</span><span>Only</span></div>
+            <% end %>
+        <% end %>
+    <% end %>
 <% end %>

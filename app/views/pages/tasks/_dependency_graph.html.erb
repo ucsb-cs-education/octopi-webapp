@@ -6,6 +6,8 @@
           (A task with no prerequisites will begin unlocked)
         </div>
       </div>
+  <% elsif @page.prerequisites.blank? %>
+      This task has no prerequisites.
   <% end %>
   <ul id="task-prerequisites">
     <%= render partial: "prereq_link", collection: @task_dependencies, as: :dependency %>

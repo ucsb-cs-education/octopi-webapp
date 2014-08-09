@@ -157,7 +157,7 @@ class Ability
     can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
     can :read, Task, {curriculum_id: page_ids, visible_to_teachers: true}
     assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids)
-    laplaya_task_ids = LapalyaTask.teacher_visible.where(curriculum_id: page_ids)
+    laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids)
     can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
     can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
     can :manual_unlock, SchoolClass, id: school_classes

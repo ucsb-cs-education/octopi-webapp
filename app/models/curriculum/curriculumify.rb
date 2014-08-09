@@ -11,7 +11,8 @@ module Curriculumify
     attr_accessor :visible_to
     if is_page_or_task?(base.to_s)
       base.scope :student_visible, -> { base.where(visible_to_students: true)}
-      base.scope :teacher_visible, -> { base.where(visible_to_students: true)}
+      base.scope :teacher_visible, -> { base.where(visible_to_teachers: true)}
+      base.scope :only_teacher_visible, -> { base.where(visible_to_teachers: true, visible_to_students: false)}
     end
 
   end

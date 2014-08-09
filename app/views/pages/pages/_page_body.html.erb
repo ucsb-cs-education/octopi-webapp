@@ -3,8 +3,12 @@
     <% if can? :update, @page %>
         <li><a href="#designer-note">Designer Notes</a></li>
     <% end %>
-    <li><a href="#teacher-body">Teacher Instructions</a></li>
-    <li><a href="#student-body">Student Instructions</a></li>
+    <% if page.visible_to_teachers %>
+        <li><a href="#teacher-body">Teacher Instructions</a></li>
+    <% end %>
+    <% if page.visible_to_students %>
+        <li><a href="#student-body">Student Instructions</a></li>
+    <% end %>
   </ul>
   <div id="teacher-body" <%= 'class=octopieditable' if can? :update, @page %>>
     <%= page.teacher_body.html_safe if page.teacher_body.present? %>
@@ -13,7 +17,7 @@
     <%= page.student_body.html_safe if page.student_body.present? %>
   </div>
   <% if can? :update, @page %>
-      <div id="designer-note" class="octopieditable" >
+      <div id="designer-note" class="octopieditable">
         <%= page.designer_note.html_safe if page.designer_note.present? %>
       </div>
   <% end %>

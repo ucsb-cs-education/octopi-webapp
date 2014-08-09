@@ -29,10 +29,10 @@ class SchoolClassesController < ApplicationController
   #Shallow actions
   # GET /school_classes/1
   def show
-    @module_pages = @school_class.module_pages.includes(:activity_pages)
+    @module_pages = @school_class.module_pages.teacher_visible.includes(:activity_pages)
 
     #these two are entirely for the average completion bar
-    @tasks = Task.student_visible.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
+    @tasks = Task.teacher_visible.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
     task_ids = @tasks.pluck(:id)
     @responses = TaskResponse.completed.where(student: @school_class.students, school_class: @school_class, task_id: task_ids)
     @unlocks = Unlock.where(school_class: @school_class,

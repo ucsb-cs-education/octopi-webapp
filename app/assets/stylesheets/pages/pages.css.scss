@@ -74,9 +74,20 @@ body.pages {
         padding: 0.4em 0.4em 0.4em 1.5em;
         font-size: 1.4em;
         height: 35px;
-        span {
+        span.ui-icon{
           position: absolute;
           margin-left: -1.3em;
+        }
+        .teacher-div, .designer-div{
+          display:inline-block;
+          float: right;
+          font-weight:bold;
+          span {
+            font-size:11px;
+            line-height: 10px;
+            display: block;
+            text-align: right;
+          }
         }
       }
     }

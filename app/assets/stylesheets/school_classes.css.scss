@@ -57,6 +57,22 @@ body.school_classes {
     margin-bottom: -10px;
   }
 
+  .teacher-only-note {
+    font-size: 10px;
+    color: #a1a1a1;
+    margin-top: 2px;
+  }
+
+  .black-link {
+    a {
+      color: black;
+      text-decoration: underline;
+    }
+    a:hover {
+      color: #160e5d;
+    }
+  }
+
   .module-title-box {
     font-size: 110%;
     margin-top: 2px;

@@ -6,6 +6,8 @@
           (An activity with no prerequisites will begin unlocked)
         </div>
       </div>
+  <% elsif @page.prerequisites.blank? %>
+      This activity has no prerequisites.
   <% end %>
   <ul id="task-prerequisites">
     <%= render partial: "prereq_link", collection: @activity_dependencies, as: :dependency %>

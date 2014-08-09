@@ -20,14 +20,14 @@ class SchoolClass < ActiveRecord::Base
     @unlocks = Unlock.where(student: students, school_class: self, unlockable_type: "Task", unlockable_id: @activity_page.tasks.pluck(:id))
     @responses = TaskResponse.where(student: students, school_class: self)
 
-    [{name: "Completed by", data: @activity_page.tasks.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
+    [{name: "Completed by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
         task.title+"("+task.id.to_s+")" : task.title)=> @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
-     {name: "Unlocked by", data: @activity_page.tasks.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
+     {name: "Unlocked by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
          task.title+"("+task.id.to_s+")" : task.title) => (@unlocks.where(unlockable: task).count-@responses.where(task: task, completed: true).count)} }.reduce({}, :merge)}]
   end
 
   def student_progress_graph_array_for(student)
-    @tasks = Task.where(activity_page: (ActivityPage.where(module_page: self.module_pages)))
+    @tasks = Task.student_visible.where(activity_page: (ActivityPage.where(module_page: self.module_pages)))
     @unlock_count = Unlock.where(student: student, school_class: self, unlockable_type: "Task", unlockable_id: @tasks.pluck(:id)).count
 
     number_of_tasks_completed = TaskResponse.where(student: student, school_class: self).where(completed: true).count
