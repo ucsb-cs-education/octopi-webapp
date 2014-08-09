@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140805164855) do
+ActiveRecord::Schema.define(version: 20140809041417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -173,6 +173,17 @@ ActiveRecord::Schema.define(version: 20140805164855) do
   add_index "task_dependencies", ["dependant_id"], name: "index_task_dependencies_on_dependant_id", using: :btree
   add_index "task_dependencies", ["prerequisite_id", "dependant_id"], name: "index_task_dependencies_on_prerequisite_id_and_dependant_id", unique: true, using: :btree
   add_index "task_dependencies", ["prerequisite_id"], name: "index_task_dependencies_on_prerequisite_id", using: :btree
+
+  create_table "task_response_feedbacks", force: true do |t|
+    t.integer  "task_response_id"
+    t.integer  "task_id"
+    t.string   "feedback"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "task_response_feedbacks", ["task_id"], name: "index_task_response_feedbacks_on_task_id", using: :btree
+  add_index "task_response_feedbacks", ["task_response_id"], name: "index_task_response_feedbacks_on_task_response_id", using: :btree
 
   create_table "task_responses", force: true do |t|
     t.integer  "student_id"

@@ -2,7 +2,6 @@ class LaplayaTaskResponse < TaskResponse
   has_one :student_response_task_response_laplaya_file, :class_name => '::StudentResponse::TaskResponseLaplayaFile', foreign_key: :parent_id, dependent: :destroy
   alias_attribute :laplaya_file, :student_response_task_response_laplaya_file
 
-
   def self.new_response(student, school_class, laplaya_task)
     transaction do
       response = LaplayaTaskResponse.create(

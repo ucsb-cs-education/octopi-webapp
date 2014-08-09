@@ -74,8 +74,7 @@ OctopiWebapp::Application.routes.draw do
   get '/signin', to: redirect('/student_portal/signin')
   get '/admin/staff/roles/:role_name', to: 'roles#get_resources', format: true
   get '/admin/staff/roles/:role_name/:resource_name/:resource_id', to: 'roles#get_roles', format: true
-  get '/admin/students/:id/change_class/:old_class/:new_class/:preserve_current', to: 'students#change_class', format: true
-  get '/admin/students/:id/remove_class/:class_id/:delete_data', to: 'students#remove_class', format: true
+
   namespace :staff do
     root 'static_pages#home'
     get 'home', to: 'static_pages#home'

@@ -37,8 +37,8 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def module_page
     respond_to do |format|
       format.html do
-        @activities = @module_page.activity_pages.student_visible
-        @unlocks = Unlock.find_for(current_student, current_school_class, @activities)
+        @activity_pages = @module_page.activity_pages.student_visible
+        @unlocks = Unlock.find_for(current_student, current_school_class, @activity_pages)
       end
     end
   end

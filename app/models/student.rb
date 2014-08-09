@@ -24,34 +24,36 @@ class Student < User
   end
 
   def change_school_class(original_class, new_class, delete_new_class_data_if_conflict)
-    task_responses.where(school_class: original_class).each { |response|
-      conflict = TaskResponse.find_by(student: self, school_class: new_class, task: response.task)
-      if conflict.nil?
-        response.update_attribute(:school_class, new_class)
-      else
-        if delete_new_class_data_if_conflict
-          conflict.destroy
+    Student.transaction do
+      task_responses.where(school_class: original_class).each { |response|
+        conflict = TaskResponse.find_by(student: self, school_class: new_class, task: response.task)
+        if conflict.nil?
           response.update_attribute(:school_class, new_class)
         else
-          response.destroy
+          if delete_new_class_data_if_conflict
+            conflict.destroy
+            response.update_attribute(:school_class, new_class)
+          else
+            response.destroy
+          end
         end
-      end
-    }
-    Unlock.where(school_class: original_class, student: self).each { |unlock|
-      conflict = Unlock.find_by(student: self, school_class: new_class, unlockable_type: unlock.unlockable_type, unlockable_id: unlock.unlockable_id)
-      if conflict.nil?
-        unlock.update_attribute(:school_class, new_class)
-      else
-        if delete_new_class_data_if_conflict
-          conflict.destroy
+      }
+      Unlock.where(school_class: original_class, student: self).each { |unlock|
+        conflict = Unlock.find_by(student: self, school_class: new_class, unlockable_type: unlock.unlockable_type, unlockable_id: unlock.unlockable_id)
+        if conflict.nil?
           unlock.update_attribute(:school_class, new_class)
         else
-          unlock.destroy
+          if delete_new_class_data_if_conflict
+            conflict.destroy
+            unlock.update_attribute(:school_class, new_class)
+          else
+            unlock.destroy
+          end
         end
-      end
-    }
-    school_classes.delete(original_class)
-    school_classes << new_class
+      }
+      school_classes.delete(original_class)
+      school_classes << new_class
+    end
   end
 
   def soft_remove_from(school_class)
@@ -65,34 +67,38 @@ class Student < User
   end
 
   def delete_all_data_for(school_class)
-    task_responses.where(school_class: school_class).each { |response|
-      response.destroy
-    }
-    Unlock.where(school_class: school_class, student: self).each { |unlock|
-      unlock.destroy
-    }
-    school_classes.delete(school_class)
+    Student.transaction do
+      task_responses.where(school_class: school_class).each { |response|
+        response.destroy
+      }
+      Unlock.where(school_class: school_class, student: self).each { |unlock|
+        unlock.destroy
+      }
+      school_classes.delete(school_class)
+    end
   end
 
   def reset_dependency_graph_for(school_class)
-    Unlock.where(school_class: school_class, student: self).each { |unlock|
-      unlock.destroy
-    }
-    school_class.module_pages.each { |module_page|
-      module_page.activity_pages.each { |activity_page|
-        if activity_page.prerequisites.count == 0
-          Unlock.where(school_class: school_class, unlockable: activity_page, student: self).first_or_create
-        end
-        activity_page.tasks.each { |task|
-          if @response = TaskResponse.find_by(school_class: school_class, task: task, student: self, completed: true)
-            Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
-            @response.unlock_dependants
-          elsif task.task_dependencies.count == 0
-            Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
-          end
-        }
+    Student.transaction do
+      Unlock.where(school_class: school_class, student: self).each { |unlock|
+        unlock.destroy
       }
-    }
+      school_class.module_pages.each do |module_page|
+        module_page.activity_pages.each do |activity_page|
+          if activity_page.prerequisites.count == 0
+            Unlock.where(school_class: school_class, unlockable: activity_page, student: self).first_or_create
+          end
+          activity_page.tasks.each do |task|
+            if !(@response = TaskResponse.find_by(school_class: school_class, task: task, student: self, completed: true)).nil?
+              Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
+              @response.unlock_dependants
+            elsif task.task_dependencies.count == 0
+              Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
+            end
+          end
+        end
+      end
+    end
   end
 
   private

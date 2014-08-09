@@ -18,23 +18,5 @@
 
 <% end %>
 <div id = "other-student-actions" class="panel">
-  <h3>Other Actions</h3>
-
-  <div class="panel_contents">
-    <div class="select input optional" id="change-classes">
-      <%= label_tag :school_classes, 'Transfer student and their data to different class:' %><br>
-      <%= select_tag :current_school_classes, options_from_collection_for_select(@student_current_classes, 'id', 'name') %>
-      <%= select_tag :possible_school_classes, options_from_collection_for_select(@student_noncurrent_classes, 'id', 'name') %><br>
-      <%= check_box_tag :preserve_current, true, true %>
-      <span>Replace any conflicting files/answers with student's current class data?</span><br>
-      <%= button_tag 'Transfer student', type: 'button', disabled: true %>
-    </div>
-    <br>
-    <div class="select input optional" id="remove-from-class">
-      <%= label_tag :school_classes, 'Remove student from a class:'%><br>
-      <%= select_tag :removable_classes, options_from_collection_for_select(@student_removable_classes, 'id', 'name') %><br>
-      <%= check_box_tag :delete_data, true, true %><span>Delete all student answers and files?</span><br>
-      <%= button_tag 'Remove', type: 'button', disabled: true %>
-    </div>
-  </div>
+  <%= render 'other_student_actions' %>
 </div>

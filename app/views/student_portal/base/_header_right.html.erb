@@ -1,9 +1,6 @@
 <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
   <ul class="nav navbar-nav navbar-right">
     <li><%= link_to 'Home', student_portal_root_path %></li>
-    <% if signed_in_student? && current_school_class.module_pages.any? %>
-        <li><%= link_to 'Get started!', student_portal_module_path(current_school_class.module_pages.first) %></li>
-    <% end %>
     <li><%= link_to 'Help', student_portal_help_path %></li>
     <% unless signed_in_student? %>
         <% if staff_signed_in? %>

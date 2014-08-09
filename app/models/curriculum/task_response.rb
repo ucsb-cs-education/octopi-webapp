@@ -2,6 +2,7 @@ class TaskResponse < ActiveRecord::Base
   belongs_to :school_class
   belongs_to :student
   belongs_to :task
+  has_many :task_response_feedbacks, dependent: :destroy
   before_save :unlock_dependencies
   validate :task_is_unlocked
   scope :completed, -> { where(completed: true) }

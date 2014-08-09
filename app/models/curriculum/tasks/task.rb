@@ -9,6 +9,8 @@ class Task < ActiveRecord::Base
   has_many :activity_dependencies, foreign_key: :task_prerequisite_id, dependent: :destroy
   has_many :activity_dependants, :through => :activity_dependencies, source: :activity_dependant
   has_many :unlocks, as: :unlockable
+  has_many :task_responses
+  has_many :task_response_feedbacks
   #before_save :check_dependants
 
   acts_as_list scope: [:page_id]

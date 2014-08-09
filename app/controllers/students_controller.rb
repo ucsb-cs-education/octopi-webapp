@@ -3,9 +3,6 @@ class StudentsController < ApplicationController
   load_and_authorize_resource
   skip_authorize_resource :school, only: [:list_student_logins]
   before_action :load_students, only: [:index]
-  respond_to :json
-  js false
-
 
   # Deep actions
   # GET /schools/:school_id/students
@@ -37,22 +34,6 @@ class StudentsController < ApplicationController
   def show
   end
 
-  def change_class
-    original_class = SchoolClass.find(params[:old_class].to_i)
-    new_class = SchoolClass.find(params[:new_class].to_i)
-    if @student.change_school_class(original_class, new_class, params[:preserve_current]=='true')
-      respond_with [{name: original_class.name, value: original_class.id}, {name: new_class.name, value: new_class.id}]
-    end
-  end
-
-  def remove_class
-    school_class = SchoolClass.find(params[:class_id])
-    if params['delete_data']=='true'
-      respond_with [{name: school_class.name, value: school_class.id}] if @student.delete_all_data_for(school_class)
-    else
-      respond_with [{name: school_class.name, value: school_class.id}] if @student.soft_remove_from(school_class)
-    end
-  end
 
   private
   def student_params

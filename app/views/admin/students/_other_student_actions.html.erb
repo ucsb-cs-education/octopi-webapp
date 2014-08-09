@@ -1,0 +1,29 @@
+<h3>Other Actions</h3>
+
+<div class="panel_contents">
+  <div class="select input optional" id="change-classes">
+    <%= form_tag change_class_admin_student_path(@student), method: 'post' do %>
+        <%= label_tag :school_classes, 'Transfer student and their data to different class:' %>
+        <br>
+        <%= select_tag :current_class, options_from_collection_for_select(@student_current_classes, 'id', 'name') %>
+        <%= select_tag :new_class, options_from_collection_for_select(@student_noncurrent_classes, 'id', 'name') %>
+        <br>
+        <%= check_box_tag :preserve, true %>
+        <span>Replace any conflicting files/answers with student's current class data?</span><br>
+        <%= button_tag 'Transfer student', type: 'submit', disabled: true %>
+    <% end %>
+  </div>
+  <br>
+
+  <div class="select input optional" id="remove-from-class">
+    <%= form_tag remove_class_admin_student_path(@student), method: 'post' do %>
+        <%= label_tag :school_classes, 'Remove student from a class:' %>
+        <br>
+        <%= select_tag :class, options_from_collection_for_select(@student_removable_classes, 'id', 'name') %>
+        <br>
+        <%= check_box_tag :delete_data, true  %>
+        <span>Delete all student answers and files?</span><br>
+        <%= button_tag 'Remove', type: 'submit', disabled: true %>
+    <% end %>
+  </div>
+</div>

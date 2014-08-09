@@ -36,80 +36,67 @@ AdminStaffController.prototype.edit = () ->
 
 AdminStudentController = Paloma.controller('Admin/Students');
 AdminStudentController.prototype.edit = () ->
-  transferClassButtonListener = ->
-    $("#change-classes").each (i) ->
-      button = $(this).find("button")
-      current_classes_dropdown = $(this).find("#current_school_classes")
-      possible_classes_dropdown = $(this).find("#possible_school_classes")
-      preserve_current = $(this).find("#preserve_current")
-      current_classes_dropdown.on 'change', ->
-        if $(this).val() and possible_classes_dropdown.val()
-          button.attr('disabled', false)
-        else
-          button.attr('disabled', true)
-      possible_classes_dropdown.on 'change', ->
-        if $(this).val() and current_classes_dropdown.val()
-          button.attr('disabled', false)
-        else
-          button.attr('disabled', true)
-      button.click ->
-        if change_confirm_message($("#current_school_classes option[value="+current_classes_dropdown.val()+"]"),$("#possible_school_classes option[value="+possible_classes_dropdown.val()+"]"))
-          url = current_classes_dropdown.val() + '/' + possible_classes_dropdown.val() + '/' + preserve_current.prop('checked')
-          $.ajax({
-            url: 'change_class/' + url + ".json",
-            success: (data, textStatus, jqXHR) ->
-              $("#current_school_classes option[value="+data[0]['value']+"]").remove()
-              $("#removable_classes option[value="+data[0]['value']+"]").remove()
-              $("#possible_school_classes option[value="+data[1]['value']+"]").remove()
-              $("#current_school_classes").append("<option value = '"+data[1]['value']+"'>"+data[1]['name']+"</option>")
-              $("#removable_classes").append("<option value = '"+data[1]['value']+"'>"+data[1]['name']+"</option>")
-              $("#possible_school_classes").append("<option value = '"+data[0]['value']+"'>"+data[0]['name']+"</option>")
-              $("#remove-from-class").find("button").attr('disabled', true)
-              button.attr('disabled', true)
-            error: (jqXHR, textStatus, error) ->
-              alert(error)
-          })
 
-
-
-
-  removeFromClassButtonListener = ->
-    $("#remove-from-class").each (i) ->
-      button = $(this).find("button")
-      removable_classes_dropdown = $(this).find("#removable_classes")
-      delete_data = $(this).find("#delete_data")
-      removable_classes_dropdown.on 'change', ->
-        if $(this).val()
-          button.attr('disabled', false)
-        else
-          button.attr('disabled', true)
-      button.click ->
-        if remove_confirm_message()
-          url = removable_classes_dropdown.val() + '/'  + delete_data.prop('checked')
-          $.ajax({
-            url: 'remove_class/' + url + ".json",
-            success: (data, textStatus, jqXHR) ->
-              $("#current_school_classes option[value="+data[0]['value']+"]").remove()
-              $("#removable_classes option[value="+data[0]['value']+"]").remove()
-              $("#possible_school_classes").append("<option value = '"+data[0]['value']+"'>"+data[0]['name']+"</option>")
-              $("#change-classes").find("button").attr('disabled', true)
-              button.attr('disabled', true)
-            error: (jqXHR, textStatus, error) ->
-              alert(error)
-          })
-
-  change_confirm_message = (old_class, new_class) ->
-    if $("#change-classes").find("#preserve_current").prop('checked')
-      confirm("This will transfer "+$("#student_first_name").val()+" "+$("#student_last_name").val()+" and all of their data from "+ old_class.text()+" to "+ new_class.text()+". If data already exists in "+ new_class.text()+" that conflicts with their data in "+ old_class.text()+" it will be replaced.\n This will occur immediately. Continue?")
+  change_confirm_message = (student_name, old_class_name, new_class_name, preserve) ->
+    text = "This will transfer #{student_name} and all of their data from #{old_class_name} to #{new_class_name}."
+    if preserve
+      text += " Any existing data will take priority over new data and will be preserved."
     else
-      confirm("This will transfer "+$("#student_first_name").val()+" "+$("#student_last_name").val()+" and all of their data from "+ old_class.text()+" to "+ new_class.text()+". If data already exists in "+ new_class.text()+" that conflicts with their data in "+ old_class.text()+", their data in "+ old_class.text()+" will be removed.\n This will occur immediately. Continue?")
+      text += " Any existing data will be overwritten if necessary."
+    text += " No data will remain in #{old_class_name} for #{student_name}."
+    text += "\nContinue?"
+    confirm(text)
 
-  remove_confirm_message = ->
-    if $("#remove-from-class").find("#delete_data").prop('checked')
-      confirm("This will remove "+$("#student_first_name").val()+" "+$("#student_last_name").val()+" from "+$('#removable_classes option[value='+$("#removable_classes").val()+']').text()+" and their data in it will be PERMANENTLY deleted.\nThis will occur immediately. Continue?")
+  remove_confirm_message = (student_name, class_name, delete_data) ->
+    text = "This will remove #{student_name} from #{class_name}."
+    if delete_data
+      text += " Their data for this class will be permanently deleted."
     else
-      confirm("This will remove "+$("#student_first_name").val()+" "+$("#student_last_name").val()+" from "+$('#removable_classes option[value='+$("#removable_classes").val()+']').text()+" but their data will be preserved and recovered if they are added again.\nThis will occur immediately. Continue?");
+      text += " Their data for this class will be preserved and recovered if they are added back ot the class."
+    text += "\nContinue?"
+    confirm(text)
 
-  $(document).ready transferClassButtonListener
-  $(document).ready removeFromClassButtonListener
+  setupStudentFunctions = ->
+    student_name = $("#student_first_name").val() + " " + $("#student_last_name").val()
+    change_classes = $('#change-classes').find('form')
+    remove_class = $('#remove-from-class').find('form')
+    current_classes_dropdown = change_classes.find("select#current_class")
+    possible_classes_dropdown = change_classes.find("select#new_class")
+    change_class_dropdowns = change_classes.find('select')
+    removeable_classes_dropdown = remove_class.find("select#class")
+    preserve_current = change_classes.find("#preserve_current")
+    delete_data = remove_class.find("#delete_data")
+    change_class_button = change_classes.find('button')
+    remove_class_button = remove_class.find('button')
+
+    #Toggle the state of the transfer button based on selected vals for both classes
+    setTransferSubmitButtonState = ->
+      if current_classes_dropdown.val() and possible_classes_dropdown.val()
+        change_class_button.removeAttr('disabled')
+      else
+        change_class_button.attr('disabled', '')
+    #add the event listener for the dropdowns
+    change_class_dropdowns.change setTransferSubmitButtonState
+
+    change_classes.submit (e) ->
+      current_class_text = current_classes_dropdown.find('option:selected').text()
+      new_class_test = possible_classes_dropdown.find('option:selected').text()
+      preserve = preserve_current.prop('checked')
+      unless change_confirm_message(student_name, current_class_text, new_class_test, preserve)
+        e.preventDefault()
+
+    setRemoveSubmitButtonState = ->
+      if removeable_classes_dropdown.val()
+        remove_class_button.removeAttr('disabled')
+      else
+        remove_class_button.attr('disabled', '')
+
+    removeable_classes_dropdown.change setRemoveSubmitButtonState
+    remove_class.submit (e) ->
+      class_text = removeable_classes_dropdown.find('option:selected').text()
+      delete_data = delete_data.prop('checked')
+      unless remove_confirm_message(student_name, class_text, delete_data)
+        e.preventDefault()
+
+  $(document).ready setupStudentFunctions
   $(document).ready

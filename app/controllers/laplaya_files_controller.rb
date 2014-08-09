@@ -30,6 +30,8 @@ class LaplayaFilesController < ApplicationController
       begin
         params = task_response_feedback_params
         if params.any?
+          task_response = @laplaya_file.laplaya_task_response
+          task_response.task_response_feedbacks.create!(task_response_feedback_params)
           #add feedback to feedback file
         end
       rescue ActionController::ParameterMissing
