@@ -11,23 +11,18 @@ class TaskResponse < ActiveRecord::Base
     errors.add(:taskresponse, 'must be unlocked') unless unlock
   end
 
-  def unlock_dependencies
-    if self.completed_changed? && self.completed == true
-      #need to factor into separate method so that unlock_dependants may be called for resetting a student dependency graph
-      unlock_dependants
-    end
-  end
-
-  def unlock_dependants
-    unlock.update_attribute(:hidden, true) if task.is_a?(AssessmentTask)
-    task.activity_dependants.each do |activity|
-      if check_prereqs(activity) && activity.find_unlock_for(student, school_class).nil?
-        Unlock.create(student: student, school_class: school_class, unlockable: activity)
+  def unlock_dependencies(force = false)
+    if (self.completed_changed? && self.completed == true) || force
+      unlock.update_attribute(:hidden, true) if task.is_a?(AssessmentTask)
+      task.activity_dependants.each do |activity|
+        if check_prereqs(activity) && activity.find_unlock_for(student, school_class).nil?
+          Unlock.create(student: student, school_class: school_class, unlockable: activity)
+        end
       end
-    end
-    task.dependants.each do |depdendant_task|
-      if check_prereqs(depdendant_task) && depdendant_task.find_unlock_for(student, school_class).nil?
-        Unlock.create(student: student, school_class: school_class, unlockable: depdendant_task)
+      task.dependants.each do |depdendant_task|
+        if check_prereqs(depdendant_task) && depdendant_task.find_unlock_for(student, school_class).nil?
+          Unlock.create(student: student, school_class: school_class, unlockable: depdendant_task)
+        end
       end
     end
   end

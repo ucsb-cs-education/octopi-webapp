@@ -3,7 +3,7 @@ class AssessmentTaskResponse < TaskResponse
   accepts_nested_attributes_for :assessment_question_responses
 
 
-  def unlock_dependencies
+  def unlock_dependencies(force = false)
     self.completed = true
     super
   end

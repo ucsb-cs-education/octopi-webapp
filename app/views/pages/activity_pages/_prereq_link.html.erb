@@ -1,11 +1,13 @@
-<% unless dependency.id==nil %>
-    <li class="prereq_link" id="prerequisite-id-<%= dependency.task_prerequisite.id %>">
-      Depends on <%= link_to "#{dependency.task_prerequisite.title}", dependency.task_prerequisite %>
-      <% if can? :update, @page %>
-          <%= form_for dependency,
-                       html: {method: :delete}, remote: true do |f| %>
-              <%= f.submit 'Remove', class: 'remove-button' %>
+<% if (can? :update, @page) || dependency.task_prerequisite.visible_to_teachers %>
+    <% unless dependency.id==nil %>
+        <li class="prereq_link" id="prerequisite-id-<%= dependency.task_prerequisite.id %>">
+          Depends on <%= link_to "#{dependency.task_prerequisite.title}", dependency.task_prerequisite %>
+          <% if can? :update, @page %>
+              <%= form_for dependency,
+                           html: {method: :delete}, remote: true do |f| %>
+                  <%= f.submit 'Remove', class: 'remove-button' %>
+              <% end %>
           <% end %>
-      <% end %>
-    </li>
+        </li>
+    <% end %>
 <% end %>

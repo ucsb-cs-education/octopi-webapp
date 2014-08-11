@@ -1,3 +1,5 @@
-<li class="dependant_link">
-  Is a prerequisite of <%= link_to "#{dependant.title}", dependant %>
-</li>
+<% if (can? :update, @page) || dependant.visible_to_teachers %>
+    <li class="dependant_link">
+      Is a prerequisite of <%= link_to "#{dependant.title}", dependant %>
+    </li>
+<% end %>

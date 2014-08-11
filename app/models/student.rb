@@ -113,7 +113,7 @@ class Student < User
           activity_page.tasks.each do |task|
             if !(@response = TaskResponse.find_by(school_class: school_class, task: task, student: self, completed: true)).nil?
               Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
-              @response.unlock_dependants
+              @response.unlock_dependencies(true)
             elsif task.task_dependencies.count == 0
               Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
             end

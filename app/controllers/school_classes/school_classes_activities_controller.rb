@@ -3,6 +3,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
 
   def activity_page
     @activity_page = ActivityPage.includes(:tasks).find(params[:id])
+    authorize! :show, @activity_page
     @activity_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable: @activity_page)
     @students = @school_class.students.includes(:task_responses)
 
