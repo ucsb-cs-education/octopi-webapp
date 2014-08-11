@@ -109,10 +109,11 @@
     }
 
     .input-box {
-      width: 1.5em;
+      width: 28px;
       display: inline-block;
+      float: left;
       .answer-input {
-        max-width: 1.5em;
+        max-width: 28px;
         display: inline-block;
       }
     }
@@ -124,6 +125,7 @@
     .answer {
       border: 1px solid lightgrey;
       border-radius: 2px;
+      padding: 5px 5px 5px 5px;
       margin: -1px;
       font-size: 18px;
       p {
