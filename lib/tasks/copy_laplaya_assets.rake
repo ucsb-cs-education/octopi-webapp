@@ -9,14 +9,16 @@ help/*.png
 Sounds/*.mp3 Sounds/*.wav Sounds/index.html
 Costumes/*.gif Costumes/*.png Costumes/index.html
 Backgrounds/*.jpg Backgrounds/*.gif Backgrounds/index.html
-).map{|x| asset_path+x}
-    for file in Dir.glob(files,0)
+).map { |x| asset_path+x }
+    for file in Dir.glob(files, 0)
       dest = file.sub asset_regex, dest_path
       dirname = File.dirname dest
       unless File.directory? dirname
         FileUtils.mkdir_p dirname, verbose: true
       end
-      FileUtils.cp file, dest, verbose: true
+      if !File.exist?(dest) or (File.mtime(file) > File.mtime(dest))
+        FileUtils.cp file, dest, verbose: true, preserve: true
+      end
     end
   end
 end

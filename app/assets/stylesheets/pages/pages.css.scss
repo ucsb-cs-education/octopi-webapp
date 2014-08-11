@@ -59,9 +59,11 @@
       margin-bottom: 10px;
     }
     #tabs {
+      font-family: inherit;
       margin-top: 5px;
+      font-size: 18px;
       p {
-        font-size: 16px;
+        font-size: inherit;
       }
     }
     #children {

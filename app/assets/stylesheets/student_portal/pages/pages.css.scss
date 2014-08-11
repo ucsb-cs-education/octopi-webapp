@@ -9,19 +9,19 @@
   }
 
   #page-title {
-    font-size: 250%;
+    font-size: 32px;
     margin-bottom: 15px;
   }
   .student-body {
-
     display: inline-block;
     padding: .5em;
     margin: 2px;
     border: 3px solid #CCCCCC;
     border-radius: 5px;
     width: 100%;
+    font-size: 18px;
     p {
-      font-size: 115%;
+      font-size: inherit;
     }
   }
 
@@ -32,8 +32,8 @@
     border-radius: 3px;
     padding: .5em;
     color: black;
+    font-size: 16px;
     a {
-      font-size: 105%;
       color: black;
     }
   }
