@@ -60,6 +60,10 @@
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     margin-bottom: 5px;
+    font-size: 18px;
+    p {
+      font-size: inherit;
+    }
   }
 
   .deleteAnswer {
