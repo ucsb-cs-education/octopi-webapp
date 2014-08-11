@@ -81,6 +81,34 @@ ActiveAdmin.register Staff do
       ]
     end
 
+    def verify_roles(object)
+      new_roles = Role.array_to_roles(params[:staff][:basic_roles]).to_a
+      school_teacher_roles = []
+      if can? :add_teacher, School
+        school_teacher_roles = Role.where(name: :teacher,
+                                          resource: School.accessible_by(current_ability, :add_teacher))
+      end
+      school_admin_roles = []
+      if can? :add_school_admin, School
+        school_admin_roles = Role.where(name: :school_admin,
+                                        resource: School.accessible_by(current_ability, :add_school_admin))
+      end
+      curriculum_roles = []
+      if can? :add_designer, CurriculumPage
+        curriculum_roles = Role.where(name: :curriculum_designer, resource_type: 'CurriculumPage', resource: CurriculumPage.accessible_by(current_ability, :add_designer).pluck(:id))
+      end
+      school_teacher_roles&=new_roles
+      school_admin_roles&=new_roles
+      curriculum_roles&=new_roles
+      new_roles = school_teacher_roles.to_set.merge(school_admin_roles).merge(curriculum_roles).to_a
+      if new_roles.any? || current_staff.super_staff?
+        params[:staff][:basic_roles] = new_roles.map { |x| x.id }
+      else
+        object.errors.add :basic_roles, "Cannot #{params[:action]} a user without a role you manage"
+        false
+      end
+    end
+
     def update(options={}, &block)
       object = resource
 
@@ -110,34 +138,6 @@ ActiveAdmin.register Staff do
           staff_params.delete(:password_confirmation) unless staff_params[:password_confirmation].present?
         end
         object.update_attributes(staff_params)
-      end
-    end
-
-    def verify_roles(object)
-      new_roles = Role.array_to_roles(params[:staff][:basic_roles]).to_a
-      school_teacher_roles = []
-      if can? :add_teacher, School
-        school_teacher_roles = Role.where(name: :teacher,
-                                          resource: School.accessible_by(current_ability, :add_teacher))
-      end
-      school_admin_roles = []
-      if can? :add_school_admin, School
-        school_admin_roles = Role.where(name: :school_admin,
-                                        resource: School.accessible_by(current_ability, :add_school_admin))
-      end
-      curriculum_roles = []
-      if can? :add_designer, CurriculumPage
-        curriculum_roles = Role.where(name: :curriculum_designer, resource_type: 'CurriculumPage', resource: CurriculumPage.accessible_by(current_ability, :add_designer).pluck(:id))
-      end
-      school_teacher_roles&=new_roles
-      school_admin_roles&=new_roles
-      curriculum_roles&=new_roles
-      new_roles = school_teacher_roles.to_set.merge(school_admin_roles).merge(curriculum_roles).to_a
-      if new_roles.any? || current_staff.super_staff?
-        params[:staff][:basic_roles] = new_roles.map { |x| x.id }
-      else
-        object.errors.add :basic_roles, "Cannot #{params[:action]} a user without a role you manage"
-        false
       end
     end
 
