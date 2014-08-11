@@ -64,6 +64,7 @@ gem 'simple_form', '~> 3.1.0.rc1'
 gem 'libxml-ruby', '~> 2.7.0'
 
 gem 'activeadmin', github: 'gregbell/active_admin'
+gem 'arbre', '~> 1.0.1'
 
 gem 'acts_as_list', '~> 0.4.0'
 gem 'ckeditor', '~> 4.1.0'

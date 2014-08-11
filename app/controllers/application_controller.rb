@@ -1,4 +1,6 @@
+require 'student_signin_module'
 class ApplicationController < ActionController::Base
+  include StudentSigninModule
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -52,6 +54,8 @@ class ApplicationController < ActionController::Base
   def user_for_paper_trail
     if staff_signed_in?
       current_staff.id
+    elsif signed_in_student?
+      current_student.id
     else
       'User not logged in'
     end

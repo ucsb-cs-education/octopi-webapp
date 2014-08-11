@@ -11,6 +11,7 @@ class Student < User
 
   has_secure_password
 
+
   def Student.new_remember_token
     SecureRandom.urlsafe_base64
   end

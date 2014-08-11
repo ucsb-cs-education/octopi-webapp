@@ -49,7 +49,7 @@ OctopiWebapp::Application.routes.draw do
 
   #match '/school_classes/:school_class_id/activities/:id', to: 'school_classes#activity_page', via: 'get', as: 'activity'
 
-  resources :schools, only: [:show, :index], shallow: true do
+   resources :schools, only: [:show, :index], shallow: true do
     resources :students, except: [:update, :edit, :destroy]
     resources :school_classes do
       member do
@@ -87,8 +87,6 @@ OctopiWebapp::Application.routes.draw do
     post 'staff', to: 'staff/registrations#create', as: 'staff_registration'
   end
   ActiveAdmin.routes(self)
-
-
   scope module: 'pages' do
     resources :curriculum_pages, path: 'curriculums', except: [:create, :edit], shallow: true do
       member do
