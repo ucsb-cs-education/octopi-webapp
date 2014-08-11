@@ -1,5 +1,6 @@
 <div class="laplaya-file-title">
   <p>Title: <%= laplaya_file.file_name %></p>
+
   <p>Updated at: <%= get_time(laplaya_file) %></p>
 </div>
 
@@ -23,10 +24,10 @@
           </div>
       <% end %>
     </div>
-<% end %>
-<% if clone_direct ||= false %>
-    <%= simple_form_for :laplaya_file, url: clone_url, method: :patch do |f| %>
-        <%= f.hidden_field :laplaya_file, value: clone_direct[:id] %>
-        <%= f.submit clone_direct[:button_label], class: 'btn btn-default' %>
+    <% if clone_direct ||= false %>
+        <%= simple_form_for :laplaya_file, url: clone_url, method: :patch do |f| %>
+            <%= f.hidden_field :laplaya_file, value: clone_direct[:id] %>
+            <%= f.submit clone_direct[:button_label], class: 'btn btn-default' %>
+        <% end %>
     <% end %>
 <% end %>
