@@ -7,7 +7,8 @@ module StudentSigninModule
     student.update_attribute(:remember_token, Student.create_remember_hash(remember_token))
     @current_student = student
     @current_school_class = school_class
-    current_student
+    @current_student.current_class = @current_school_class
+    @current_student
   end
 
   def update_autosignout_time

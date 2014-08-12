@@ -13,7 +13,7 @@ ActiveAdmin.register SchoolClass do
 
   show :title => :name do
     attributes_table :name, :school do
-      table_for school_class.students.order('first_name ASC') do
+      table_for school_class.students.where(type: "Student").order('first_name ASC') do
         column 'Students' do |student|
           link_to student.name, [:admin, student]
         end

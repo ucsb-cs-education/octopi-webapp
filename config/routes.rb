@@ -64,7 +64,9 @@ OctopiWebapp::Application.routes.draw do
       get '/activities/:id', to: 'school_classes/school_classes_activities#activity_page', as: 'activity'
       get '/student/:id', to: 'school_classes/school_classes_student_progress#student_progress', as: 'student_progress'
       get '/reset_dependency_graph', to: 'school_classes/school_classes_student_progress#reset_dependency_graph'
-      get '/view_as_student/:module_id', to: 'school_classes#view_as_student', as: 'view_as_student'
+      get '/view_as_student', to: 'school_classes#view_as_student', as: 'view_as_student'
+      match '/signout_test_student', to: 'school_classes#signout_test_student', as: 'signout_test_student', via: 'delete'
+      match '/reset_test_student', to: 'school_classes#reset_test_student', as: 'reset_test_student', via: 'delete'
     end
 
 

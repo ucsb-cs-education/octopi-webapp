@@ -65,8 +65,8 @@ class SchoolClassesController < ApplicationController
 
   def view_as_student
     @school_class = SchoolClass.find(params[:school_class_id])
-    test_student = current_staff.test_student
     pass = SecureRandom.uuid
+    test_student = current_staff.test_student
     test_student ||= TestStudent.create(first_name: "TestStudent", last_name: current_staff.last_name,
                                         login_name: SecureRandom.uuid, password: pass,
                                         password_confirmation: pass, school: @school_class.school,
@@ -76,6 +76,27 @@ class SchoolClassesController < ApplicationController
     end
     sign_in_student test_student, @school_class
     redirect_to student_portal_module_path(@school_class.module_pages.first)
+  end
+
+  def signout_test_student
+    if teacher_using_test_student?
+      sign_out_student current_student
+    else
+      flash[:error] = "You are not signed in as a test student."
+    end
+    redirect_to :back
+  end
+
+  def reset_test_student
+    if teacher_using_test_student?
+      @school_class = SchoolClass.find(params[:school_class_id])
+      current_student.delete_all_data_for(@school_class)
+      current_student.school_classes << @school_class
+      flash[:success] = "All progress for Test Student reset."
+    else
+      flash[:error] = "You are not signed in as a test student."
+    end
+    redirect_to :back
   end
 
   #Shallow actions

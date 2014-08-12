@@ -47,7 +47,7 @@ class Ability
       can :crud, LaplayaFile, user_id: user.id
       can :create, LaplayaFile
 
-      if user.class == Staff
+      if user.is_a? Staff
         #All users can edit themselves
         can :crud, Staff, :id => user.id
         can :read, ActiveAdmin::Page, :name => 'Dashboard'
@@ -64,7 +64,7 @@ class Ability
           teacher(user) if user.has_role? :teacher, :any
           curriculum_designer(user) if user.has_role? :curriculum_designer, :any
         end
-      elsif user.class == Student
+      elsif user.is_a? Student
         student(user)
 
       end
@@ -148,7 +148,8 @@ class Ability
       cannot :read, School, :id => School.pluck(:id) - schools_teacher
       can :read, School, :id => schools_teacher
       can [:crud, :change_class, :remove_class], Student, :id => Student.where(school_id: schools_teacher).pluck(:id)
-      can [:read_update, :add_new_student, :add_student, :view_as_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
+      can [:read_update, :add_new_student, :add_student,
+           :view_as_student, :signout_test_student, :reset_test_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
     else
       cannot :read, School, :id => School.pluck(:id) - school_classes_teacher
       can :read, School, :id => school_classes_teacher

@@ -4,6 +4,9 @@
     <li><%= link_to 'Help', student_portal_help_path %></li>
     <% if current_staff %>
         <li><%= link_to 'Staff/Teachers', staff_root_path %></li>
+        <% unless @current_school_class.nil? %>
+            <li><%= link_to 'Back to '+@current_school_class.name, school_class_path(@current_school_class) %></li>
+        <% end %>
     <% end %>
     <% if signed_in_student? %>
         <%= render 'student_signed_in_dropdown' %>
