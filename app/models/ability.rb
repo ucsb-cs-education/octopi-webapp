@@ -72,6 +72,7 @@ class Ability
   end
 
   def curriculum_designer(user)
+    can :add_basic_roles, Staff
     page_ids = CurriculumPage.with_role(:curriculum_designer, user).pluck(:id)
     can [:crud, :add_designer, :show_sandbox_file, :show_project_file], Page, :curriculum_id => page_ids
     can [:crud, :clone, :clone_completed,
@@ -93,6 +94,7 @@ class Ability
   end
 
   def school_admin(user)
+    can :add_basic_roles, Staff
     schools = School.with_role(:school_admin, user)
     school_ids = schools.pluck(:id)
     cannot :read, School, :id => School.pluck(:id) - schools
@@ -132,6 +134,7 @@ class Ability
   end
 
   def teacher(user)
+    can :add_basic_roles, Staff
     #this is really awful. We need to clean this up, a lot...
 
     schools = School.with_role(:teacher, user).pluck(:id)

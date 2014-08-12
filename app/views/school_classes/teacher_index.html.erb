@@ -1,0 +1,16 @@
+<% provide(:title, 'Your classes') %>
+<h1>Your Classes</h1>
+<% @schools.each do |school| %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <%= link_to school[:name], schools_path(school[:id]) %>
+      </div>
+      <div class="panel-body">
+        <% school[:classes].each do |school_class| %>
+            <p>
+                <%= link_to school_class.name, school_class_path(school_class) %>
+            </p>
+        <% end %>
+      </div>
+    </div>
+<% end %>

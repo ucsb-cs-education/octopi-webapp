@@ -1,9 +1,13 @@
 <p>
   <strong>School:</strong>
   <%= @school_class.school.name %>
-  <br>
-  <strong>Name:</strong>
+</p>
+<p>
+  <strong>Class name:</strong>
   <%= @school_class.name %>
+</p>
+<p>
+
 </p>
 
 
@@ -20,7 +24,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @school_class.students.each do |s| %>
+  <% ordered_students.each do |s| %>
       <tr>
         <td><%= s.first_name %></td>
         <td><%= s.last_name %></td>
@@ -51,6 +55,6 @@
 <p>
 
   <%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
-  <%= link_to 'Edit Students', edit_school_class_path, class: 'btn btn-primary' %>
+  <%= link_to 'Edit Class', edit_school_class_path, class: 'btn btn-primary' %>
 </p>
 

@@ -18,8 +18,9 @@
         <%= f.input :basic_roles, label: 'Roles', as: :check_boxes, :input_html => {checked: 'checked'}, collection: @staff.basic_roles %>
         <li class="select input optional" id="new-role-select">
           <%= label_tag :new_roles, 'Add a new role' %>
-          <%= select_tag :new_roles, options_from_collection_for_select(@new_role_names, 'id', 'name') %>
+          <%= select_tag :new_roles, options_from_collection_for_select(@new_role_names, 'id', 'name'), name: nil %>
           <%= select_tag :new_role_resources, options_from_collection_for_select(@new_role_values, 'id', 'name'),
+                         name: nil,
                          'data-option-dependent' => true,
                          'data-option-observed' => 'new_roles',
                          'data-option-url' => '/admin/staff/roles/:role_name:.json',
@@ -28,7 +29,7 @@
                          'data-option-key-method' => :id,
                          'data-option-value-method' => :name
           %>
-          <%= button_tag 'Add the role', type: 'button', disabled: true %>
+          <%= button_tag 'Add the role', type: 'button', disabled: true, name: nil %>
         </li>
     <% end %>
     <%= f.actions do %>

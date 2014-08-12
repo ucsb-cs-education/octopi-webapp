@@ -1,13 +1,9 @@
 <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
   <ul class="nav navbar-nav navbar-right">
-    <li><%= link_to 'Home', student_portal_root_path %></li>
+    <li><%= link_to 'Student Homepage', student_portal_root_path %></li>
     <li><%= link_to 'Help', student_portal_help_path %></li>
     <% unless signed_in_student? %>
-        <% if staff_signed_in? %>
-            <li><%= link_to 'Non-Student Portal', main_app.home_path %></li>
-        <% else %>
-            <li><%= link_to 'Non-Student Portal', new_staff_session_path %></li>
-        <% end %>
+        <li><%= link_to 'Staff/Teachers', staff_root_path %></li>
     <% end %>
     <% if signed_in_student? %>
         <%= render 'student_signed_in_dropdown' %>

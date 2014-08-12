@@ -1,35 +1,42 @@
-<div class="col-xs-12 col-sm-6 col-md-4 col-sm-offset-6 col-md-offset-8">
-  <%= simple_form_for :school, url: schools_path, method: 'get' do |f| %>
-      <div class="form-inputs">
-        <%= f.input :id, include_blank: false, collection: School.accessible_by(current_ability, :show), selected: @school.id, label: 'Select a different school to administer' %>
-      </div>
+<div class="row">
 
-      <div class="form-actions">
-        <%= f.button :submit, 'Switch schools' %>
-      </div>
-  <% end %>
+  <div class="col-xs-12 col-sm-4 col-sm-push-8">
+    <%= simple_form_for :school, url: schools_path, method: 'get' do |f| %>
+        <div class="form-inputs">
+          <%= f.input :id, include_blank: false, collection: School.accessible_by(current_ability, :show), selected: @school.id, label: 'Select a different school to administer' %>
+        </div>
+
+        <div class="form-actions">
+          <%= f.button :submit, 'Switch schools' %>
+        </div>
+    <% end %>
+  </div>
+  <div class="col-xs-12 col-sm-8 col-sm-pull-4">
+    <p>
+      <strong>Name:</strong>
+      <%= @school.name %>
+    </p>
+
+    <p>
+      <strong>Student remote access allowed:</strong>
+      <%= @school.student_remote_access_allowed %>
+    </p>
+
+    <% if can? :update, @school %>
+        <p>
+          <strong>Ip range:</strong>
+          <%= @school.ip_range %>
+        </p>
+
+        <p>
+          <%= link_to 'Change school settings', edit_admin_school_path(@school) %></p>
+    <% end %>
+
+    <p>
+      <%= link_to 'View school\'s classes', school_school_classes_path(@school) %><br>
+
+      <%= link_to 'View school\'s students', school_students_path(@school) %>
+    </p>
+  </div>
+
 </div>
-
-<p>
-  <strong>Name:</strong>
-  <%= @school.name %>
-</p>
-
-<p>
-  <strong>Student remote access allowed:</strong>
-  <%= @school.student_remote_access_allowed %>
-</p>
-
-<% if can? :update, @school %>
-<p>
-  <strong>Ip range:</strong>
-  <%= @school.ip_range %>
-</p><p>
-<%= link_to 'Change school settings', edit_admin_school_path(@school) %></p>
-<% end %>
-
-<p>
-  <%= link_to 'View school\'s classes', school_school_classes_path(@school) %><br>
-
-  <%= link_to 'View school\'s students', school_students_path(@school) %>
-</p>

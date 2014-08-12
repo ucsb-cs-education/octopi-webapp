@@ -9,6 +9,7 @@ class StudentPortal::StaticPagesController < StudentPortal::BaseController
   end
 
   def help
+    redirect_to help_path
   end
 
 end

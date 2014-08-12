@@ -1,5 +1,5 @@
 class SchoolClassesController < ApplicationController
-  load_and_authorize_resource :school_class
+  load_and_authorize_resource :school_class, except: [:teacher_index]
   load_and_authorize_resource :school, only: [:index, :new, :create]
   before_action :load_school, only: [:edit]
 
@@ -8,6 +8,37 @@ class SchoolClassesController < ApplicationController
   # GET /schools/:school_id/school_classes
   def index
     @school_classes = @school.school_classes
+  end
+
+  def teacher_index
+    authenticate_staff!
+    if current_staff.super_staff?
+      @schools = School.all
+    else
+      @schools = School.with_role(:teacher, current_staff)
+    end
+    if @schools.empty?
+      flash[:error] = 'You are not a teacher at any schools! You must be a teacher to access this page. Other users must access through the school directly.'
+      redirect_to staff_root_path
+    else
+      schools = {}
+      @schools.each do |school|
+        schools[school.name] = {id: school.id, name: school.name, classes: []}
+        classes = school.school_classes
+        unless current_staff.super_staff?
+          classes = classes.with_role(:teacher, current_staff)
+        end
+        classes.each do |klass|
+          schools[klass.school.name][:classes] << klass
+        end
+      end
+      @schools = []
+      schools.each do |k, v|
+        v[:classes].sort { |x, y| x.name <=> y.name }
+        @schools << v
+      end
+    end
+
   end
 
   # POST /schools/:school_id/school_classes

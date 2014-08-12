@@ -20,6 +20,7 @@
               f.input :login_name, collection: [],
                       include_blank: 'Please select a class first', selected: 0,
                       input_html: {
+                              disabled: true,
                               'data-option-dependent' => true,
                               'data-option-observed' => 'session_school_class',
                               'data-option-url' => '/school_classes/:school_class_id:/student_logins.json',

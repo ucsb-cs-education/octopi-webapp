@@ -2,11 +2,9 @@
 <%= render 'header' %>
 <%= content_for?(:pre_container) ? yield(:pre_container) : '' %>
 <div class="container">
-  <% unless flash.empty? %>
-      <div class="flashes">
-        <%= render 'flashes' %>
-      </div>
-  <% end %>
+  <div class="flashes">
+    <%= render 'flashes' %>
+  </div>
   <div id="main-body" class="<%= controller_classes %>">
     <%= yield %>
   </div>

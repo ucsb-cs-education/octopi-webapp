@@ -1,3 +1,4 @@
+<small>The teacher instructions for a curriculum are displayed at the <%= link_to 'curriculum index page', curriculum_pages_path %></small>
 <ul id="children" <%= 'class=octopisortable' if can? :update, page%> >
   <%= render partial: "page", collection: children_visible_to_me(page) %>
 </ul>

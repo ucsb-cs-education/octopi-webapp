@@ -25,3 +25,28 @@
 //= require school_classes
 //= require sorttable
 //= require dependant_dropdowns
+
+var AddFlash = (function() {
+    "use strict";
+
+    var elem,
+        hideHandler,
+        that = {};
+
+    that.init = function(options) {
+        elem = $(options.selector);
+    };
+
+    that.show = function(text) {
+        clearTimeout(hideHandler);
+
+        elem.find("span").html(text);
+        elem.delay(200).fadeIn().delay(4000).fadeOut();
+    };
+
+    return that;
+}());
+
+$(document).ready(function() {
+    AddFlash.init({"selector": "#runtime_flash"})
+});

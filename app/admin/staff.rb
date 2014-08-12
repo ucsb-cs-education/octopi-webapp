@@ -2,8 +2,11 @@ ActiveAdmin.register Staff do
   filter :roles
   remove_filter :users_roles
   permit_params do
-    params = [:first_name, :last_name, :email, :password, :password_confirmation, :current_password]
-    params.push basic_roles: [] if can?([:add_teacher, :add_school_admin, :add_designer], [School, CurriculumPage])
+    params = [:first_name, :last_name, :email, :password, :password_confirmation]
+    if %w(edit update).include?(request.filtered_parameters['action']) && resource && resource == current_staff
+      params.push :current_password
+    end
+    params.push basic_roles: [] if can? :add_basic_roles, Staff
     params.push :super_staff if can? :create_super_staff, :any
     params
   end
@@ -81,12 +84,18 @@ ActiveAdmin.register Staff do
       ]
     end
 
-    def verify_roles(object)
+
+    def assign_roles
       new_roles = Role.array_to_roles(params[:staff][:basic_roles]).to_a
       school_teacher_roles = []
       if can? :add_teacher, School
         school_teacher_roles = Role.where(name: :teacher,
                                           resource: School.accessible_by(current_ability, :add_teacher))
+      end
+      school_class_teacher_roles = []
+      if can? :add_class_teacher, SchoolClass
+        school_class_teacher_roles = Role.where(name: :teacher,
+                                                resource: SchoolClass.accessible_by(current_ability, :add_class_teacher))
       end
       school_admin_roles = []
       if can? :add_school_admin, School
@@ -100,24 +109,29 @@ ActiveAdmin.register Staff do
       school_teacher_roles&=new_roles
       school_admin_roles&=new_roles
       curriculum_roles&=new_roles
-      new_roles = school_teacher_roles.to_set.merge(school_admin_roles).merge(curriculum_roles).to_a
-      if new_roles.any? || current_staff.super_staff?
-        params[:staff][:basic_roles] = new_roles.map { |x| x.id }
-      else
-        object.errors.add :basic_roles, "Cannot #{params[:action]} a user without a role you manage"
-        false
+      school_class_teacher_roles&=new_roles
+      new_roles = school_teacher_roles.to_set.
+          merge(school_admin_roles).
+          merge(curriculum_roles).
+          merge(school_class_teacher_roles).to_a
+      new_roles.map! { |x| x.id }
+      params[:staff][:basic_roles] = new_roles
+      unless new_roles.any? || current_staff.super_staff?
+        {
+            basic_roles: "Cannnot #{params[:action]} a user without a role you manage"
+        }
       end
     end
 
     def update(options={}, &block)
       object = resource
 
-      if verify_roles object
-        if update_resource(object, resource_params)
-          options[:location] ||= smart_resource_url
-        end
+      unless (invalidations = assign_roles).nil?
+        object.manual_invalidations << invalidations
       end
-
+      if update_resource(object, resource_params)
+        options[:location] ||= smart_resource_url
+      end
       respond_with_dual_blocks(object, options, &block)
     end
 
@@ -142,11 +156,13 @@ ActiveAdmin.register Staff do
     end
 
     def create(options={}, &block)
+      invalidations = assign_roles
       object = build_resource
-      if verify_roles object
-        if create_resource(object)
-          options[:location] ||= smart_resource_url
-        end
+      unless (invalidations).nil?
+        object.manual_invalidaitons << invalidations
+      end
+      if create_resource(object)
+        options[:location] ||= smart_resource_url
       end
 
       respond_with_dual_blocks(object, options, &block)

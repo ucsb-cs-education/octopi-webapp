@@ -13,6 +13,8 @@ OctopiWebapp::Application.routes.draw do
     match '/home', to: redirect('/'), via: 'get'
     match '/signin', to: 'sessions#new', via: 'get'
     match '/signout', to: 'sessions#destroy', via: 'delete'
+    get '/profile', to: 'students#show', as: 'profile'
+    patch '/profile', to: 'students#update'
 
     scope module: 'laplaya' do
       match '/laplaya', to: 'laplaya_base#laplaya', via: 'get'
@@ -49,7 +51,8 @@ OctopiWebapp::Application.routes.draw do
 
   #match '/school_classes/:school_class_id/activities/:id', to: 'school_classes#activity_page', via: 'get', as: 'activity'
 
-   resources :schools, only: [:show, :index], shallow: true do
+  get '/school_classes/', to: 'school_classes#teacher_index', as: 'teacher_school_classes'
+  resources :schools, only: [:show, :index], shallow: true do
     resources :students, except: [:update, :edit, :destroy]
     resources :school_classes do
       member do

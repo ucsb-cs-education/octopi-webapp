@@ -13,6 +13,8 @@ class Staff < User
   scope :unconfirmed, -> { where(confirmed_at: nil) }
   scope :confirmed, -> { where.not(confirmed_at: nil) }
 
+  validate :manual_invalidator
+
 
   # Taken from https://github.com/plataformatec/devise/wiki/How-To%3a-Require-admin-to-activate-account-before-sign_in
   # Uncomment here and change initial migration when ready to test
@@ -31,26 +33,50 @@ class Staff < User
   #def send_admin_mail
   #  AdminMailer.new_user_waiting_for_approval(self).deliver
   #end
-
-
-  def teacher?
-    has_role? :teacher, :any
+  def add_role(*args)
+    @super_staff = nil
+    @teacher = nil
+    @school_admin = nil
+    @curriculum_designer = nil
+    super add_role *args
   end
 
-  def school_admin?
-    has_role? :school_admin, :any
+  def teacher?(allow_superstaff = false)
+    if @teacher.nil?
+      @teacher = has_role? :teacher, :any
+    end
+    @teacher || (allow_superstaff && super_staff?)
+  end
+
+  def school_admin?(allow_superstaff = false)
+    if @school_admin.nil?
+      @school_admin = has_role? :school_admin, :any
+    end
+    @school_admin || (allow_superstaff && super_staff?)
+  end
+
+  def curriculum_designer?(allow_superstaff = false)
+    if @curriculum_designer.nil?
+      @curriculum_designer = has_role? :curriculum_designer, :any
+    end
+    @curriculum_designer || (allow_superstaff && super_staff?)
   end
 
   def super_staff?
-    has_role? :super_staff, :any
+    if @super_staff.nil?
+      @super_staff = has_role? :super_staff, :any
+    end
+    @super_staff
   end
 
   def super_staff
     super_staff?
   end
+
   def school_admin
     school_admin?
   end
+
   def teacher
     teacher?
   end
@@ -64,17 +90,17 @@ class Staff < User
   end
 
   def basic_roles
-    roles.where(name: Role.basic_role_syms)
+    if new_record?
+      roles.to_a.select {|role| Role.basic_role_strs.include? role.name }
+    else
+      roles.where(name: Role.basic_role_syms)
+    end
   end
 
   def basic_roles=(new_roles)
     new_roles = Role.array_to_roles(new_roles).
         select { |x| Role.basic_role_strs.include?(x.name) && x.resource.present? }
-    if self.roles.empty?
-      self.roles << new_roles
-    else
-      self.roles = (self.roles - basic_roles) + new_roles
-    end
+    self.roles = (self.roles - basic_roles) + new_roles
   end
 
   def name
@@ -90,4 +116,27 @@ class Staff < User
   def self.role_adapter
     self.superclass.role_adapter
   end
+
+  def manual_invalidations
+    @manual_invalidations ||= []
+  end
+
+  private
+  def manual_invalidator
+    if self.manual_invalidations.any?
+      self.manual_invalidations.each do |validation|
+        if validation.is_a? Hash
+          validation.each do |key, value|
+            errors.add key, value
+          end
+        else
+          raise StandardError('Invalid type in manual invalidations')
+        end
+      end
+      false
+    else
+      true
+    end
+  end
+
 end

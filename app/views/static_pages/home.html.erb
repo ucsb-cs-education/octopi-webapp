@@ -1,5 +1,7 @@
 <% provide(:title, 'Home') %>
-<% content_for :body_attributes do 'id=octopi-homepage' end %>
+<% content_for :body_attributes do
+  'id=octopi-homepage'
+end %>
 <% content_for :pre_container do %>
     <section class="welcome-to-octopi">
       <div class="opacity-filter">
@@ -11,6 +13,10 @@
             <span>with LaPlaya</span>
           </h1>
           <% if signed_in_student? %>
+              <p>
+                Welcome back, <%= current_student.name %>.
+              </p>
+              <%= link_to 'Student Homepage', student_portal_root_path, class: 'btn btn-primary' %>
           <% else %>
               <%= link_to 'Sign in!', student_portal_signin_path, class: 'btn btn-primary' %>
           <% end %>

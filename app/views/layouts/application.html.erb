@@ -8,6 +8,7 @@
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
+  <%= content_for?(:one_time_script) ? yield(:one_time_script) : '' %>
 </head>
 <%= render 'body' %>
 </html>

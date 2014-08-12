@@ -8,6 +8,7 @@ class Student < User
   before_create :create_remember_token
   before_destroy :delete_all_dependant_data
   attr_accessor :current_class
+  attr_reader :current_password
 
   has_secure_password
 
@@ -22,6 +23,26 @@ class Student < User
 
   def name
     "#{first_name} #{last_name}"
+  end
+
+  def update_with_password(params, *options)
+    current_password = params.delete(:current_password)
+
+    if params[:password].blank?
+      params.delete(:password)
+      params.delete(:password_confirmation) if params[:password_confirmation].blank?
+    end
+
+    result = if self.authenticate(current_password)
+               update_attributes(params, *options)
+             else
+               self.assign_attributes(params, *options)
+               self.valid?
+               self.errors.add(:current_password, current_password.blank? ? :blank : :invalid)
+               false
+             end
+    self.password = self.password_confirmation = nil
+    result
   end
 
   def change_school_class(original_class, new_class, delete_new_class_data_if_conflict)

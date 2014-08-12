@@ -1,3 +1,6 @@
+<div class="alert alert-info" id="runtime_flash" style="display:none;">
+  <span></span>
+</div>
 <% flash.each do |key, value| %>
     <% if key == 'alert' or key == 'error' %>
         <%= content_tag(:div, value, class: 'alert alert-danger') %>
@@ -7,4 +10,5 @@
     <% else %>
         <%= content_tag(:div, value, class: "alert alert-#{key}") %>
     <% end %>
+    <% flash.clear %>
 <% end %>

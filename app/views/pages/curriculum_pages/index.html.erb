@@ -1,0 +1,18 @@
+<% provide :title, 'Curriculums' %>
+<div id="curriculums_index">
+  <h2>Curriculums on Octopi</h2>
+  <% @curriculum_pages.each do |page| %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <% if can? :show, page %>
+              <%= link_to page.title, page %>
+          <% else %>
+              <%= page.title %>
+          <% end %>
+        </div>
+        <div class="panel-body">
+          <%= page.teacher_body.html_safe if page.teacher_body.present? %>
+        </div>
+      </div>
+  <% end %>
+</div>

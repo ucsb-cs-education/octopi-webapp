@@ -1,8 +1,9 @@
 <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
   <ul class="nav navbar-nav navbar-right">
     <% if signed_in_student? %>
+        <li><%= link_to 'Student Homepage', student_portal_root_path %></li>
     <% elsif staff_signed_in? %>
-        <li><%= link_to 'Staff Home', staff_home_path %></li>
+        <li><%= link_to 'Staff Homepage', staff_home_path %></li>
     <% else %>
         <li><%= link_to 'Sign-In', student_portal_signin_path %></li>
     <% end %>

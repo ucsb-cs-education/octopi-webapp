@@ -1,5 +1,9 @@
 module SchoolClassesHelper
 
+  def ordered_students
+    @school_class.students.order(first_name: :asc, last_name: :asc)
+  end
+
   def average_task_completion
     @responses.count/(@tasks.count * @school_class.students.count).to_f
   end

@@ -24,6 +24,7 @@ updateDropDowns = ->
       observer.change()
       if observed.val()
         observer.append $("<option value=\"\">").text("Loading...")
+        observer.attr('disabled', '')
         url = url_mask.replace(regexp, observed.val())
         $.getJSON url, (data) ->
           observer.empty().append prompt

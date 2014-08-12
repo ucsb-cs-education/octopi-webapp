@@ -19,7 +19,7 @@
       <th>Last Name</th>
       <th>Login Name</th>
     </tr>
-    <%= render partial: 'student_table_row', collection: @school_class.students, as: :student %>
+    <%= render partial: 'student_table_row', collection: ordered_students, as: :student %>
   </table>
 </div>
 

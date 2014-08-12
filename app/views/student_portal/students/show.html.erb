@@ -1,0 +1,53 @@
+<% provide :title, current_student.name %>
+<% if @failed %>
+    <% content_for :one_time_script do %>
+        <%= javascript_tag "$(document).ready(function(){$('#password_modal').modal('show')})" %>
+    <% end %>
+<% end %>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12 col-sm-8">
+        <h2><%= current_student.name %></h2>
+        <p><strong>School: </strong> <%= current_student.school.name %></p>
+        <p><strong>Login Name: </strong> <%= current_student.login_name %></p>
+        <p><strong>Classes: </strong></p>
+        <ul id="class-list">
+          <% current_student.school_classes.each do |school_class| %>
+              <li><p>
+                <%= school_class.name %>
+                <% if current_school_class == school_class %>
+                    <strong>(current)</strong>
+                <% end %>
+              </p></li>
+          <% end %>
+        </ul>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#password_modal">
+          Change your password
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="password_modal" role="dialog" aria-labelledby="changePassword" aria-describedby="Password Change Dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Change your password</h4>
+      </div>
+      <%= simple_form_for current_student, url: student_portal_profile_path, method: 'patch' do |f| %>
+          <div class="modal-body">
+            <%= f.input :current_password %>
+            <%= f.input :password, label: 'New Password' %>
+            <%= f.input :password_confirmation %>
+          </div>
+          <div class="modal-footer">
+            <a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</a>
+            <%= f.submit 'Save changes', class: 'btn btn-primary' %>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>

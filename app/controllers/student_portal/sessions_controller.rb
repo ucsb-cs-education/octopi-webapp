@@ -13,8 +13,8 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
 
   def create
     school_id = params[:session][:school] || -1
-    login_name = params[:session][:login_name] || ""
-    password = params[:session][:password] || ""
+    login_name = params[:session][:login_name] || ''
+    password = params[:session][:password] || ''
     school_class_id = params[:session][:school_class] || -1
 
     student = Student.find_by(school_id: school_id, login_name: login_name.downcase)
@@ -35,12 +35,12 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
 
   def list_school_classes
     school_classes = School.find(params[:school_id]).school_classes
-    render json: school_classes.order("name ASC").select(:name, :school_id, :id)
+    render json: school_classes.order('name ASC').select(:name, :school_id, :id)
   end
 
   def list_student_logins
     students  = SchoolClass.find(params[:school_class_id]).students
-    render json: students.order("login_name ASC").select(:login_name, :school_class_id, :id)
+    render json: students.order('login_name ASC').select(:login_name, :school_class_id, :id)
   end
 
 
