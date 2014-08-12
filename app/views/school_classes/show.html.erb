@@ -49,6 +49,16 @@
                 height: '100px',
                 library: {hAxis: {title: 'Percent of tasks completed and unlocked, averaged over all students'}} %>
 </div>
+<% unless teacher_using_test_student? %>
+    <%= button_to "Sign in as Test Student", {action: "view_as_student", school_class_id: @school_class.id, module_id: @module_pages.first},
+                  class: "btn btn-default", method: :get %>
+<% else %>
+    student_portal_signout_path, method: 'delete'
+    <%= button_to "View as Test Student", {action: "view_as_student", school_class_id: @school_class.id, module_id: @module_pages.first},
+                  class: "btn btn-default", method: :get %>
+    <%#= button_to "Sign Out Test Student", {action: student_portal_signout_path, id: current_staff.test_student},
+                  class: "btn btn-default", method: :delete %>
+<% end %>
 <%= render partial: 'list_module_page', collection: @module_pages, as: 'module_page' %>
 <br>
 <br>

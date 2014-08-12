@@ -2,7 +2,7 @@
   <ul class="nav navbar-nav navbar-right">
     <li><%= link_to 'Student Homepage', student_portal_root_path %></li>
     <li><%= link_to 'Help', student_portal_help_path %></li>
-    <% unless signed_in_student? %>
+    <% if current_staff %>
         <li><%= link_to 'Staff/Teachers', staff_root_path %></li>
     <% end %>
     <% if signed_in_student? %>

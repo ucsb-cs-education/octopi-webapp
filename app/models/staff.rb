@@ -12,7 +12,7 @@ class Staff < User
             uniqueness: {case_sensitive: false}, length: {maximum: 254} #Max possible email length
   scope :unconfirmed, -> { where(confirmed_at: nil) }
   scope :confirmed, -> { where.not(confirmed_at: nil) }
-
+  has_one :test_student, foreign_key: :test_student_id
   validate :manual_invalidator
 
 

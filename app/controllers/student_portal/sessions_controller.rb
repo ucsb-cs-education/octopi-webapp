@@ -17,7 +17,7 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
     password = params[:session][:password] || ''
     school_class_id = params[:session][:school_class] || -1
 
-    student = Student.find_by(school_id: school_id, login_name: login_name.downcase)
+    student = Student.find_by(school_id: school_id, login_name: login_name.downcase, type: 'Student')
     school_class = SchoolClass.find_by(id: school_class_id)
 
     if student && school_class && student.authenticate(password)
@@ -39,7 +39,7 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
   end
 
   def list_student_logins
-    students  = SchoolClass.find(params[:school_class_id]).students
+    students  = SchoolClass.find(params[:school_class_id]).students.where(type: 'Student')
     render json: students.order('login_name ASC').select(:login_name, :school_class_id, :id)
   end
 

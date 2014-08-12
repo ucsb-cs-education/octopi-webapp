@@ -2,9 +2,11 @@
   <ul class="nav navbar-nav navbar-right">
     <% if signed_in_student? %>
         <li><%= link_to 'Student Homepage', student_portal_root_path %></li>
-    <% elsif staff_signed_in? %>
+    <% end %>
+    <% if staff_signed_in? %>
         <li><%= link_to 'Staff Homepage', staff_home_path %></li>
-    <% else %>
+    <% end %>
+    <% unless signed_in_student? || current_staff %>
         <li><%= link_to 'Sign-In', student_portal_signin_path %></li>
     <% end %>
     <li><%= link_to 'Help', help_path %></li>

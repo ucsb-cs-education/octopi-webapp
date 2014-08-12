@@ -19,4 +19,11 @@ class Staff::SessionsController < Devise::SessionsController
       sign_out_student(current_student) if signed_in_student?
     end
   end
+
+  def sign_out(*args)
+    super(*args)
+    if signed_in_student? && current_student.is_a?(TestStudent)
+      sign_out_student
+    end
+  end
 end

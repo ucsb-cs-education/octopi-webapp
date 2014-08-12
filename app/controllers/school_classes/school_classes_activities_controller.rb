@@ -1,11 +1,13 @@
 class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
   load_and_authorize_resource :school_class
+  include SchoolClassesHelper
 
   def activity_page
     @activity_page = ActivityPage.includes(:tasks).find(params[:id])
     authorize! :show, @activity_page
     @activity_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable: @activity_page)
     @students = @school_class.students.includes(:task_responses)
+    @students = ordered_students
 
     @info = {:activity => {title: @activity_page.title, id: @activity_page.id, students_who_unlocked: @activity_unlocks.pluck(:student_id)},
              :tasks => @activity_page.tasks.student_visible.map { |task|

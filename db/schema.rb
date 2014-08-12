@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140810174925) do
+ActiveRecord::Schema.define(version: 20140812190657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,6 +211,7 @@ ActiveRecord::Schema.define(version: 20140810174925) do
     t.boolean  "visible_to_students", default: true
     t.boolean  "visible_to_teachers", default: true
     t.boolean  "demo",                default: false
+    t.text     "special_type",        default: "none"
   end
 
   create_table "unlocks", force: true do |t|
@@ -248,12 +249,14 @@ ActiveRecord::Schema.define(version: 20140810174925) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "school_id"
+    t.integer  "test_student_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["school_id", "login_name"], name: "index_users_on_school_id_and_login_name", using: :btree
   add_index "users", ["school_id"], name: "index_users_on_school_id", using: :btree
+  add_index "users", ["test_student_id"], name: "index_users_on_test_student_id", using: :btree
 
   create_table "users_roles", id: false, force: true do |t|
     t.integer "user_id"

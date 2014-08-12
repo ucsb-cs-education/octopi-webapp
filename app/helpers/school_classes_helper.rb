@@ -1,7 +1,13 @@
+#we need this here so that when classes are dynamically loaded in development, we see all the students
+require 'test_student'
 module SchoolClassesHelper
 
   def ordered_students
-    @school_class.students.order(first_name: :asc, last_name: :asc)
+    @students ||= @school_class.students
+    @students = @students.order(first_name: :asc, last_name: :asc)
+    @students = @students.where(%Q["users"."type" = 'Student'] +
+                                    ((teacher_using_test_student?) ? %Q[or "users"."id" = '#{current_staff.test_student.id}'] : ''))
+
   end
 
   def average_task_completion
@@ -9,7 +15,7 @@ module SchoolClassesHelper
   end
 
   def average_task_unlock
-    @unlocks.count/( @tasks.count * @school_class.students.count).to_f
+    @unlocks.count/(@tasks.count * @school_class.students.count).to_f
   end
 
   def get_path_for_task(task)

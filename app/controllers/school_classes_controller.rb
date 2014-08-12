@@ -1,4 +1,7 @@
+#we need this here so that when classes are dynamically loaded in development, we see all the students
+require 'test_student'
 class SchoolClassesController < ApplicationController
+  include SchoolClassesHelper
   load_and_authorize_resource :school_class, except: [:teacher_index]
   load_and_authorize_resource :school, only: [:index, :new, :create]
   before_action :load_school, only: [:edit]
@@ -24,11 +27,12 @@ class SchoolClassesController < ApplicationController
       schools = {}
       @schools.each do |school|
         schools[school.name] = {id: school.id, name: school.name, classes: []}
+        #'ERROR:  bind message supplies 2 parameters, but prepared statement "a4" requires 1'
         classes = school.school_classes
         unless current_staff.super_staff?
           #Postgres number of variables error
           # classes = classes.with_role(:teacher, current_staff)
-          classes = classes.select {|x| current_staff.has_role? :teacher, x}
+          classes = classes.select { |x| current_staff.has_role? :teacher, x }
         end
         classes.each do |klass|
           schools[klass.school.name][:classes] << klass
@@ -59,6 +63,21 @@ class SchoolClassesController < ApplicationController
     end
   end
 
+  def view_as_student
+    @school_class = SchoolClass.find(params[:school_class_id])
+    test_student = current_staff.test_student
+    pass = SecureRandom.uuid
+    test_student ||= TestStudent.create(first_name: "TestStudent", last_name: current_staff.last_name,
+                                        login_name: SecureRandom.uuid, password: pass,
+                                        password_confirmation: pass, school: @school_class.school,
+                                        staff: current_staff)
+    unless test_student.school_classes.pluck(:id).include? @school_class.id
+      test_student.school_classes << @school_class
+    end
+    sign_in_student test_student, @school_class
+    redirect_to student_portal_module_path(@school_class.module_pages.first)
+  end
+
   #Shallow actions
   # GET /school_classes/1
   def show
@@ -67,9 +86,10 @@ class SchoolClassesController < ApplicationController
     #these two are entirely for the average completion bar
     @tasks = Task.teacher_visible.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
     task_ids = @tasks.pluck(:id)
-    @responses = TaskResponse.completed.where(student: @school_class.students, school_class: @school_class, task_id: task_ids)
+    @students = ordered_students
+    @responses = TaskResponse.completed.where(student: @students, school_class: @school_class, task_id: task_ids)
     @unlocks = Unlock.where(school_class: @school_class,
-                            student: @school_class.students,
+                            student: @students,
                             unlockable_id: task_ids,
                             unlockable_type: 'Task')
   end

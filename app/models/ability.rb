@@ -148,7 +148,7 @@ class Ability
       cannot :read, School, :id => School.pluck(:id) - schools_teacher
       can :read, School, :id => schools_teacher
       can [:crud, :change_class, :remove_class], Student, :id => Student.where(school_id: schools_teacher).pluck(:id)
-      can [:read_update, :add_new_student, :add_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
+      can [:read_update, :add_new_student, :add_student, :view_as_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
     else
       cannot :read, School, :id => School.pluck(:id) - school_classes_teacher
       can :read, School, :id => school_classes_teacher

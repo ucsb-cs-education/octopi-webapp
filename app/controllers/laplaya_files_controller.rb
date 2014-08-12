@@ -61,7 +61,15 @@ class LaplayaFilesController < ApplicationController
     end
 
     def current_user
-      current_staff || current_student
+      if current_staff
+        if teacher_using_test_student?
+          current_student
+        else
+          current_staff
+        end
+      else
+        current_student
+      end
     end
 
     def laplaya_file_params

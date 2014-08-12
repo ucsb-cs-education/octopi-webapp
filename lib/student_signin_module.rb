@@ -23,17 +23,21 @@ module StudentSigninModule
   end
 
   def current_student
-    expires_at = session[:student_autosignout_time]
-    remember_token = Student.create_remember_hash(session[:student_remember_token])
-    @current_student ||= Student.find_by(remember_token: remember_token)
-    if expires_at && expires_at < Time.now
-      sign_out_student(@current_student) if @current_student
+    if @current_student.nil?
+      remember_token = Student.create_remember_hash(session[:student_remember_token])
+      @current_student = Student.find_by(remember_token: remember_token)
+      if @current_student
+        expires_at = session[:student_autosignout_time]
+        if expires_at && expires_at < Time.now
+          sign_out_student(@current_student)
+        end
+        update_autosignout_time
+        if session[:school_class_id]
+          @current_student.current_class ||= SchoolClass.find_by(id: session[:school_class_id])
+        end
+      end
     end
-    update_autosignout_time
-    if @current_student && session[:school_class_id]
-      @current_student.current_class ||= SchoolClass.find_by(id: session[:school_class_id])
-    end
-    @current_student
+    @current_student ||= false
   end
 
   def current_school_class
@@ -52,7 +56,8 @@ module StudentSigninModule
   end
 
   def signed_in_student?
-    !current_student.nil?
+    # current_student == true or is an object
+    !(current_student == false)
   end
 
   def signed_in_student
@@ -76,6 +81,10 @@ module StudentSigninModule
 
   def store_location
     session[:return_to] = request.url if request.get?
+  end
+
+  def teacher_using_test_student?
+    current_staff && current_staff.test_student && current_staff.test_student == current_student
   end
 
 end
