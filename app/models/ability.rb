@@ -87,6 +87,8 @@ class Ability
     can :create, AssessmentQuestion
     can :create, AssessmentTask
     can :see_developer_view, LaplayaFile
+    can :update, Task, :curriculum_id => page_ids
+    can :update, Page, :curriculum_id => page_ids
   end
 
   def super_staff(user)

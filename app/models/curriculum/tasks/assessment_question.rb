@@ -8,7 +8,7 @@ class AssessmentQuestion < ActiveRecord::Base
   validate :JSON_validator
   validate :valid_answer_type
   validates :title, presence: true, allow_blank: false
-  has_paper_trail
+  has_paper_trail :on=> [:update, :destroy]
   private
 
   def self.answer_types

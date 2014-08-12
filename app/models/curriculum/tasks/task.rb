@@ -12,7 +12,7 @@ class Task < ActiveRecord::Base
   has_many :task_responses
   has_many :task_response_feedbacks
   #before_save :check_dependants
-  has_paper_trail
+  has_paper_trail :on=> [:update, :destroy]
 
   acts_as_list scope: [:page_id]
   # include CustomModelNaming

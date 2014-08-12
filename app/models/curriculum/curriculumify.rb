@@ -1,6 +1,6 @@
 module Curriculumify
   def self.included(base)
-    base.after_create { update_curriculum_id; save }
+    base.after_create :initialize_curriculum_id
     base.before_validation :update_curriculum_id, unless: :new_record?
     base.validates :parent, presence: true, unless: :curriculum_page?
     base.validates :curriculum_id, presence: true, unless: :new_record?
@@ -32,6 +32,13 @@ module Curriculumify
 
   def curriculum_page?
     type == 'CurriculumPage'
+  end
+
+  def initialize_curriculum_id
+    self.without_versioning do
+      update_curriculum_id
+      save
+    end
   end
 
   def update_curriculum_id

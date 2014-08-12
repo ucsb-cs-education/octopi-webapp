@@ -1,0 +1,9 @@
+panel "History" do
+    table_for assigns[:versions].order(:id).reverse do
+        column "Version Date", :created_at
+        column "User who changed version", :whodunnit
+        column "Restore" do |version|
+            link_to "restore", :controller => "tasks", :action=> "restore", :version=> version.id
+        end
+    end
+end

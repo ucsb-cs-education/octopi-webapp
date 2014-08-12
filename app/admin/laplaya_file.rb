@@ -23,23 +23,21 @@ ActiveAdmin.register LaplayaFile do
   member_action :history do
     @laplaya_file = LaplayaFile.find(params[:id])
     @versions = @laplaya_file.versions
-    render "layouts/history"
+    render "layouts/laplaya_files_history"
   end
-  member_action :save do
+  member_action :restore do
     @laplaya_file = LaplayaFile.find(params[:id])
-    if (@laplaya_file.versions.size - params[:version].to_i) != 1
-      @laplaya_file = @laplaya_file.versions[params[:version].to_i+1].reify if params[:version]
-      @laplaya_file.save!
-    end
-    redirect_to history_admin_laplaya_file_path, notice: "File Saved!"
+    @laplaya_file = @laplaya_file.versions.find(params[:version].to_i).reify if params[:version]
+    @laplaya_file.save!
+    redirect_to history_admin_laplaya_file_path, notice: "File Restored!"
   end
-  show do |file|
+  show :title => :file_name do |file|
 
     attributes_table do
       row "File id" do
         file.id
       end
-      [:file_name, :note, :public, :created_at, :updated_at].each do |attribute|
+      [:note, :public, :created_at, :updated_at].each do |attribute|
         row attribute
       end
       row " " do
