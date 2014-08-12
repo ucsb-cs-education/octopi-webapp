@@ -26,7 +26,9 @@ class SchoolClassesController < ApplicationController
         schools[school.name] = {id: school.id, name: school.name, classes: []}
         classes = school.school_classes
         unless current_staff.super_staff?
-          classes = classes.with_role(:teacher, current_staff)
+          #Postgres number of variables error
+          # classes = classes.with_role(:teacher, current_staff)
+          classes = classes.select {|x| current_staff.has_role? :teacher, x}
         end
         classes.each do |klass|
           schools[klass.school.name][:classes] << klass
