@@ -102,7 +102,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
   def delete_all_responses
     if TaskResponse.destroy_all(task: @laplaya_task)
       flash[:success]="All Student responses to this task have been deleted."
-      redirect_to(laplaya_task_path(@laplaya_task))
+      redirect_to laplaya_task_path(@laplaya_task)
     else
       bad_request_with_errors @laplaya_task
     end

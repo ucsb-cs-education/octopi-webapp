@@ -21,10 +21,11 @@ PagesController.prototype.show = () ->
     currentForm = this
     prompt = "This will delete all student responses to this task in ALL schools."
     email = $(currentForm).find("input[type=submit]").attr("data-email")
+    errorMessage = "You must enter your email to continue, or press cancel to quit."
     e.preventDefault()
     confirmationPrompt prompt, email, {success: ->
       currentForm.submit()
-    }, "You must enter your email to continue, or press cancel to quit."
+    }, errorMessage
 
   enableSubmitButton = PagesController.prototype.enableSubmitButton
   $('#page-title').blur(enableSubmitButton)
