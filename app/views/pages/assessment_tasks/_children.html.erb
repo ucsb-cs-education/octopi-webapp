@@ -10,7 +10,8 @@
         <%= f.submit 'Add a new Question', class: 'btn btn-default', id: 'add-new-child-btn' %>
     <% end %>
     <div id="delete-responses">
-      <%= button_to "Delete All Responses", {action: "delete_all_responses", id: @page.id}, class: "btn btn-danger btn-xs",
-                    form_class: "delete-all-responses-form", method: :delete,data:{email: current_staff.email} %>
+      <%= button_to "Delete All Responses", {action: "delete_all_responses", id: @page.id},
+                    class: "btn btn-danger btn-xs",
+                    form_class: "delete-all-responses-form", method: :delete, data: {email: current_staff.email} %>
     </div>
 <% end %>

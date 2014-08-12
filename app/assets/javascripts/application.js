@@ -27,9 +27,53 @@
 //= require dependant_dropdowns
 //= require bootbox
 
+var confirmationPrompt = function (message, confirmationText, callbacks, errorText, hasErrored) {
+    var success = null;
+    var failure = null;
+    var cancel = null;
+    var text = message;
+    if (typeof callbacks == 'undefined') {
+        callbacks = {}
+    }
+    text += "<br>If you want to continue, please enter <b>" + confirmationText + "</b>.";
+    if (typeof callbacks.success == 'undefined') {
+        success = function () {
+            return true
+        }
+    } else {
+        success = callbacks.success
+    }
+    if (typeof callbacks.failure == 'undefined') {
+        failure = function () {
+            if (hasErrored != true) {
+                confirmationPrompt(message + "<div>" + errorText + "</div>", confirmationText, callbacks, errorText, true)
+            } else {
+                confirmationPrompt(message, confirmationText, callbacks, errorText, true)
+            }
+        }
+    } else {
+        failure = callbacks.failure
+    }
+    if (typeof callbacks.cancel == 'undefined') {
+        cancel = function () {
+            return false;
+        }
+    } else {
+        cancel = callbacks.cancel
+    }
+    bootbox.prompt(text, function (result) {
+        if (result === confirmationText) {
+            success();
+        } else if (result === null) {
+            cancel();
+        } else {
+            failure();
+        }
+    });
+}
+
 var AddFlash = (function() {
     "use strict";
-
     var elem,
         hideHandler,
         that = {};

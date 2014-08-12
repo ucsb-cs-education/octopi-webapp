@@ -19,10 +19,12 @@ PagesController.prototype.show = () ->
 
   $(".delete-all-responses-form").submit (e) ->
     currentForm = this
+    prompt = "This will delete all student responses to this task in ALL schools."
+    email = $(currentForm).find("input[type=submit]").attr("data-email")
     e.preventDefault()
-    bootbox.prompt "This will delete all student responses to this task in ALL schools. If you are sure this is what you want, type in your email and press 'OK'.", (result) ->
-      if result is $(currentForm).find("input[type=submit]").attr("data-email")
-        currentForm.submit()
+    confirmationPrompt prompt, email, {success: ->
+      currentForm.submit()
+    }, "You must enter your email to continue, or press cancel to quit."
 
   enableSubmitButton = PagesController.prototype.enableSubmitButton
   $('#page-title').blur(enableSubmitButton)

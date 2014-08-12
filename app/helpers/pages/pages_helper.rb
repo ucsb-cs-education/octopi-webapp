@@ -13,5 +13,10 @@ module Pages::PagesHelper
     end
   end
 
+  def delete_all_responses_confirmation_box_text
+    text = 'confirmationPrompt(\'This will delete all student responses to this task in ALL schools.\','
+    text+= "'"+current_staff.email.html_safe+"')"
+    text.html_safe
+  end
 
 end
