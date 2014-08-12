@@ -1,28 +1,28 @@
-<h1>Editing school</h1>
+<h1>Edit Students</h1>
 
+<%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
 <p>
   <strong>School:</strong>
   <%= @school_class.school.name %>
   <br>
   <strong>Name:</strong>
   <%= @school_class.name %>
+  <br>
+  <strong>Teachers:</strong>
+  <% Staff.all.each do |staff| %>
+      <% school_classes = SchoolClass.with_role(:teacher, staff)%>
+      <% class_staff  = Array.new%>
+      <% if school_classes.include?(@school_class) %>
+          <% class_staff.push(staff.name) %>
+      <% end %>
+      <% class_staff.each do |class_staff_name|%>
+          (<%= class_staff_name %>)
+      <% end %>
+  <% end %>
 </p>
-<!--Update Class Name-->
-
 <div class="row basic-info">
-  <%= render 'form' %>
   <%= button_to "Download class spreadsheet", {action: "download_class_csv", id: @school_class.id},
                 class: "btn btn-default", format: :xlsx, method: :post %>
-</div>
-<div class="row">
-  <table id="classlist" class="sortable">
-    <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Login Name</th>
-    </tr>
-    <%= render partial: 'student_table_row', collection: ordered_students, as: :student %>
-  </table>
 </div>
 <!--Add/modify students via CSV -->
 <div id="file-area">
@@ -35,6 +35,17 @@
   <%= link_to 'How do I do this?', student_spreadsheet_help_school_class_path(@school_class) %>
 </div>
 
+<div class="row" id="edit_student">
+  <p><strong>Edit a student in the class:</strong></p>
+  <%= simple_form_for :student, url: edit_student_school_class_path(@school_class), method: 'post', remote: true do |f| %>
+      <div class="col-md-6 form-inputs">
+        <%= f.input :id, collection: @school_class.students.order("last_name ASC"), selected: 0, input_html: {id: 'edit_student_list'}, label: false %>
+      </div>
+      <div class="col-md-1 form-actions">
+        <%= f.button :submit, 'Edit Student' %>
+      </div>
+  <% end %>
+</div>
 <!--Add existing student to class-->
 
 <div class="row" id="existing_student">
@@ -44,7 +55,7 @@
         <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected: 0, input_html: {id: 'existing_student_list'}, label: false %>
       </div>
       <div class="col-md-1 form-actions">
-        <%= f.button :submit, 'Add', id: 'add_existing_student_button' %>
+        <%= f.button :submit, 'Add Existing Student', id: 'add_existing_student_button' %>
       </div>
   <% end %>
 </div>
@@ -60,8 +71,18 @@
     <%= button_tag :'Add New Student', class: 'btn btn-primary', type: 'button', id: 'new_student_button' %>
   </div>
 </div>
-
-
+<br>
+<div class="row">
+  <table id="classlist" class="sortable" style="width:900px">
+    <tr>
+      <th>User ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Login Name</th>
+    </tr>
+    <%= render partial: 'student_table_row', collection: ordered_students, as: :student %>
+  </table>
+</div>
 
 <p></p>
 <%= link_to 'Back', school_class_path, class: 'btn btn-default' %>

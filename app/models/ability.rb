@@ -71,10 +71,10 @@ class Ability
   def curriculum_designer(user)
     can :add_basic_roles, Staff
     page_ids = CurriculumPage.with_role(:curriculum_designer, user).pluck(:id)
-    can [:crud, :add_designer, :show_sandbox_file, :show_project_file], Page, :curriculum_id => page_ids
+    can [:crud, :add_designer, :show_sandbox_file, :show_project_file, :save_version], Page, :curriculum_id => page_ids
     can [:crud, :clone, :clone_completed,
          :update_laplaya_analysis_file, :get_laplaya_analysis_file,
-         :show_completed_file, :show_base_file, :delete_all_responses], Task, :curriculum_id => page_ids
+         :show_completed_file, :show_base_file, :save_version, :delete_all_responses], Task, :curriculum_id => page_ids
     can :crud, AssessmentQuestion, :curriculum_id => page_ids
     can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => %w(TaskBaseLaplayaFile SandboxBaseLaplayaFile ProjectBaseLaplayaFile TaskCompletedLaplayaFile)}
 
@@ -165,9 +165,8 @@ class Ability
     laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
     can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
-    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, id: school_classes
+    can :manual_unlock, SchoolClass, id: school_classes
 
-    can :create, Student
   end
 
   def student(user)

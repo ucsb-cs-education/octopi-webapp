@@ -4,7 +4,7 @@ module Curriculumify
     base.before_validation :update_curriculum_id, unless: :new_record?
     base.validates_presence_of :parent, unless: :curriculum_page?
     base.validates_presence_of :curriculum_id, unless: :new_record?
-    base.validates_presence_of :title, allow_blank: false, if: :has_title?
+    base.validates_presence_of :title, allow_blank: false, length: {maximum: 100}, if: :has_title?
     base.validate :curriculum_id_validator, unless: :new_record?
     base.before_save :set_visibility_statuses, if: :has_visibility_status?
     base.after_initialize :initialize_visible_to, if: :has_visibility_status?

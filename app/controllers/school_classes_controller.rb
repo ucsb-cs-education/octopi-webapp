@@ -117,9 +117,39 @@ class SchoolClassesController < ApplicationController
   # GET /school_classes/1/edit
   def edit
     @student = Student.new
+    session[:admin_student_back_url] = request.original_url || school_path(@student.school)
+  end
+
+  def edit_student
+    @student = Student.find(params[:student][:id])
+    session[:admin_student_back_url] = edit_school_class_path || school_path(@student.school)
+    respond_to do |format|
+      format.js do
+        js false
+      end
+    end
+     #redirect_to edit_admin_student_path(@student)
+  end
+
+  def edit_class
+  end
+
+  def remove_class_role
+    Staff.find(params[:staff_id]).remove_role :teacher, SchoolClass.find(@school_class.id)
+    redirect_to edit_class_school_class_path
   end
 
 
+  def add_teacher
+    @teacher = Staff.find(params[:staff][:id])
+    authorize! :update, @teacher
+    @teacher.grant :teacher, SchoolClass.find(@school_class.id)
+    respond_to do |format|
+      format.js do
+        js false
+      end
+    end
+  end
   def add_new_student
     @student = Student.new(student_params)
     @student.school = @school_class.school
@@ -323,7 +353,7 @@ class SchoolClassesController < ApplicationController
     if @school_class.update(school_class_params)
       respond_to do |format|
         format.html do
-          redirect_to edit_school_class_path, notice: 'Class was successfully updated.'
+          redirect_to :back, notice: 'Class was successfully updated.'
         end
       end
     else

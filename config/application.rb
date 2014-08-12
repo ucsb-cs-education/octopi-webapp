@@ -29,7 +29,7 @@ module OctopiWebapp
     config.action_controller.include_all_helpers = false
 
     config.browserify_rails.commandline_options = '-t coffeeify --extension=".js.coffee"' if config.respond_to? :browserify_rails
-
+    PaperTrail.enabled = false
     config.generators do |g|
       g.test_framework :rspec
     end

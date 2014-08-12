@@ -1,0 +1,45 @@
+<h1>Edit Class</h1>
+<%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
+<p>
+  <div>
+    <strong>School:</strong>
+    <%= @school_class.school.name %>
+  </div>
+  <div>
+    <strong>Name:</strong>
+    <%= @school_class.name %>
+  </div>
+  <div id="teacher_list">
+    <strong>Teachers:</strong>
+            <% Staff.all.each do |staff| %>
+            <% school_classes = SchoolClass.with_role(:teacher, staff)%>
+            <% class_staff  = Array.new%>
+            <% if school_classes.include?(@school_class) %>
+            <% class_staff.push(staff.name) %>
+            <% end %>
+            <% class_staff.each do |class_staff_name|%>
+    (<%= class_staff_name %>
+            --<%= link_to "remove", controller: "school_classes", action: "remove_class_role", staff_id: staff.id%>--)
+    <% end %>
+    <% end %>
+  </div>
+</p>
+    <!--Update Class Name-->
+
+    <div class="row basic-info">
+    <%= render 'form' %>
+    </div>
+    <div class="row" id="add_teacher">
+        <p><strong>Add a teacher to the class:</strong></p>
+    <%= simple_form_for :staff, url: add_teacher_school_class_path(@school_class), method: 'post', remote: true do |f| %>
+        <div class="col-md-6 form-inputs">
+        <%= f.input :id, collection: (Staff.with_role(:teacher, @school_class.school) -Staff.with_role(:teacher,@school_class)),
+                    input_html: {id: 'add_teacher_list'},selected: 0, label: false %>
+        </div>
+        <div class="col-md-1 form-actions">
+        <%= f.button :submit, 'Add Teacher' %>
+        </div>
+    <% end %>
+    </div>
+
+

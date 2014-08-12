@@ -12,7 +12,7 @@ class Task < ActiveRecord::Base
   has_many :task_responses
   has_many :task_response_feedbacks
   #before_save :check_dependants
-  has_paper_trail :on=> [:update, :destroy]
+  has_paper_trail on: [:update, :destroy]
 
   acts_as_list scope: [:page_id]
   # include CustomModelNaming
@@ -20,6 +20,7 @@ class Task < ActiveRecord::Base
   # self.route_key = :feeds
   alias_attribute :parent, :activity_page
   include Curriculumify
+  include Versionate
   validates :title, presence: true, length: {maximum: 100}, allow_blank: false
 
   def depend_on(prereq)
@@ -47,5 +48,11 @@ class Task < ActiveRecord::Base
     end
     unlock
   end
+
+  def restore_task_children(id, version)
+    task = self.class.find(id)
+    task.restore_children(version)
+  end
+
 
 end

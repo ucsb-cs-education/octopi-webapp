@@ -18,7 +18,6 @@ class Pages::CurriculumPagesController < Pages::PagesController
     else
       updated = @curriculum_page.update(curriculum_page_params)
     end
-
     respond_to do |format|
       format.js do
         response.location = curriculum_page_url(@curriculum_page)
@@ -29,6 +28,7 @@ class Pages::CurriculumPagesController < Pages::PagesController
       end
     end
   end
+
 
   private
   def set_page_variable

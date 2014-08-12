@@ -7,6 +7,8 @@ ActiveAdmin.register LaplayaFile do
   filter :created_at
   filter :updated_at
 
+  menu :if => proc{current_staff.super_staff? || current_staff.curriculum_designer? }
+
   index do
     selectable_column
     id_column

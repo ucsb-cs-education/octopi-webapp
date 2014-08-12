@@ -16,7 +16,7 @@ class LaplayaFile < ActiveRecord::Base
   before_validation :cloudify_media_xml, if: :should_cloudify?
   before_validation :cleanup_media_xml_parser, if: :should_cloudify?
 
-  has_paper_trail ignore: [:notes, :thumbnail], :on => [:update, :destroy], :unless => Proc.new { |file| file.owner.is_a?(TestStudent) }
+  has_paper_trail ignore: [:notes, :thumbnail], on: [:update, :destroy], :unless => Proc.new { |file| file.owner.is_a?(TestStudent) }
 
   def to_s
     self.file_name

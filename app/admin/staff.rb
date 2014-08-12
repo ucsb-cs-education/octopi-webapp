@@ -164,7 +164,7 @@ ActiveAdmin.register Staff do
       invalidations = assign_roles
       object = build_resource
       unless (invalidations).nil?
-        object.manual_invalidaitons << invalidations
+        object.manual_invalidations << invalidations
       end
       if create_resource(object)
         options[:location] ||= smart_resource_url

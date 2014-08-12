@@ -3,13 +3,15 @@ class TaskResponse < ActiveRecord::Base
   belongs_to :student
   belongs_to :task
   has_many :task_response_feedbacks, dependent: :destroy
-  before_save :unlock_dependencies
+  before_save :unlock_dependencies, :set_task_version
   validate :task_is_unlocked
+  validates_presence_of :task
   scope :completed, -> { where(completed: true) }
 
   def task_is_unlocked
     errors.add(:taskresponse, 'must be unlocked') unless unlock
   end
+
 
   def unlock_dependencies(force = false)
     if (self.completed_changed? && self.completed == true) || force
@@ -42,6 +44,11 @@ class TaskResponse < ActiveRecord::Base
       end
     }
     true
+  end
+
+  private
+  def set_task_version
+    update_attribute(:version_date, task.updated_at)
   end
 
 end

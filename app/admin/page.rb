@@ -19,8 +19,11 @@ ActiveAdmin.register Page do
   end
   member_action :restore do
     @page = Page.find(params[:id])
-    @page = @page.versions.find(params[:version].to_i).reify if params[:version]
-    @page.save!
+    if params[:version]
+      @page = @page.versions.find(params[:version].to_i).reify
+      @page.save!
+      @page.restore_page_children(@page.id, params[:version])
+    end
     redirect_to history_admin_page_path, notice: "File Restored!"
   end
 

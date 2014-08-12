@@ -12,7 +12,7 @@ class SchoolClasses::SchoolClassesStudentProgressController < SchoolClassesContr
                     }}
     }}
     }
-
+    session[:admin_student_back_url] = request.original_url || school_path(@student.school)
     @graph_info = @school_class.student_progress_graph_array_for(@student)
   end
 

@@ -6,9 +6,10 @@ class AssessmentQuestion < ActiveRecord::Base
   alias_attribute :children, :answers
   validate :JSON_validator
   validate :valid_answer_type
-  has_paper_trail :on=> [:update, :destroy]
+  has_paper_trail on: [:update, :destroy]
   acts_as_list scope: [:assessment_task_id]
 
+  include Versionate
   include Curriculumify
   undef :visible_to
   undef :visible_to=

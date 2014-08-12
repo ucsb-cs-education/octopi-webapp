@@ -1,3 +1,7 @@
+<%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
+<%= link_to 'Edit Class', edit_class_school_class_path, class: 'btn btn-primary' %>
+<%= link_to 'Edit Students', edit_school_class_path, class: 'btn btn-primary' %>
+<p></p>
 <p>
   <strong>School:</strong>
   <%= @school_class.school.name %>
@@ -7,14 +11,30 @@
   <%= @school_class.name %>
 </p>
 <p>
+  <strong>Teachers:</strong>
+  <% Staff.all.each do |staff| %>
+      <% school_classes = SchoolClass.with_role(:teacher, staff)%>
+      <% class_staff  = Array.new%>
+      <% if school_classes.include?(@school_class) %>
+          <% class_staff.push(staff.name) %>
+      <% end %>
+      <% class_staff.each do |class_staff_name|%>
+          (<%= class_staff_name %>)
+      <% end %>
+  <% end %>
+
+
+</p>
+<p>
 
 </p>
 <!--Class list-->
 
 <body>
-<table id="classlist" class="sortable" style="width:1140px">
+<table id="classlist" class="sortable" style="width:900px">
   <thead>
   <tr>
+    <th>User ID</th>
     <th>First Name</th>
     <th class="sorttable_alpha">Last Name</th>
     <th class="sorttable_alpha">Login Name</th>
@@ -24,6 +44,7 @@
   <tbody>
   <% ordered_students.each do |s| %>
       <tr>
+        <td><%= s.id %></td>
         <td><%= s.first_name %></td>
         <td><%= s.last_name %></td>
         <td><%= s.login_name %></td>
@@ -64,11 +85,5 @@
     </div>
 <% end %>
 <%= render partial: 'list_module_page', collection: @module_pages, as: 'module_page' %>
-<br>
-<br>
-<p>
 
-  <%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
-  <%= link_to 'Edit Class', edit_school_class_path, class: 'btn btn-primary' %>
-</p>
 

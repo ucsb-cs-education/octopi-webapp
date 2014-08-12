@@ -37,6 +37,11 @@
               </div>
           <% end %>
           <%= render 'destroy_link', object: @page %>
+          <p>
+              <div class="col-md-6 row">
+                <%= button_to 'Save a version', controller: controller_name, action: 'save_version'%>
+              </div>
+          </p>
       <% end %>
   <% end %>
 </div>
