@@ -116,6 +116,7 @@ OctopiWebapp::Application.routes.draw do
               patch :clone
               patch :clone_completed
               patch :analysis_file, to: :update_laplaya_analysis_file
+              delete :delete_all_responses
               get :analysis_file, to: :get_laplaya_analysis_file
             end
             resources :task_dependencies, only: [:destroy, :create]
@@ -123,6 +124,9 @@ OctopiWebapp::Application.routes.draw do
           end
 
           resources :assessment_tasks, except: [:index, :edit], shallow: true do
+            member do
+              delete :delete_all_responses
+            end
             resources :task_dependencies, only: [:destroy, :create]
             resources :activity_dependencies, only: [:destroy, :create]
             resources :assessment_questions, except: [:index, :edit], shallow: true

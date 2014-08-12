@@ -77,7 +77,7 @@ class Ability
     can [:crud, :add_designer, :show_sandbox_file, :show_project_file], Page, :curriculum_id => page_ids
     can [:crud, :clone, :clone_completed,
          :update_laplaya_analysis_file, :get_laplaya_analysis_file,
-         :show_completed_file, :show_base_file], Task, :curriculum_id => page_ids
+         :show_completed_file, :show_base_file, :delete_all_responses], Task, :curriculum_id => page_ids
     can :crud, AssessmentQuestion, :curriculum_id => page_ids
     can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => %w(TaskBaseLaplayaFile SandboxBaseLaplayaFile ProjectBaseLaplayaFile TaskCompletedLaplayaFile)}
     can [:create, :clone_project, :clone_sandbox], ModulePage

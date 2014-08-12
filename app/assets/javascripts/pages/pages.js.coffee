@@ -16,6 +16,14 @@ PagesController.prototype.ckeditor_inline = (element) ->
   });
 
 PagesController.prototype.show = () ->
+
+  $(".delete-all-responses-form").submit (e) ->
+    currentForm = this
+    e.preventDefault()
+    bootbox.prompt "This will delete all student responses to this task in ALL schools. If you are sure this is what you want, type in your email and press 'OK'.", (result) ->
+      if result is $(currentForm).find("input[type=submit]").attr("data-email")
+        currentForm.submit()
+
   enableSubmitButton = PagesController.prototype.enableSubmitButton
   $('#page-title').blur(enableSubmitButton)
   $('#visibility-select').change(enableSubmitButton)
@@ -61,7 +69,6 @@ PagesController.prototype.show = () ->
     demoCheckboxListener = () ->
       method = if this.checked then disableLaplayaChild else enableLaplayaChild
       $('#child-pages').find('#base-file, #analysis-file').each(method)
-
 
     submitFunction = () ->
       teacher_body = $('#teacher-body').html()
@@ -114,6 +121,9 @@ PagesController.prototype.show = () ->
           alert += "<br/>Error: " + value
         alert += "</div>"
       addAlert(alert, false)
+
+
+
 
 
   $(document).ready(addPageViewSelectorCallback);

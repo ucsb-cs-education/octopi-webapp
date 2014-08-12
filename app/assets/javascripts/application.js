@@ -25,6 +25,7 @@
 //= require school_classes
 //= require sorttable
 //= require dependant_dropdowns
+//= require bootbox
 
 var AddFlash = (function() {
     "use strict";

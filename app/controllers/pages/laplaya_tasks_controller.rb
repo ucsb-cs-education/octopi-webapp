@@ -99,6 +99,15 @@ class Pages::LaplayaTasksController < Pages::TasksController
     laplaya_helper
   end
 
+  def delete_all_responses
+    if TaskResponse.destroy_all(task: @laplaya_task)
+      flash[:success]="All Student responses to this task have been deleted."
+      redirect_to(laplaya_task_path(@laplaya_task))
+    else
+      bad_request_with_errors @laplaya_task
+    end
+  end
+
   private
   def clone_helper(file_to_clone_to)
     if params[:laplaya_file] && params[:laplaya_file][:laplaya_file] && params[:laplaya_file][:laplaya_file].present?
