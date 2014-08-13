@@ -30,6 +30,16 @@ class Task < ActiveRecord::Base
     self.prerequisites.include?(prereq)
   end
 
+  def delete_all_responses!
+    Task.transaction do
+      if Unlock.where(unlockable: self, hidden: true).update_all(hidden: false) && TaskResponse.destroy_all(task: self)
+        true
+      else
+        raise (ActiveRecord::RecordNotDestroyed)
+      end
+    end
+  end
+
   def find_unlock_for(student, school_class)
     unlock = Unlock.find_for(student, school_class, self)
     if unlock.nil? && prerequisites.empty?

@@ -70,6 +70,7 @@ class SchoolClassesController < ApplicationController
                                         password_confirmation: pass, school: @school_class.school,
                                         staff: current_staff)
     unless test_student.school_classes.pluck(:id).include? @school_class.id
+      test_student.school = @school_class.school
       test_student.school_classes << @school_class
     end
     sign_in_student test_student, @school_class

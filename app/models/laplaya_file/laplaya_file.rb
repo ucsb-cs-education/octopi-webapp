@@ -5,7 +5,7 @@ class LaplayaFile < ActiveRecord::Base
   belongs_to :user
   alias_attribute :owner, :user
   before_validation :update_thumbnail_and_note
-  has_paper_trail ignore: [:notes, :thumbnail], :on => [:update, :destroy]
+  has_paper_trail ignore: [:notes, :thumbnail], :on => [:update, :destroy], :unless => Proc.new { |file| file.owner.is_a?(TestStudent) }
 
   def to_s
     self.file_name

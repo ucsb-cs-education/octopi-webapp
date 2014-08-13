@@ -46,17 +46,14 @@ class Pages::AssessmentTasksController < Pages::TasksController
   end
 
   def delete_all_responses
-
-    if Unlock.where(unlockable: @assessment_task).update_all(hidden: false)
-      if TaskResponse.destroy_all(task: @assessment_task)
-        flash[:success]="All Student responses to this task have been deleted."
-        redirect_to assessment_task_path(@assessment_task)
-      else
-        bad_request_with_errors @assessment_task
+    begin
+      if @assessment_task.delete_all_responses!
+        flash[:success]="All responses successfully deleted."
       end
-    else
-      bad_request_with_errors @assessment_task
+    rescue Exception => e
+      flash[:danger]=e.message
     end
+    redirect_to assessment_task_path(@assessment_task)
   end
 
   def destroy

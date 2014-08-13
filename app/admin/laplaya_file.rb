@@ -39,8 +39,10 @@ ActiveAdmin.register LaplayaFile do
       [:note, :public, :created_at, :updated_at].each do |attribute|
         row attribute
       end
-      row " " do
-       link_to "versions", history_admin_laplaya_file_path
+      unless file.owner.is_a?(TestStudent)
+        row " " do
+          link_to "versions", history_admin_laplaya_file_path
+        end
       end
     end
   end
