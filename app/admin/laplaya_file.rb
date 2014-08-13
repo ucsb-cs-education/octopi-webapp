@@ -22,7 +22,7 @@ ActiveAdmin.register LaplayaFile do
   member_action :history do
     @laplaya_file = LaplayaFile.find(params[:id])
     @versions = @laplaya_file.versions
-    render "layouts/laplaya_files_history"
+    render "layouts/history"
   end
   member_action :restore do
     @laplaya_file = LaplayaFile.find(params[:id])

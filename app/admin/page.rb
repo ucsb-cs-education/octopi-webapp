@@ -15,7 +15,7 @@ ActiveAdmin.register Page do
   member_action :history do
     @page = Page.find(params[:id])
     @versions = @page.versions
-    render "layouts/pages_history"
+    render "layouts/history"
   end
   member_action :restore do
     @page = Page.find(params[:id])

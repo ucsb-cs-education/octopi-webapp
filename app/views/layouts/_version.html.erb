@@ -3,7 +3,7 @@
     <b>Created At:</b>
     <%= @versions.last.created_at%>
     <br>
-    <b>Admin</b>: <%= @versions.last.whodunnit %>
+    <b>Changed By:</b>: <%= @versions.last.whodunnit %>
     <br>
     <% if @versions.length.to_i > 0 %>
         <% if params[:version].to_i > 0 || !params[:version] %>
@@ -12,11 +12,11 @@
         <% end %>
         <% if params[:version] %>
             <h3>This is version <%= "#{params[:version]}"%></h3>
-            <b>Modify at:</b>
+            <b>Modified:</b>
             <%= @versions[(params[:version].to_i)-1].created_at %>
             <br>
-            <b>Admin</b>:
-            <%= @versions[(params[:version].to_i)-1 ].whodunnit %>
+            <b>Changed By:</b>:
+            <%= @versions[(params[:version].to_i)-1].whodunnit %>
             <br>
 
             <%= link_to "Go to current version"%>

@@ -16,7 +16,7 @@ ActiveAdmin.register Task do
   member_action :history do
     @task = Task.find(params[:id])
     @versions = @task.versions
-    render "layouts/tasks_history"
+    render "layouts/history"
   end
   member_action :restore do
     @task = Task.find(params[:id])
