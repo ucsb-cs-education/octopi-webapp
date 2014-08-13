@@ -48,5 +48,4 @@ ActiveAdmin.register Page do
   end
   sidebar :versionate, :partial => "layouts/version", :only => :show
 
-
 end

@@ -8,7 +8,6 @@ ActiveAdmin.register LaplayaFile do
   filter :created_at
   filter :updated_at
 
-
   index do
     selectable_column
     id_column
@@ -54,8 +53,5 @@ ActiveAdmin.register LaplayaFile do
     end
   end
   sidebar :versionate, :partial => "layouts/version", :only => :show
-
-
-
 
 end
