@@ -1,5 +1,3 @@
-#we need this here so that when classes are dynamically loaded in development, we see all the students
-require 'test_student'
 class SchoolClassesController < ApplicationController
   include SchoolClassesHelper
   load_and_authorize_resource :school_class, except: [:teacher_index]

@@ -93,7 +93,6 @@ PagesController.prototype.show = () ->
         alert "Title cannot be blank"
         return false
 
-
     $('#laplaya_task_demo').each(demoCheckboxListener)
     $('#laplaya_task_demo').change(demoCheckboxListener)
     $('form.page-form').submit(submitFunction)
@@ -124,10 +123,6 @@ PagesController.prototype.show = () ->
           alert += "<br/>Error: " + value
         alert += "</div>"
       addAlert(alert, false)
-
-
-
-
 
   $(document).ready(addPageViewSelectorCallback);
   $(document).ready();

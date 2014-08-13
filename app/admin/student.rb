@@ -65,6 +65,10 @@ ActiveAdmin.register Student do
       js :edit
     end
 
+    def scoped_collection
+      super.not_teststudents
+    end
+
     def load_student_classes
       @student = resource
       @student_current_classes = [OpenStruct.new({name: 'Move from class', id: nil})]

@@ -9,6 +9,7 @@ class Student < User
   before_destroy :delete_all_dependant_data
   attr_accessor :current_class
   attr_reader :current_password
+  scope :not_teststudents, -> {where(type: 'Student')}
 
   has_secure_password
 

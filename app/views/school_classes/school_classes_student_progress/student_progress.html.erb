@@ -1,5 +1,9 @@
 <div id="student-name">
-  <%= link_to @student.name, admin_student_path(@student) %>
+  <% unless @student.is_a?(TestStudent) %>
+      <%= link_to @student.name, admin_student_path(@student) %>
+  <% else %>
+      <%= @student.name %>
+  <% end %>
 </div>
 <%= link_to "Back", @school_class, class: "btn btn-default" %>
 <div id="progress-summary">

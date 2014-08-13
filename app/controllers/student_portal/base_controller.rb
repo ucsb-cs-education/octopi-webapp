@@ -1,5 +1,4 @@
 require 'student_signin_module'
-require 'test_student'
 class StudentPortal::BaseController < ApplicationController
   include StudentSigninModule
   after_action :update_autosignout_time
