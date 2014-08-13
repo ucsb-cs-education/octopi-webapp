@@ -33,12 +33,14 @@ class Staff < User
   #def send_admin_mail
   #  AdminMailer.new_user_waiting_for_approval(self).deliver
   #end
+  alias_method :_user_add_role, :add_role
+
   def add_role(*args)
     @super_staff = nil
     @teacher = nil
     @school_admin = nil
     @curriculum_designer = nil
-    super add_role *args
+    _user_add_role *args
   end
 
   def teacher?(allow_superstaff = false)
