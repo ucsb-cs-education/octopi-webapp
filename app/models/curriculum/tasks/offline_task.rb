@@ -4,11 +4,16 @@ class OfflineTask < Task
     visible_to_students && (:visible == get_visibility_status_for(student, school_class))
   end
 
+  def create_basic_response_for(student, school_class)
+    TaskResponse.create!(student: student, school_class: school_class, task: self, unlocked: (prerequisites.empty? ? true : false))
+  end
+
   def get_visibility_status_for(student, school_class)
-    if (unlock = find_unlock_for(student, school_class)).nil?
+    response = find_response_for(student, school_class)
+    if response.nil? || !response.unlocked
       :locked
     else
-      unlock.hidden ? false : :visible
+      response.hidden ? false : :visible
     end
   end
 end

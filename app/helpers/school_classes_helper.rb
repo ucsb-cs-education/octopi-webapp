@@ -13,7 +13,7 @@ module SchoolClassesHelper
   end
 
   def average_task_unlock
-    @unlocks.count/(@tasks.count * @school_class.students.count).to_f
+    (@task_unlocked_responses.count + @activity_unlocks.count)/(@tasks.count * @school_class.students.count).to_f
   end
 
   def get_path_for_task(task)

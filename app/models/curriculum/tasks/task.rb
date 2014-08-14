@@ -8,11 +8,10 @@ class Task < ActiveRecord::Base
 
   has_many :activity_dependencies, foreign_key: :task_prerequisite_id, dependent: :destroy
   has_many :activity_dependants, :through => :activity_dependencies, source: :activity_dependant
-  has_many :unlocks, as: :unlockable
   has_many :task_responses
   has_many :task_response_feedbacks
   #before_save :check_dependants
-  has_paper_trail :on=> [:update, :destroy]
+  has_paper_trail :on => [:update, :destroy]
 
   acts_as_list scope: [:page_id]
   # include CustomModelNaming
@@ -32,7 +31,7 @@ class Task < ActiveRecord::Base
 
   def delete_all_responses!
     Task.transaction do
-      if Unlock.where(unlockable: self, hidden: true).update_all(hidden: false) && TaskResponse.destroy_all(task: self)
+      if TaskResponse.where(task: self).update_all(completed: false, hidden: false) && TaskResponse.where(task: self).each { |r| r.delete_children! }
         true
       else
         raise (ActiveRecord::RecordNotDestroyed)
@@ -40,12 +39,12 @@ class Task < ActiveRecord::Base
     end
   end
 
-  def find_unlock_for(student, school_class)
-    unlock = Unlock.find_for(student, school_class, self)
-    if unlock.nil? && prerequisites.empty?
-      unlock = Unlock.create(student: student, school_class: school_class, unlockable: self)
+  def find_response_for(student, school_class)
+    response = TaskResponse.find_by(student: student, school_class: school_class, task: self)
+    if response.nil?
+      response = self.create_basic_response_for(student, school_class)
     end
-    unlock
+    response
   end
 
 end

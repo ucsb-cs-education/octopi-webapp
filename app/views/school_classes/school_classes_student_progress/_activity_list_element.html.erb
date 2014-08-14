@@ -10,10 +10,9 @@
       <%= image_tag("padlock.png", size: "20") %>
       <%= activity_page[:title] %>
       <div class="unlock-button">
-        <%= simple_form_for [@school_class, @unlocks.build], html: {method: :post}, remote: true do |f| %>
-            <%= f.hidden_field :unlockable_id, value: activity_page[:id] %>
+        <%= simple_form_for [@school_class, @activity_unlocks.build], html: {method: :post}, remote: true do |f| %>
+            <%= f.hidden_field :activity_page_id, value: activity_page[:id] %>
             <%= f.hidden_field :student_id, value: @student.id %>
-            <%= f.hidden_field :unlockable_type, value: Page %>
             <%= f.hidden_field :from_student_progress_view, value: true %>
             <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
         <% end %>

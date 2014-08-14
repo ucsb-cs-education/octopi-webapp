@@ -1,0 +1,8 @@
+<% @school_class = @task_response.school_class %>
+$("#task_<%=@task_response.task_id %>_student_<%= @task_response.student_id%>").replaceWith(
+        "<%= j render partial:"school_classes/school_classes_activities/student_status", locals: {student: [0,{id: @task_response.student.id,name: @task_response.student.name, percent_done: 0.00}],
+        task: {id: @task_response.task_id, statuses: {@task_response.student_id => :visible}}}%>");
+
+$("#progress-chart").replaceWith(
+        "<%= j render partial:"school_classes/school_classes_activities/graph", locals:{graph_info: @school_class.activity_progress_graph_array_for(@task_response.task.activity_page)} %>"
+);

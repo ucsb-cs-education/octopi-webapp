@@ -38,8 +38,8 @@
     <td class="button-td">
       <% unless @info[:counts][:unlocked_count] === @info[:counts][:student_count] %>
           <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
-              <%= f.hidden_field :unlockable_id, value: @info[:activity][:id] %>
-              <%= f.hidden_field :unlockable_type, value: Page.to_s %>
+              <%= f.hidden_field :page_id, value: @info[:activity][:id] %>
+              <%= f.hidden_field :page_type, value: ActivityPage.to_s %>
               <%= f.submit 'Unlock For All', class: 'btn btn-xs btn-warning unlock-all' %>
           <% end %>
       <% end %>
@@ -48,8 +48,8 @@
         <td class="button-td">
           <% if task[:statuses].has_value?(:locked) %>
               <%= simple_form_for :students, url: manual_unlock_school_class_path(@school_class), action: :post do |f| %>
-                  <%= f.hidden_field :unlockable_id, value: task[:id] %>
-                  <%= f.hidden_field :unlockable_type, value: Task.to_s %>
+                  <%= f.hidden_field :page_id, value: task[:id] %>
+                  <%= f.hidden_field :page_type, value: Task.to_s %>
                   <%= f.submit 'Unlock For All', class: 'btn btn-warning btn-xs unlock-all' %>
               <% end %>
           <% end %>

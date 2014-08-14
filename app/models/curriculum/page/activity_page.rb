@@ -19,9 +19,9 @@ class ActivityPage < Page
   end
 
   def find_unlock_for(student, school_class)
-    unlock = Unlock.find_for(student, school_class, self)
-    if unlock.nil? && prerequisites.empty?
-      unlock = Unlock.create(student: student, school_class: school_class, unlockable: self)
+    unlock = ActivityUnlock.find_for(student, school_class, self)
+    if unlock.nil?
+      unlock = ActivityUnlock.create(student: student, school_class: school_class, activity_page: self, unlocked: (prerequisites.empty? ? true : false))
     end
     unlock
   end
@@ -31,7 +31,8 @@ class ActivityPage < Page
   end
 
   def get_visibility_status_for(student, school_class)
-    if find_unlock_for(student, school_class).nil?
+    unlock = find_unlock_for(student, school_class)
+    if !unlock.unlocked
       :locked
     else
       :visible

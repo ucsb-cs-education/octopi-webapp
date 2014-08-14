@@ -35,7 +35,7 @@ OctopiWebapp::Application.routes.draw do
     get '/activities/:id', to: 'pages#activity_page', as: 'activity'
 
     get '/question_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
-    post '/question_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
+    patch '/question_tasks/:id', to: 'pages#assessment_response', as: 'assessment_task_response'
 
     get '/laplaya_tasks/:id', to: 'pages#laplaya_task', as: 'laplaya_task'
     post '/laplaya_tasks/:id', to: 'pages#laplaya_task_response', as: 'laplaya_task_response'
@@ -60,11 +60,12 @@ OctopiWebapp::Application.routes.draw do
         post 'add_student'
         post 'manual_unlock', format: false
       end
-      resources :unlocks, only: [:destroy, :create]
+      resources :activity_unlocks, only: [:destroy, :create]
       get '/activities/:id', to: 'school_classes/school_classes_activities#activity_page', as: 'activity'
       get '/student/:id', to: 'school_classes/school_classes_student_progress#student_progress', as: 'student_progress'
       get '/reset_dependency_graph', to: 'school_classes/school_classes_student_progress#reset_dependency_graph'
       get '/view_as_student', to: 'school_classes#view_as_student', as: 'view_as_student'
+      match '/unlock_task_response', to: 'school_classes#unlock_task_response', as: 'unlock_task_response', via: 'patch'
       match '/signout_test_student', to: 'school_classes#signout_test_student', as: 'signout_test_student', via: 'delete'
       match '/reset_test_student', to: 'school_classes#reset_test_student', as: 'reset_test_student', via: 'delete'
     end

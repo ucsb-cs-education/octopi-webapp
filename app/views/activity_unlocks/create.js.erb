@@ -1,0 +1,3 @@
+$("#activity_<%= @unlock.activity_page_id%>_student_<%=@unlock.student_id %>").replaceWith(
+        "<%= j render partial:"school_classes/school_classes_activities/percent_completed", locals: {student: {id: @unlock.student.id,name: @unlock.student.name, percent_done: 0.00},
+        activity: {id: @unlock.activity_page_id,students_who_unlocked: [@unlock.student.id]}}%>");

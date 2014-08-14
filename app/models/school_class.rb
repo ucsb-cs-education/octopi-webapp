@@ -17,18 +17,18 @@ class SchoolClass < ActiveRecord::Base
 
   def activity_progress_graph_array_for(activity)
     @activity_page = ActivityPage.includes(:tasks).find(activity)
-    @unlocks = Unlock.where(student: students, school_class: self, unlockable_type: "Task", unlockable_id: @activity_page.tasks.pluck(:id))
-    @responses = TaskResponse.where(student: students, school_class: self)
+    @task_unlocks = TaskResponse.unlocked.where(student: students, school_class: self, task: @activity_page.tasks.pluck(:id))
+    @responses = TaskResponse.completed.where(student: students, school_class: self)
 
     [{name: "Completed by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
-        task.title+"("+task.id.to_s+")" : task.title)=> @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
+        task.title+"("+task.id.to_s+")" : task.title)=> @responses.where(task: task).count} }.reduce({}, :merge)},
      {name: "Unlocked by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
-         task.title+"("+task.id.to_s+")" : task.title) => (@unlocks.where(unlockable: task).count-@responses.where(task: task, completed: true).count)} }.reduce({}, :merge)}]
+         task.title+"("+task.id.to_s+")" : task.title) => (@task_unlocks.where(task: task).count-@responses.where(task: task).count)} }.reduce({}, :merge)}]
   end
 
   def student_progress_graph_array_for(student)
     @tasks = Task.student_visible.where(activity_page: (ActivityPage.where(module_page: self.module_pages)))
-    @unlock_count = Unlock.where(student: student, school_class: self, unlockable_type: "Task", unlockable_id: @tasks.pluck(:id)).count
+    @unlock_count = TaskResponse.unlocked.where(student: student, school_class: self, task: @tasks.pluck(:id)).count
 
     number_of_tasks_completed = TaskResponse.where(student: student, school_class: self).where(completed: true).count
     number_of_tasks_in_progress = @unlock_count - number_of_tasks_completed

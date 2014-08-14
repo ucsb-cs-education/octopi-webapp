@@ -4,12 +4,11 @@
       <%= image_tag("padlock.png", size: "15") %>
       <%= task[:title] %>
       <div class="unlock-button">
-        <%= simple_form_for [@school_class, @unlocks.build], html: {method: :post}, remote: true do |f| %>
-            <%= f.hidden_field :unlockable_id, value: task[:id] %>
-            <%= f.hidden_field :student_id, value: @student[:id] %>
-            <%= f.hidden_field :unlockable_type, value: Task %>
+        <%= simple_form_for :task_response, url: school_class_unlock_task_response_path, :method => :patch, :format => 'js', remote: true do |f| %>
+            <%= f.hidden_field :student_id, value: @student.id %>
+            <%= f.hidden_field :task_id, value: task[:id] %>
             <%= f.hidden_field :from_student_progress_view, value: true %>
-            <%= f.submit "Unlock", class: 'btn btn-xs btn-default' %>
+            <%= f.submit 'Unlock', class: 'btn btn-xs btn-default' %>
         <% end %>
       </div>
     </li>

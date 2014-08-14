@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140812190657) do
+ActiveRecord::Schema.define(version: 20140814195458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,16 @@ ActiveRecord::Schema.define(version: 20140812190657) do
   add_index "activity_dependencies", ["activity_dependant_id"], name: "index_activity_dependencies_on_activity_dependant_id", using: :btree
   add_index "activity_dependencies", ["task_prerequisite_id", "activity_dependant_id"], name: "activity_dependency_index", unique: true, using: :btree
   add_index "activity_dependencies", ["task_prerequisite_id"], name: "index_activity_dependencies_on_task_prerequisite_id", using: :btree
+
+  create_table "activity_unlocks", force: true do |t|
+    t.boolean  "hidden",           default: false
+    t.boolean  "unlocked",         default: false
+    t.integer  "activity_page_id"
+    t.integer  "student_id"
+    t.integer  "school_class_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "assessment_question_responses", force: true do |t|
     t.integer  "task_response_id"
@@ -193,6 +203,8 @@ ActiveRecord::Schema.define(version: 20140812190657) do
     t.boolean  "completed",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "unlocked",        default: false
+    t.boolean  "hidden",          default: false
   end
 
   add_index "task_responses", ["student_id", "school_class_id", "task_id"], name: "task_response_tri_index", unique: true, using: :btree
@@ -212,18 +224,6 @@ ActiveRecord::Schema.define(version: 20140812190657) do
     t.boolean  "visible_to_teachers", default: true
     t.boolean  "demo",                default: false
   end
-
-  create_table "unlocks", force: true do |t|
-    t.boolean  "hidden"
-    t.integer  "unlockable_id"
-    t.string   "unlockable_type"
-    t.integer  "student_id"
-    t.integer  "school_class_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "unlocks", ["unlockable_id", "unlockable_type", "student_id", "school_class_id"], name: "unlock_index", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "type"

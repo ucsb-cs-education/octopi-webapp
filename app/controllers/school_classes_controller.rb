@@ -106,12 +106,13 @@ class SchoolClassesController < ApplicationController
     #these two are entirely for the average completion bar
     @tasks = Task.teacher_visible.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
     task_ids = @tasks.pluck(:id)
+    activity_ids = ActivityPage.where(module_page: @module_pages).pluck(:id)
     @students = ordered_students
     @responses = TaskResponse.completed.where(student: @students, school_class: @school_class, task_id: task_ids)
-    @unlocks = Unlock.where(school_class: @school_class,
-                            student: @students,
-                            unlockable_id: task_ids,
-                            unlockable_type: 'Task')
+    @task_unlocked_responses = TaskResponse.unlocked.where(student: @students, school_class: @school_class, task_id: task_ids)
+    @activity_unlocks = ActivityUnlock.unlocked.where(school_class: @school_class,
+                                                      student: @students,
+                                                      activity_page: activity_ids)
   end
 
   # GET /school_classes/1/edit
@@ -153,10 +154,16 @@ class SchoolClassesController < ApplicationController
   # POST /school_classes/:school_class_id/manual_unlock
   def manual_unlock
     @school_class.students.each { |x|
-      @unlock = Unlock.where(student: x,
-                             school_class: @school_class,
-                             unlockable_id: params[:students][:unlockable_id],
-                             unlockable_type: params[:students][:unlockable_type]).first_or_create
+      if params[:students][:page_type]=="ActivityPage"
+        @unlock = ActivityUnlock.find_or_create_by!(student: x,
+                                                    school_class: @school_class,
+                                                    activity_page_id: params[:students][:page_id])
+      else
+        @unlock = TaskResponse.find_or_create_by!(student: x,
+                                                  school_class: @school_class,
+                                                  task_id: params[:students][:page_id])
+      end
+      @unlock.update(unlocked: true)
     }
     redirect_to(:back)
   end
@@ -171,6 +178,26 @@ class SchoolClassesController < ApplicationController
       end
     else
       render action: 'edit'
+    end
+  end
+
+  def unlock_task_response
+    @task_response = TaskResponse.find_or_create_by(student: params[:task_response][:student_id],
+                                                    task: params[:task_response][:task_id],
+                                                    school_class: params[:school_class_id])
+    @task_response.update(unlocked: true)
+    if @task_response.errors.empty?
+      respond_to do |format|
+        format.html { redirect_to (@task_response) }
+        format.js do
+          js false
+          if params[:task_response][:from_student_progress_view] == 'true'
+            render :action => 'unlocked_task_response_from_student_progress_view'
+          else
+            render :action => 'unlocked_task_response_from_activity_view'
+          end
+        end
+      end
     end
   end
 

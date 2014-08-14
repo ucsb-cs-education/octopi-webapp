@@ -5,11 +5,11 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
   def activity_page
     @activity_page = ActivityPage.includes(:tasks).find(params[:id])
     authorize! :show, @activity_page
-    @activity_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable: @activity_page)
+    @activity_unlocks = ActivityUnlock.where(student: @school_class.students, school_class: @school_class, activity_page: @activity_page)
     @students = @school_class.students.includes(:task_responses)
     @students = ordered_students
 
-    @info = {:activity => {title: @activity_page.title, id: @activity_page.id, students_who_unlocked: @activity_unlocks.pluck(:student_id)},
+    @info = {:activity => {title: @activity_page.title, id: @activity_page.id, students_who_unlocked: @activity_unlocks.unlocked.pluck(:student_id)},
              :tasks => @activity_page.tasks.student_visible.map { |task|
                {id: task.id, title: task.title, type: task.type,
                 statuses: @students.map { |student|
@@ -21,7 +21,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
                                #https://github.com/rails/rails/issues/15920
                                percent_done: (student.task_responses.where(task: @activity_page.tasks.student_visible.all.pluck(:id)).where(completed: true).count.to_f/@activity_page.tasks.student_visible.count)}}
              }.reduce({}, :merge),
-             :counts => {unlocked_count: @activity_unlocks.count, student_count: @students.count}
+             :counts => {unlocked_count: @activity_unlocks.unlocked.count, student_count: @students.count}
     }
 
     @graph_info = @school_class.activity_progress_graph_array_for(@activity_page)

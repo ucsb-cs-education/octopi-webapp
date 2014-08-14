@@ -10,6 +10,17 @@ class LaplayaTaskResponse < TaskResponse
           task: laplaya_task,
           completed: false
       )
+      response.make_laplaya_file_for(laplaya_task)
+    end
+  end
+
+  def delete_children!
+    laplaya_file.nil? ? true : laplaya_file.destroy!
+  end
+
+  def make_laplaya_file_for(laplaya_task)
+    transaction do
+      response = self
       response.build_student_response_task_response_laplaya_file.clone(laplaya_task.task_base_laplaya_file)
       response.student_response_task_response_laplaya_file.owner = student
       response.student_response_task_response_laplaya_file.save!

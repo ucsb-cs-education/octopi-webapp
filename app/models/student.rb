@@ -2,6 +2,7 @@ class Student < User
   belongs_to :school, counter_cache: true
   has_and_belongs_to_many :school_classes, after_add: :verify_classes, join_table: 'school_classes_students'
   has_many :task_responses, :dependent => :destroy
+  has_many :activity_unlocks, :dependent => :destroy
   validates :login_name, presence: true, length: {maximum: 50}, :uniqueness => {:scope => :school_id, :case_sensitive => false}
   validates :school, presence: true
   before_save { login_name.downcase! }
@@ -9,7 +10,7 @@ class Student < User
   before_destroy :delete_all_dependant_data
   attr_accessor :current_class
   attr_reader :current_password
-  scope :not_teststudents, -> {where(type: 'Student')}
+  scope :not_teststudents, -> { where(type: 'Student') }
 
   has_secure_password
 
@@ -61,8 +62,8 @@ class Student < User
           end
         end
       }
-      Unlock.where(school_class: original_class, student: self).each { |unlock|
-        conflict = Unlock.find_by(student: self, school_class: new_class, unlockable_type: unlock.unlockable_type, unlockable_id: unlock.unlockable_id)
+      activity_unlocks.where(school_class: original_class).each { |unlock|
+        conflict = ActivityUnlock.find_by(student: self, school_class: new_class, activity_page: unlock.activity_page)
         if conflict.nil?
           unlock.update_attribute(:school_class, new_class)
         else
@@ -94,7 +95,7 @@ class Student < User
       task_responses.where(school_class: school_class).each { |response|
         response.destroy
       }
-      Unlock.where(school_class: school_class, student: self).each { |unlock|
+      activity_unlocks.each { |unlock|
         unlock.destroy
       }
       school_classes.delete(school_class)
@@ -103,20 +104,27 @@ class Student < User
 
   def reset_dependency_graph_for(school_class)
     Student.transaction do
-      Unlock.where(school_class: school_class, student: self).each { |unlock|
-        unlock.destroy
-      }
+      activity_unlocks.update_all(unlocked: false)
+      task_responses.update_all(unlocked: false)
       school_class.module_pages.each do |module_page|
         module_page.activity_pages.each do |activity_page|
           if activity_page.prerequisites.count == 0
-            Unlock.where(school_class: school_class, unlockable: activity_page, student: self).first_or_create
+            activity_unlock = activity_unlocks.where(school_class: school_class, activity_page: activity_page).first_or_create
+            activity_unlock.update(unlocked: true)
           end
           activity_page.tasks.each do |task|
-            if !(@response = TaskResponse.find_by(school_class: school_class, task: task, student: self, completed: true)).nil?
-              Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
-              @response.unlock_dependencies(true)
-            elsif task.task_dependencies.count == 0
-              Unlock.where(school_class: school_class, unlockable: task, student: self).first_or_create
+            task_response = task_responses.find_by(school_class: school_class, task: task)
+            unless task_response.nil?
+              if task_response.completed == true
+                task_response.update(unlocked: true)
+                task_response.unlock_dependencies(true)
+              elsif task.task_dependencies.count == 0
+                task_response.update(unlocked: true)
+              end
+            else
+              if task.prerequisites.count==0
+                task.get_visibility_status_for(self, school_class)
+              end
             end
           end
         end

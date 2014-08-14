@@ -23,10 +23,10 @@ describe "teacher view of an activity page", type: :feature do
     sign_in_as(teacher)
 
     #need the relevant unlocks to exist
-    task_one.get_visibility_status_for(student_one,school_class)
-    task_one.get_visibility_status_for(student_two,school_class)
-    task_two.get_visibility_status_for(student_one,school_class)
-    task_two.get_visibility_status_for(student_two,school_class)
+    task_one.get_visibility_status_for(student_one, school_class)
+    task_one.get_visibility_status_for(student_two, school_class)
+    task_two.get_visibility_status_for(student_one, school_class)
+    task_two.get_visibility_status_for(student_two, school_class)
     visit(school_class_activity_path(school_class, activity_page))
   end
 
@@ -47,11 +47,17 @@ describe "teacher view of an activity page", type: :feature do
 
   describe "with correctly working unlock buttons", js: true do
     describe "when a single unlock button is pressed" do
-      it "should create a single unlock" do
+      it "should make a single task response be unlocked" do
         expect do
           first("input[value='Unlock']").click
           wait_for_ajax
-        end.to change(Unlock, :count).by(1)
+        end.to change(TaskResponse.unlocked, :count).by(1)
+      end
+      it "should not change the number of task responses" do
+        expect do
+          click_on "Unlock For All"
+          wait_for_ajax
+        end.to_not change(TaskResponse, :count)
       end
       describe "that updates the page correctly" do
         before do
@@ -65,11 +71,17 @@ describe "teacher view of an activity page", type: :feature do
     end
     describe "when unlock for all is pressed" do
       describe "when no students have unlocked the task" do
-        it "should create multiple unlocks" do
+        it "should increase the nunber of unlocked task responses by 2" do
           expect do
             click_on "Unlock For All"
             wait_for_ajax
-          end.to change(Unlock, :count).by(2)
+          end.to change(TaskResponse.unlocked, :count).by(2)
+        end
+        it "should not change the number of task responses" do
+          expect do
+            click_on "Unlock For All"
+            wait_for_ajax
+          end.to_not change(TaskResponse, :count)
         end
         describe "that updates the page correctly" do
           before do
@@ -86,11 +98,17 @@ describe "teacher view of an activity page", type: :feature do
           first("input[value='Unlock']").click
           wait_for_ajax
         end
-        it "should create one unlock" do
+        it "should make a single task response be unlocked" do
           expect do
             click_on "Unlock For All"
             wait_for_ajax
-          end.to change(Unlock, :count).by(1)
+          end.to change(TaskResponse.unlocked, :count).by(1)
+        end
+        it "should not change the number of task responses" do
+          expect do
+            click_on "Unlock For All"
+            wait_for_ajax
+          end.to_not change(TaskResponse, :count)
         end
         describe "that updates the page correctly" do
           before do
@@ -115,7 +133,7 @@ describe "teacher view of an activity page", type: :feature do
     end
     describe "after a student completed a task" do
       before do
-        TaskResponse.create(school_class: school_class, student: student_one, task: task_one, completed: true)
+        TaskResponse.find_by(school_class: school_class, student: student_one, task: task_one).update(completed: true)
         visit(school_class_activity_path(school_class, activity_page))
       end
       it { should have_css("span.completed-span", :count => 1) }
@@ -124,7 +142,7 @@ describe "teacher view of an activity page", type: :feature do
     end
   end
 
-  describe "when in an activity no students have unlocked" do
+  describe "when in an activity no students have unlocked and students have not gotten its visibility status yet" do
     let(:locked_activity_page) { FactoryGirl.create(:activity_page, module_page: activity_page.module_page) }
     before do
       locked_activity_page.depend_on(task_two)
@@ -136,11 +154,17 @@ describe "teacher view of an activity page", type: :feature do
     end
     describe "with correctly working unlock buttons", js: true do
       describe "when a single unlock button is pressed" do
-        it "should create a single unlock" do
+        it "should make a single task ActivityUnlock be unlocked" do
           expect do
             first("input[value='Unlock']").trigger('click')
             wait_for_ajax
-          end.to change(Unlock, :count).by(1)
+          end.to change(ActivityUnlock.unlocked, :count).by(1)
+        end
+        it "increase the number of activity unlocks by 1" do
+          expect do
+            first("input[value='Unlock']").trigger('click')
+            wait_for_ajax
+          end.to change(ActivityUnlock, :count).by(1)
         end
         describe "that updates the page correctly" do
           before do
@@ -153,11 +177,80 @@ describe "teacher view of an activity page", type: :feature do
         end
       end
       describe "when unlock for all is pressed", js: true do
-        it "should create multiple unlocks" do
+        it "should increase the number of unlocked activity unlocks by 2" do
           expect do
             first("input[value='Unlock For All']").click()
             wait_for_ajax
-          end.to change(Unlock, :count).by(2)
+          end.to change(ActivityUnlock.unlocked, :count).by(2)
+        end
+        it "should increase the number of activity unlocks by 2" do
+          expect do
+            first("input[value='Unlock For All']").click()
+            wait_for_ajax
+          end.to change(ActivityUnlock, :count).by(2)
+        end
+        describe "that updates the page correctly" do
+          before do
+            first("input[value='Unlock For All']").click()
+            wait_for_ajax
+          end
+          describe "should remove both unlock buttons" do
+            it { should_not have_css("div.unlock-button") }
+          end
+        end
+      end
+    end
+  end
+
+
+  describe "when in an activity no students have unlocked and students have gotten its visibility status already" do
+    let(:locked_activity_page) { FactoryGirl.create(:activity_page, module_page: activity_page.module_page) }
+    before do
+      locked_activity_page.depend_on(task_two)
+      locked_activity_page.get_visibility_status_for(student_one, school_class)
+      locked_activity_page.get_visibility_status_for(student_two, school_class)
+      visit(school_class_activity_path(school_class, locked_activity_page))
+    end
+    describe "with correct content" do
+      it { should have_css("div.unlock-button", :count => 2) }
+      it { should_not have_css("div.student-status") }
+    end
+    describe "with correctly working unlock buttons", js: true do
+      describe "when a single unlock button is pressed" do
+        it "should make a single task ActivityUnlock be unlocked" do
+          expect do
+            first("input[value='Unlock']").trigger('click')
+            wait_for_ajax
+          end.to change(ActivityUnlock.unlocked, :count).by(1)
+        end
+        it "should not change the number of activity unlocks" do
+          expect do
+            first("input[value='Unlock']").trigger('click')
+            wait_for_ajax
+          end.to_not change(ActivityUnlock, :count)
+        end
+        describe "that updates the page correctly" do
+          before do
+            first("input[value='Unlock']").trigger('click')
+            wait_for_ajax
+          end
+          describe "should remove one unlock button" do
+            it { should have_css("div.unlock-button", :count => 1) }
+          end
+        end
+      end
+      describe "when unlock for all is pressed", js: true do
+        it "should increase the number of unlocked activity unlocks by 2" do
+          expect do
+            first("input[value='Unlock For All']").click()
+            wait_for_ajax
+          end.to change(ActivityUnlock.unlocked, :count).by(2)
+        end
+        it "should not change the number of activity unlocks" do
+          expect do
+            first("input[value='Unlock For All']").click()
+            wait_for_ajax
+          end.to_not change(ActivityUnlock, :count)
         end
         describe "that updates the page correctly" do
           before do

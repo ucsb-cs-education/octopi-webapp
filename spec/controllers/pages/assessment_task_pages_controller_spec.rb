@@ -34,9 +34,9 @@ describe Pages::AssessmentTasksController, type: :controller do
 
     let(:assessment_task) { FactoryGirl.create(:assessment_task, curriculum_id: curriculum.id) }
     let(:other_assessment_task) { FactoryGirl.create(:assessment_task, curriculum_id: curriculum.id) }
-    let(:response_1) { AssessmentTaskResponse.create(task: assessment_task, school_class: school_class, student: student) }
-    let(:response_2) { AssessmentTaskResponse.create(task: assessment_task, school_class: school_class, student: student_2) }
-    let(:other_response) { AssessmentTaskResponse.create(task: other_assessment_task, school_class: school_class, student: student) }
+    let(:response_1) { AssessmentTaskResponse.create(task: assessment_task, school_class: school_class, student: student, completed: true, hidden: true) }
+    let(:response_2) { AssessmentTaskResponse.create(task: assessment_task, school_class: school_class, student: student_2, completed: true, hidden: true) }
+    let(:other_response) { AssessmentTaskResponse.create(task: other_assessment_task, school_class: school_class, student: student, completed: true, hidden: true) }
     let(:another_response) { AssessmentTaskResponse.create(task: assessment_task, school_class: another_school_class, student: another_student) }
 
     before do
@@ -49,56 +49,64 @@ describe Pages::AssessmentTasksController, type: :controller do
       assessment_task
       other_assessment_task
       another_school_class.module_pages << assessment_task.activity_page.module_page
-      Unlock.create(student: student, school_class: school_class, unlockable: assessment_task, hidden: true)
-      Unlock.create(student: student_2, school_class: school_class, unlockable: assessment_task, hidden: true)
-      Unlock.create(student: student, school_class: school_class, unlockable: other_assessment_task, hidden: true)
-      Unlock.create(student: another_student, school_class: another_school_class, unlockable: assessment_task, hidden: true)
       response_1
       response_2
       other_response
       another_response
+      TaskResponse.all.each { |response|
+        2.times do
+          response.assessment_question_responses << AssessmentQuestionResponse.create(task_response: response)
+        end
+      }
       sign_in_as(curriculum_designer)
     end
 
-    it "should decrease response count by 2" do
+    it "should not change response count" do
       expect do
         xhr :delete, :delete_all_responses, id: assessment_task.id
-      end.to change(TaskResponse, :count).by(-3)
+      end.to_not change(TaskResponse, :count)
     end
-    it "should not decrease unlock count" do
+    it "should decrease the number of assessment question responses by 6" do
       expect do
         xhr :delete, :delete_all_responses, id: assessment_task.id
-      end.to_not change(Unlock, :count)
+      end.to change(AssessmentQuestionResponse, :count).by(-6)
     end
-    it "should decrease the number of hidden unlocks" do
+    it "should not delete the assessment question responses of the other assessment task" do
       expect do
         xhr :delete, :delete_all_responses, id: assessment_task.id
-      end.to change(Unlock.where(hidden: true), :count).by(-3)
+      end.to_not change(TaskResponse.find_by(task: other_assessment_task, school_class: school_class, student: student).assessment_question_responses, :count)
     end
-    it "should increase the number of non-hidden unlocks" do
+    it "should decrease completed response count by 2" do
       expect do
         xhr :delete, :delete_all_responses, id: assessment_task.id
-      end.to change(Unlock.where(hidden: false), :count).by(3)
+      end.to change(TaskResponse.completed, :count).by(-2)
     end
-    it "should not make the unlock in a different task unhidden" do
-      xhr :delete, :delete_all_responses, id: assessment_task.id
-      expect(Unlock.find_by(student: student, school_class: school_class, unlockable: other_assessment_task, hidden: false)).to eq(nil)
+    it "should decrease hidden response count by 2" do
+      expect do
+        xhr :delete, :delete_all_responses, id: assessment_task.id
+      end.to change(TaskResponse.where(hidden: true), :count).by(-2)
     end
-    it "should not delete the response in a different task" do
+    it "should not set other response to no longer be completed" do
       xhr :delete, :delete_all_responses, id: assessment_task.id
-      expect(TaskResponse.find_by(task: other_assessment_task, school_class: school_class, student: student)).to_not eq(nil)
+      expect(TaskResponse.find_by(task: other_assessment_task, school_class: school_class, student: student).completed).to eq(true)
     end
-    it "should delete response_1" do
+    it "should not set other response to longer be hidden" do
       xhr :delete, :delete_all_responses, id: assessment_task.id
-      expect(TaskResponse.find_by(task: assessment_task, school_class: school_class, student: student)).to eq(nil)
+      expect(TaskResponse.find_by(task: other_assessment_task, school_class: school_class, student: student).hidden).to eq(true)
     end
-    it "should delete response_2" do
+    #check completed changes and hidden chjanges
+    #check for assesementquestionresponses getting DELEREED
+    it "should not delete response_1" do
       xhr :delete, :delete_all_responses, id: assessment_task.id
-      expect(TaskResponse.find_by(task: assessment_task, school_class: school_class, student: student_2)).to eq(nil)
+      expect(TaskResponse.find_by(task: assessment_task, school_class: school_class, student: student)).to_not eq(nil)
     end
-    it "should delete another_response" do
+    it "should_not delete response_2" do
       xhr :delete, :delete_all_responses, id: assessment_task.id
-      expect(TaskResponse.find_by(task: assessment_task, school_class: another_school_class, student: another_student)).to eq(nil)
+      expect(TaskResponse.find_by(task: assessment_task, school_class: school_class, student: student_2)).to_not eq(nil)
+    end
+    it "should not delete another_response" do
+      xhr :delete, :delete_all_responses, id: assessment_task.id
+      expect(TaskResponse.find_by(task: assessment_task, school_class: another_school_class, student: another_student)).to_not eq(nil)
     end
 
   end

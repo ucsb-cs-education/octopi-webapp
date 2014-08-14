@@ -12,21 +12,26 @@ class LaplayaTask < Task
   end
 
   def get_visibility_status_for(student, school_class)
-    LaplayaTask.get_visibility_status(
-        find_unlock_for(student, school_class),
-        TaskResponse.find_by(student: student, school_class: school_class, task: self))
-  end
-
-  def self.get_visibility_status(unlock, response)
-    if unlock.nil?
+    response = find_response_for(student, school_class)
+    if response.nil? || !response.unlocked
       :locked
     else
       result = :visible
-      if response.present? && response.completed
-        result = :completed
+      if response.present?
+        unless response.laplaya_file.nil?
+          result = :in_progress
+        end
+        if response.completed
+          result = :completed
+        end
       end
       result
     end
   end
+
+  def create_basic_response_for(student, school_class)
+    LaplayaTaskResponse.create!(student: student, school_class: school_class, task: self, unlocked: (prerequisites.empty? ? true : false))
+  end
+
 
 end

@@ -1,0 +1,8 @@
+<% @student = @unlock.student %>
+var activity_element = $("#activity_<%= @unlock.activity_page_id%>_student_<%=@unlock.student_id %>")
+var activity_tasks = $("#activity_<%= @unlock.activity_page_id%>_student_<%=@unlock.student_id %>").find("ul").detach()
+activity_element.replaceWith(
+        "<%= j render partial:"school_classes/school_classes_student_progress/activity_list_element", locals: {activity_page: {
+        title: @unlock.activity_page.title, id: @unlock.activity_page_id, unlocked: true
+        }}%>")
+$("#activity_<%= @unlock.activity_page_id%>_student_<%=@unlock.student_id %>").append(activity_tasks);

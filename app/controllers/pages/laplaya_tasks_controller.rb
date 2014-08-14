@@ -102,7 +102,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
   def delete_all_responses
     begin
       if @laplaya_task.delete_all_responses!
-        flash[:success]="All responses successfully deleted."
+        flash[:success]="All responses successfully reset."
       end
     rescue Exception => e
       flash[:danger]=e.message

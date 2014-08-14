@@ -22,13 +22,17 @@ describe StudentPortal::PagesController, type: :controller do
     let(:params_name) { :assessment_task_response }
 
     describe 'Attempting to respond for a locked task' do
-      it 'should not create a new task response' do
+      before do
+        AssessmentTaskResponse.create(school_class: school_class, student: new_student, task: task, unlocked: false)
+      end
+
+      it 'should not complete a task response' do
         expect do
           xhr :post, method_symbol, id: task.id, params_name => {
               school_class: school_class,
               student: new_student,
               task: task}
-        end.to_not change(TaskResponse, :count)
+        end.to_not change(TaskResponse.completed, :count)
       end
 
       it 'should respond with 400' do
@@ -41,16 +45,25 @@ describe StudentPortal::PagesController, type: :controller do
 
     describe 'Responding for a correctly unlocked task' do
       before do
-        Unlock.create(school_class: school_class, student: new_student, unlockable: task)
+        AssessmentTaskResponse.create(school_class: school_class, student: new_student, task: task, unlocked: true)
       end
 
-      it 'should create a new task response' do
+      it 'should not create a new task response' do
         expect do
           xhr :post, method_symbol, id: task.id, params_name => {
               school_class: school_class,
               student: new_student,
               task: task}
-        end.to change(TaskResponse, :count).by(1)
+        end.to_not change(TaskResponse, :count)
+      end
+
+      it 'should complete a task response' do
+        expect do
+          xhr :post, method_symbol, id: task.id, params_name => {
+              school_class: school_class,
+              student: new_student,
+              task: task}
+        end.to change(TaskResponse.completed, :count).by(1)
       end
 
       it 'should respond with 302' do
@@ -71,7 +84,7 @@ describe StudentPortal::PagesController, type: :controller do
               dependant_task.depend_on(task)
             end
 
-            it 'should create a new task response' do
+            it 'should create a new task response if none exists' do
               expect do
                 xhr :post, method_symbol, id: task.id, params_name => {
                     school_class: school_class,
@@ -80,13 +93,33 @@ describe StudentPortal::PagesController, type: :controller do
               end.to change(TaskResponse, :count).by(1)
             end
 
-            it 'should create a new unlock' do
+            it 'should not create a new task response if one already exists' do
+              AssessmentTaskResponse.create(school_class: school_class, student: new_student, task: dependant_task, unlocked: false)
               expect do
                 xhr :post, method_symbol, id: task.id, params_name => {
                     school_class: school_class,
                     student: new_student,
                     task: task}
-              end.to change(Unlock, :count).by(1)
+              end.to_not change(TaskResponse, :count)
+            end
+
+            it 'should unlock a task response if the task response does not already exist' do
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(TaskResponse.unlocked, :count).by(1)
+            end
+
+            it 'should unlock a task response if the task response already exists' do
+              AssessmentTaskResponse.create(school_class: school_class, student: new_student, task: dependant_task, unlocked: false)
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(TaskResponse.unlocked, :count).by(1)
             end
 
             it 'should respond with 302' do
@@ -102,22 +135,51 @@ describe StudentPortal::PagesController, type: :controller do
               dependant_activity.depend_on(task)
             end
 
-            it 'should create a new task response' do
+            it 'should not create a new task response' do
               expect do
                 xhr :post, method_symbol, id: task.id, params_name => {
                     school_class: school_class,
                     student: new_student,
                     task: task}
-              end.to change(TaskResponse, :count).by(1)
+              end.to_not change(TaskResponse, :count)
             end
 
-            it 'should create a new unlock' do
+            it 'should create an activity unlock if none exists' do
               expect do
                 xhr :post, method_symbol, id: task.id, params_name => {
                     school_class: school_class,
                     student: new_student,
                     task: task}
-              end.to change(Unlock, :count).by(1)
+              end.to change(ActivityUnlock, :count).by(1)
+            end
+
+            it 'should not create an activity unlock if one already exists' do
+              ActivityUnlock.create(school_class: school_class, student: new_student, activity_page: dependant_activity, unlocked: false)
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to_not change(ActivityUnlock, :count)
+            end
+
+            it 'should unlock an activity unlock if the activity unlock already exists' do
+              ActivityUnlock.create(school_class: school_class, student: new_student, activity_page: dependant_activity, unlocked: false)
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(ActivityUnlock.unlocked, :count).by(1)
+            end
+
+            it 'should unlock an activity unlock if the activity unlock does not already exist' do
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(ActivityUnlock.unlocked, :count).by(1)
             end
 
             it 'should respond with 302' do
@@ -138,10 +200,10 @@ describe StudentPortal::PagesController, type: :controller do
     let(:params_name) { :laplaya_task_response }
 
     describe 'attempting to get a locked task' do
-      it 'should not create a new task response' do
+      it 'should create a new task response' do
         expect do
           get :laplaya_task, id: task.id
-        end.to_not change(TaskResponse, :count)
+        end.to change(TaskResponse, :count).by(1)
       end
 
       it 'should respond with 302' do
@@ -151,13 +213,16 @@ describe StudentPortal::PagesController, type: :controller do
     end
 
     describe 'Attempting to respond for a locked task' do
-      it 'should not create a new task response' do
+      before do
+        LaplayaTaskResponse.create(school_class: school_class, student: new_student, task: task, unlocked: false)
+      end
+      it 'should not complete a task response' do
         expect do
           xhr :post, method_symbol, id: task.id, params_name => {
               school_class: school_class,
               student: new_student,
               task: task}
-        end.to_not change(TaskResponse, :count)
+        end.to_not change(TaskResponse.completed, :count)
       end
 
       it 'should respond with 400' do
@@ -170,16 +235,25 @@ describe StudentPortal::PagesController, type: :controller do
 
     describe 'Responding for a correctly unlocked task' do
       before do
-        Unlock.create(school_class: school_class, student: new_student, unlockable: task)
+        LaplayaTaskResponse.create(school_class: school_class, student: new_student, task: task, unlocked: true)
       end
 
-      it 'should create a new task response' do
+      it 'should not create a new task response' do
         expect do
           xhr :post, method_symbol, id: task.id, params_name => {
               school_class: school_class,
               student: new_student,
               task: task}
-        end.to change(TaskResponse, :count).by(1)
+        end.to_not change(TaskResponse, :count)
+      end
+
+      it 'should completed a task response' do
+        expect do
+          xhr :post, method_symbol, id: task.id, params_name => {
+              school_class: school_class,
+              student: new_student,
+              task: task}
+        end.to change(TaskResponse.completed, :count).by(1)
       end
 
       it 'should respond with 302' do
@@ -189,15 +263,15 @@ describe StudentPortal::PagesController, type: :controller do
         expect(response.status).to eq(302)
       end
 
-      it 'should create a new task response when GET' do
+      it 'should not create a new task response when GET' do
         expect do
           get :laplaya_task, id: task.id
-        end.to change(TaskResponse, :count).by(1)
+        end.to_not change(TaskResponse, :count)
       end
-
       describe 'after the page has been viewed' do
         before do
-          get :laplaya_task, id: task.id
+          LaplayaTask.find(task.id).get_visibility_status_for(new_student, school_class)
+          LaplayaTask.find(task.id).activity_page.get_visibility_status_for(new_student,school_class)
         end
         describe 'that has a dependency' do
           describe 'that is a task dependant' do
@@ -206,6 +280,56 @@ describe StudentPortal::PagesController, type: :controller do
               dependant_task.depend_on(task)
             end
 
+            it 'should create a new task response if none exists' do
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(TaskResponse, :count).by(1)
+            end
+
+            it 'should not create a new task response if one already exists' do
+              LaplayaTaskResponse.create(school_class: school_class, student: new_student, task: dependant_task, unlocked: false)
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to_not change(TaskResponse, :count)
+            end
+
+            it 'should unlock a task response if the task response does not already exist' do
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(TaskResponse.unlocked, :count).by(1)
+            end
+
+            it 'should unlock a task response if the task response already exists' do
+              LaplayaTaskResponse.create(school_class: school_class, student: new_student, task: dependant_task, unlocked: false)
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(TaskResponse.unlocked, :count).by(1)
+            end
+
+            it 'should respond with 302' do
+              xhr :post, method_symbol, id: task.id, params_name => {
+                  school_class: school_class,
+                  student: new_student}
+              expect(response.status).to eq(302)
+            end
+          end
+          describe 'that is an activity dependant' do
+
+            before do
+              dependant_activity.depend_on(task)
+            end
 
             it 'should not create a new task response' do
               expect do
@@ -216,13 +340,42 @@ describe StudentPortal::PagesController, type: :controller do
               end.to_not change(TaskResponse, :count)
             end
 
-            it 'should create a new unlock' do
+            it 'should create an activity unlock if none exists' do
               expect do
                 xhr :post, method_symbol, id: task.id, params_name => {
                     school_class: school_class,
                     student: new_student,
                     task: task}
-              end.to change(Unlock, :count).by(1)
+              end.to change(ActivityUnlock, :count).by(1)
+            end
+
+            it 'should not create an activity unlock if one already exists' do
+              ActivityUnlock.create(school_class: school_class, student: new_student, activity_page: dependant_activity, unlocked: false)
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to_not change(ActivityUnlock, :count)
+            end
+
+            it 'should unlock an activity unlock if the activity unlock already exists' do
+              ActivityUnlock.create(school_class: school_class, student: new_student, activity_page: dependant_activity, unlocked: false)
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(ActivityUnlock.unlocked, :count).by(1)
+            end
+
+            it 'should unlock an activity unlock if the activity unlock does not already exist' do
+              expect do
+                xhr :post, method_symbol, id: task.id, params_name => {
+                    school_class: school_class,
+                    student: new_student,
+                    task: task}
+              end.to change(ActivityUnlock.unlocked, :count).by(1)
             end
 
             it 'should respond with 302' do
@@ -231,37 +384,6 @@ describe StudentPortal::PagesController, type: :controller do
                   student: new_student}
               expect(response.status).to eq(302)
             end
-          end
-        end
-        describe 'that is an activity dependant' do
-
-          before do
-            dependant_activity.depend_on(task)
-          end
-
-          it 'should not create a new task response' do
-            expect do
-              xhr :post, method_symbol, id: task.id, params_name => {
-                  school_class: school_class,
-                  student: new_student,
-                  task: task}
-            end.to_not change(TaskResponse, :count)
-          end
-
-          it 'should create a new unlock' do
-            expect do
-              xhr :post, method_symbol, id: task.id, params_name => {
-                  school_class: school_class,
-                  student: new_student,
-                  task: task}
-            end.to change(Unlock, :count).by(1)
-          end
-
-          it 'should respond with 302' do
-            xhr :post, method_symbol, id: task.id, params_name => {
-                school_class: school_class,
-                student: new_student}
-            expect(response.status).to eq(302)
           end
         end
       end

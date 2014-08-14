@@ -20,14 +20,10 @@ describe 'student portal', type: :feature do
   let(:assessment_task_not_in_class) { FactoryGirl.create(:assessment_task, activity_page: activity_page_not_in_class) }
   let(:assessment_question) { FactoryGirl.create(:assessment_question, assessment_task: assessment_task) }
 
-  let(:unlock) { Unlock.create(unlockable: activity_page, school_class: school_class, student: new_student, hidden: false) }
-  let(:unlock_task) { Unlock.create(unlockable: assessment_task, school_class: school_class, student: new_student, hidden: false) }
 
   before(:each) do
     school_class
     new_student
-    unlock
-    unlock_task
     school_class.school.curriculum_pages << curriculum
     school_class.school.school_classes.first.module_pages << module_page
     school_class.school.school_classes.first.module_pages << module_page_2
@@ -127,19 +123,16 @@ describe 'student portal', type: :feature do
           it { should_not have_link("#{laplaya_task.title}", :href => student_portal_laplaya_task_path(laplaya_task)) }
         end
         describe 'when unlocked' do
-          let(:laplaya_unlock) { Unlock.create(student: new_student, school_class: school_class, unlockable: laplaya_task) }
           before do
-            laplaya_unlock
+            laplaya_task.get_visibility_status_for(new_student, school_class)
             visit(thisPath)
           end
           it { should have_link("#{laplaya_task.title}", :href => student_portal_laplaya_task_path(laplaya_task)) }
         end
         describe 'when completed' do
-          let(:laplaya_unlock) { Unlock.create(student: new_student, school_class: school_class, unlockable: laplaya_task) }
-          let(:laplaya_response) { TaskResponse.create(student: new_student, school_class: school_class, task: laplaya_task, completed: true) }
           before do
-            laplaya_unlock
-            laplaya_response
+            laplaya_task.get_visibility_status_for(new_student, school_class)
+            TaskResponse.find_by(task: laplaya_task).update(completed: true)
             visit(thisPath)
           end
           it { should have_selector("div[class='child-link complete']") }
@@ -191,7 +184,7 @@ describe 'student portal', type: :feature do
           } }
           it { should change(TaskResponse, :count).by(1) }
           it { should change(AssessmentQuestionResponse, :count).by(1) }
-          it { should change(Unlock, :count).by(2) }
+          it { should change(TaskResponse.unlocked, :count).by(1) }
         end
         describe 'after redirecting', driver: :selenium do
           before do

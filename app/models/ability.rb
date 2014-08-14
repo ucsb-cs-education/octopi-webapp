@@ -124,7 +124,7 @@ class Ability
     can :see_user_admin_menu
 
     can :manual_unlock, SchoolClass, :id => school_classes_ids
-    can :activity_page, SchoolClass, :id => school_classes_ids
+    can :unlock_task_response, SchoolClass, id: school_classes
   end
 
   def teacher(user)
@@ -160,6 +160,7 @@ class Ability
     can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
     can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
     can :manual_unlock, SchoolClass, id: school_classes
+    can :unlock_task_response, SchoolClass, id: school_classes
 
     can :create, Student
   end

@@ -15,13 +15,13 @@ describe "a teacher view of a student page", type: :feature do
     activity_page.tasks << task_one
     activity_page.tasks << task_two
     task_two.depend_on(task_one)
-    activity_page.find_unlock_for(student, school_class)
+    activity_page.get_visibility_status_for(student, school_class)
     school_class.module_pages << activity_page.module_page
     sign_in_as(teacher)
 
     #need the relevant unlocks to exist
-    task_one.get_visibility_status_for(student,school_class)
-    task_two.get_visibility_status_for(student,school_class)
+    task_one.get_visibility_status_for(student, school_class)
+    task_two.get_visibility_status_for(student, school_class)
     visit(school_class_student_progress_path(school_class, student))
   end
 
@@ -47,11 +47,11 @@ describe "a teacher view of a student page", type: :feature do
 
   describe "with correctly working unlock buttons", js: true do
     describe "after a task is unlocked" do
-      it "should create a single unlock" do
+      it "should increase the amount of unlocked task responses by 1" do
         expect do
           first("input[value='Unlock']").click
           wait_for_ajax
-        end.to change(Unlock, :count).by(1)
+        end.to change(TaskResponse.unlocked, :count).by(1)
       end
       describe "that updates the page correctly" do
         before do
@@ -70,11 +70,35 @@ describe "a teacher view of a student page", type: :feature do
         locked_activity_page.depend_on(task_two)
         visit(school_class_student_progress_path(school_class, student))
       end
-      it "should create a single unlock" do
+      it "should increase the amount of unlocked ActivityUnlocks" do
         expect do
           find(".locked-activity").first("input[value='Unlock']").click
           wait_for_ajax
-        end.to change(Unlock, :count).by(1)
+        end.to change(ActivityUnlock.unlocked, :count).by(1)
+      end
+      it "should increase the number of ActivityUnlocks if the student has not yet viewed the page" do
+        expect do
+          find(".locked-activity").first("input[value='Unlock']").click
+          wait_for_ajax
+        end.to change(ActivityUnlock, :count).by(1)
+      end
+      describe "when a student has already gotten the visibility status of the locked activity page" do
+        before do
+          locked_activity_page.get_visibility_status_for(student, school_class)
+          wait_for_ajax
+        end
+        it "should not increase the number of activity unlocks" do
+          expect do
+            find(".locked-activity").first("input[value='Unlock']").click
+            wait_for_ajax
+          end.to_not change(ActivityUnlock, :count)
+        end
+        it "should increase the amount of unlocked ActivityUnlocks" do
+          expect do
+            find(".locked-activity").first("input[value='Unlock']").click
+            wait_for_ajax
+          end.to change(ActivityUnlock.unlocked, :count).by(1)
+        end
       end
       describe "that updates the page correctly" do
         before do

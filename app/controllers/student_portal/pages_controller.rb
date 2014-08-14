@@ -38,7 +38,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     respond_to do |format|
       format.html do
         @activity_pages = @module_page.activity_pages.student_visible
-        @unlocks = Unlock.find_for(current_student, current_school_class, @activity_pages)
+        #@unlocks = Unlock.find_for(current_student, current_school_class, @activity_pages)
       end
     end
   end
@@ -73,7 +73,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def assessment_task
     respond_to do |format|
       format.html do
-        @task_response = AssessmentTaskResponse.new(
+        @task_response = AssessmentTaskResponse.find_or_create_by(
             student: current_student,
             school_class: current_school_class,
             task: @assessment_task)
@@ -116,8 +116,9 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def assessment_response
     respond_to do |format|
       format.html do
-        task_response = AssessmentTaskResponse.create(assessment_response_params)
-        if task_response.errors.empty?
+        task_response = AssessmentTaskResponse.find_or_create_by(student: current_student, school_class: current_school_class, task: Task.find(params[:id]))
+        task_response = task_response.update!(assessment_response_params)
+        if task_response
           redirect_to student_portal_activity_path(@assessment_task.activity_page)
         else
           bad_request_with_errors task_response
@@ -235,11 +236,17 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   end
 
   def build_laplaya_task_response
-    @laplaya_task_response ||= LaplayaTaskResponse.new_response(
-        current_student,
-        current_school_class,
-        @laplaya_task
-    )
+    if @laplaya_task_response.nil?
+      LaplayaTaskResponse.new_response(
+          current_student,
+          current_school_class,
+          @laplaya_task
+      )
+    elsif @laplaya_task_response.laplaya_file.nil?
+      @laplaya_task_response.make_laplaya_file_for(@laplaya_task)
+    else
+      @laplaya_task_response
+    end
   end
 
   def verify_valid_module
@@ -263,10 +270,8 @@ class StudentPortal::PagesController < StudentPortal::BaseController
 
   def assessment_response_params
     result = params.require(:assessment_task_response).permit(:'assessment_question_responses_attributes' => [:selected, :assessment_question_id])
-    result[:task_id] = @assessment_task.id
-    result[:student_id] = current_student.id
-    result[:school_class_id] = current_school_class.id
-    result
+    result[:completed] = true
+    result.to_h
   end
 
   def set_module_cookie
