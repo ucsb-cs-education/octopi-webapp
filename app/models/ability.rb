@@ -29,11 +29,6 @@ class Ability
     # See the wiki for details:
     # https://github.com/bryanrite/cancancan/wiki/Defining-Abilities
 
-    #A non-signed in student (thus, any user) must be able to access all the school's names to select his/her to login
-    can :index, School
-    #A non-signed in student (thus, any user) must be able to access all student's logins to select his/her logins
-    can :list_student_logins, Student
-
     can :show, LaplayaFile, public: true
 
     alias_action :create, :read, :update, :destroy, :to => :crud
@@ -97,7 +92,6 @@ class Ability
     can :add_basic_roles, Staff
     schools = School.with_role(:school_admin, user)
     school_ids = schools.pluck(:id)
-    cannot :read, School, :id => School.pluck(:id) - schools
     can [:read_update, :add_teacher, :add_school_admin], School, id: school_ids
 
     can [:crud, :change_class, :remove_class], Student, :id => Student.where(school_id: school_ids).pluck(:id)
@@ -145,13 +139,11 @@ class Ability
     school_classes_teacher = SchoolClass.with_role(:teacher, user).pluck(:school_id)
     schools_teacher = School.with_role(:teacher, user).pluck(:id)
     if School.with_role(:teacher, user) != []
-      cannot :read, School, :id => School.pluck(:id) - schools_teacher
       can :read, School, :id => schools_teacher
       can [:crud, :change_class, :remove_class], Student, :id => Student.where(school_id: schools_teacher).pluck(:id)
       can [:read_update, :add_new_student, :add_student,
            :view_as_student, :signout_test_student, :reset_test_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
     else
-      cannot :read, School, :id => School.pluck(:id) - school_classes_teacher
       can :read, School, :id => school_classes_teacher
       can [:read, :update], Student, :id=> Student.where(school_id: school_classes_teacher).pluck(:id)
       can :crud, Student, :id => SchoolClass.with_role(:teacher, user).map{|school_class| school_class.students.map {

@@ -1,7 +1,6 @@
 class StudentsController < ApplicationController
   load_and_authorize_resource :school, only: [:index, :new, :create]
   load_and_authorize_resource
-  skip_authorize_resource :school, only: [:list_student_logins]
   before_action :load_students, only: [:index]
 
   # Deep actions
