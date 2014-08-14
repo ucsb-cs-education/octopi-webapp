@@ -149,12 +149,11 @@
 }
 .g_C {
 	/* Grid cell (all) */
-	padding : 6px 12px 6px 6px;
 	border-color : #eee;
 	border-style : solid;
 	color : #333;
 	height : 3em;
-	line-height : 1.5em;
+	line-height : 2em;
 	vertical-align : top;
 	white-space : nowrap;
 	visibility : hidden;

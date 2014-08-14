@@ -1,6 +1,7 @@
-<div value = "<%=(activity[:students_who_unlocked].include? student[:id])? (student[:percent_done]*100).to_s[0..1] : -1%>" id="activity_<%= activity[:id] %>_student_<%= student[:id] %>"  >
+<% percent_done = (student[:percent_done]==1? "100" : (student[:percent_done]*100).to_s[0..1]) %>
+<div value = "<%=(activity[:students_who_unlocked].include? student[:id])? [0,percent_done.to_i-1].max : -1%>" class="percent-box" id="activity_<%= activity[:id] %>_student_<%= student[:id] %>"  >
   <% if activity[:students_who_unlocked].include? student[:id] %>
-      <%= (student[:percent_done]*100).to_s[0..1] %>% Complete
+      <%= percent_done %>% Complete
   <% else %>
       <div class="unlock-button">
         <%= simple_form_for [@school_class, @activity_unlocks.build], html: {method: :post}, remote: true do |f| %>

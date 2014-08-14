@@ -106,12 +106,29 @@
     text-overflow: ellipsis;
     overflow: hidden;
     width: 10em;
+    padding : 6px 12px 6px 6px;
+  }
+
+  .percent-box, .unlock-all-box{
+    padding : 6px 12px 6px 6px;
   }
 
   #progress-table-div {
     width: auto;
     max-height: 500px;
     padding-bottom: 1px;
+  }
+
+  .student-status{
+    padding:.5em;
+  }
+
+  .completed-box, .false-box{
+    background: #caffca;
+  }
+
+  .visible-box{
+    background: #FFFFD5;
   }
 
   .small-font {
