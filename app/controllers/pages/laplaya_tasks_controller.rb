@@ -80,6 +80,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
   end
 
   def get_laplaya_analysis_file
+    js false
     send_data @laplaya_task.laplaya_analysis_file.data, filename: "processor_#{@laplaya_task.id}.js.txt", disposition: :attachment
   end
 

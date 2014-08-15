@@ -8,12 +8,14 @@ class Staff < User
   # ,:timeoutable # disabled until we test and figure out a way to keep users logged in while in Snap
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(?:\.[a-z\d\-]+)*\.[a-z]+\z/i
+  before_validation :assign_password
   validates :email, presence: true, format: {with: VALID_EMAIL_REGEX},
             uniqueness: {case_sensitive: false}, length: {maximum: 254} #Max possible email length
   scope :unconfirmed, -> { where(confirmed_at: nil) }
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   has_one :test_student, foreign_key: :test_student_id
   validate :manual_invalidator
+  attr_accessor :assign_a_random_password
 
 
   # Taken from https://github.com/plataformatec/devise/wiki/How-To%3a-Require-admin-to-activate-account-before-sign_in
@@ -34,6 +36,15 @@ class Staff < User
   #  AdminMailer.new_user_waiting_for_approval(self).deliver
   #end
   alias_method :_user_add_role, :add_role
+
+  def assign_password
+    if assign_a_random_password === true
+      require 'securerandom'
+      _password = SecureRandom.hex(16)
+      self.password = _password
+      self.password_confirmation = _password
+    end
+  end
 
   def add_role(*args)
     @super_staff = nil

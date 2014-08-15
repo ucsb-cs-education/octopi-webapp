@@ -3,7 +3,7 @@
 #= require dependant_dropdowns
 AdminStaffController = Paloma.controller('Admin/Staff');
 AdminStaffController.prototype.edit = () ->
-  newRoleSelectButtonListener = ->
+  addActionListeners = ->
     $("#new-role-select").each (i) ->
       button = $(this).find("button")
       role_dropdown = $(this).find("#new_roles")
@@ -31,7 +31,20 @@ AdminStaffController.prototype.edit = () ->
             alert(error)
         })
 
-  $(document).ready newRoleSelectButtonListener
+    $('#staff_assign_a_random_password').change( ->
+      fields = $('#staff_password_input,#staff_password_confirmation_input')
+      console.log('change')
+      if $(this).prop('checked')
+         fields.each(->
+           $(this).hide()
+         )
+      else
+        fields.each(->
+          $(this).show()
+        )
+    )
+
+  $(document).ready addActionListeners
   $(document).ready
 
 AdminStudentController = Paloma.controller('Admin/Students');

@@ -5,6 +5,8 @@ ActiveAdmin.register Staff do
     params = [:first_name, :last_name, :email, :password, :password_confirmation]
     if %w(edit update).include?(request.filtered_parameters['action']) && resource && resource == current_staff
       params.push :current_password
+    elsif %w(new create).include?(request.filtered_parameters['action'])
+      params.push :assign_a_random_password
     end
     params.push basic_roles: [] if can? :add_basic_roles, Staff
     params.push :super_staff if can? :create_super_staff, :any
@@ -156,6 +158,9 @@ ActiveAdmin.register Staff do
     end
 
     def create(options={}, &block)
+      if resource_params.first[:assign_a_random_password] === '1'
+        resource_params.first[:assign_a_random_password] = true
+      end
       invalidations = assign_roles
       object = build_resource
       unless (invalidations).nil?
@@ -164,7 +169,9 @@ ActiveAdmin.register Staff do
       if create_resource(object)
         options[:location] ||= smart_resource_url
       end
-
+      if resource_params.first[:assign_a_random_password] === true
+        UserMailer.generated_password_email(object).deliver
+      end
       respond_with_dual_blocks(object, options, &block)
     end
 

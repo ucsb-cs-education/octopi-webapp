@@ -7,13 +7,12 @@
             <li>Currently waiting confirmation for: <%= resource.unconfirmed_email %>
               . <%= link_to 'Resend confirmation', staff_confirmation_path, data: {method: :post} %></li>
         <% end %>
-        <%= f.input :password, required: false, label: 'New password' %>
-        <%= f.input :password_confirmation, label: 'New password confirmation' %>
+        <%= f.input :password, required: false, label: 'New password', hidden: @staff.assign_a_random_password %>
+        <%= f.input :password_confirmation, label: 'New password confirmation', hidden: @staff.assign_a_random_password %>
         <% if @staff == current_staff %>
             <%= f.input :current_password, hint: 'Required when changing your password' %>
         <% end %>
-
-
+        <%= f.input :assign_a_random_password, as: :boolean if @staff.new_record? %>
         <%= f.input :super_staff, as: :boolean if can? :create_super_staff, User %>
         <%= f.input :basic_roles, label: 'Roles', as: :check_boxes, :input_html => {checked: 'checked'}, collection: @staff.basic_roles %>
         <li class="select input optional" id="new-role-select">
