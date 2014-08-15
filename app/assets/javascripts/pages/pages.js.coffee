@@ -8,12 +8,25 @@ PagesController.prototype.enableSubmitButton = () ->
 
 PagesController.prototype.ckeditor_inline = (element) ->
   $(element).attr("contenteditable", true)
-  CKEDITOR.inline( element, {
-    toolbar:'Pure',
-    on: {
-      blur: PagesController.prototype.enableSubmitButton
+  resource_type = $('#main-body').find('div.page').attr('data-resource-type')
+  resource_id = $('#main-body').find('div.page').attr('data-resource-id')
+  config = {
+    toolbar: 'Pure',
+    on: { blur: PagesController.prototype.enableSubmitButton
     }
-  });
+  }
+  if resource_id and resource_type
+    params = "?resource[type]=#{resource_type}&resource[id]=#{resource_id}"
+    attachment_files = "/ckeditor/attachment_files#{params}"
+    pictures = "/ckeditor/pictures#{params}"
+    config.filebrowserBrowseUrl = attachment_files
+    config.filebrowserFlashBrowseUrl = attachment_files
+    config.filebrowserFlashUploadUrl = attachment_files
+    config.filebrowserImageBrowseLinkUrl = pictures
+    config.filebrowserImageBrowseUrl = pictures
+    config.filebrowserImageUploadUrl = pictures
+    config.filebrowserUploadUrl = attachment_files
+  CKEDITOR.inline(element, config);
 
 PagesController.prototype.show = () ->
 

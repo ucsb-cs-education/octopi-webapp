@@ -46,9 +46,10 @@ class Ability
         #All users can edit themselves
         can :crud, Staff, :id => user.id
         can :read, ActiveAdmin::Page, :name => 'Dashboard'
-        can [:read, :create, :destroy], Ckeditor::Picture
-        can [:read, :create, :destroy], Ckeditor::AttachmentFile
-
+        can [:create], Ckeditor::Picture
+        can [:create], Ckeditor::AttachmentFile
+        can [:read, :destroy], Ckeditor::Picture, assetable: user
+        can [:read, :destroy], Ckeditor::AttachmentFile, assetable: user
 
         cannot :update, Staff.with_role(:super_staff).where.not(id: user)
         cannot :destroy, Staff.with_role(:super_staff).where.not(id: user)
@@ -75,6 +76,10 @@ class Ability
          :show_completed_file, :show_base_file, :delete_all_responses], Task, :curriculum_id => page_ids
     can :crud, AssessmentQuestion, :curriculum_id => page_ids
     can [:show, :update], LaplayaFile, {:curriculum_id => page_ids, :type => %w(TaskBaseLaplayaFile SandboxBaseLaplayaFile ProjectBaseLaplayaFile TaskCompletedLaplayaFile)}
+
+    can [:read, :destroy], Ckeditor::Picture, {resource_type: 'Page', resource_id: page_ids}
+    can [:read, :destroy], Ckeditor::AttachmentFile, {resource_type: 'Page', resource_id: page_ids}
+
     can [:create, :clone_project, :clone_sandbox], ModulePage
     can :create, ActivityPage
     can :create, LaplayaTask
@@ -145,9 +150,9 @@ class Ability
            :view_as_student, :signout_test_student, :reset_test_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
     else
       can :read, School, :id => school_classes_teacher
-      can [:read, :update], Student, :id=> Student.where(school_id: school_classes_teacher).pluck(:id)
-      can :crud, Student, :id => SchoolClass.with_role(:teacher, user).map{|school_class| school_class.students.map {
-          |student| student.id}.flatten(1)}.flatten(1).uniq
+      can [:read, :update], Student, :id => Student.where(school_id: school_classes_teacher).pluck(:id)
+      can :crud, Student, :id => SchoolClass.with_role(:teacher, user).map { |school_class| school_class.students.map {
+          |student| student.id }.flatten(1) }.flatten(1).uniq
       can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
     end
     page_ids = CurriculumPage.all.pluck(:id)

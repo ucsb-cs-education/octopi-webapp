@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140812190657) do
+ActiveRecord::Schema.define(version: 20140813220117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,10 +71,13 @@ ActiveRecord::Schema.define(version: 20140812190657) do
     t.integer  "height"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "resource_id"
+    t.string   "resource_type"
   end
 
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
+  add_index "ckeditor_assets", ["resource_id", "resource_type"], name: "index_ckeditor_assets_on_resource_id_and_resource_type", using: :btree
 
   create_table "curriculum_pages_schools", id: false, force: true do |t|
     t.integer "school_id",          null: false
@@ -86,6 +89,17 @@ ActiveRecord::Schema.define(version: 20140812190657) do
     t.integer  "task_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "laplaya_file_assets", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "asset_type"
+    t.string   "data_fingerprint"
+    t.string   "data_file_name"
+    t.string   "data_content_type"
+    t.integer  "data_file_size"
+    t.datetime "data_updated_at"
   end
 
   create_table "laplaya_files", force: true do |t|

@@ -4,8 +4,14 @@ class StudentResponse::TaskResponseLaplayaFile < StudentResponse::StudentRespons
 
   def trigger_analysis(force = false)
     if project_changed? || force
-      Resque.enqueue(ProcessLaplayaFileById,
-                     id, laplaya_task_response.task.laplaya_analysis_file.id, parent_id)
+      if laplaya_task_response.present? &&
+          laplaya_task_response.task.present? &&
+          laplaya_task_response.task.laplaya_analysis_file.present? &&
+          laplaya_task_response.task.laplaya_analysis_file.data.present?
+
+        Resque.enqueue(ProcessLaplayaFileById,
+                       id, laplaya_task_response.task.laplaya_analysis_file.id, parent_id)
+      end
     end
   end
 

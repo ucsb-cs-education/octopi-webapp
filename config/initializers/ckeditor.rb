@@ -32,13 +32,20 @@ Ckeditor.setup do |config|
   # By default: nil
   # config.asset_path = "http://www.example.com/assets/ckeditor/"
   config.assets_languages = ['en']
-  config.assets_plugins = %w(image smiley)
+  config.assets_plugins = %w(image smiley attachment)
 
   #handle custom addons
-  assets_root =  Rails.root.join('app','assets','javascripts')
-  ckeditor_plugins_root = assets_root.join('ckeditor','plugins')
+  assets_root = Rails.root.join('app', 'assets', 'javascripts')
+  ckeditor_plugins_root = assets_root.join('ckeditor', 'plugins')
   %w(openlink sourcedialog).each do |ckeditor_plugin|
-    Ckeditor.assets += Dir[ckeditor_plugins_root.join(ckeditor_plugin, '**', '*.js')].map {|x| x.sub(assets_root.to_path, '').sub(/^\/+/, '')}
-  end
+    Ckeditor.assets += Dir[ckeditor_plugins_root.join(ckeditor_plugin, '**', '*.js')].map { |x| x.sub(assets_root.to_path, '').sub(/^\/+/, '') }
 
+  end
+  require 'extensions/paloma_restriction'
+  Ckeditor::ApplicationController.send(:include, PalomaRestriction)
+  # require 'extensions/ckeditor/ckeditor_base_extension'
+  require 'extensions/ckeditor/attachment_files_controller_extension'
+  require 'extensions/ckeditor/pictures_controller_extension'
+  Ckeditor::PicturesController.send(:include, Ckeditor::PicturesControllerExtension)
+  Ckeditor::AttachmentFilesController.send(:include, Ckeditor::AttachmentFilesControllerExtension)
 end

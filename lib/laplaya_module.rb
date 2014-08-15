@@ -15,7 +15,7 @@ module LaplayaModule
   def setup_laplaya
     js false
     @laplaya_ide_params = {}
-    @laplaya_ide_params['root_path'] = '/static/laplaya/'
+    @laplaya_ide_params['root_path'] = Rails.application.config.laplaya_root_path
   end
 
   #Should be used whenever we are loading a specific file

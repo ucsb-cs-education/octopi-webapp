@@ -243,7 +243,7 @@ ActiveAdmin.setup do |config|
 
   ActiveAdmin::BaseController::Authorization::ACTIONS_DICTIONARY[:index] = :index
   ActiveAdmin::BaseController::Authorization::ACTIONS_DICTIONARY[:show] = :show
-  require 'active_admin/paloma_restriction'
-  ActiveAdmin::BaseController.send(:include, ActiveAdmin::PalomaRestriction)
+  require 'extensions/paloma_restriction'
+  ActiveAdmin::BaseController.send(:include, PalomaRestriction)
 end
 

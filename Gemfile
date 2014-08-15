@@ -68,7 +68,16 @@ gem 'arbre', '~> 1.0.1'
 
 gem 'acts_as_list', '~> 0.4.0'
 gem 'ckeditor', '~> 4.1.0'
+
+#For AWS-ckeditor assets and Laplaya Media
+gem 'aws-sdk', '~> 1.51.0'
 gem 'paperclip', '~> 4.1.1'
+gem 'data_uri', '~> 0.1.0' #for converting data-uris to the actual file to upload to aws
+
+#Host our assets on AWS
+gem 'fog', '~>1.20', require: 'fog/aws/storage'
+gem 'asset_sync', '~> 1.1.0'
+
 
 # Restrict javascript to a specific controller, within assett pipeline
 gem 'paloma', '~> 4.1.0'
@@ -98,6 +107,7 @@ group :test do
 end
 
 group :development, :test do
+  gem 'dotenv-rails', '~> 0.11.1'
   gem 'factory_girl_rails', '~> 4.4.1'
   gem 'faker', '~> 1.3.0'
   gem 'rspec-rails', '~> 3.0.1'

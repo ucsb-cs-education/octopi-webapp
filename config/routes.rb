@@ -2,7 +2,6 @@ require 'resque_web'
 
 OctopiWebapp::Application.routes.draw do
 
-  mount Ckeditor::Engine => '/ckeditor'
   namespace :student_portal do
     resources :sessions, only: [:create] #, :destroy]
     root 'static_pages#home', as: ''
@@ -142,6 +141,8 @@ OctopiWebapp::Application.routes.draw do
       end
     end
   end
+
+  mount Ckeditor::Engine => '/ckeditor'
 
   resque_web_constraint = lambda do |request|
     current_staff = request.env['warden'].user

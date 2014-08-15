@@ -1,4 +1,5 @@
 OctopiWebapp::Application.configure do
+  config.laplaya_root_path =  '/assets/laplaya/'
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -11,7 +12,7 @@ OctopiWebapp::Application.configure do
   config.eager_load = false
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send.
@@ -28,7 +29,18 @@ OctopiWebapp::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = {host: 'localhost', port: 3000}
+
+  if ENV['S3_DEV_ENABLED'] == 'true'
+    config.paperclip_defaults = {
+        :storage => :s3,
+        :s3_credentials => {
+            :bucket => ENV['S3_BUCKET_NAME'],
+            :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
+            :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+        }
+    }
+  end
 
 
 end

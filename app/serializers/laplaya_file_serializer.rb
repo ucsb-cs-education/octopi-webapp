@@ -37,7 +37,7 @@ class LaplayaFileSerializer < ActiveModel::Serializer
           else
             nil
         end
-    task.laplaya_analysis_file.data
+    task.laplaya_analysis_file.data.force_encoding('UTF-8')
   end
 
   def filter(keys)
