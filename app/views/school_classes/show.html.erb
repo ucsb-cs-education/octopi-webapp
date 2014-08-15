@@ -50,16 +50,20 @@
                 library: {hAxis: {title: 'Percent of tasks completed and unlocked, averaged over all students'}} %>
 </div>
 <% unless teacher_using_test_student? %>
-    <%= button_to "Sign in as Test Student", {action: "view_as_student", school_class_id: @school_class.id},
-                  class: "btn btn-default", method: :get %>
+    <div id="test-student-div">
+      <%= button_to "Sign in as Test Student", {action: "view_as_student", school_class_id: @school_class.id},
+                    class: "btn btn-default", method: :get %>
+    </div>
 <% else %>
-    <div class = "small-font">Includes test student when signed in as one.</div>
-    <%= button_to "View as Test Student", {action: "view_as_student", school_class_id: @school_class.id},
-                  class: "btn btn-default btn-sm", method: :get %>
-    <%= button_to "Sign Out Test Student", {action: "signout_test_student", school_class_id: @school_class.id},
-                  class: "btn btn-default btn-sm", method: :delete %>
-    <%= button_to "Reset Test Student", {action: "reset_test_student", school_class_id: @school_class.id},
-                  class: "btn btn-default btn-sm", method: :delete %>
+    <div class="small-font">Includes test student when signed in as one.</div>
+    <div id="test-student-div">
+      <%= button_to "View as Test Student", {action: "view_as_student", school_class_id: @school_class.id},
+                    class: "btn btn-default", method: :get %>
+      <%= button_to "Sign Out Test Student", {action: "signout_test_student", school_class_id: @school_class.id},
+                    class: "btn btn-default", method: :delete %>
+      <%= button_to "Reset Test Student", {action: "reset_test_student", school_class_id: @school_class.id},
+                    class: "btn btn-default", method: :delete %>
+    </div>
 <% end %>
 <%= render partial: 'list_module_page', collection: @module_pages, as: 'module_page' %>
 <br>
