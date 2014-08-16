@@ -17,7 +17,96 @@ module Curriculumify
 
   end
 
+  def cloudify_page!(user_for_assets)
+    changed = false
+    resource = CurriculumPage.find(curriculum_id)
+    @_assets = {}
+    params = {assetable: user_for_assets, resource: resource}
+    cloudify_fields.each do |field|
+      val = self.send(field)
+      if val
+        new_val = cloudify_helper(val, params)
+        if new_val != val
+          changed = true
+          self.send(field+'=', new_val)
+        end
+      end
+    end
+    if is_a? AssessmentQuestion
+      answer_array = JSON.parse(self.answers)
+      answers_changed = false
+      if answer_array && answer_array.any?
+        answer_array.map! do |answer|
+          text = cloudify_helper(answer['text'], params)
+          if text != answer['text']
+            answers_changed = true
+            answer['text'] = text
+            answer
+          else
+            answer
+          end
+        end
+        if answers_changed
+          changed = true
+          self.answers = JSON.generate(answer_array)
+        end
+      end
+    end
+    save! if changed
+    changed
+  end
+
+
   private
+  def cloudify_helper(text, params)
+    regex = /data:(?<mime>[\w\/\-\.]+);(?<encoding>\w+),(?<data>[^"'>]+)|http:\/\/i\.imgur\.com\/[^"'>]+/
+    text.gsub(regex) do |match|
+      existing_asset = @_assets[match.hash]
+      asset = false
+      if existing_asset
+        asset = existing_asset
+      else
+        picture = false
+        data = false
+        if match.starts_with? 'data'
+          data = LaplayaFileAsset.get_data_from_data_uri_string(match)
+          if $~[:mime].starts_with? 'image'
+            picture = true
+          end
+        elsif match.starts_with? 'http://i.imgur'
+          picture = true
+          data = Net::HTTP.get(URI.parse(match))
+        end
+        if data
+          params[:data] = LaplayaFileAsset.get_file_handle_for_data(data)
+          if picture
+            asset = Ckeditor::Picture.create!(params)
+          else
+            asset = Ckeditor::AttachmentFile.create!(params)
+          end
+        end
+      end
+      if asset
+        unless existing_asset
+          @_assets[match.hash] = asset
+        end
+        asset.data.url
+      else
+        match
+      end
+    end
+  end
+
+  def cloudify_fields
+    if is_a?(Page) || is_a?(Task)
+      %w(student_body teacher_body designer_note)
+    elsif is_a?(AssessmentQuestion)
+      %w(question_body)
+    else
+      []
+    end
+  end
+
   def self.is_page_or_task?(type)
     type == 'Page' || type == 'Task'
   end

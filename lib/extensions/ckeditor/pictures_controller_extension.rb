@@ -14,6 +14,4 @@ module Ckeditor::PicturesControllerExtension
     respond_with_asset(@picture)
   end
 
-
-
 end
