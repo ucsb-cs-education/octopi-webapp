@@ -95,8 +95,10 @@ OctopiWebapp::Application.routes.draw do
     post 'staff', to: 'staff/registrations#create', as: 'staff_registration'
   end
   ActiveAdmin.routes(self)
+  get '/curriculums*curriculapath', to: redirect { |params, req| "/curricula#{params[:curriculapath]}" }
+  get '/curriculums', to: redirect('/curricula')
   scope module: 'pages' do
-    resources :curriculum_pages, path: 'curriculums', except: [:create, :edit], shallow: true do
+    resources :curriculum_pages, path: 'curricula', except: [:create, :edit], shallow: true do
       member do
       end
       resources :module_pages, path: 'modules', except: [:index, :edit], shallow: true do
