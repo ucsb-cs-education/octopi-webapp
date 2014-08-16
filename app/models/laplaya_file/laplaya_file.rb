@@ -1,4 +1,6 @@
 require 'xml'
+require 'rexml/text'
+
 class LaplayaFile < ActiveRecord::Base
   resourcify
   validates :file_name, presence: true, length: {maximum: 100}, allow_blank: false
@@ -72,24 +74,63 @@ class LaplayaFile < ActiveRecord::Base
     end
   end
 
+  def escape_xml_names(str)
+    #Some XML files don't properly escape things in the name
+    #this regex searches for that and fixes it
+    escape_name_regex = /((name|devName)\s*=\s*")(?<body>([^"]*(&(?!(apos|quot|lt|gt|amp|#xD|#126);)|'|<|>)[^"]*)+)"/
+    str.match(escape_name_regex) do |match|
+      orig_body = $~[:body]
+      unescaped = REXML::Text.unnormalize(orig_body)
+      while (new = REXML::Text.unnormalize(unescaped)) != unescaped do
+        unescaped = new
+      end
+      new_body = REXML::Text.normalize(unescaped)
+      str.gsub!('"'+orig_body+'"', '"'+new_body+'"')
+      true
+    end
+  end
+
+  def cleanup_xml_errors(str)
+    #Some XML files have status wedged in without spaces
+    #this searches for that, and fixes it
+    status_regex = /"(status="[^"]*")/
+    str = str.gsub(status_regex, '" \1 ')
+
+    while escape_xml_names(str)
+    end
+    str
+  end
+
+  def parse(str, variable_name)
+    begin
+      parser = XML::Parser.string(str)
+      parser.parse
+    rescue LibXML::XML::Error => e
+      str = cleanup_xml_errors(str)
+      parser = XML::Parser.string(str)
+      result = parser.parse
+      self.send(variable_name+'=', str)
+      result
+    end
+  end
+
   def build_project_xml_parser(force = false)
     force ||= @_force_cloudify
-    if force || self.project_changed?
+    if self.project.present? && (force || self.project_changed?)
       unless @_project_xml_content
         @_project_xml_content_changed = false
         begin
-          parser = XML::Parser.string(self.project)
-          @_project_xml_content = parser.parse
+          @_project_xml_content = parse(self.project, 'project')
           unless @_project_xml_content.root.name == 'project'
-            self.manual_invalidations << {project: 'root node must be a project'}
+            add_invalidation :project, 'root node must be a project'
             return
           end
           unless @_project_xml_content.root.attributes['name']
-            self.manual_invalidations << {project: 'name must be present'}
+            add_invalidation :project, 'name must be present'
             return
           end
         rescue LibXML::XML::Error => e
-          self.manual_invalidations << {project: e.message}
+          add_invalidation :project, e.message
           return false
         end
       end
@@ -99,22 +140,21 @@ class LaplayaFile < ActiveRecord::Base
 
   def build_media_xml_parser(force = false)
     force ||= @_force_cloudify
-    if force || self.media_changed?
+    if self.media.present? && (force || self.media_changed?)
       unless @_media_xml_content
         @_media_xml_content_changed = false
         begin
-          parser = XML::Parser.string(self.media)
-          @_media_xml_content = parser.parse
+          @_media_xml_content = parse(self.media, 'media')
           unless @_media_xml_content.root.name == 'media'
-            self.manual_invalidations << {media: 'root node must be a media'}
+            add_invalidation :media, 'root node must be a media'
             return
           end
           unless @_media_xml_content.root.attributes['name']
-            self.manual_invalidations << {media: 'name must be present'}
+            add_invalidation :media, 'name must be present'
             return
           end
         rescue LibXML::XML::Error => e
-          self.manual_invalidations << {media: e.message}
+          add_invalidation :media, e.message
           return false
         end
       end
@@ -128,7 +168,7 @@ class LaplayaFile < ActiveRecord::Base
   end
 
   def cleanup_media_xml_parser
-    @_project_xml_content = nil
+    @_media_xml_content = nil
     true
   end
 
@@ -160,27 +200,28 @@ class LaplayaFile < ActiveRecord::Base
     true
   end
 
-  def cloudify_media_xml
-    def cloudify_node(node, attr, type)
-      if node
-        data = node.attributes[attr]
-        if data && data.start_with?('data')
-          asset = LaplayaFileAsset.asset_for_data_uri!(data, type)
-          node.attributes[attr] = asset.data.url
-          @_media_xml_content_changed = true
-        end
+  def cloudify_media_node(node, attr, type)
+    if node
+      data = node.attributes[attr]
+      if data && data.start_with?('data')
+        asset = LaplayaFileAsset.asset_for_data_uri!(data, type)
+        node.attributes[attr] = asset.data.url
+        @_media_xml_content_changed = true
       end
     end
+  end
+
+  def cloudify_media_xml
 
     unless @_media_xml_content.nil?
       sounds = @_media_xml_content.find('sound')
       sounds.each do |sound|
-        cloudify_node(sound, 'sound', 'sound')
+        cloudify_media_node(sound, 'sound', 'sound')
       end
       sounds = nil
       costumes = @_media_xml_content.find('costume')
       costumes.each do |costume|
-        cloudify_node(costume, 'image', 'costume')
+        cloudify_media_node(costume, 'image', 'costume')
       end
       costumes = nil
       if @_media_xml_content_changed
@@ -199,11 +240,16 @@ class LaplayaFile < ActiveRecord::Base
         self.note = (note) ? note.content : ''
         self.thumbnail = (thumbnail) ? thumbnail.content : nil
       rescue LibXML::XML::Error => e
-        self.manual_invalidations << {project: e.message}
+        add_invalidation :project, e.message
         return false
       end
     end
     true
   end
 
+
+  def add_invalidation(key, value)
+    self.manual_invalidations << {key => value}
+    self.errors.add key, value
+  end
 end

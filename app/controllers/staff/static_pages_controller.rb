@@ -13,6 +13,7 @@ class Staff::StaticPagesController < ApplicationController
   end
 
   def laplaya_file
+    authorize! :show, LaplayaFile.select(:id,:type).find(params[:id])
     @laplaya_ide_params[:fileID] = params[:id]
     laplaya_helper
   end
