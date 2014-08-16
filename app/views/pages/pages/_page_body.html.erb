@@ -3,10 +3,8 @@
     <% if can? :update, @page %>
         <li><a href="#designer-note">Designer Notes</a></li>
     <% end %>
-    <% if page.visible_to_teachers %>
-        <li><a href="#teacher-body">Teacher Instructions</a></li>
-    <% end %>
-    <% if page.visible_to_students %>
+    <li><a href="#teacher-body">Teacher Instructions</a></li>
+    <% if page.visible_to_students || (!page.visible_to_students && !page.visible_to_teachers) %>
         <li><a href="#student-body">Student Instructions</a></li>
     <% end %>
   </ul>
