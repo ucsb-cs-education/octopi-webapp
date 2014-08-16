@@ -5,14 +5,14 @@ module Curriculumify
     base.validates :parent, presence: true, unless: :curriculum_page?
     base.validates :curriculum_id, presence: true, unless: :new_record?
     base.validate :curriculum_id_validator, unless: :new_record?
-    base.validate :title, presence: true, if: :has_title?
+    base.validate :title, presence: true, allow_blank: false, if: :has_title?
     base.before_save :set_visibility_statuses, if: :has_visibility_status?
     base.after_initialize :initialize_visible_to, if: :has_visibility_status?
     attr_accessor :visible_to
     if is_page_or_task?(base.to_s)
-      base.scope :student_visible, -> { base.where(visible_to_students: true)}
-      base.scope :teacher_visible, -> { base.where(visible_to_teachers: true)}
-      base.scope :only_teacher_visible, -> { base.where(visible_to_teachers: true, visible_to_students: false)}
+      base.scope :student_visible, -> { base.where(visible_to_students: true) }
+      base.scope :teacher_visible, -> { base.where(visible_to_teachers: true) }
+      base.scope :only_teacher_visible, -> { base.where(visible_to_teachers: true, visible_to_students: false) }
     end
 
   end
@@ -23,7 +23,7 @@ module Curriculumify
   end
 
   def has_visibility_status?(type = self.type)
-    (type =~ /((Task|Project|Sandbox)Base|TaskCompleted)LaplayaFile|CurriculumPage/).nil?
+    (type =~ /((Task|Project|Sandbox)Base|TaskCompleted)LaplayaFile|CurriculumPage|AssessmentQuestion/).nil?
   end
 
   def has_title?
@@ -78,7 +78,8 @@ module Curriculumify
     missing_items = difference_between_arrays(array2, array1)
     extra_items.empty? & missing_items.empty?
   end
-private
+
+  private
   def initialize_visible_to
     if visible_to_teachers
       if visible_to_students
@@ -135,4 +136,5 @@ private
       false
     end
   end
+
 end

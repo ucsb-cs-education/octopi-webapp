@@ -169,9 +169,6 @@ ActiveAdmin.register Staff do
       if create_resource(object)
         options[:location] ||= smart_resource_url
       end
-      if resource_params.first[:assign_a_random_password] === true
-        UserMailer.generated_password_email(object).deliver
-      end
       respond_with_dual_blocks(object, options, &block)
     end
 

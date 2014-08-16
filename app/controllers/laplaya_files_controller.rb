@@ -27,11 +27,10 @@ class LaplayaFilesController < ApplicationController
   end
 
   def update
-    params = laplaya_file_params
-    if params.any? && @laplaya_file.update_attributes(params)
-      head :no_content, location: laplaya_file_url(@laplaya_file)
-    else
-      bad_request_with_errors @laplaya_file
+    success = false
+    if params[:laplaya_task].nil? || params[:laplaya_file]
+      params = laplaya_file_params
+      success =  params.any? && @laplaya_file.update_attributes(params)
     end
     if @laplaya_file.is_a? StudentResponse::TaskResponseLaplayaFile
       begin
@@ -40,79 +39,86 @@ class LaplayaFilesController < ApplicationController
           task_response = @laplaya_file.laplaya_task_response
           task_response.task_response_feedbacks.create!(task_response_feedback_params)
           #add feedback to feedback file
+          success = 'laplaya_feedback_created'
         end
       rescue ActionController::ParameterMissing
         # ignored
       end
-
-      end
     end
-
-    def create
-      @laplaya_file.owner = current_user
-      if @laplaya_file.save
-        create_post_success_response(:created, laplaya_file_url(@laplaya_file), @laplaya_file.id)
-      else
-        bad_request_with_errors @laplaya_file
-      end
+    if success === true
+      head :no_content, location: laplaya_file_url(@laplaya_file)
+    elsif
+      render text: success, status: 200, location: laplaya_file_url(@laplaya_file)
+    else
+      bad_request_with_errors @laplaya_file
     end
-
-    def destroy
-      @laplaya_file.destroy
-      head :no_content
-    end
-
-    private
-    def signed_in_user
-      authenticate_staff! unless current_staff || current_student
-    end
-
-    def current_user
-      if current_staff
-        if teacher_using_test_student?
-          current_student
-        else
-          current_staff
-        end
-      else
-        current_student
-      end
-    end
-
-    def laplaya_file_params
-      avail_params = [:project, :media]
-      if can? :create_public_laplaya_files, LaplayaFile
-        avail_params << :public
-      end
-      params.require(:laplaya_file).permit(*avail_params)
-    end
-
-    def task_response_feedback_params
-      params.require(:laplaya_task).permit(:feedback)
-    end
-
-    def confirm_unlocked
-      if signed_in_student?
-        case @laplaya_file.type
-          when 'StudentResponse::TaskResponseLaplayaFile'
-            unless @laplaya_file.laplaya_task_response.task.is_accessible?(current_student, current_school_class)
-              raise CanCan::AccessDenied
-            end
-          when 'StudentResponse::ProjectResponseLaplayaFile',
-              'StudentResponse::SandboxResponseLaplayaFile',
-              'SandboxBaseLaplayaFile'
-            unless current_school_class && current_school_class.module_pages.include?(@laplaya_file.module_page)
-              raise CanCan::AccessDenied
-            end
-          else
-            # type code here
-        end
-      end
-    end
-
-    protected
-    def create_post_success_response (status, location, file_id)
-      render json: {success: true, location: location, file_id: file_id}, location: location, status: status
-    end
-
   end
+
+  def create
+    @laplaya_file.owner = current_user
+    if @laplaya_file.save
+      create_post_success_response(:created, laplaya_file_url(@laplaya_file), @laplaya_file.id)
+    else
+      bad_request_with_errors @laplaya_file
+    end
+  end
+
+  def destroy
+    @laplaya_file.destroy
+    head :no_content
+  end
+
+  private
+  def signed_in_user
+    authenticate_staff! unless current_staff || current_student
+  end
+
+  def current_user
+    if current_staff
+      if teacher_using_test_student?
+        current_student
+      else
+        current_staff
+      end
+    else
+      current_student
+    end
+  end
+
+  def laplaya_file_params
+    avail_params = [:project, :media]
+    if can? :create_public_laplaya_files, LaplayaFile
+      avail_params << :public
+    end
+    params.require(:laplaya_file).permit(*avail_params)
+  end
+
+  def task_response_feedback_params
+    params.require(:laplaya_task).permit(:feedback)
+  end
+
+  def confirm_unlocked
+    if signed_in_student?
+      case @laplaya_file.type
+        when 'StudentResponse::TaskResponseLaplayaFile'
+          unless @laplaya_file.laplaya_task_response.task.is_accessible?(current_student, current_school_class)
+            raise CanCan::AccessDenied
+          end
+        when 'StudentResponse::ProjectResponseLaplayaFile',
+            'StudentResponse::SandboxResponseLaplayaFile',
+            'SandboxBaseLaplayaFile'
+          unless current_school_class && current_school_class.module_pages.include?(@laplaya_file.module_page)
+            raise CanCan::AccessDenied
+          end
+        else
+          # type code here
+      end
+    end
+  end
+
+  protected
+  def create_post_success_response (status, location, file_id)
+    render json: {success: true, location: location, file_id: file_id}, location: location, status: status
+  end
+
+end

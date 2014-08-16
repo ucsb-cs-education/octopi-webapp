@@ -4,13 +4,18 @@ class AssessmentQuestion < ActiveRecord::Base
   belongs_to :assessment_task, foreign_key: :assessment_task_id
   alias_attribute :parent, :assessment_task
   alias_attribute :children, :answers
-  after_create { update_attribute(:curriculum_id, parent.curriculum_id) }
   validate :JSON_validator
   validate :valid_answer_type
-  validates :title, presence: true, allow_blank: false
   has_paper_trail :on=> [:update, :destroy]
-  private
+  include Curriculumify
 
+  protected
+  def type
+    self.class.to_s
+  end
+
+
+  private
   def self.answer_types
     [OpenStruct.new(val: 'singleAnswer', label:'One Correct'),
      OpenStruct.new(val: 'multipleAnswers', label:'Multiple Correct'),
@@ -28,10 +33,6 @@ class AssessmentQuestion < ActiveRecord::Base
         radios_have_one_answer
       end
     end
-  end
-
-  def update_curriculum_id
-    self.curriculum_id = parent.curriculum_id
   end
 
   def radios_have_one_answer

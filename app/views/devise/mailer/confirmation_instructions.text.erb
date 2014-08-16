@@ -1,0 +1,17 @@
+Welcome to Octopi, <%= @staff.name %>
+===============
+<% if @staff.assign_a_random_password === true %>
+An admin has created an account for you. Your login credentials are as follows:
+Email: <%= @staff.email %>
+Password: <%= @staff.password %>
+
+Your password cannot be sent to you again! We advise you to change your password
+once you have logged in. That can be done at:
+<%= confirmation_url(@resource, confirmation_token: @token) %>
+<% else %>
+Your account was created with the email: <%= @staff.email %>
+<% end %>
+
+You must first confirm your account by using the following url:
+
+<%= confirmation_url(@resource, confirmation_token: @token) %>

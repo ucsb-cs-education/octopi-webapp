@@ -1,5 +1,28 @@
-<p>Welcome <%= @email %>!</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+<h1>Welcome to Octopi, <%= @staff.name %></h1>
+<% if @staff.assign_a_random_password === true %>
+    <p>
+      An admin has created an account for you. Your login credentials are as follows:
+      <br/>
+      <strong>Email:</strong> <%= @staff.email %><br/>
+      <strong>Password:</strong> <%= @staff.password %><br/>
+    </p>
 
-<p>You can confirm your account email through the link below:</p>
+    <p>
+      Your password cannot be sent to you again! We advise you
+      to <%= link_to 'change your password', edit_admin_staff_url(@staff) %> after you have logged in.
+    </p>
+<% else %>
+    <p>Your account was created with the email: <strong><%= @staff.email %></strong></p>
+<% end %>
+
+<p>You must first confirm your account by using the following link::</p>
 
 <p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+</body>
+</html>

@@ -19,9 +19,4 @@ class ModulePage < Page
     visible_to_students && school_class.module_pages.student_visible.include?(self)
   end
 
-  private
-  def update_curriculum_id
-    self.curriculum_id = parent.curriculum_id
-  end
-
 end
