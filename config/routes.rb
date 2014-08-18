@@ -46,8 +46,10 @@ OctopiWebapp::Application.routes.draw do
   match '/schools/:school_id/school_classes.json', to: 'student_portal/sessions#list_school_classes', format: false, via: 'get'
 
 
-  resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false do
+  resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, defaults: {format: :json} do
   end
+
+  get '/laplaya_files/:id.xml', format: false, defaults: {format: :xml}, to: 'laplaya_files#show'
 
   #match '/school_classes/:school_class_id/activities/:id', to: 'school_classes#activity_page', via: 'get', as: 'activity'
 

@@ -16,7 +16,14 @@ class LaplayaFilesController < ApplicationController
 
   def show
     @laplaya_file = @laplaya_file.becomes(LaplayaFile)
-    render json: @laplaya_file
+    respond_to do |format|
+      format.json do
+        render json: @laplaya_file
+      end
+      format.xml do
+        render text: "<snapdata>#{@laplaya_file.project}#{@laplaya_file.media}</snapdata>"
+      end
+    end
   end
 
   def update

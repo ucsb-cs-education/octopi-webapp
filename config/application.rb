@@ -35,5 +35,6 @@ module OctopiWebapp
     end
     require 'rails/generators'
     Rails::Generators.fallbacks[:rspec] = :test_unit
+    PaperTrail.enabled = false
   end
 end
