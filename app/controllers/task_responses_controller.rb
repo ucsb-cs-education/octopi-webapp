@@ -5,7 +5,6 @@ class TaskResponsesController < ApplicationController
     begin
       TaskResponse.transaction do
         #path is still messed up, but it is functional
-        #@task_response = TaskResponse.find(params[:id])
         @school_class = SchoolClass.find(params[:task_response_id])
         @task_response.destroy!
         Unlock.find_by(student: @task_response.student, school_class: @school_class, unlockable: @task_response.task).update(hidden: false)

@@ -9,6 +9,6 @@ $("#task_<%=@unlock.unlockable_id %>_student_<%= @unlock.student_id%>").replaceW
         task: {id: @unlock.unlockable_id, statuses: {@unlock.student_id => :visible}}}%>");
 
 $("#progress-chart").replaceWith(
-        "<%= j render partial:"school_classes/school_classes_activities/graph", locals:{graph_info: @school_class.activity_progress_graph_array_for(@unlock.unlockable.activity_page)} %>"
+        "<%= j render partial:"school_classes/school_classes_activities/graph", locals:{graph_info: @school_class.activity_progress_graph_array_for(@unlock.unlockable.activity_page, current_student)} %>"
 );
 <%end%>
