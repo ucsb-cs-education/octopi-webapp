@@ -39,6 +39,7 @@ module OctopiWebapp
 
     config.laplaya_debug_sources = %w(morphic.js widgets.js blocks.js threads.js objects.js gui.js paint.js
 lists.js byob.js xml.js store.js locale.js octopi_cloud.js sha512.js FileSaver.js).map { |x| 'laplaya/'+x }
+    config.laplaya_debug_dest_path = 'debug_assets/'
 
   end
 end

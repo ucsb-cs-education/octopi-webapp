@@ -42,5 +42,6 @@ OctopiWebapp::Application.configure do
     }
   end
 
+  config.auto_cloudify_laplaya_files = false
 
 end

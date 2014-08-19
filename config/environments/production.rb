@@ -63,7 +63,6 @@ OctopiWebapp::Application.configure do
   # config.assets.precompile += %w( search.js )
   config.assets.precompile += %w( laplaya_application.js )
   config.assets.precompile += %w( active_admin.js )
-  config.assets.precompile += config.laplaya_debug_sources
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
