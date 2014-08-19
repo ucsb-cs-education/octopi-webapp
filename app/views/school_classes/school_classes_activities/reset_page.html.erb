@@ -1,0 +1,15 @@
+<div class="activity-title-box">
+  <%= link_to @activity_page.title, activity_page_path(@activity_page) %>
+</div>
+<%= link_to 'Back', school_class_activity_path(@school_class, @activity_page), class: 'btn btn-default' %>
+
+<%#= render partial: 'graph', locals: {graph_info: @graph_info} %>
+<div id="progress-table-div">
+  <%= render partial: 'school_classes/school_classes_activities/reset_page/progress_table' %>
+</div>
+<br>
+
+<%= simple_form_for :activity, url: reset_activity_school_class_path(@school_class), method: :delete do |f| %>
+    <%= f.hidden_field :activity_id, value: @activity_page.id %>
+    <%= f.submit 'Reset Activity', class: 'btn btn-danger' %>
+<% end %>

@@ -404,6 +404,40 @@ class SchoolClassesController < ApplicationController
     redirect_to(:back)
   end
 
+  def reset_activity
+    @school_class = SchoolClass.find(params[:id])
+    @activity_page = ActivityPage.find(params[:activity][:activity_id])
+    respond_to do |format|
+      format.html do
+        redirect_to school_class_activity_path(@school_class, @activity_page)
+      end
+    end
+  end
+
+  def reset_task
+    @school_class = SchoolClass.find(params[:id])
+    @task = Task.find(params[:task][:task_id])
+    respond_to do |format|
+      format.html do
+        redirect_to :back
+      end
+    end
+  end
+
+  def reset_response
+    @school_class = SchoolClass.find(params[:id])
+    @student = Student.find(params[:response][:student_id])
+    @task = Task.find(params[:response][:task_id])
+    response = TaskResponse.find_by(school_class: @school_class, student: @student, task: @task)
+    respond_to do |format|
+      format.html { redirect_to(response) }
+      format.js do
+        js false
+        render :action => 'response_was_reset'
+      end
+    end
+  end
+
   def update
     @school_class = SchoolClass.find(params[:id])
     if @school_class.update(school_class_params)

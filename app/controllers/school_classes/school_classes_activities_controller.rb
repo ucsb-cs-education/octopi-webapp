@@ -3,6 +3,15 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
   include SchoolClassesHelper
 
   def activity_page
+    get_required_info
+    @graph_info = @school_class.activity_progress_graph_array_for(@activity_page, current_student)
+  end
+
+  def reset_page
+    get_required_info
+  end
+
+  def get_required_info
     @activity_page = ActivityPage.includes(:tasks).find(params[:id])
     authorize! :show, @activity_page
     @activity_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable: @activity_page)
@@ -23,8 +32,6 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
              }.reduce({}, :merge),
              :counts => {unlocked_count: @activity_unlocks.count, student_count: @students.count}
     }
-
-    @graph_info = @school_class.activity_progress_graph_array_for(@activity_page)
   end
 end
 

@@ -93,11 +93,29 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
     allowMultipleSelections: false
     showSelectionColumn: false
     fixedCols: 2
-    )
+  )
+
+SchoolClassesActivitiesController.prototype.reset_page = () ->
+  new Grid("progress-table-div",
+    srcType: "dom"
+    srcData: "tasks-table"
+    allowGridResize: false
+    allowColumnResize: false
+    allowClientSideSorting: true
+    colSortType: [
+      "string"
+      "string"
+      "number"
+    ]
+    allowSelections: true
+    allowMultipleSelections: false
+    showSelectionColumn: false
+    fixedCols: 2
+  )
 
 
 SchoolClassesStudentProgressController = Paloma.controller('SchoolClasses/SchoolClassesStudentProgress')
 SchoolClassesStudentProgressController.prototype.student_progress = () ->
   $(document).on "click", ".student_progress", ->
     confirm("This will reset the student's progress to where it currently should be based on what they have completed.
-    Tasks and Activities that were manually unlocked for them and they have not completed or completed the prerequisites of will be locked again.\nContinue?")
+        Tasks and Activities that were manually unlocked for them and they have not completed or completed the prerequisites of will be locked again.\nContinue?")

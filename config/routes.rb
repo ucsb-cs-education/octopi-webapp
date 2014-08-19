@@ -64,9 +64,13 @@ OctopiWebapp::Application.routes.draw do
         post 'do_csv_actions'
         post 'download_class_csv'
         get 'student_spreadsheet_help'
+        delete 'reset_activity', format: false
+        delete 'reset_task', format: false
+        delete 'reset_response'
       end
       resources :unlocks, only: [:destroy, :create]
       get '/activities/:id', to: 'school_classes/school_classes_activities#activity_page', as: 'activity'
+      get '/activities/:id/reset', to: 'school_classes/school_classes_activities#reset_page', as: 'reset_activity_view'
       get '/student/:id', to: 'school_classes/school_classes_student_progress#student_progress', as: 'student_progress'
       get '/reset_dependency_graph', to: 'school_classes/school_classes_student_progress#reset_dependency_graph'
       get '/view_as_student', to: 'school_classes#view_as_student', as: 'view_as_student'

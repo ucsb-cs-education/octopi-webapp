@@ -22,8 +22,12 @@ class LaplayaTask < Task
       :locked
     else
       result = :visible
-      if response.present? && response.completed
-        result = :completed
+      if response.present?
+        if response.completed
+          result = :completed
+        else
+          result = :in_progress
+        end
       end
       result
     end
