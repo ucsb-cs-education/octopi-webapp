@@ -4,7 +4,7 @@
         <form id="change-module" action="<%= @module_page.id %>">
           <label for="modules" class="select required control-label">Select a different module</label>
           <select id="modules" class="form-control">
-            <%= render partial: 'student_portal/pages/module_page/module_options', collection: current_school_class.module_pages, as: :module_page %>
+            <%= render partial: 'student_portal/pages/module_page/module_options', collection: current_class_modules_for_select, as: :module_page %>
           </select>
 
           <div class="form-actions">
