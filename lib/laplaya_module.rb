@@ -29,10 +29,12 @@ module LaplayaModule
   end
 
   def force_slash(slash = :slash)
+    base = request.original_url.match(/[^\?]+/).to_s
+    params = request.original_url.slice(base.length, request.original_url.length - base.length)
     if slash == :slash
-      redirect_to request.original_url + '/' unless request.original_url.match(/\/$/)
+      redirect_to request.path + '/' + params unless base.last === '/'
     elsif slash == :noslash
-      redirect_to request.original_url.gsub /\/+$/, '' unless request.original_url.match(/[^\/]$/)
+      redirect_to request.path.gsub(/\/+$/) + params, '' unless base.last != '/'
     end
   end
 

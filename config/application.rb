@@ -36,5 +36,9 @@ module OctopiWebapp
     require 'rails/generators'
     Rails::Generators.fallbacks[:rspec] = :test_unit
     PaperTrail.enabled = false
+
+    config.laplaya_debug_sources = %w(morphic.js widgets.js blocks.js threads.js objects.js gui.js paint.js
+lists.js byob.js xml.js store.js locale.js octopi_cloud.js sha512.js FileSaver.js).map { |x| 'laplaya/'+x }
+
   end
 end

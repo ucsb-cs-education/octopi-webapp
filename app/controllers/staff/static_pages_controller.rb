@@ -9,16 +9,37 @@ class Staff::StaticPagesController < ApplicationController
   include LaplayaModule
 
   def laplaya
-    laplaya_helper
+    staff_laplaya_helper
   end
 
   def laplaya_file
     authorize! :show, LaplayaFile.select(:id,:type).find(params[:id])
     @laplaya_ide_params[:fileID] = params[:id]
-    laplaya_helper
+    staff_laplaya_helper
   end
 
   def home
-
   end
+
+  private
+  def staff_laplaya_helper
+    if params[:debug] === 'true'
+      if (laplaya_params = params[:laplaya]).is_a? Hash
+        laplaya_params.each do |k, v|
+          if ((number = Integer(v)) rescue false)
+            laplaya_params[k] = number
+          elsif v === 'true'
+            laplaya_params[k] = true
+          elsif v === 'false'
+            laplaya_params[k] = false
+          end
+        end
+        @laplaya_ide_params.merge!(laplaya_params)
+      end
+      render 'laplaya_debug', layout: false
+    else
+      laplaya_helper
+    end
+  end
+
 end
