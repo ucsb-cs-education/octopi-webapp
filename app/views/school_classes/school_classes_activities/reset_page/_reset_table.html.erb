@@ -18,7 +18,7 @@
   <tbody>
   <% @info[:students].to_a.each { |student| %>
       <tr>
-        <%= render partial: 'school_classes/school_classes_activities/reset_page/activity_status', locals: {student: student, activity: @info[:activity]} %>
+        <%= render partial: 'school_classes/school_classes_activities/reset_page/student_name', locals: {student: student, activity: @info[:activity]} %>
         <% @info[:tasks].each { |task| %>
             <td>
               <%= render partial: 'school_classes/school_classes_activities/reset_page/reset_response', locals: {task: task, student: student}, as: 'student' %>
@@ -36,10 +36,12 @@
     <% @info[:tasks].each { |task| %>
         <td class="button-td">
           <div class="unlock-all-box">
-            <% if task[:statuses].has_value?(:in_progress) || task[:statuses].has_value?(:completed) || task[:statuses].has_value?(false) %>
-                <%= simple_form_for :task, url: reset_task_school_class_path(@school_class), method: :delete do |f| %>
+            <% unless task[:responses].values.all? { |i| i.nil? } %>
+                <%= simple_form_for :task, url: reset_task_school_class_path(@school_class),
+                                    html: {class: 'reset-task-form'},
+                                    method: :delete do |f| %>
                     <%= f.hidden_field :task_id, value: task[:id] %>
-                    <%= f.submit 'Reset Task', class: 'btn btn-danger btn-xs' %>
+                    <%= f.submit 'Reset Task', 'data-email' => current_staff.email, class: 'btn btn-danger btn-xs' %>
                 <% end %>
             <% else %>
                 <b>N/A</b>

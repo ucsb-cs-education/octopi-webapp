@@ -113,6 +113,29 @@ SchoolClassesActivitiesController.prototype.reset_page = () ->
     fixedCols: 2
   )
 
+  $(".reset-single-response").submit ->
+    confirm("This will delete  the student's current response and reset their progress to not begun. This cannot be undone.\n Continue?")
+
+  $(".reset-task-form").submit (e) ->
+    currentForm = this
+    prompt = "This will delete all files students have for this task. Any tasks that students have begun or completed will be reset to not begun."
+    email = $(currentForm).find("input[type=submit]").attr("data-email")
+    errorMessage = "You must enter your email to continue, or press cancel to quit."
+    e.preventDefault()
+    confirmationPrompt prompt, email, {success: ->
+      currentForm.submit()
+    }, errorMessage
+
+  $(".reset-activity-form").submit (e) ->
+    currentForm = this
+    prompt = "This will delete ALL files students have for this activity. Any tasks that students have begun or completed will be reset to not begun."
+    email = $(currentForm).find("input[type=submit]").attr("data-email")
+    errorMessage = "You must enter your email to continue, or press cancel to quit."
+    e.preventDefault()
+    confirmationPrompt prompt, email, {success: ->
+      currentForm.submit()
+    }, errorMessage
+
 
 SchoolClassesStudentProgressController = Paloma.controller('SchoolClasses/SchoolClassesStudentProgress')
 SchoolClassesStudentProgressController.prototype.student_progress = () ->

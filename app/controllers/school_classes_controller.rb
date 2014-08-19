@@ -405,38 +405,49 @@ class SchoolClassesController < ApplicationController
   end
 
   def reset_activity
-    @school_class = SchoolClass.find(params[:id])
-    @activity_page = ActivityPage.find(params[:activity][:activity_id])
-    respond_to do |format|
-      format.html do
-        redirect_to school_class_activity_path(@school_class, @activity_page)
+    begin
+      SchoolClass.transaction do
+        @school_class = SchoolClass.find(params[:id])
+        @activity_page = ActivityPage.find(params[:activity][:activity_id])
+        @activity_page.tasks.each { |task|
+          TaskResponse.where(school_class: @school_class, task: task).each { |response|
+            response.destroy!
+            Unlock.find_by(student: response.student, school_class: @school_class, unlockable: response.task).update(hidden: false)
+            #For RemoveUnlocks branch
+            #response.delete_children!
+            #response.update(hidden: false, completed: false)
+          }
+        }
+        flash[:success] = "All progress for #{@activity_page.title} successfully reset."
+        redirect_to :back
       end
+    rescue Exception => e
+      flash[:error] = e.message
+      redirect_to :back
     end
   end
 
   def reset_task
-    @school_class = SchoolClass.find(params[:id])
-    @task = Task.find(params[:task][:task_id])
-    respond_to do |format|
-      format.html do
+    begin
+      SchoolClass.transaction do
+        @school_class = SchoolClass.find(params[:id])
+        @task = Task.find(params[:task][:task_id])
+        TaskResponse.where(school_class: @school_class, task: @task).each { |response|
+          response.destroy!
+          Unlock.find_by(student: response.student, school_class: @school_class, unlockable: response.task).update(hidden: false)
+          #For RemoveUnlocks branch
+          #response.delete_children!
+          #response.update(hidden: false, completed: false)
+        }
+        flash[:success] = "All progress for #{@task.title} successfully reset."
         redirect_to :back
       end
+    rescue Exception => e
+      flash[:error] = e.message
+      redirect_to :back
     end
   end
 
-  def reset_response
-    @school_class = SchoolClass.find(params[:id])
-    @student = Student.find(params[:response][:student_id])
-    @task = Task.find(params[:response][:task_id])
-    response = TaskResponse.find_by(school_class: @school_class, student: @student, task: @task)
-    respond_to do |format|
-      format.html { redirect_to(response) }
-      format.js do
-        js false
-        render :action => 'response_was_reset'
-      end
-    end
-  end
 
   def update
     @school_class = SchoolClass.find(params[:id])

@@ -5,11 +5,13 @@
 
 <%#= render partial: 'graph', locals: {graph_info: @graph_info} %>
 <div id="progress-table-div">
-  <%= render partial: 'school_classes/school_classes_activities/reset_page/progress_table' %>
+  <%= render partial: 'school_classes/school_classes_activities/reset_page/reset_table' %>
 </div>
 <br>
 
-<%= simple_form_for :activity, url: reset_activity_school_class_path(@school_class), method: :delete do |f| %>
+<%= simple_form_for :activity, url: reset_activity_school_class_path(@school_class),
+                    html: {class: 'reset-activity-form'},
+                    method: :delete do |f| %>
     <%= f.hidden_field :activity_id, value: @activity_page.id %>
-    <%= f.submit 'Reset Activity', class: 'btn btn-danger' %>
+    <%= f.submit 'Reset Activity', 'data-email' => current_staff.email, class: 'btn btn-danger' %>
 <% end %>
