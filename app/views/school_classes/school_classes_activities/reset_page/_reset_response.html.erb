@@ -1,12 +1,10 @@
 <% student = student[1] %>
-<% status = task[:statuses][student[:id]] %>
-<% if status == :completed || status == false || status == :in_progress %>
+<% response = task[:responses][student[:id]] %>
+<% unless response.nil? %>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
-      <%= simple_form_for :response, url: reset_response_school_class_path(@school_class), method: :delete, :format => 'js', remote: true do |f| %>
-          <%= f.hidden_field :task_id, value: task[:id] %>
-          <%= f.hidden_field :student_id, value: student[:id] %>
-          <%= f.submit 'Reset', class: 'btn btn-default btn-xs' %>
-      <% end %>
+      <%= button_to 'Reset',reset_task_response_school_class_path(response, @school_class),
+                    class: "btn btn-default btn-xs",
+                    form_class: "reset-single-response", method: :delete %>
     </div>
 <% else %>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
