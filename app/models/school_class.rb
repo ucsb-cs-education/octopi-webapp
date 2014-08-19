@@ -5,6 +5,7 @@ class SchoolClass < ActiveRecord::Base
   belongs_to :school
   validates :school, presence: true
   validates :name, presence: true, length: {maximum: 100}, uniqueness: {scope: :school}
+  include SchoolClassesHelper
 
   def teachers
     Staff.with_role(:teacher, self)
@@ -15,13 +16,19 @@ class SchoolClass < ActiveRecord::Base
   end
 
 
-  def activity_progress_graph_array_for(activity)
+  def activity_progress_graph_array_for(activity, test_student = nil)
+    @students = students.not_teststudents
+    if test_student!=false
+      @students = @students << test_student
+    end
+
+
     @activity_page = ActivityPage.includes(:tasks).find(activity)
-    @unlocks = Unlock.where(student: students, school_class: self, unlockable_type: "Task", unlockable_id: @activity_page.tasks.pluck(:id))
-    @responses = TaskResponse.where(student: students, school_class: self)
+    @unlocks = Unlock.where(student: @students, school_class: self, unlockable_type: "Task", unlockable_id: @activity_page.tasks.pluck(:id))
+    @responses = TaskResponse.where(student: @students, school_class: self)
 
     [{name: "Completed by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
-        task.title+"("+task.id.to_s+")" : task.title)=> @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
+        task.title+"("+task.id.to_s+")" : task.title) => @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
      {name: "Unlocked by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
          task.title+"("+task.id.to_s+")" : task.title) => (@unlocks.where(unlockable: task).count-@responses.where(task: task, completed: true).count)} }.reduce({}, :merge)}]
   end

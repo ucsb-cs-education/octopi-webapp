@@ -80,6 +80,10 @@
     }
   }
 
+  #reset-link-div{
+    float:right;
+  }
+
   .module-title-box {
     font-size: 110%;
     margin-top: 2px;
@@ -146,6 +150,10 @@
     background: #FFFFD5;
   }
 
+  .in_progress-box {
+    background: #bce8f1;
+  }
+
   .small-font {
     font-size: 85%;
     float: right;
@@ -181,6 +189,14 @@
 
     .completed-task {
       background-color: rgba(144, 245, 144, 0.40);
+    }
+
+    .in_progress-task {
+      background: #bce8f1;
+    }
+
+    .unlocked-task {
+      background: #FFFFD5;
     }
 
   }

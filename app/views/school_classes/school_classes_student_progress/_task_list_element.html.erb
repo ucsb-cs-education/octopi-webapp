@@ -17,9 +17,13 @@
     <li class="completed-task" id="task_<%= task[:id] %>_student_<%= @student.id %>">
       <%= task[:title] %> - Completed
     </li>
+<% elsif status == :in_progress %>
+    <li class="in_progress-task" id="task_<%= task[:id] %>_student_<%= @student.id %>">
+      <%= task[:title] %> - In progress
+    </li>
 <% else %>
     <li class="unlocked-task" id="task_<%= task[:id] %>_student_<%= @student.id %>">
-      <%= task[:title] %>
+      <%= task[:title] %> - Not begun
     </li>
 <% end %>
 

@@ -16,8 +16,12 @@
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status <%= status.to_s%>-box">
       <span class="completed-span"> <b>Complete</b> </span>
     </div>
-<% else %>
+<% elsif status == :in_progress%>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status <%= status.to_s%>-box">
       <span class="unlocked-span"> In progress </span>
+    </div>
+<% else%>
+    <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status <%= status.to_s%>-box">
+      <span class="unlocked-span"> Not begun</span>
     </div>
 <% end %>
