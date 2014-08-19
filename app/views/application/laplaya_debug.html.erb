@@ -7,7 +7,7 @@
   <title>LaPlaya</title>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
   <% Rails.application.config.laplaya_debug_sources.each do |source| %>
-      <script type="text/javascript" src="<%=(Rails.application.config.laplaya_debug_dest_path  + source)%>"></script>
+      <script type="text/javascript" src="/<%=(Rails.application.config.laplaya_debug_dest_path  + source)%>"></script>
   <% end %>
   <script type="text/javascript">
       var world;

@@ -1,5 +1,4 @@
 OctopiWebapp::Application.configure do
-  config.laplaya_root_path =  '/assets/laplaya/'
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -42,6 +41,6 @@ OctopiWebapp::Application.configure do
     }
   end
 
-  config.auto_cloudify_laplaya_files = false
+
 
 end

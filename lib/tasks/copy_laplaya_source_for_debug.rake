@@ -1,9 +1,9 @@
 require 'digest'
 namespace :laplaya do
   desc 'Copy static laplaya source for staff debug mode'
-  task :copy_laplaya_source_for_debug do
+  task :copy_laplaya_source_for_debug => :environment do
     asset_dir = Rails.root.join('lib/assets/javascripts/')
-    dest_dir = Rails.root.join('public/javascripts', Rails.application.config.laplaya_debug_dest_path)
+    dest_dir = Rails.root.join('public', Rails.application.config.laplaya_debug_dest_path)
     files = Rails.application.config.laplaya_debug_sources.map { |x| asset_dir.join(x) }
     for file in files
       dest = file.to_s.sub asset_dir.to_s, dest_dir.to_s
@@ -19,6 +19,6 @@ namespace :laplaya do
 end
 
 # auto run ckeditor:create_nondigest_assets after assets:precompile
-  Rake::Task['assets:precompile'].enhance do
-    Rake::Task['laplaya:copy_laplaya_source_for_debug'].invoke
-  end
+Rake::Task['assets:precompile'].enhance do
+  Rake::Task['laplaya:copy_laplaya_source_for_debug'].invoke
+end

@@ -139,7 +139,4 @@ OctopiWebapp::Application.configure do
 
   config.paperclip_defaults = paperclip_settings
 
-  config.auto_cloudify_laplaya_files = ENV['AUTO_CLOUDIFY_LAPLAYA_FILES'] === 'true'
-  config.laplaya_root_path = ENV['LAPLAYA_ROOT_PATH'] || '/assets/laplaya/'
-
 end

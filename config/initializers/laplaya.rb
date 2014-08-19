@@ -1,14 +1,6 @@
-# if defined?(AssetSync) && AssetSync.config.run_on_precompile
-#
-#   asset_path = Rails.root.join('lib', 'assets', 'javascripts')
-#   files = []
-#   %w(lang-*.js *.gif *.png
-# help/*.png
-# Sounds/*.mp3 Sounds/*.wav Sounds/index.html
-# Costumes/*.gif Costumes/*.png Costumes/index.html
-# Backgrounds/*.jpg Backgrounds/*.gif Backgrounds/index.html
-# ).each do |path|
-#     files += Dir[asset_path.join('laplaya', path)].map { |x| x.sub(asset_path.to_path, '').sub(/^\/+/, '') }
-#   end
-#   Rails.application.config.assets.precompile += files
-# end
+Rails.application.config.auto_cloudify_laplaya_files = ENV['AUTO_CLOUDIFY_LAPLAYA_FILES'] === 'true'
+Rails.application.config.laplaya_root_path = ENV['LAPLAYA_ROOT_PATH'] || '/assets/laplaya/'
+Rails.application.config.laplaya_debug_sources = %w(morphic.js widgets.js blocks.js threads.js objects.js gui.js paint.js
+lists.js byob.js xml.js store.js locale.js octopi_cloud.js sha512.js FileSaver.js).map { |x| 'laplaya/'+x }
+Rails.application.config.laplaya_debug_dest_path = 'debug_assets/'
+
