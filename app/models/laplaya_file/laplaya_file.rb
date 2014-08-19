@@ -10,11 +10,11 @@ class LaplayaFile < ActiveRecord::Base
 
   before_validation :build_project_xml_parser
   before_validation :update_thumbnail_and_note
-  before_validation :cloudify_project_xml, if: Rails.application.config.auto_cloudify_laplaya_files || @_force_cloudify
+  before_validation :cloudify_project_xml, if: :should_cloudify?
   before_validation :cleanup_project_xml_parser
-  before_validation :build_media_xml_parser, if: Rails.application.config.auto_cloudify_laplaya_files || @_force_cloudify
-  before_validation :cloudify_media_xml, if: Rails.application.config.auto_cloudify_laplaya_files || @_force_cloudify
-  before_validation :cleanup_media_xml_parser, if: Rails.application.config.auto_cloudify_laplaya_files || @_force_cloudify
+  before_validation :build_media_xml_parser, if: :should_cloudify?
+  before_validation :cloudify_media_xml, if: :should_cloudify?
+  before_validation :cleanup_media_xml_parser, if: :should_cloudify?
 
   has_paper_trail ignore: [:notes, :thumbnail], :on => [:update, :destroy], :unless => Proc.new { |file| file.owner.is_a?(TestStudent) }
 
@@ -52,6 +52,10 @@ class LaplayaFile < ActiveRecord::Base
   end
 
   private
+
+  def should_cloudify?
+    (Rails.application.config.auto_cloudify_laplaya_files || @_force_cloudify)
+  end
 
   def self.xml_info_regex
     /^<\?xml((?!\?>).)*\?>\s/
