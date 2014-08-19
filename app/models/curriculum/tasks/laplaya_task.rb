@@ -7,7 +7,7 @@ class LaplayaTask < Task
   def is_accessible?(student, school_class)
     if visible_to_students
       status = get_visibility_status_for(student, school_class)
-      status == :visible || status == :completed
+      status == :visible || status == :completed || status == :in_progress
     end
   end
 

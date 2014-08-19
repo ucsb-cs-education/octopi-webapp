@@ -27,22 +27,26 @@ class SchoolClass < ActiveRecord::Base
     @unlocks = Unlock.where(student: @students, school_class: self, unlockable_type: "Task", unlockable_id: @activity_page.tasks.pluck(:id))
     @responses = TaskResponse.where(student: @students, school_class: self)
 
-    [{name: "Completed by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
+    [{name: "Completed", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
         task.title+"("+task.id.to_s+")" : task.title) => @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
-     {name: "Unlocked by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
-         task.title+"("+task.id.to_s+")" : task.title) => (@unlocks.where(unlockable: task).count-@responses.where(task: task, completed: true).count)} }.reduce({}, :merge)}]
+     {name: "In progress", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
+         task.title+"("+task.id.to_s+")" : task.title) => @responses.where(task: task, completed: false).count} }.reduce({}, :merge)},
+     {name: "Not begun", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
+         task.title+"("+task.id.to_s+")" : task.title) => (@unlocks.where(unlockable: task).count-@responses.where(task: task, completed: true).count-@responses.where(task: task, completed: false).count)} }.reduce({}, :merge)}]
   end
 
   def student_progress_graph_array_for(student)
     @tasks = Task.student_visible.where(activity_page: (ActivityPage.where(module_page: self.module_pages)))
     @unlock_count = Unlock.where(student: student, school_class: self, unlockable_type: "Task", unlockable_id: @tasks.pluck(:id)).count
 
-    number_of_tasks_completed = TaskResponse.where(student: student, school_class: self, task: @tasks.ids).where(completed: true).count
-    number_of_tasks_in_progress = @unlock_count - number_of_tasks_completed
+    number_of_tasks_completed = TaskResponse.where(student: student, school_class: self).where(completed: true).count
+    number_of_tasks_in_progress = TaskResponse.where(student: student, school_class: self).where(completed: false).count
+    number_of_tasks_not_begun = @unlock_count - number_of_tasks_completed - number_of_tasks_in_progress
     number_of_locked_tasks = @tasks.count - @unlock_count
 
     {"Completed tasks" => [0,number_of_tasks_completed].max,
      "In progress tasks" => [0,number_of_tasks_in_progress].max,
+     "Tasks not begun" => [0,number_of_tasks_not_begun].max,
      "Locked tasks" => [0,number_of_locked_tasks].max}
   end
 

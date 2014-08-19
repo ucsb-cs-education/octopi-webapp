@@ -45,8 +45,6 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
                {student.id => {id: student.id, name: student.name, first_name: student.first_name, last_name: student.last_name}}
              }.reduce({}, :merge)
     }
-
-    @test = 5;
   end
 end
 
