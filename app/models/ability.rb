@@ -99,7 +99,7 @@ class Ability
     school_ids = schools.pluck(:id)
     can [:read_update, :add_teacher, :add_school_admin], School, id: school_ids
 
-    can [:crud, :change_class, :remove_class], Student, :id => Student.where(school_id: school_ids).pluck(:id)
+    can [:crud, :change_class, :remove_class], Student, :id => Student.select(:id).where(school_id: school_ids).ids
     can :create, Student
 
     school_classes = SchoolClass.where(school_id: school_ids)
@@ -139,26 +139,26 @@ can :activity_page, SchoolClass, :id => school_classes_ids
 
     schools = School.with_role(:teacher, user).pluck(:id)
     can :read, School, :id => schools
-    can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
+    can :read, Student, :id => Student.select(:id,:school_id).where(school_id: schools).ids
 
     school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
     school_classes_teacher = SchoolClass.with_role(:teacher, user).pluck(:school_id)
     schools_teacher = School.with_role(:teacher, user).pluck(:id)
     if School.with_role(:teacher, user) != []
       can :read, School, :id => schools_teacher
-      can [:crud, :change_class, :remove_class], Student, :id => Student.where(school_id: schools_teacher).pluck(:id)
+      can [:crud, :change_class, :remove_class], Student, :id => Student.select(:id).where(school_id: schools_teacher).ids
       can [:read_update, :add_new_student, :add_student,
            :view_as_student, :signout_test_student, :reset_test_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
     else
       can :read, School, :id => school_classes_teacher
-      can [:read, :update], Student, :id => Student.where(school_id: school_classes_teacher).pluck(:id)
+      can [:read, :update], Student, :id => Student.select(:id).where(school_id: school_classes_teacher).ids
       can :crud, Student, :id => SchoolClass.with_role(:teacher, user).map { |school_class| school_class.students.map {
           |student| student.id }.flatten(1) }.flatten(1).uniq
       can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
     end
     page_ids = CurriculumPage.all.pluck(:id)
     can :read_update, SchoolClass, :id => school_classes
-    can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
+    can :crud, Student, :id => Student.select(:id).joins(:school_classes).where(school_classes: {id: school_classes}).distinct.ids
     can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
     can [:read,:show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
     assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)

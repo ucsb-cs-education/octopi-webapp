@@ -5,7 +5,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
   def activity_page
     @activity_page = ActivityPage.includes(:tasks).find(params[:id])
     authorize! :show, @activity_page
-    @students = @school_class.students.includes(:task_responses).select('id,first_name,last_name')
+    @students = @school_class.students.select(:id,:first_name,:last_name).includes(:task_responses)
     @students = ordered_students
     @activity_unlocks = Unlock.where(student: @students.ids, school_class: @school_class, unlockable: @activity_page)
 
@@ -31,7 +31,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
     @activity_page = ActivityPage.includes(:tasks).find(params[:id])
     authorize! :show, @activity_page
     @activity_unlocks = Unlock.where(student: @school_class.students, school_class: @school_class, unlockable: @activity_page)
-    @students = @school_class.students.includes(:task_responses).select('id,first_name,last_name')
+    @students = @school_class.students.select(:id,:first_name,:last_name).includes(:task_responses)
     @students = ordered_students
 
     @info = {:activity => {title: @activity_page.title, id: @activity_page.id, students_who_unlocked: @activity_unlocks.pluck(:student_id)},
