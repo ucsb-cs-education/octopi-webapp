@@ -2,7 +2,7 @@
 <% response = task[:responses][student[:id]] %>
 <% unless response.nil? %>
     <div id="task_<%= task[:id] %>_student_<%= student[:id] %>" class="student-status">
-      <%= button_to 'Reset',reset_task_response_school_class_path(response, @school_class),
+      <%= button_to 'Reset', reset_school_class_task_responses_path(@school_class, response),
                     class: "btn btn-default btn-xs",
                     form_class: "reset-single-response", method: :delete %>
     </div>
