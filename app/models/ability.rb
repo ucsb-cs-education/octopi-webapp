@@ -176,8 +176,6 @@ can :activity_page, SchoolClass, :id => school_classes_ids
     if (user.respond_to? :current_class) && (user.current_class.present?)
       module_page_ids = user.current_class.module_pages.pluck(:id)
       can :show, LaplayaFile, type: SandboxBaseLaplayaFile.to_s, parent_id: module_page_ids
-      #demo_laplaya_tasks = LaplayaTask.where(demo: true, page_id: ActivityPage.where(page_id: module_page_ids).pluck(:id))
-      #can :show, LaplayaFile, id: TaskCompletedLaplayaFile.where(laplaya_task: demo_laplaya_tasks).pluck(:id)
     end
   end
 

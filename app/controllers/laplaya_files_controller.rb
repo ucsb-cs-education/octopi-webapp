@@ -4,7 +4,6 @@ class LaplayaFilesController < ApplicationController
   include StudentSigninModule
   load_resource :laplaya_file
   authorize_resource :laplaya_file, unless: :is_a_demo_for_current_student
-  load_and_authorize_resource :laplaya_file
   protect_from_forgery with: :null_session
   before_action :signed_in_user
   before_action :confirm_unlocked, only: [:show, :update]
@@ -127,15 +126,14 @@ class LaplayaFilesController < ApplicationController
   private
   def is_a_demo_for_current_student
     (
-    action_name == :show &&
-        current_student && current_school_class &&
+    action_name == "show" && current_student && current_school_class &&
         @laplaya_file.is_a?(TaskCompletedLaplayaFile) &&
         LaplayaTask.where(
             demo: true,
             page_id: ActivityPage.where(
                 page_id: current_school_class.module_pages.pluck(:id)
             ).pluck(:id)
-        ).pluck(:id).includes?(@laplaya_file.id)
+        ).pluck(:id).include?(@laplaya_file.parent_id)
     )
   end
 
