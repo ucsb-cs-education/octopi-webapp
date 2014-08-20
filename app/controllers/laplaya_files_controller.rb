@@ -2,11 +2,14 @@ require 'student_signin_module'
 
 class LaplayaFilesController < ApplicationController
   include StudentSigninModule
+  load_resource :laplaya_file
+  authorize_resource :laplaya_file, unless: :is_a_demo_for_current_student
   load_and_authorize_resource :laplaya_file
   protect_from_forgery with: :null_session
   before_action :signed_in_user
   before_action :confirm_unlocked, only: [:show, :update]
   js false
+
 
   def index
     #Following line needed to prevent super_staff from crashing server during index
@@ -119,6 +122,21 @@ class LaplayaFilesController < ApplicationController
   protected
   def create_post_success_response (status, location, file_id)
     render json: {success: true, location: location, file_id: file_id}, location: location, status: status
+  end
+
+  private
+  def is_a_demo_for_current_student
+    (
+    action_name == :show &&
+        current_student && current_school_class &&
+        @laplaya_file.is_a?(TaskCompletedLaplayaFile) &&
+        LaplayaTask.where(
+            demo: true,
+            page_id: ActivityPage.where(
+                page_id: current_school_class.module_pages.pluck(:id)
+            ).pluck(:id)
+        ).pluck(:id).includes?(@laplaya_file.id)
+    )
   end
 
 end
