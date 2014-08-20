@@ -6,8 +6,10 @@
 <%= render partial: 'graph', locals: {graph_info: @graph_info} %>
 
 <hr>
-<div id="progress-table-div">
-  <%= render partial: 'progress_table' %>
+<div>
+  <div id="progress-table-div">
+    <%= render partial: 'progress_table' %>
+  </div>
 </div>
 <div id="reset-link-div">
   <%= link_to 'Reset progress for one or more students', school_class_reset_activity_view_path(@school_class, @activity_page) %>

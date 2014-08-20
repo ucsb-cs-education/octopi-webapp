@@ -14,7 +14,7 @@ class LaplayaTask < Task
   def get_visibility_status_for(student, school_class)
     LaplayaTask.get_visibility_status(
         find_unlock_for(student, school_class),
-        TaskResponse.find_by(student: student, school_class: school_class, task: self))
+        student.task_responses.find_by(school_class: school_class, task: self))
   end
 
   def self.get_visibility_status(unlock, response)
