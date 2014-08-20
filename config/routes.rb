@@ -67,11 +67,7 @@ OctopiWebapp::Application.routes.draw do
         delete 'reset_activity', format: false
         delete 'reset_task', format: false
       end
-      resource :task_responses, only: [:delete] do
-        member do
-          delete 'reset/:id', to: 'task_responses#reset', as: 'reset'
-        end
-      end
+      delete 'task_responses/:id/reset', to: 'task_responses#reset', as: 'task_responses_reset'
       resources :unlocks, only: [:destroy, :create]
       get '/activities/:id', to: 'school_classes/school_classes_activities#activity_page', as: 'activity'
       get '/activities/:id/reset', to: 'school_classes/school_classes_activities#reset_page', as: 'reset_activity_view'
