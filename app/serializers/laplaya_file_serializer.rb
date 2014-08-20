@@ -37,7 +37,7 @@ class LaplayaFileSerializer < ActiveModel::Serializer
           else
             nil
         end
-    result = task.laplaya_analysis_file
+    result = task.laplaya_analysis_file.data
     result = result.force_encoding('UTF-8') unless result.nil?
     result
   end
