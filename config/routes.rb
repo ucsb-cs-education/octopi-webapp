@@ -66,8 +66,10 @@ OctopiWebapp::Application.routes.draw do
         get 'student_spreadsheet_help'
         delete 'reset_activity', format: false
         delete 'reset_task', format: false
-        scope :task_responses do
-          delete ':task_response_id/reset', to: 'task_responses#reset', as: 'reset_task_response'
+      end
+      resource :task_responses, only: [:delete] do
+        member do
+          delete 'reset/:id', to: 'task_responses#reset', as: 'reset'
         end
       end
       resources :unlocks, only: [:destroy, :create]

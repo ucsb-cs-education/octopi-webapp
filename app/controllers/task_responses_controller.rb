@@ -4,8 +4,7 @@ class TaskResponsesController < ApplicationController
   def reset
     begin
       TaskResponse.transaction do
-        #path is still messed up, but it is functional
-        @school_class = SchoolClass.find(params[:task_response_id])
+        @school_class = SchoolClass.find(params[:school_class_id])
         @task_response.destroy!
         Unlock.find_by(student: @task_response.student, school_class: @school_class, unlockable: @task_response.task).update(hidden: false)
         #For RemoveUnlocks branch
