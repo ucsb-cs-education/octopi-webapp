@@ -18,4 +18,12 @@ class LaplayaTaskResponse < TaskResponse
     end
   end
 
+  def total_time
+    total_time = 0;
+    time_intervals.each{|i|
+      total_time += i.length
+    }
+    total_time
+  end
+
 end

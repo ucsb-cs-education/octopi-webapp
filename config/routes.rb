@@ -44,6 +44,8 @@ OctopiWebapp::Application.routes.draw do
   match '/school_classes/:school_class_id/student_logins.json', to: 'student_portal/sessions#list_student_logins', format: false, via: 'get'
   match '/schools/:school_id/school_classes.json', to: 'student_portal/sessions#list_school_classes', format: false, via: 'get'
 
+  resources :time_intervals, only: [:update, :create], format: false, defaults: {format: :json} do
+  end
 
   resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, defaults: {format: :json} do
   end

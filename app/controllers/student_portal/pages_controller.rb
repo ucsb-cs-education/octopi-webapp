@@ -98,6 +98,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
           @laplaya_ide_params[:demoMode] = true
         else
           @laplaya_ide_params[:fileID] = @laplaya_task_response.laplaya_file.id
+          @interval = @laplaya_task_response.make_new_interval(Time.new.to_i)
         end
         @laplaya_ide_params[:prevTask] = get_path_for_task(@laplaya_task.higher_item)
         @laplaya_ide_params[:nextTask] = get_path_for_task(@laplaya_task.lower_item)

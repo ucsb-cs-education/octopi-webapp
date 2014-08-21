@@ -30,7 +30,7 @@ class LaplayaFilesController < ApplicationController
     success = false
     if params[:laplaya_task].nil? || params[:laplaya_file]
       params = laplaya_file_params
-      success =  params.any? && @laplaya_file.update_attributes(params)
+      success = params.any? && @laplaya_file.update_attributes(params)
     end
     if @laplaya_file.is_a? StudentResponse::TaskResponseLaplayaFile
       begin
@@ -47,8 +47,7 @@ class LaplayaFilesController < ApplicationController
     end
     if success === true
       head :no_content, location: laplaya_file_url(@laplaya_file)
-    elsif
-      render text: success, status: 200, location: laplaya_file_url(@laplaya_file)
+    elsif render text: success, status: 200, location: laplaya_file_url(@laplaya_file)
     else
       bad_request_with_errors @laplaya_file
     end

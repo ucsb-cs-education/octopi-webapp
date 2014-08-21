@@ -8,14 +8,28 @@
   <title>LaPlaya</title>
   <script type="text/javascript">
       var world;
+      var user_is_interacting_with_page = true;
+
       window.onload = function () {
           world = new WorldMorph(document.getElementById('world'));
           new IDE_Morph(<%= raw @laplaya_ide_params.to_json %>).openIn(world);
           setInterval(loop, 1);
+          <% unless @laplaya_task_response.nil? || current_student.nil? || @laplaya_task_response.student!=current_student || @interval.nil? %>
+          recordTime(new Date().getTime() / 1000);
+          setInterval(recordTime, 30000);
+          <% end %>
       };
       function loop() {
           world.doOneCycle();
       }
+
+      <% unless @laplaya_task_response.nil? || current_student.nil? || @laplaya_task_response.student!=current_student || @interval.nil? %>
+      $.idleTimer(10000);
+      var time_interval_id = <%= @interval.id %>;
+      var laplaya_task_response_id = <%= @laplaya_task_response.id %>;
+      set_record_time_functions();
+      <% end %>
+
   </script>
 </head>
 <body style="margin: 0;">

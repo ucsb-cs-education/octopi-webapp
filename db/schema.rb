@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140813220117) do
+ActiveRecord::Schema.define(version: 20140821164925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,6 +225,14 @@ ActiveRecord::Schema.define(version: 20140813220117) do
     t.boolean  "visible_to_students", default: true
     t.boolean  "visible_to_teachers", default: true
     t.boolean  "demo",                default: false
+  end
+
+  create_table "time_intervals", force: true do |t|
+    t.integer  "begin_time"
+    t.integer  "end_time"
+    t.integer  "task_response_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "unlocks", force: true do |t|
