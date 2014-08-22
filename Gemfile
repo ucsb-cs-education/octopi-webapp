@@ -85,6 +85,9 @@ gem 'paloma', '~> 4.1.0'
 #draw charts for the teacher view
 gem 'chartkick', '~> 1.3.2'
 
+#interpret CSV from excel
+gem 'spreadsheet', '~> 0.9.8'
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
