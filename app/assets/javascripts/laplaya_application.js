@@ -54,4 +54,7 @@ function set_record_time_functions() {
             })
         }
     }
+
+    recordTime(new Date().getTime() / 1000);
+    setInterval(recordTime, 30000);
 }
