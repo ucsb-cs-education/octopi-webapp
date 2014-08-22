@@ -50,6 +50,16 @@
       padding-left: 0px;
     }
   }
+  #draganddrop-area{
+    display: inline-block;
+    float:right;
+    #drop-zone{
+      min-height: 120px;
+      width:200px;
+      border: 1px solid grey;
+      background: lightgrey;
+    }
+  }
 
   #curriculum-div {
     font-size: 180%;

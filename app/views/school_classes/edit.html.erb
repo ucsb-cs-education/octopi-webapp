@@ -22,6 +22,20 @@
     <%= render partial: 'student_table_row', collection: ordered_students, as: :student %>
   </table>
 </div>
+<!--Add/modify students via CSV -->
+<div id="draganddrop-area">
+  Or select an excel or csv file with student info:
+  <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), method: 'post' do |f| %>
+      <%= f.file_field :csv %>
+      <%= f.button :submit, 'Submit', class: 'btn btn-promary' %>
+  <% end %>
+  <div id="status-zone">Or Drag an Excel or Csv file with student info below:</div>
+  <div id="drop-zone">
+
+  </div>
+  <div id="list-zone"></div>
+  <a href='#'>How do I do this?</a>
+</div>
 
 <!--Add existing student to class-->
 
@@ -38,16 +52,18 @@
 </div>
 
 <!--Add new student to class-->
-
 <div class="row hidden" id="new_student">
   <%= render 'new_student_form' %>
 </div>
+
 <p></p>
 <div class="row">
   <div class="col-md-6">
     <%= button_tag :'Add New Student', class: 'btn btn-primary', type: 'button', id: 'new_student_button' %>
   </div>
 </div>
+
+
 
 <p></p>
 <%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
