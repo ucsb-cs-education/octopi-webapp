@@ -58,3 +58,8 @@ function set_record_time_functions() {
     recordTime(new Date().getTime() / 1000);
     setInterval(recordTime, 30000);
 }
+
+//This actually does work
+$(window).unload(function(){
+    console.log("hello")
+});
