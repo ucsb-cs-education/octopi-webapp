@@ -150,6 +150,89 @@ class SchoolClassesController < ApplicationController
     end
   end
 
+  def edit_students_via_csv
+    #put this whole thing into a model?
+    #its going to be in a worker anyway
+
+
+    #open the file
+    tmpfl = params[:student_csv][:csv]
+    extension = tmpfl.original_filename.split('.').last
+    sheet = Roo::Spreadsheet.open(tmpfl.tempfile.to_path, extension: extension.to_sym).to_a
+
+    #parse the file into something usable
+    sheet[0].each_with_index { |header, num|
+      #first name
+      unless (header =~ /first/i).nil?
+        @first_name_column = num
+      end
+      #last name
+      unless (header =~ /last/i).nil?
+        @last_name_column = num
+      end
+      #password but not password confirmation
+      unless (header =~ /password\s*\z/i).nil?
+        @password_column = num
+      end
+      #password confirmation but not password
+      unless (header =~ /password(\s*|[-_])confirm/i).nil?
+        @password_confirmation_column = num
+      end
+      #login name
+      unless (header =~ /login/i).nil?
+        @login_name_column = num
+      end
+      #octopi id
+      #THIS IS TOO LENIENT, NEED TO ENFORCE OCTOPI SOMEWHERE
+      unless (header =~ /id\s*\z/i).nil?
+        @id_column = num
+      end
+    }
+
+    #ERROR HERE IF:
+    #ANY ARE NILL
+    #ANY REPEAT (error earlier?)
+
+    school = @school_class.school
+    @actions = sheet.each_with_index.map { |student, i|
+      unless i == 0
+        if student[@id_column] == nil
+          if this_student = school.students.find_by(login_name: student[@login_name_column])
+            student_found(this_student)
+          else
+            if school.students.include?(Student.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column]))
+              #Create a new student, but make it very clear one with the same name already exists
+            else
+              #Create a new student
+            end
+          end
+        else
+          begin
+            this_student = Student.find(student[@id_column])
+            if school.students.include?(this_student)
+              student_found(this_student)
+            else
+              #PROBLEM: STUDENT FOUND BY ID BUT WAS NOT IN THIS SCHOOL
+            end
+          rescue ActiveRecord::RecordNotFound => e
+            #PROBLEM: COULD NOT FIND STUDENT  BY ID
+          end
+        end
+      end
+    }
+
+  end
+
+  def student_found(student)
+    if student.school_classes.include(@school_class)
+      if PASSWORD_OVERRIGHT_ENABLED? #gana do
+        #Change their password
+      end
+    else
+      #Add them to this class
+    end
+  end
+
   # POST /school_classes/:school_class_id/manual_unlock
   def manual_unlock
     @school_class.students.each { |x|

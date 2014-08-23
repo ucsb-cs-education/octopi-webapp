@@ -157,7 +157,7 @@ GEM
       net-ssh (>= 2.1.3)
     fog-json (1.0.0)
       multi_json (~> 1.0)
-    fog-softlayer (0.3.14)
+    fog-softlayer (0.3.15)
       fog-core
       fog-json
     formatador (0.2.5)
@@ -321,6 +321,10 @@ GEM
       resque
       sass-rails
       twitter-bootstrap-rails
+    roo (1.13.2)
+      nokogiri
+      rubyzip
+      spreadsheet (> 0.6.4)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -475,6 +479,7 @@ DEPENDENCIES
   resque-loner
   resque-web
   rolify!
+  roo (~> 1.13.2)
   rspec-collection_matchers (~> 1.0.0)
   rspec-expectations (~> 3.0.1)
   rspec-its (~> 1.0.1)
