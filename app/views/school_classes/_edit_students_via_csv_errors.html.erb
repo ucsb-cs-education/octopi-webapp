@@ -1,0 +1,21 @@
+<% if action[:flags].include? :duplicate %>
+    Another student by that name already exists in this school. Please confirm that you want to
+    create another student with the same name: <input class="conflict-checkbox conflicting" type="checkbox">
+    <br>
+<% end %>
+<% if action[:flags].include? :id_login_name_mismatch %>
+    <% if action[:login_name].nil? %>
+        You left the login name blank.
+    <% else %>
+        The login name of the student with Octopi Id <%= action[:flags][0] %> does not match <%= action[:login_name] %>.
+    <% end %>
+    Please confirm that the student this should be done to is <%= @school_class.school.students.find(action[:flags][0]).name %>.
+    <input class="conflict-checkbox conflicting" type="checkbox">
+    <br>
+<% end %>
+<% if action[:flags].include? :incorrect_confirmation %>
+    Password does not match password confirmation. Please confirm that the password should become
+    <b><%= action[:password] %></b>:
+    <input data-correct='<%= action[:password] %>' class="conflict-textbox conflicting" type="text">
+    <br>
+<% end %>

@@ -1,0 +1,130 @@
+<p>
+  <strong>School:</strong>
+  <%= @school_class.school.name %>
+  <br>
+  <strong>Name:</strong>
+  <%= @school_class.name %>
+</p>
+<div id="action-top">
+  Please resolve any problems and confirm that the following is correct before continuing:
+</div>
+<hr>
+<div class="small-font">
+  Uncheck any you want to exclude.
+</div><br>
+<div id='actions-form'>
+  <%= simple_form_for :student_csv, url: do_csv_actions_school_class_path(@school_class), method: 'post' do |f| %>
+      <% @actions.each_with_index { |action, i| %>
+          <% unless action == nil || action[:action] == nil %>
+              <% if action[:flags].include? :error %>
+                  <div class='action-error-div'>
+                    <div class="small-font">
+                      This action will be skipped unless resolved in the document
+                    </div>
+                    <% case action[:action] %>
+                    <% when :student_does_not_exist %>
+                        The student with Octopi Id <%= action[:flags][1] %> could not be found. MAKE THIS TRY TO FIND
+                        THE STUDENT BY OTHER PARAMS.
+                    <% when :student_not_in_school %>
+                        The student with Octopi Id <%= action[:flags][1] %> is not in <%= @school_class.school.name %>.
+                        If <%= action[:first_name] %> <%= action[:last_name] %> is from another school, you must add
+                        them as a new student.
+                    <% end %>
+                  </div>
+              <% else %>
+                  <% div_class = ((action[:flags].blank? or action[:flags].all? { |x| x.is_a? Integer }) ? 'action-success-div' : 'action-problem-div') %>
+                  <% case action[:action] %>
+                  <% when :create %>
+                      <div class='<%= div_class %>'>
+                        <div class="confirm-box">
+                          <input class='do-this-box' type="checkbox" checked>
+                        </div>
+                        Student <%= action[:first_name] %> <%= action[:last_name] %> will be created and added
+                        to <%= @school_class.name %>
+                        with login name <%= action[:login_name] %> and password <%= action[:password] %>.<br>
+                        <%= render partial: 'edit_students_via_csv_errors', locals: {action: action} %>
+                        <%= f.input "action_#{i}", input_html: {value: action.to_json}, as: :hidden %>
+                      </div>
+                  <% when :change_password %>
+                      <div class='<%= div_class %>'>
+                        <div class="confirm-box">
+                          <input class='do-this-box' type="checkbox" checked>
+                        </div>
+                        Student <%= action[:first_name] %> <%= action[:last_name] %> will have their password changed
+                        to <%= action[:password] %>.<br>
+                        <%= render partial: 'edit_students_via_csv_errors', locals: {action: action} %>
+                        <%= f.input "action_#{i}", input_html: {value: action.to_json}, as: :hidden %>
+                      </div>
+                  <% when :add_to_class %>
+                      <div class='<%= div_class %>'>
+                        <div class="confirm-box">
+                          <input class='do-this-box' type="checkbox" checked>
+                        </div>
+                        Student <%= action[:first_name] %> <%= action[:last_name] %> will be added
+                        to <%= @school_class.name %>.<br>
+                        <%= render partial: 'edit_students_via_csv_errors', locals: {action: action} %>
+                        <%= f.input "action_#{i}", input_html: {value: action.to_json}, as: :hidden %>
+                      </div>
+                  <% end %>
+              <% end %>
+          <% end %>
+      <% } %>
+      <%= f.button :submit, 'Continue', class: 'btn btn-primary', id: 'continue-btn' %>
+      <%= link_to 'Cancel', edit_school_class_path(@school_class), class: 'btn btn-default' %>
+  <% end %>
+</div>
+
+<script>
+    $(".conflict-checkbox").change(function () {
+        if ($(this).prop('checked')) {
+            $(this).removeClass('conflicting')
+            if ($(this).parent().children('.conflicting').length === 0) {
+                $(this).parent().removeClass('action-problem-div').addClass('action-success-div')
+            }
+        } else {
+            $(this).addClass('conflicting')
+            $(this).parent().removeClass('action-success-div').addClass('action-problem-div')
+        }
+    });
+    $(".conflict-textbox").keyup(function () {
+        if ($(this).val() === $(this).attr('data-correct')) {
+            $(this).removeClass('conflicting')
+            if ($(this).parent().children('.conflicting').length === 0) {
+                $(this).parent().removeClass('action-problem-div').addClass('action-success-div')
+                check_all_problems_resolved();
+            }
+        } else {
+            $(this).addClass('conflicting')
+            $(this).parent().removeClass('action-success-div').addClass('action-problem-div')
+            check_all_problems_resolved();
+        }
+    });
+    $('.do-this-box').change(function () {
+        if ($(this).prop('checked')) {
+            $(this).parent().parent().removeClass('exclude')
+        } else {
+            $(this).parent().parent().addClass('exclude')
+        }
+    });
+    $(document).change(function () {
+        check_all_problems_resolved();
+    });
+
+    function check_all_problems_resolved() {
+        var form = $("#actions-form form")
+        if (form.children('.action-problem-div').not('.exclude').length === 0) {
+            $('#continue-btn').attr('disabled', false)
+            false
+        } else {
+            $('#continue-btn').attr('disabled', true)
+            true
+        }
+    }
+
+    check_all_problems_resolved();
+
+    $("#actions-form form").submit(function () {
+        $("#actions-form form").children('.exclude').children('.form-group').remove()
+        true
+    });
+</script>

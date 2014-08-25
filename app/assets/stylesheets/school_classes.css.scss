@@ -50,12 +50,12 @@
       padding-left: 0px;
     }
   }
-  #draganddrop-area{
+  #draganddrop-area {
     display: inline-block;
-    float:right;
-    #drop-zone{
+    float: right;
+    #drop-zone {
       min-height: 120px;
-      width:200px;
+      width: 200px;
       border: 1px solid grey;
       background: lightgrey;
     }
@@ -116,17 +116,17 @@
     text-overflow: ellipsis;
     overflow: hidden;
     width: 10em;
-    padding : 6px 12px 6px 6px;
+    padding: 6px 12px 6px 6px;
   }
 
-  #test-student-div{
-    button{
+  #test-student-div {
+    button {
       height: 3em;
     }
   }
 
-  .percent-box, .unlock-all-box{
-    padding : 6px 12px 6px 6px;
+  .percent-box, .unlock-all-box {
+    padding: 6px 12px 6px 6px;
   }
 
   #progress-table-div {
@@ -135,17 +135,17 @@
     padding-bottom: 1px;
   }
 
-  .student-status{
-    padding:.5em;
+  .student-status {
+    padding: .5em;
     height: inherit;
     width: inherit;
   }
 
-  .completed-box, .false-box{
+  .completed-box, .false-box {
     background: #caffca;
   }
 
-  .visible-box{
+  .visible-box {
     background: #FFFFD5;
   }
 
@@ -186,5 +186,43 @@
       background-color: rgba(144, 245, 144, 0.40);
     }
 
+  }
+
+  #action-top {
+    text-align: center;
+    font-size: 140%;
+  }
+
+  #actions-form {
+    div {
+      padding: .5em;
+      margin-top: 1px;
+      margin-bottom: 1px;
+    }
+    .action-error-div {
+      background: #ffa09b;
+      border: 1px solid #ff7b76;
+    }
+    .action-success-div {
+      background: #b5eeb3;
+      border: 1px solid #88ee88;
+    }
+    .action-problem-div {
+      background: lightgoldenrodyellow;
+      border: 1px solid #ffcb8f;
+    }
+    .exclude {
+      background: lightgrey;
+      border: 1px solid grey;
+    }
+    .confirm-box {;
+      display: inline-block;
+      float: right;
+      line-height: 1px;
+      padding: 0px;
+      margin: 0px;
+      margin-top: -1px;
+      text-align: center;
+    }
   }
 }

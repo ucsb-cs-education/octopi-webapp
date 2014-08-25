@@ -184,7 +184,7 @@ class SchoolClassesController < ApplicationController
       end
       #octopi id
       #THIS IS TOO LENIENT, NEED TO ENFORCE OCTOPI SOMEWHERE
-      unless (header =~ /id\s*\z/i).nil?
+      unless (header =~ /octopi(\s*|[-_])id/i).nil?
         @id_column = num
       end
     }
@@ -196,41 +196,97 @@ class SchoolClassesController < ApplicationController
     school = @school_class.school
     @actions = sheet.each_with_index.map { |student, i|
       unless i == 0
+        action = nil;
+        flags = [];
         if student[@id_column] == nil
           if this_student = school.students.find_by(login_name: student[@login_name_column])
-            student_found(this_student)
+            action = student_found(this_student, student[@password_column])
+            flags.push(this_student.id)
+            unless student[@password_column] == student[@password_confirmation_column]
+              flags.push :incorrect_confirmation
+            end
           else
             if school.students.include?(Student.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column]))
-              #Create a new student, but make it very clear one with the same name already exists
+              action = :create
+              flags.push(:duplicate)
             else
-              #Create a new student
+              action = :create
             end
           end
         else
           begin
-            this_student = Student.find(student[@id_column])
+            this_student = Student.find(student[@id_column].to_i)
             if school.students.include?(this_student)
-              student_found(this_student)
+              action = student_found(this_student, student[@password_column])
+              flags.push(this_student.id)
+              unless student[@password_column] == student[@password_confirmation_column]
+                flags.push :incorrect_confirmation
+              end
+              unless student[@login_name_column] == this_student.login_name
+                flags.push :id_login_name_mismatch
+              end
             else
-              #PROBLEM: STUDENT FOUND BY ID BUT WAS NOT IN THIS SCHOOL
+              action = :student_not_in_school
+              flags.push(:error)
+              flags.push(student[@id_column].to_i)
             end
           rescue ActiveRecord::RecordNotFound => e
-            #PROBLEM: COULD NOT FIND STUDENT  BY ID
+            action = :student_does_not_exist
+            flags.push(:error)
+            flags.push(student[@id_column].to_i)
           end
         end
+
+        {action: action, first_name: student[@first_name_column],
+         last_name: student[@last_name_column], login_name: student[@login_name_column],
+         password: student[@password_column], password_confirmation: student[@password_confirmation_column],
+         flags: flags}
       end
     }
 
   end
 
-  def student_found(student)
-    if student.school_classes.include(@school_class)
-      if PASSWORD_OVERRIGHT_ENABLED? #gana do
-        #Change their password
+  def student_found(student, pass = nil)
+    if student.school_classes.include?(@school_class)
+      if params[:student_csv][:change_passwords] == "1" && pass!=nil
+        :change_password
       end
     else
-      #Add them to this class
+      :add_to_class
     end
+  end
+
+  def do_csv_actions
+    begin
+      SchoolClass.transaction do
+        params[:student_csv].each { |action|
+          action = JSON.parse action[1]
+          case action['action']
+            when 'create'
+              Student.transaction do
+                @student = Student.new(first_name: action['first_name'], last_name: action['last_name'],
+                                       login_name: action['login_name'], password: action['password'],
+                                       password_confirmation: action['password'], school: @school_class.school)
+                @student.save!
+                @school_class.students << @student unless @school_class.students.include? @student
+              end
+            when 'change_password'
+              @student = Student.find(action['flags'][0])
+              @student.update_attributes({password: action['password'], password_confirmation: action['password_confirmation']})
+              @student.save!
+            when 'add_to_class'
+              Student.find(action['flags'][0]).school_classes << @school_class
+          end
+        }
+        flash[:success] = 'Success!'
+        redirect_to edit_school_class_path(@school_class)
+      end
+    rescue Exception => e
+      flash[:error] = e.message
+      redirect_to edit_school_class_path(@school_class)
+    end
+
+
   end
 
   # POST /school_classes/:school_class_id/manual_unlock
