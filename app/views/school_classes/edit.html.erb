@@ -24,10 +24,10 @@
 </div>
 <!--Add/modify students via CSV -->
 <div id="draganddrop-area">
-  Or select an excel or csv file with student info:
+  Or select a spreadsheet with student info:
   <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), method: 'post' do |f| %>
       <%= f.file_field :csv %>
-      <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?'%>
+      <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?' %>
       <%= f.button :submit, 'Submit', class: 'btn btn-primary' %>
   <% end %>
   <div id="status-zone">Or Drag an Excel or Csv file with student info below:</div>

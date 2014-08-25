@@ -3,6 +3,7 @@ class SchoolClassesController < ApplicationController
   load_and_authorize_resource :school_class, except: [:teacher_index]
   load_and_authorize_resource :school, only: [:index, :new, :create]
   before_action :load_school, only: [:edit]
+  respond_to :xls, :html, :js
 
 
   # Deep actions
@@ -198,19 +199,40 @@ class SchoolClassesController < ApplicationController
       unless i == 0
         action = nil;
         flags = [];
+        student[@login_name_column] = student[@login_name_column].downcase unless student[@login_name_column]==nil
         if student[@id_column] == nil
-          if this_student = school.students.find_by(login_name: student[@login_name_column])
-            action = student_found(this_student, student[@password_column])
-            flags.push(this_student.id)
-            unless student[@password_column] == student[@password_confirmation_column]
-              flags.push :incorrect_confirmation
+          if this_student = Student.find_by(login_name: student[@login_name_column])
+            unless school.students.include?(this_student) && (this_student.first_name==student[@first_name_column] && this_student.last_name==student[@last_name_column])
+              action = :repeat_login_name
+              flags.push(:error)
+            else
+              action = student_found(this_student, student[@password_column])
+              flags.push(this_student.id)
+              unless student[@password_column] == student[@password_confirmation_column]
+                flags.push :incorrect_confirmation
+              end
             end
           else
-            if school.students.include?(Student.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column]))
+            if student[@login_name_column].nil?
+              action = :nil_login
+              flags.push(:error)
+            elsif student[@first_name_column].nil?
+              action = :nil_first_name
+              flags.push(:error)
+            elsif student[@last_name_column].nil?
+              action = :nil_last_name
+              flags.push(:error)
+            elsif student[@password_column].nil?
+              action = :nil_password
+              flags.push(:error)
+            elsif school.students.include?(Student.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column]))
               action = :create
               flags.push(:duplicate)
             else
               action = :create
+            end
+            if student[@password_column] != student[@password_confirmation_column] && action!=:nil_password
+              flags.push :incorrect_confirmation
             end
           end
         else
@@ -243,7 +265,6 @@ class SchoolClassesController < ApplicationController
          flags: flags}
       end
     }
-
   end
 
   def student_found(student, pass = nil)
@@ -272,7 +293,7 @@ class SchoolClassesController < ApplicationController
               end
             when 'change_password'
               @student = Student.find(action['flags'][0])
-              @student.update_attributes({password: action['password'], password_confirmation: action['password_confirmation']})
+              @student.update_attributes({password: action['password'], password_confirmation: action['password']})
               @student.save!
             when 'add_to_class'
               Student.find(action['flags'][0]).school_classes << @school_class
@@ -285,8 +306,6 @@ class SchoolClassesController < ApplicationController
       flash[:error] = e.message
       redirect_to edit_school_class_path(@school_class)
     end
-
-
   end
 
   # POST /school_classes/:school_class_id/manual_unlock

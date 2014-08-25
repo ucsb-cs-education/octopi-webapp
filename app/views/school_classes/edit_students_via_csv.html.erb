@@ -21,20 +21,12 @@
                     <div class="small-font">
                       This action will be skipped unless resolved in the document
                     </div>
-                    <% case action[:action] %>
-                    <% when :student_does_not_exist %>
-                        The student with Octopi Id <%= action[:flags][1] %> could not be found. MAKE THIS TRY TO FIND
-                        THE STUDENT BY OTHER PARAMS.
-                    <% when :student_not_in_school %>
-                        The student with Octopi Id <%= action[:flags][1] %> is not in <%= @school_class.school.name %>.
-                        If <%= action[:first_name] %> <%= action[:last_name] %> is from another school, you must add
-                        them as a new student.
-                    <% end %>
+                    <%= render partial: 'edit_students_via_csv_errors', locals: {action: action} %>
                   </div>
               <% else %>
                   <% div_class = ((action[:flags].blank? or action[:flags].all? { |x| x.is_a? Integer }) ? 'action-success-div' : 'action-problem-div') %>
                   <% case action[:action] %>
-                  <% when :create %>
+  <% when :create %>
                       <div class='<%= div_class %>'>
                         <div class="confirm-box">
                           <input class='do-this-box' type="checkbox" checked>
