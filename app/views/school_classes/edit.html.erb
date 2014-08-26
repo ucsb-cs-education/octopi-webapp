@@ -11,6 +11,8 @@
 
 <div class="row basic-info">
   <%= render 'form' %>
+  <%= button_to "Download class spreadsheet", {action: "download_class_csv", id: @school_class.id},
+                class: "btn btn-default", format: :xlsx, method: :post %>
 </div>
 <div class="row">
   <table id="classlist" class="sortable">

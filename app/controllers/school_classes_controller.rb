@@ -269,7 +269,7 @@ class SchoolClassesController < ApplicationController
             elsif @login_name_list.include?(student[@login_name_column])
               action = :repeat_new_login
               flags.push(:error)
-            elsif school.students.include?(Student.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column]))
+            elsif school.students.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column])!=nil
               action = :create
               flags.push(:duplicate)
               @login_name_list.push(student[@login_name_column])
@@ -360,6 +360,27 @@ class SchoolClassesController < ApplicationController
     rescue Exception => e
       flash[:error] = e.message
       redirect_to edit_school_class_path(@school_class)
+    end
+  end
+
+  def download_class_csv
+    class_book = Axlsx::Package.new
+    wb = class_book.workbook
+    wb.add_worksheet(:name => "Class Info") do |sheet|
+      sheet.add_row ["First Name", "Last Name", "Login Name", "Octopi Id", "Password","Password Confirmation"]
+      ordered_students.each{|student|
+        sheet.add_row [student.first_name,student.last_name,student.login_name,student.id]
+      }
+    end
+    begin
+      js false;
+      temp = Tempfile.new("class_info.xlsx")
+
+      class_book.serialize temp.path
+      send_file temp.path, filename: "#{@school_class.name}_info.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ensure
+      #temp.close
+      #temp.unlink
     end
   end
 

@@ -88,6 +88,7 @@ gem 'chartkick', '~> 1.3.2'
 #interpret CSV from excel
 gem 'spreadsheet', '~> 0.9.8'
 gem 'roo', '~> 1.13.2'
+gem 'axlsx', '~> 2.0.1'
 
 
 group :doc do
