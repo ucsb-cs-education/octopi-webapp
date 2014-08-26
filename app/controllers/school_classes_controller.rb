@@ -3,8 +3,7 @@ class SchoolClassesController < ApplicationController
   load_and_authorize_resource :school_class, except: [:teacher_index]
   load_and_authorize_resource :school, only: [:index, :new, :create]
   before_action :load_school, only: [:edit]
-  respond_to :xls, :html, :js
-
+  before_action :find_columns, only: [:edit_students_via_csv]
 
   # Deep actions
   # GET /schools/:school_id/school_classes
@@ -151,56 +150,98 @@ class SchoolClassesController < ApplicationController
     end
   end
 
+  def find_columns
+    errors = []
+    begin
+      #open the file
+      if params[:student_csv][:csv].nil?
+        raise "You must choose a spreadsheet to do this."
+      end
+      tmpfl = params[:student_csv][:csv]
+      extension = File.extname(tmpfl.original_filename)
+      if supported_filetype.include?(extension)
+        @sheet = Roo::Spreadsheet.open(tmpfl.tempfile.to_path, extension: extension.to_sym).to_a
+      else
+        raise "Cannot read a '#{extension}' file. Try saving as a .xls, .xlsx, .ods, or .csv file."
+      end
+
+      #parse the file into something usable
+      @sheet[0].each_with_index { |header, num|
+        unless (header =~ /first(\s*name)?\s*\z/i).nil?
+          errors.push("Columns '#{@sheet[0][@first_name_column]}' and '#{header}' are both valid headers for First name.") unless @first_name_column.nil?
+          @first_name_column = num
+        end
+        unless (header =~ /last(\s*name)?\s*\z/i).nil?
+          errors.push("Columns '#{@sheet[0][@last_name_column]}' and '#{header}' are both valid headers for Last name.") unless @last_name_column.nil?
+          @last_name_column = num
+        end
+        unless (header =~ /password\s*\z/i).nil?
+          errors.push("Columns '#{@sheet[0][@password_column]}' and '#{header}' are both valid headers for Password.") unless @password_column.nil?
+          @password_column = num
+        end
+        unless (header =~ /password(\s*|[-_])confirm/i).nil?
+          errors.push("Columns '#{@sheet[0][@password_confirmation_column]}' and '#{header}'
+          are both valid headers for Password confirmation.") unless @password_confirmation_column.nil?
+          @password_confirmation_column = num
+        end
+        unless (header =~ /login(\s*name)?\s*\z/i).nil?
+          errors.push("Columns '#{@sheet[0][@login_name_column]}' and '#{header}' are both valid headers for Login name.") unless @login_name_column.nil?
+          @login_name_column = num
+        end
+        unless (header =~ /octopi(\s*student)?\s*(id|num)/i).nil?
+          errors.push("Columns '#{@sheet[0][@id_column]}' and '#{header}' are both valid headers for Octiopi Id.") unless @id_column.nil?
+          @id_column = num
+        end
+      }
+
+      if @first_name_column == nil
+        errors.push("Could not find a first name column. Please create a column with the header 'First' or 'First name' and try again.")
+      end
+      if @last_name_column == nil
+        errors.push("Could not find a last name column. Please create a column with the header 'Last' or 'Last name' and try again.")
+      end
+      if @login_name_column == nil
+        errors.push("Could not find a login name column. Please create a column with the header 'Login' or 'Login name' and try again.")
+      end
+      if @password_column == nil
+        errors.push("Could not find a password column. Please create a column with the header 'Password' and try again.")
+      end
+      if @password_confirmation_column == nil
+        errors.push("Could not find a password confirmation column. Please create a column with the header 'Password confirmation' or 'Password confirm' and try again.")
+      end
+      if @id_column == nil
+        msg = "Could not find an 'Octopi id' or 'Octopi student id' column. This is valid, but some duplicate students may be created. Please carefully
+      check that no unintended changes are made."
+        if errors.empty?
+          flash[:warning] = msg
+        else
+          errors.push(msg)
+        end
+      end
+
+    rescue Exception => e
+      errors.push(e.message)
+    end
+
+    unless errors.empty?
+      flash[:error] = errors.join("<br/>").html_safe
+      redirect_to :back
+    end
+  end
+
+  # POST /school_classes/:id/edit_students_via_csv
   def edit_students_via_csv
     #put this whole thing into a model?
     #its going to be in a worker anyway
 
-
-    #open the file
-    tmpfl = params[:student_csv][:csv]
-    extension = tmpfl.original_filename.split('.').last
-    sheet = Roo::Spreadsheet.open(tmpfl.tempfile.to_path, extension: extension.to_sym).to_a
-
-    #parse the file into something usable
-    sheet[0].each_with_index { |header, num|
-      #first name
-      unless (header =~ /first/i).nil?
-        @first_name_column = num
-      end
-      #last name
-      unless (header =~ /last/i).nil?
-        @last_name_column = num
-      end
-      #password but not password confirmation
-      unless (header =~ /password\s*\z/i).nil?
-        @password_column = num
-      end
-      #password confirmation but not password
-      unless (header =~ /password(\s*|[-_])confirm/i).nil?
-        @password_confirmation_column = num
-      end
-      #login name
-      unless (header =~ /login/i).nil?
-        @login_name_column = num
-      end
-      #octopi id
-      #THIS IS TOO LENIENT, NEED TO ENFORCE OCTOPI SOMEWHERE
-      unless (header =~ /octopi(\s*|[-_])id/i).nil?
-        @id_column = num
-      end
-    }
-
-    #ERROR HERE IF:
-    #ANY ARE NILL
-    #ANY REPEAT (error earlier?)
-
+    @login_name_list = []
     school = @school_class.school
-    @actions = sheet.each_with_index.map { |student, i|
+    @actions = @sheet.each_with_index.map { |student, i|
       unless i == 0
         action = nil;
         flags = [];
         student[@login_name_column] = student[@login_name_column].downcase unless student[@login_name_column]==nil
-        if student[@id_column] == nil
+        if @id_column == nil || student[@id_column] == nil
           if this_student = Student.find_by(login_name: student[@login_name_column])
             unless school.students.include?(this_student) && (this_student.first_name==student[@first_name_column] && this_student.last_name==student[@last_name_column])
               action = :repeat_login_name
@@ -225,11 +266,16 @@ class SchoolClassesController < ApplicationController
             elsif student[@password_column].nil?
               action = :nil_password
               flags.push(:error)
+            elsif @login_name_list.include?(student[@login_name_column])
+              action = :repeat_new_login
+              flags.push(:error)
             elsif school.students.include?(Student.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column]))
               action = :create
               flags.push(:duplicate)
+              @login_name_list.push(student[@login_name_column])
             else
               action = :create
+              @login_name_list.push(student[@login_name_column])
             end
             if student[@password_column] != student[@password_confirmation_column] && action!=:nil_password
               flags.push :incorrect_confirmation
@@ -251,11 +297,19 @@ class SchoolClassesController < ApplicationController
               action = :student_not_in_school
               flags.push(:error)
               flags.push(student[@id_column].to_i)
+              if this_student = school.students.find_by(login_name: student[@login_name_column])
+                flags.push(this_student.name)
+                flags.push(this_student.id)
+              end
             end
           rescue ActiveRecord::RecordNotFound => e
             action = :student_does_not_exist
             flags.push(:error)
             flags.push(student[@id_column].to_i)
+            if this_student = school.students.find_by(login_name: student[@login_name_column])
+              flags.push(this_student.name)
+              flags.push(this_student.id)
+            end
           end
         end
 
@@ -277,6 +331,7 @@ class SchoolClassesController < ApplicationController
     end
   end
 
+  # POST /school_classes/:id/do_csv_actions
   def do_csv_actions
     begin
       SchoolClass.transaction do
@@ -343,6 +398,10 @@ class SchoolClassesController < ApplicationController
 
   def load_school
     @school = @school_class.school
+  end
+
+  def supported_filetype
+    ['.xls', '.xlsx', '.ods', '.csv']
   end
 
 end

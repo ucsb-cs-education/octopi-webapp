@@ -23,19 +23,14 @@
   </table>
 </div>
 <!--Add/modify students via CSV -->
-<div id="draganddrop-area">
+<div id="file-area">
   Or select a spreadsheet with student info:
-  <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), method: 'post' do |f| %>
+  <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), js: false, method: 'post' do |f| %>
       <%= f.file_field :csv %>
       <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?' %>
-      <%= f.button :submit, 'Submit', class: 'btn btn-primary' %>
+      <%= f.button :submit, 'Submit', id: 'student-csv-submit', disabled: true %>
   <% end %>
-  <div id="status-zone">Or Drag an Excel or Csv file with student info below:</div>
-  <div id="drop-zone">
-
-  </div>
-  <div id="list-zone"></div>
-  <a href='#'>How do I do this?</a>
+  <%= link_to 'How do I do this?', '#' %>
 </div>
 
 <!--Add existing student to class-->
@@ -68,3 +63,13 @@
 
 <p></p>
 <%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
+
+<script>
+    $('#student_csv_csv').change(function () {
+        if ($(this).val() != '') {
+            $('#student-csv-submit').attr('disabled', false)
+        } else {
+            $('#student-csv-submit').attr('disabled', true)
+        }
+    });
+</script>

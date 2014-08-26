@@ -57,6 +57,7 @@
                         <%= render partial: 'edit_students_via_csv_errors', locals: {action: action} %>
                         <%= f.input "action_#{i}", input_html: {value: action.to_json}, as: :hidden %>
                       </div>
+                  <% else %>
                   <% end %>
               <% end %>
           <% end %>
@@ -106,10 +107,8 @@
         var form = $("#actions-form form")
         if (form.children('.action-problem-div').not('.exclude').length === 0) {
             $('#continue-btn').attr('disabled', false)
-            false
         } else {
             $('#continue-btn').attr('disabled', true)
-            true
         }
     }
 
@@ -117,6 +116,5 @@
 
     $("#actions-form form").submit(function () {
         $("#actions-form form").children('.exclude').children('.form-group').remove()
-        true
     });
 </script>

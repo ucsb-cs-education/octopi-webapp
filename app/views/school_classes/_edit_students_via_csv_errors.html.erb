@@ -1,15 +1,23 @@
 <% case action[:action] %>
 <% when :student_does_not_exist %>
-    The student with Octopi Id <%= action[:flags][1] %> could not be found. MAKE THIS TRY TO FIND
-    THE STUDENT BY OTHER PARAMS.
+    The student with Octopi Id <%= action[:flags][1] %> could not be found.
+    <% unless action[:flags][2].nil? %>
+        <br> However, the login name you provided matches <%= action[:flags][2] %>, with Octopi id <%= action[:flags][3] %>. Did you mean them?
+    <% end %>
 <% when :student_not_in_school %>
     The student with Octopi Id <%= action[:flags][1] %> is not in <%= @school_class.school.name %>.
     If <%= action[:first_name] %> <%= action[:last_name] %> is from another school, you must add
     them as a new student.
+    <% unless action[:flags][2].nil? %>
+        <br> However, the login name you provided matches <%= action[:flags][2] %>, with Octopi id <%= action[:flags][3] %>. Did you mean them?
+    <% end %>
 <% when :nil_login %>
     Cannot create student <%= action[:first_name] %> <%= action[:last_name] %> when no login name is provided.
 <% when :repeat_login_name %>
     Cannot create student <%= action[:first_name] %> <%= action[:last_name] %>. Login name is already in use.
+<% when :repeat_new_login %>
+    Cannot create student <%= action[:first_name] %> <%= action[:last_name] %>. No two students can have the same login name,
+    and <%= action[:login_name] %> is already being assigned on this list.
 <% when :nil_password %>
     Cannot create student <%= action[:first_name] %> <%= action[:last_name] %> when no default password is provided.
 <% when :nil_first_name %>

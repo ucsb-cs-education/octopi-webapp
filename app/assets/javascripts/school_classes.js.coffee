@@ -8,7 +8,6 @@ SchoolClassesController.prototype.show = () ->
   SortableJS()
 
 SchoolClassesController.prototype.edit = () ->
-
   showFormAndHideAddNewStudentButton = () ->
     $("#new_student").removeClass("hidden")
     $("#new_student_button").addClass("hidden")
@@ -26,9 +25,12 @@ SchoolClassesController.prototype.edit = () ->
   $(document).ready(addButtonOnClicks);
   $(document).ready()
 
+SchoolClassesController.prototype.edit_students_via_csv = () ->
+
+
+
 SchoolClassesActivitiesController = Paloma.controller('SchoolClasses/SchoolClassesActivities')
 SchoolClassesActivitiesController.prototype.activity_page = () ->
-
   $(document).on "click", ".unlock-all", ->
     confirm("This will unlock for all students in this class and cannot be easily undone.\nDo you wish to continue?")
 
@@ -47,11 +49,11 @@ SchoolClassesActivitiesController.prototype.activity_page = () ->
     allowMultipleSelections: false
     showSelectionColumn: false
     fixedCols: 2
-    )
+  )
 
 
 SchoolClassesStudentProgressController = Paloma.controller('SchoolClasses/SchoolClassesStudentProgress')
 SchoolClassesStudentProgressController.prototype.student_progress = () ->
   $(document).on "click", ".student_progress", ->
     confirm("This will reset the student's progress to where it currently should be based on what they have completed.
-    Tasks and Activities that were manually unlocked for them and they have not completed or completed the prerequisites of will be locked again.\nContinue?")
+        Tasks and Activities that were manually unlocked for them and they have not completed or completed the prerequisites of will be locked again.\nContinue?")
