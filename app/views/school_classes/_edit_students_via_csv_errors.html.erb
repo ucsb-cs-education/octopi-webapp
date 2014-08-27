@@ -37,9 +37,7 @@
         <% else %>
             The login name of the student with Octopi Id <%= action[:flags][0] %> does not match <%= action[:login_name] %>.
         <% end %>
-        Please confirm that the student this should be done to is <%= @school_class.school.students.find(action[:flags][0]).name %>.
-        <br>
-        The provided name is <%= action[:first_name] %> <%= action[:last_name] %>.
+        The name your provided is <%= action[:first_name] %> <%= action[:last_name] %>. Please confirm that this is the correct student:
         <input class="conflict-checkbox conflicting" type="checkbox">
         <br>
     <% end %>

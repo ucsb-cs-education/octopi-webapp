@@ -26,6 +26,7 @@
               <% else %>
                   <% div_class = ((action[:flags].blank? or action[:flags].all? { |x| x.is_a? Integer }) ? 'action-success-div' : 'action-problem-div') %>
                   <% case action[:action] %>
+  <!-- This keeps auto formating over here and i dont know why-->
   <% when :create %>
                       <div class='<%= div_class %>'>
                         <div class="confirm-box">
@@ -42,7 +43,11 @@
                         <div class="confirm-box">
                           <input class='do-this-box' type="checkbox" checked>
                         </div>
-                        Student <%= action[:first_name] %> <%= action[:last_name] %> will have their password changed
+                        <% if action[:flags].include? :id_login_name_mismatch %>
+                            Student <%= @school_class.school.students.find(action[:flags][0]).name %>
+                        <% else %>
+                            Student <%= action[:first_name] %> <%= action[:last_name] %>
+                        <% end %>will have their password changed
                         to <%= action[:password] %>.<br>
                         <%= render partial: 'edit_students_via_csv_errors', locals: {action: action} %>
                         <%= f.input "action_#{i}", input_html: {value: action.to_json}, as: :hidden %>
@@ -52,7 +57,11 @@
                         <div class="confirm-box">
                           <input class='do-this-box' type="checkbox" checked>
                         </div>
-                        Student <%= action[:first_name] %> <%= action[:last_name] %> will be added
+                        <% if action[:flags].include? :id_login_name_mismatch %>
+                            Student <%= @school_class.school.students.find(action[:flags][0]).name %>
+                        <% else %>
+                            Student <%= action[:first_name] %> <%= action[:last_name] %>
+                        <% end %> will be added
                         to <%= @school_class.name %>.<br>
                         <%= render partial: 'edit_students_via_csv_errors', locals: {action: action} %>
                         <%= f.input "action_#{i}", input_html: {value: action.to_json}, as: :hidden %>
@@ -66,55 +75,3 @@
       <%= link_to 'Cancel', edit_school_class_path(@school_class), class: 'btn btn-default' %>
   <% end %>
 </div>
-
-<script>
-    $(".conflict-checkbox").change(function () {
-        if ($(this).prop('checked')) {
-            $(this).removeClass('conflicting')
-            if ($(this).parent().children('.conflicting').length === 0) {
-                $(this).parent().removeClass('action-problem-div').addClass('action-success-div')
-            }
-        } else {
-            $(this).addClass('conflicting')
-            $(this).parent().removeClass('action-success-div').addClass('action-problem-div')
-        }
-    });
-    $(".conflict-textbox").keyup(function () {
-        if ($(this).val() === $(this).attr('data-correct')) {
-            $(this).removeClass('conflicting')
-            if ($(this).parent().children('.conflicting').length === 0) {
-                $(this).parent().removeClass('action-problem-div').addClass('action-success-div')
-                check_all_problems_resolved();
-            }
-        } else {
-            $(this).addClass('conflicting')
-            $(this).parent().removeClass('action-success-div').addClass('action-problem-div')
-            check_all_problems_resolved();
-        }
-    });
-    $('.do-this-box').change(function () {
-        if ($(this).prop('checked')) {
-            $(this).parent().parent().removeClass('exclude')
-        } else {
-            $(this).parent().parent().addClass('exclude')
-        }
-    });
-    $(document).change(function () {
-        check_all_problems_resolved();
-    });
-
-    function check_all_problems_resolved() {
-        var form = $("#actions-form form")
-        if (form.children('.action-problem-div').not('.exclude').length === 0) {
-            $('#continue-btn').attr('disabled', false)
-        } else {
-            $('#continue-btn').attr('disabled', true)
-        }
-    }
-
-    check_all_problems_resolved();
-
-    $("#actions-form form").submit(function () {
-        $("#actions-form form").children('.exclude').children('.form-group').remove()
-    });
-</script>

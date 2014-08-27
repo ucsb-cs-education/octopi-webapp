@@ -243,7 +243,7 @@ class SchoolClassesController < ApplicationController
         student[@login_name_column] = student[@login_name_column].downcase unless student[@login_name_column]==nil
         if @id_column == nil || student[@id_column] == nil
           if this_student = Student.find_by(login_name: student[@login_name_column])
-            unless school.students.include?(this_student) && (this_student.first_name==student[@first_name_column] && this_student.last_name==student[@last_name_column])
+            unless school.students.include?(this_student) && (this_student.first_name.strip==student[@first_name_column].strip && this_student.last_name.strip==student[@last_name_column].strip)
               action = :repeat_login_name
               flags.push(:error)
             else
@@ -334,21 +334,22 @@ class SchoolClassesController < ApplicationController
   # POST /school_classes/:id/do_csv_actions
   def do_csv_actions
     begin
+      #All of the '.strip's are here to prevent whitespace from causing problems.
       SchoolClass.transaction do
         params[:student_csv].each { |action|
           action = JSON.parse action[1]
           case action['action']
             when 'create'
               Student.transaction do
-                @student = Student.new(first_name: action['first_name'], last_name: action['last_name'],
-                                       login_name: action['login_name'], password: action['password'],
-                                       password_confirmation: action['password'], school: @school_class.school)
+                @student = Student.new(first_name: action['first_name'].strip, last_name: action['last_name'].strip,
+                                       login_name: action['login_name'].strip, password: action['password'].strip,
+                                       password_confirmation: action['password'].strip, school: @school_class.school)
                 @student.save!
                 @school_class.students << @student unless @school_class.students.include? @student
               end
             when 'change_password'
               @student = Student.find(action['flags'][0])
-              @student.update_attributes({password: action['password'], password_confirmation: action['password']})
+              @student.update_attributes({password: action['password'].strip, password_confirmation: action['password'].strip})
               @student.save!
             when 'add_to_class'
               Student.find(action['flags'][0]).school_classes << @school_class

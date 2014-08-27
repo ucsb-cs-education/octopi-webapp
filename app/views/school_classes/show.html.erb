@@ -10,7 +10,8 @@
 
 </p>
 
-
+<%= button_to "Download class spreadsheet", {action: "download_class_csv", id: @school_class.id},
+              class: "btn btn-default", format: :xlsx, method: :post %>
 <!--Class list-->
 
 <body>

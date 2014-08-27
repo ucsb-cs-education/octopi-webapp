@@ -25,8 +25,52 @@ SchoolClassesController.prototype.edit = () ->
   $(document).ready(addButtonOnClicks);
   $(document).ready()
 
-SchoolClassesController.prototype.edit_students_via_csv = () ->
+  $("#student_csv_csv").change ->
+    unless $(this).val() is ""
+      $("#student-csv-submit").attr "disabled", false
+    else
+      $("#student-csv-submit").attr "disabled", true
+    return
 
+SchoolClassesController.prototype.edit_students_via_csv = () ->
+  check_all_problems_resolved = ->
+    form = $("#actions-form form")
+    if form.children(".action-problem-div").not(".exclude").length is 0
+      $("#continue-btn").attr "disabled", false
+    else
+      $("#continue-btn").attr "disabled", true
+
+  $(".conflict-checkbox").change ->
+    if $(this).prop("checked")
+      $(this).removeClass "conflicting"
+      $(this).parent().removeClass("action-problem-div").addClass "action-success-div"  if $(this).parent().children(".conflicting").length is 0
+    else
+      $(this).addClass "conflicting"
+      $(this).parent().removeClass("action-success-div").addClass "action-problem-div"
+
+  $(".conflict-textbox").keyup ->
+    if $(this).val() is $(this).attr("data-correct")
+      $(this).removeClass "conflicting"
+      if $(this).parent().children(".conflicting").length is 0
+        $(this).parent().removeClass("action-problem-div").addClass "action-success-div"
+        check_all_problems_resolved()
+    else
+      $(this).addClass "conflicting"
+      $(this).parent().removeClass("action-success-div").addClass "action-problem-div"
+      check_all_problems_resolved()
+
+  $(".do-this-box").change ->
+    if $(this).prop("checked")
+      $(this).parent().parent().removeClass "exclude"
+    else
+      $(this).parent().parent().addClass "exclude"
+
+  $(document).change ->
+    check_all_problems_resolved()
+
+  check_all_problems_resolved()
+  $("#actions-form form").submit ->
+    $("#actions-form form").children(".exclude").children(".form-group").remove()
 
 
 SchoolClassesActivitiesController = Paloma.controller('SchoolClasses/SchoolClassesActivities')

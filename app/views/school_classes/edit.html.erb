@@ -26,7 +26,7 @@
 </div>
 <!--Add/modify students via CSV -->
 <div id="file-area">
-  Or select a spreadsheet with student info:
+  Or add multiple students at once by selecting a spreadsheet with info:
   <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), js: false, method: 'post' do |f| %>
       <%= f.file_field :csv %>
       <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?' %>
@@ -65,13 +65,3 @@
 
 <p></p>
 <%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
-
-<script>
-    $('#student_csv_csv').change(function () {
-        if ($(this).val() != '') {
-            $('#student-csv-submit').attr('disabled', false)
-        } else {
-            $('#student-csv-submit').attr('disabled', true)
-        }
-    });
-</script>
