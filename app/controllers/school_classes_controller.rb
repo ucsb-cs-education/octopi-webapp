@@ -97,16 +97,22 @@ class SchoolClassesController < ApplicationController
   # GET /school_classes/1
   def show
     @module_pages = @school_class.module_pages.teacher_visible.includes(:activity_pages)
-
-    #these two are entirely for the average completion bar
     @tasks = Task.teacher_visible.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
-    task_ids = @tasks.pluck(:id)
     @students = ordered_students
-    @responses = TaskResponse.completed.where(student: @students, school_class: @school_class, task_id: task_ids)
-    @unlocks = Unlock.where(school_class: @school_class,
-                            student: @students,
-                            unlockable_id: task_ids,
-                            unlockable_type: 'Task')
+
+    #WARNING: THIS IS NOW -SLOW-
+    #generating these graphs is taking a very long time. I believe a way to fix this would be to have these stored in the school class somehow, and when
+    #they are asked from simply send what is already known, and tell a worker to recalculate it. When the worker is finished, save the new charts and
+    #and send a request to update the page and redraw all the graphs with the new info.
+
+    @student_mini_graphs = @students.map { |student|
+      {student.id => ActivityPage.where(module_page: @module_pages).each_with_index.map { |a, i|
+        ["#{i+1}", ((student.task_responses.where(task: a.tasks.student_visible.all.ids).where(completed: true).count.to_f/a.tasks.student_visible.count)*100)]
+      }
+      }
+    }.reduce({}, :merge!)
+
+    @graph_info = @school_class.show_page_graph_data
   end
 
   # GET /school_classes/1/edit_students

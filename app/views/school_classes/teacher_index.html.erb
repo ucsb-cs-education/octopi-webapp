@@ -3,7 +3,7 @@
 <% @schools.each do |school| %>
     <div class="panel panel-default">
       <div class="panel-heading">
-        <%= link_to school[:name], schools_path(school[:id]) %>
+        <%= link_to school[:name], school_path(school[:id]) %>
         <label>School Admins: </label>
         <% school[:admins].each do |staff| %>
             (<%= staff.name %>)

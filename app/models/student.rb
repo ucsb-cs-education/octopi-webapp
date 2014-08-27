@@ -124,6 +124,15 @@ class Student < User
     end
   end
 
+  def number_of_tasks_completed(activity = nil)
+    if activity.nil?
+      task_responses.completed.count
+    else
+      #ActiveRecord::StatementInvalid: PG::ProtocolViolation: ERROR:  bind message supplies 2 parameters, but prepared statement "a3" requires 1
+      task_responses.where(task: activity.tasks.pluck(:id)).completed.count
+    end
+  end
+
   private
   def create_remember_token
     self.remember_token = Student.create_remember_hash(Student.new_remember_token)
