@@ -16,6 +16,17 @@ module SchoolClassesHelper
     @unlocks.count/(@tasks.count * @school_class.students.count).to_f
   end
 
+  def getShowColors
+    max = @graph_info.count()
+    (0...max).map { |i|
+      r = Math.cos((6.28/max)*i)* 127+128
+      g = Math.cos((6.28/max)*i + 3.14/2) * 127+128
+      b = Math.cos((6.28/max)*i + 3.14) * 127+128
+
+      "rgb(#{r.to_i},#{g.to_i},#{b.to_i})"
+    }
+  end
+
   def get_path_for_task(task)
     if task
       case task[:type]

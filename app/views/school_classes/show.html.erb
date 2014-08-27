@@ -9,6 +9,16 @@
 <p>
 
 </p>
+<p>
+  <%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
+  <%= link_to 'Edit Class', edit_school_class_path, class: 'btn btn-primary' %>
+</p>
+<div id="overall progress">
+  <%= column_chart (@graph_info),
+                   colors: getShowColors,
+                   stacked: true,
+                   library: {vAxis: {title: '# of Students who have completed X tasks'}} %>
+</div>
 <!--Class list-->
 
 <body>
@@ -18,7 +28,7 @@
     <th>First Name</th>
     <th class="sorttable_alpha">Last Name</th>
     <th class="sorttable_alpha">Login Name</th>
-    <th>Progress</th>
+    <th class="sorttable_nosort">Progress</th>
   </tr>
   </thead>
   <tbody>
@@ -27,13 +37,34 @@
         <td><%= s.first_name %></td>
         <td><%= s.last_name %></td>
         <td><%= s.login_name %></td>
-        <td><%= link_to 'View Progress', school_class_student_progress_path(@school_class, s) %></td>
+        <td>
+          <div class="mini-chart-div">
+            <%= column_chart (@student_mini_graphs[s.id]),
+                             max: 100,
+                             height: "30px",
+                             colors: ["27AB1E"],
+                             library: {enableInteractivity: false,
+                                       column: {
+                                         group_width: "100%"
+                                       },
+                                       width: 100, vAxis: {
+                                             baselineColor: '#fff',
+                                             gridlines: {
+                                                     color: '#EEE',
+                                                     count: 4
+                                             },
+                                             textPosition: 'none'},
+                                       hAxis: {title: 'Activity'}} %>
+            <div>
+              Completion % per Activity
+            </div>
+          </div><%= link_to 'View Progress', school_class_student_progress_path(@school_class, s) %>
+        </td>
       </tr>
   <% end %>
   </tbody>
   <tfoot></tfoot>
 </table>
-
 </body>
 
 
@@ -41,19 +72,12 @@
   Curriculum:
 </div>
 <hr>
-<div id="overall progress">
-  <%= bar_chart ({'Completed %' => average_task_completion*100, 'Unlocked %' => average_task_unlock*100}),
-                max: 101,
-                height: '100px',
-                library: {hAxis: {title: 'Percent of tasks completed and unlocked, averaged over all students'}} %>
-</div>
 <% unless teacher_using_test_student? %>
     <div id="test-student-div">
       <%= button_to "Sign in as Test Student", {action: "view_as_student", school_class_id: @school_class.id},
                     class: "btn btn-default", method: :get %>
     </div>
 <% else %>
-    <div class="small-font">Includes test student when signed in as one.</div>
     <div id="test-student-div">
       <%= button_to "View as Test Student", {action: "view_as_student", school_class_id: @school_class.id},
                     class: "btn btn-default", method: :get %>
@@ -66,9 +90,5 @@
 <%= render partial: 'list_module_page', collection: @module_pages, as: 'module_page' %>
 <br>
 <br>
-<p>
 
-  <%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
-  <%= link_to 'Edit Class', edit_school_class_path, class: 'btn btn-primary' %>
-</p>
 

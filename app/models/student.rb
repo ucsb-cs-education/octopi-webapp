@@ -9,7 +9,7 @@ class Student < User
   before_destroy :delete_all_dependant_data
   attr_accessor :current_class
   attr_reader :current_password
-  scope :not_teststudents, -> {where(type: 'Student')}
+  scope :not_teststudents, -> { where(type: 'Student') }
 
   has_secure_password
 
@@ -121,6 +121,15 @@ class Student < User
           end
         end
       end
+    end
+  end
+
+  def number_of_tasks_completed(activity = nil)
+    if activity.nil?
+      task_responses.completed.count
+    else
+      #ActiveRecord::StatementInvalid: PG::ProtocolViolation: ERROR:  bind message supplies 2 parameters, but prepared statement "a3" requires 1
+      task_responses.where(task: activity.tasks.pluck(:id)).completed.count
     end
   end
 

@@ -21,7 +21,7 @@ class SchoolClass < ActiveRecord::Base
     @responses = TaskResponse.where(student: students, school_class: self)
 
     [{name: "Completed by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
-        task.title+"("+task.id.to_s+")" : task.title)=> @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
+        task.title+"("+task.id.to_s+")" : task.title) => @responses.where(task: task, completed: true).count} }.reduce({}, :merge)},
      {name: "Unlocked by", data: @activity_page.tasks.student_visible.map { |task| {((@activity_page.tasks.where(title: task.title).count>1) ?
          task.title+"("+task.id.to_s+")" : task.title) => (@unlocks.where(unlockable: task).count-@responses.where(task: task, completed: true).count)} }.reduce({}, :merge)}]
   end
@@ -37,6 +37,24 @@ class SchoolClass < ActiveRecord::Base
     {"Completed tasks" => [0,number_of_tasks_completed].max,
      "In progress tasks" => [0,number_of_tasks_in_progress].max,
      "Locked tasks" => [0,number_of_locked_tasks].max}
+  end
+
+  def show_page_graph_data
+    activity_pages = ActivityPage.where(module_page: module_pages)
+    max_tasks = activity_pages.map { |x| x.tasks.student_visible.count }.max
+
+    @completed_counts = activity_pages.map { |activity|
+      {activity.id => students.where(type: 'Student').map { |student|
+        student.number_of_tasks_completed(activity)
+      }}
+    }.reduce({}, :merge!)
+
+    (0..max_tasks).map { |i|
+      {name: "#{i}",
+       data: activity_pages.map { |activity|
+         {activity.title => @completed_counts[activity.id].count(i)}
+       }.reduce({}, :merge!)}
+    }
   end
 
   private
