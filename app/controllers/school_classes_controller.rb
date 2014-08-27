@@ -150,6 +150,10 @@ class SchoolClassesController < ApplicationController
     end
   end
 
+  def student_spreadsheet_help
+    #dont need to do anything
+  end
+
   def find_columns
     errors = []
     begin
@@ -242,7 +246,7 @@ class SchoolClassesController < ApplicationController
         flags = [];
         student[@login_name_column] = student[@login_name_column].downcase unless student[@login_name_column]==nil
         if @id_column == nil || student[@id_column] == nil
-          if this_student = Student.find_by(login_name: student[@login_name_column])
+          if this_student = school.students.find_by(login_name: student[@login_name_column])
             unless school.students.include?(this_student) && (this_student.first_name.strip==student[@first_name_column].strip && this_student.last_name.strip==student[@last_name_column].strip)
               action = :repeat_login_name
               flags.push(:error)
@@ -336,26 +340,28 @@ class SchoolClassesController < ApplicationController
     begin
       #All of the '.strip's are here to prevent whitespace from causing problems.
       SchoolClass.transaction do
-        params[:student_csv].each { |action|
-          action = JSON.parse action[1]
-          case action['action']
-            when 'create'
-              Student.transaction do
-                @student = Student.new(first_name: action['first_name'].strip, last_name: action['last_name'].strip,
-                                       login_name: action['login_name'].strip, password: action['password'].strip,
-                                       password_confirmation: action['password'].strip, school: @school_class.school)
+        unless params[:student_csv].nil?
+          params[:student_csv].each { |action|
+            action = JSON.parse action[1]
+            case action['action']
+              when 'create'
+                Student.transaction do
+                  @student = Student.new(first_name: action['first_name'].strip, last_name: action['last_name'].strip,
+                                         login_name: action['login_name'].strip, password: action['password'].strip,
+                                         password_confirmation: action['password'].strip, school: @school_class.school)
+                  @student.save!
+                  @school_class.students << @student unless @school_class.students.include? @student
+                end
+              when 'change_password'
+                @student = Student.find(action['flags'][0])
+                @student.update_attributes({password: action['password'].strip, password_confirmation: action['password'].strip})
                 @student.save!
-                @school_class.students << @student unless @school_class.students.include? @student
-              end
-            when 'change_password'
-              @student = Student.find(action['flags'][0])
-              @student.update_attributes({password: action['password'].strip, password_confirmation: action['password'].strip})
-              @student.save!
-            when 'add_to_class'
-              Student.find(action['flags'][0]).school_classes << @school_class
-          end
-        }
-        flash[:success] = 'Success!'
+              when 'add_to_class'
+                Student.find(action['flags'][0]).school_classes << @school_class
+            end
+          }
+          flash[:success] = 'Success!'
+        end
         redirect_to edit_school_class_path(@school_class)
       end
     rescue Exception => e
@@ -368,20 +374,21 @@ class SchoolClassesController < ApplicationController
     class_book = Axlsx::Package.new
     wb = class_book.workbook
     wb.add_worksheet(:name => "Class Info") do |sheet|
-      sheet.add_row ["First Name", "Last Name", "Login Name", "Octopi Id", "Password","Password Confirmation"]
-      ordered_students.each{|student|
-        sheet.add_row [student.first_name,student.last_name,student.login_name,student.id]
+      sheet.add_row ["First Name", "Last Name", "Login Name", "Octopi Id", "Password", "Password Confirmation"]
+      ordered_students.each { |student|
+        sheet.add_row [student.first_name, student.last_name, student.login_name, student.id]
       }
     end
     begin
       js false;
-      temp = Tempfile.new("class_info.xlsx")
+      temp = Tempfile.new("class_info.xlsx", 'tmp')
 
       class_book.serialize temp.path
       send_file temp.path, filename: "#{@school_class.name}_info.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ensure
-      #temp.close
-      #temp.unlink
+      #i cannot simply close the tempfile here or it will be deleted before being sent
+      #the solution appears to be separate tempfiles into folders based on time and use a background process to delete folders that are too old.
+      #use the Maid gem?
     end
   end
 

@@ -63,6 +63,7 @@ OctopiWebapp::Application.routes.draw do
         post 'edit_students_via_csv'
         post 'do_csv_actions'
         post 'download_class_csv'
+        get 'student_spreadsheet_help'
       end
       resources :unlocks, only: [:destroy, :create]
       get '/activities/:id', to: 'school_classes/school_classes_activities#activity_page', as: 'activity'

@@ -1,0 +1,184 @@
+<p>
+  <strong>School:</strong>
+  <%= @school_class.school.name %>
+</p>
+<p>
+  <strong>Class name:</strong>
+  <%= @school_class.name %>
+</p>
+<p>
+
+</p>
+<%= link_to 'Back', edit_school_class_path(@school_class), class: 'btn btn-default' %>
+<hr>
+<p>
+  The adding students via spreadsheet feature is designed to allow teachers and admins to add many students or make
+  many changes at one time.
+</p>
+<p>
+  The first step is to create a valid spreadsheet. The simplest way to do this is to simply click the 'Download class
+  spreadsheet' button, found at the top of the edit
+  page. You could also click here:
+</p>
+<%= button_to "Download class spreadsheet", {action: "download_class_csv", id: @school_class.id},
+              class: "btn btn-default", format: :xlsx, method: :post %>
+<p>
+  This will download a Windows Excel file (which can be opened in many other spreadsheet programs) containing class
+  information. It will appear something like this:
+<TABLE CELLSPACING="0" COLS="6" BORDER="0" class="table table-bordered">
+  <COLGROUP WIDTH="110"></COLGROUP>
+  <COLGROUP WIDTH="111"></COLGROUP>
+  <COLGROUP WIDTH="149"></COLGROUP>
+  <COLGROUP WIDTH="70"></COLGROUP>
+  <COLGROUP WIDTH="85"></COLGROUP>
+  <COLGROUP WIDTH="161"></COLGROUP>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>First Name</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Last Name</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Login Name</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Octopi Id</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Password</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Password Confirmation</TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>Student 1</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Last Name 1</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Login name_1</TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDVAL="1" SDNUM="1033;">1</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>Person Two</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>2nd Last Name</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Another_login_name</TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDVAL="2" SDNUM="1033;">2</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>3rd Human</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Last III</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>student_3_login</TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDVAL="3" SDNUM="1033;">3</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+  </TR>
+</TABLE>
+If the class has no students currently, only the headers will be there.
+</p>
+<p>
+  You can now edit the file to make certain changes to the class:
+<ul>
+  <li>
+    To create a new student and add them to the class,
+    fill out their information in a new row and leave the Octopi Id column blank.
+  </li>
+  <li>
+    To add an existing student to a class, fill in their information just like existing students.
+    All that is required to do this is their Octopi Id, but you will be asked to confirm you are adding the correct
+    student if you
+    do not supply the rest of their information.
+  </li>
+  <li>
+    To change the password of a student already in the class, fill out their password and password confirmation columns
+    with the
+    password you want them to have.
+  </li>
+</ul>
+</p>
+<p>
+  For example:
+<TABLE CELLSPACING="0" COLS="6" BORDER="0" class="table table-bordered">
+  <COLGROUP WIDTH="110"></COLGROUP>
+  <COLGROUP WIDTH="111"></COLGROUP>
+  <COLGROUP WIDTH="149"></COLGROUP>
+  <COLGROUP WIDTH="70"></COLGROUP>
+  <COLGROUP WIDTH="85"></COLGROUP>
+  <COLGROUP WIDTH="161"></COLGROUP>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>First Name</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Last Name</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Login Name</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Octopi Id</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Password</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Password Confirmation</TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>Student 1</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Last Name 1</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Login name_1</TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDVAL="1" SDNUM="1033;">1</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>Person Two</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>2nd Last Name</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Another_login_name</TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDVAL="2" SDNUM="1033;">2</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>3rd Human</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Last III</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>student_3_login</TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDVAL="3" SDNUM="1033;">3</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>newpass</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>newpass</TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>New</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Student</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>new_student_login</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>password</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>password</TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>Student 4</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>Lastname 4</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>login_of_student_4</TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDVAL="4" SDNUM="1033;">4</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+  </TR>
+  <TR>
+    <TD HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM>Someone</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>New</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>newlogin</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM><BR></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>someone_6</TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM>someone_6</TD>
+  </TR>
+</TABLE>
+If you were to upload this spreadsheet to the same class, the following changes would occur:
+<ul>
+  <li>
+    The student '3rd Human Last III' would have their password changed to 'newpass'.
+  </li>
+  <li>
+    The student 'New Student' would be created and added to the class with the login name 'new_student_login' and the
+    password 'password'.
+  </li>
+  <li>
+    The student 'Student 4 Lastname 4' would become part of the class in additional to any other classes they are in.
+  </li>
+  <li>
+    The student 'Someone New' would be created and added to the class with the login name 'newlogin' and the
+    password 'someone_6'.
+  </li>
+</ul>
+</p>
+<p>
+  Once you are satisfied with your changes, return to the edit class page and click 'Choose File'. A folder browser will
+  open and you can navigate to the spreadsheet you want to use. You can also click and drag a file over the 'Choose
+  File' button. Supported file types include Microsoft Excel (.xls, .xlsx), ODF spreadsheet (.ods), and Text CVS (.csv).
+  Next click 'Submit' and you will be brought to a page that shows you all the changes that will be made.
+  If you notice anything incorrect, you have the option to cancel.
+</p>
+<p>
+  <b>Remember:</b> Every student within the same school must have a different login name.
+</p>
+<%= link_to 'Back', edit_school_class_path(@school_class), class: 'btn btn-default' %>

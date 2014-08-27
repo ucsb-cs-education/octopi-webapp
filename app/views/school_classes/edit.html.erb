@@ -32,7 +32,7 @@
       <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?' %>
       <%= f.button :submit, 'Submit', id: 'student-csv-submit', disabled: true %>
   <% end %>
-  <%= link_to 'How do I do this?', '#' %>
+  <%= link_to 'How do I do this?', student_spreadsheet_help_school_class_path(@school_class) %>
 </div>
 
 <!--Add existing student to class-->

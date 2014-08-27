@@ -25,9 +25,7 @@
                   </div>
               <% else %>
                   <% div_class = ((action[:flags].blank? or action[:flags].all? { |x| x.is_a? Integer }) ? 'action-success-div' : 'action-problem-div') %>
-                  <% case action[:action] %>
-  <!-- This keeps auto formating over here and i dont know why-->
-  <% when :create %>
+                  <% case action[:action] when :create %>
                       <div class='<%= div_class %>'>
                         <div class="confirm-box">
                           <input class='do-this-box' type="checkbox" checked>

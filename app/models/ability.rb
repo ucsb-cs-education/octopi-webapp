@@ -128,7 +128,7 @@ class Ability
     can :read, LaplayaFile, {:curriculum_id => page_ids, :type => 'TaskBaseLaplayaFile'}
     can :see_user_admin_menu
 
-    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv], SchoolClass, :id => school_classes_ids
+    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, :id => school_classes_ids
     can :activity_page, SchoolClass, :id => school_classes_ids
   end
 
@@ -164,7 +164,7 @@ class Ability
     laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
     can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
-    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv], SchoolClass, id: school_classes
+    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, id: school_classes
 
     can :create, Student
   end
