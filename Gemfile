@@ -85,8 +85,7 @@ gem 'paloma', '~> 4.1.0'
 #draw charts for the teacher view
 gem 'chartkick', '~> 1.3.2'
 
-#interpret CSV from excel
-gem 'spreadsheet', '~> 0.9.8'
+#interpret CSV from excel and create spreadsheets to send
 gem 'roo', '~> 1.13.2'
 gem 'axlsx', '~> 2.0.1'
 

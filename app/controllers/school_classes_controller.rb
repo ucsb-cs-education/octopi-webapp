@@ -379,18 +379,11 @@ class SchoolClassesController < ApplicationController
         sheet.add_row [student.first_name, student.last_name, student.login_name, student.id]
       }
     end
-    begin
-      js false;
-      temp = Tempfile.new("class_info.xlsx", "#{Rails.root}/log")
-
-      class_book.serialize temp.path
-      send_file temp.path, filename: "#{@school_class.name}_info.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    ensure
-      #i cannot simply close the tempfile here or it will be deleted before being sent
-      #the solution appears to be separate tempfiles into folders based on time and use a background process to delete folders that are too old.
-      #use the Maid gem?
-      #however it appears that tmp files are deleted whenever a new request is sent ? so this is okay?
-    end
+    js false;
+    output = StringIO.new
+    class_book.use_shared_strings = true
+    output.write(class_book.to_stream.read)
+    send_data output.string, filename: "#{@school_class.name}_info.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   end
 
   # POST /school_classes/:school_class_id/manual_unlock
