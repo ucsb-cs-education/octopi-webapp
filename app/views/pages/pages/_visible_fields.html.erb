@@ -1,4 +1,4 @@
-<% if @page.respond_to? :visible_to %>
+<% if (@page.respond_to? (:visible_to)) && !@page.is_a?(AssessmentQuestion) %>
       <%= f.input :visible_to, collection: [
               {id: :all, label: 'Teachers and Students'},
               {id: :teachers, label: 'Teachers'},

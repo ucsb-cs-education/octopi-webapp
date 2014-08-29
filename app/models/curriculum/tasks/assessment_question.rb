@@ -2,18 +2,27 @@ require 'xml'
 class AssessmentQuestion < ActiveRecord::Base
   resourcify
   belongs_to :assessment_task, foreign_key: :assessment_task_id
+  has_many :assessment_questions
   alias_attribute :parent, :assessment_task
   alias_attribute :children, :answers
   validate :JSON_validator
   validate :valid_answer_type
   has_paper_trail :on=> [:update, :destroy]
+  has_and_belongs_to_many(:assessment_questions,
+                          :join_table => "question_relation",
+                          :foreign_key => "question_a_id",
+                          :association_foreign_key => "question_b_id")
   include Curriculumify
+
+  def connect_to(assessment_question)
+    assessment_questions << assessment_question
+    assessment_question.assessment_questions << self
+  end
 
   protected
   def type
     self.class.to_s
   end
-
 
   private
   def self.answer_types
