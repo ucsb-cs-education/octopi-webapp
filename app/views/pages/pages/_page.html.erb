@@ -3,7 +3,9 @@
         <span class='ui-icon ui-icon-arrowthick-2-n-s'></span>
     <% end %>
     <% if page.is_a?(AssessmentQuestion) %>
-        <%= link_to page.title, page %>
+        <% title = page.title%>
+        <% page.assessment_questions.each{|x| title+=", #{x.title}"} %>
+        <%= link_to title, page %>
     <% else %>
         <% if page.visible_to_students %>
             <%= link_to page.title, page %>
