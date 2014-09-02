@@ -77,7 +77,13 @@ class StudentPortal::PagesController < StudentPortal::BaseController
             student: current_student,
             school_class: current_school_class,
             task: @assessment_task)
-        @assessment_task.children.each do |x|
+        @children = []
+        @assessment_task.children.where(assessment_question: nil).each{|x|
+          @children << (
+            (x.children << x).sample
+          )
+        }
+        @children.each do |x|
           @task_response.assessment_question_responses.build(assessment_question: x)
         end
       end
