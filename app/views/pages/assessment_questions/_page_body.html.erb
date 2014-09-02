@@ -1,6 +1,6 @@
-<div id = "other-links-div">
+<div id = "variant-links-div">
   <% @child_assessment_questions.each { |aq| %>
-      <%= render partial: "link_to_other", locals: {question: aq} %>
+      <%= render partial: "link_to_variant", locals: {question: aq} %>
   <% } %>
 </div>
 <br>

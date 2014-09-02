@@ -58,9 +58,6 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
 
   private
   def assessment_question_params
-    #unless params[:assessment_question][:assessment_question].nil?
-    #  params[:assessment_question][:assessment_question] = {assessment_question: AssessmentQuestion.find(params[:assessment_question][:assessment_question].to_i)}
-    # end
     params.require(:assessment_question).permit(:title, :question_body, :answers, :question_type, :assessment_question_id)
   end
 
