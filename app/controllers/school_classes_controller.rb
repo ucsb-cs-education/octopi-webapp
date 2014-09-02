@@ -172,28 +172,33 @@ class SchoolClassesController < ApplicationController
       #parse the file into something usable
       @sheet[0].each_with_index { |header, num|
         unless (header =~ /first(\s*name)?\s*\z/i).nil?
-          errors.push("Columns '#{@sheet[0][@first_name_column]}' and '#{header}' are both valid headers for First name.") unless @first_name_column.nil?
+          errors.push("Columns '#{@sheet[0][@first_name_column]}' and '#{header}' are both valid headers for First name.
+          Please remove or rename one and try again.") unless @first_name_column.nil?
           @first_name_column = num
         end
         unless (header =~ /last(\s*name)?\s*\z/i).nil?
-          errors.push("Columns '#{@sheet[0][@last_name_column]}' and '#{header}' are both valid headers for Last name.") unless @last_name_column.nil?
+          errors.push("Columns '#{@sheet[0][@last_name_column]}' and '#{header}' are both valid headers for Last name.
+          Please remove or rename one and try again.") unless @last_name_column.nil?
           @last_name_column = num
         end
         unless (header =~ /password\s*\z/i).nil?
-          errors.push("Columns '#{@sheet[0][@password_column]}' and '#{header}' are both valid headers for Password.") unless @password_column.nil?
+          errors.push("Columns '#{@sheet[0][@password_column]}' and '#{header}' are both valid headers for Password.
+          Please remove or rename one and try again.") unless @password_column.nil?
           @password_column = num
         end
         unless (header =~ /password(\s*|[-_])confirm/i).nil?
           errors.push("Columns '#{@sheet[0][@password_confirmation_column]}' and '#{header}'
-          are both valid headers for Password confirmation.") unless @password_confirmation_column.nil?
+          are both valid headers for Password confirmation. Please remove or rename one and try again.") unless @password_confirmation_column.nil?
           @password_confirmation_column = num
         end
         unless (header =~ /login(\s*name)?\s*\z/i).nil?
-          errors.push("Columns '#{@sheet[0][@login_name_column]}' and '#{header}' are both valid headers for Login name.") unless @login_name_column.nil?
+          errors.push("Columns '#{@sheet[0][@login_name_column]}' and '#{header}' are both valid headers for Login name.
+          Please remove or rename one and try again.") unless @login_name_column.nil?
           @login_name_column = num
         end
         unless (header =~ /octopi(\s*student)?\s*(id|num)/i).nil?
-          errors.push("Columns '#{@sheet[0][@id_column]}' and '#{header}' are both valid headers for Octiopi Id.") unless @id_column.nil?
+          errors.push("Columns '#{@sheet[0][@id_column]}' and '#{header}' are both valid headers for Octopi student number.
+          Please remove or rename one and try again.") unless @id_column.nil?
           @id_column = num
         end
       }
@@ -214,8 +219,8 @@ class SchoolClassesController < ApplicationController
         errors.push("Could not find a password confirmation column. Please create a column with the header 'Password confirmation' or 'Password confirm' and try again.")
       end
       if @id_column == nil
-        msg = "Could not find an 'Octopi id' or 'Octopi student id' column. This is valid, but some duplicate students may be created. Please carefully
-      check that no unintended changes are made."
+        msg = "Could not find an 'Octopi student number' or 'Octopi id' column. This is valid, but some duplicate students may be created. Please carefully
+        check that no unintended changes are made."
         if errors.empty?
           flash[:warning] = msg
         else
@@ -366,7 +371,8 @@ class SchoolClassesController < ApplicationController
         redirect_to edit_school_class_path(@school_class)
       end
     rescue Exception => e
-      flash[:error] = "An error has occured. Please contact us and provide this message: " + e.message
+      flash[:error] = "An error has occured. Please contact us so we can resolve the issue. Possible causes include attempts to do some
+      actions twice and using the incorrect Octopi student number. Please check your sheet for problems and try again."
       redirect_to edit_school_class_path(@school_class)
     end
   end
@@ -375,7 +381,7 @@ class SchoolClassesController < ApplicationController
     class_book = Axlsx::Package.new
     wb = class_book.workbook
     wb.add_worksheet(:name => "Class Info") do |sheet|
-      sheet.add_row ["First Name", "Last Name", "Login Name", "Octopi Id", "Password", "Password Confirmation"]
+      sheet.add_row ["First Name", "Last Name", "Login Name", "Octopi Student Number", "Password", "Password Confirmation"]
       ordered_students.each { |student|
         sheet.add_row [student.first_name, student.last_name, student.login_name, student.id]
       }
