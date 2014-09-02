@@ -1,1 +1,7 @@
 $('.page-form .btn-primary').prop('disabled', true);
+$("#update-page-btn").prop('value', 'Saving...');
+$("#update-page-btn").prop('value', 'Saved!');
+setTimeout(function() {
+        $("#update-page-btn").prop('value', 'Save changes to <%= @page.title %>');
+        $('.page-form .btn-primary').prop('disabled', false);
+}, 1000);
