@@ -36,8 +36,9 @@
             You left the login name blank.
         <% else %>
             The login name of the student with Octopi Id <%= action[:flags][0] %> does not match <%= action[:login_name] %>.
+            The name your provided is <%= action[:first_name] %> <%= action[:last_name] %>.
         <% end %>
-        The name your provided is <%= action[:first_name] %> <%= action[:last_name] %>. Please confirm that this is being done to the correct student:
+         Please confirm that this is being done to the correct student:
         <input class="conflict-checkbox conflicting" type="checkbox">
         <br>
     <% end %>

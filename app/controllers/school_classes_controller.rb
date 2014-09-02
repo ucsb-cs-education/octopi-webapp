@@ -357,7 +357,8 @@ class SchoolClassesController < ApplicationController
                 @student.update_attributes({password: action['password'].strip, password_confirmation: action['password'].strip})
                 @student.save!
               when 'add_to_class'
-                Student.find(action['flags'][0]).school_classes << @school_class
+                @student = Student.find(action['flags'][0])
+                @student.school_classes << @school_class unless @student.school_classes.include?(@school_class)
             end
           }
           flash[:success] = 'Success!'
@@ -365,7 +366,7 @@ class SchoolClassesController < ApplicationController
         redirect_to edit_school_class_path(@school_class)
       end
     rescue Exception => e
-      flash[:error] = e.message
+      flash[:error] = "An error has occured. Please contact us and provide this message: " + e.message
       redirect_to edit_school_class_path(@school_class)
     end
   end
