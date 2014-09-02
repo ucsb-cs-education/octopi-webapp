@@ -2,21 +2,17 @@ require 'xml'
 class AssessmentQuestion < ActiveRecord::Base
   resourcify
   belongs_to :assessment_task, foreign_key: :assessment_task_id
-  has_many :assessment_questions
   alias_attribute :parent, :assessment_task
   alias_attribute :children, :answers
   validate :JSON_validator
   validate :valid_answer_type
-  has_paper_trail :on=> [:update, :destroy]
-  has_and_belongs_to_many(:assessment_questions,
-                          :join_table => "question_relation",
-                          :foreign_key => "question_a_id",
-                          :association_foreign_key => "question_b_id")
+  has_paper_trail :on => [:update, :destroy]
+  belongs_to :assessment_question, foreign_key: :assessment_question_id
+  before_destroy :reorganize_children
   include Curriculumify
 
-  def connect_to(assessment_question)
-    assessment_questions << assessment_question
-    assessment_question.assessment_questions << self
+  def children
+    assessment_task.assessment_questions.where(assessment_question: self)
   end
 
   protected
@@ -25,9 +21,20 @@ class AssessmentQuestion < ActiveRecord::Base
   end
 
   private
+  def reorganize_children
+    @new_primary_question = children.first
+    children.each { |c|
+      if c == @new_primary_question
+        c.update(assessment_question: nil)
+      else
+        c.update(assessment_question: @new_primary_question)
+      end
+    }
+  end
+
   def self.answer_types
-    [OpenStruct.new(val: 'singleAnswer', label:'One Correct'),
-     OpenStruct.new(val: 'multipleAnswers', label:'Multiple Correct'),
+    [OpenStruct.new(val: 'singleAnswer', label: 'One Correct'),
+     OpenStruct.new(val: 'multipleAnswers', label: 'Multiple Correct'),
      OpenStruct.new(val: 'freeResponse', label: 'Free Response')]
   end
 

@@ -1,1 +1,5 @@
+<% if @page.assessment_question.nil? %>
 $('#children').append("<%= escape_javascript(render partial: "pages/assessment_questions/page", object: @page) %>");
+<% else %>
+$('#other-links-div').append("<%= escape_javascript(render partial: "link_to_other", locals: {question: @page}) %>")
+<% end %>

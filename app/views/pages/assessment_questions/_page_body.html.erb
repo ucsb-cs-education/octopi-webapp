@@ -1,10 +1,8 @@
-<% unless @assessment_question.assessment_questions.blank? %>
-    <% @assessment_question.assessment_questions.each { |aq| %>
-        <div style="display:inline-block">
-          <%= button_to aq.title, assessment_question_path(aq), :method => :get %>
-        </div>
-    <% } %>
-<% end %>
+<div id = "other-links-div">
+  <% @child_assessment_questions.each { |aq| %>
+      <%= render partial: "link_to_other", locals: {question: aq} %>
+  <% } %>
+</div>
 <br>
 <div id="tabs">
   <ul>
