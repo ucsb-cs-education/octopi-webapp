@@ -18,6 +18,7 @@ describe "Assessment question page", type: :feature do
     it { should have_content("One Correct") }
     it { should have_content("Multiple Correct") }
     it { should have_content("Free Response") }
+    it { should have_selector("#variant-links-div") }
   end
 
   describe "answer tests" do
@@ -48,7 +49,6 @@ describe "Assessment question page", type: :feature do
     it { should_not have_selector('input[type=radio]') }
     it { should have_selector('input[type=checkbox]', :count => 5) }
     it { should_not have_selector('div.ischecked') }
-    it { should have_selector('div.isNotchecked') }
   end
   describe "after changing question type to Free Response", js: true do
     before do
@@ -58,9 +58,8 @@ describe "Assessment question page", type: :feature do
     it { should_not have_selector('input[type=radio]') }
     it { should_not have_selector('input[type=checkbox]') }
     it { should_not have_selector('div.ischecked') }
-    it { should_not have_selector('div.isNotchecked') }
-    it { should_not have_selector('#addAns')}
-    it { should have_selector('#free-response-note')}
+    it { should_not have_selector('#addAns') }
+    it { should have_selector('#free-response-note') }
   end
 
   describe "update question", js: true do
@@ -99,7 +98,7 @@ describe "Assessment question page", type: :feature do
       expect(RSpecSanitizer::sanitize(assessment_question.question_body)).to eq('ExampleQuestion for an rspec test')
     end
 
-    it "should update the answer text" do
+    it "should update the answer text", js: true, diver: :selenium do
       expect do
         click_button("Save changes to")
         wait_for_ajax
@@ -157,7 +156,7 @@ describe "Assessment question page", type: :feature do
     end
   end
 
-  describe "after attempting to update a free response question", js:true do
+  describe "after attempting to update a free response question", js: true do
     before do
       click_button("Add New Answer Choice")
       select('Free Response', :from => 'ansType')
@@ -172,6 +171,76 @@ describe "Assessment question page", type: :feature do
         wait_for_ajax
         assessment_question.reload
       end.to change(assessment_question, :question_body)
+    end
+  end
+
+  describe "After creating a variant", js: true do
+    before do
+      click_button "Add a variant"
+      wait_for_ajax
+    end
+    it { should have_selector('.variant-link', :count => 1) }
+    it { should have_button('New Question') }
+
+    describe "After then visiting the variant" do
+      before do
+        click_button "New Question"
+      end
+
+      it { should have_selector('.variant-link', :count => 1) }
+      it { should have_button("#{assessment_question.title}") }
+
+      describe "After again creating a new variant" do
+        before do
+          click_button "Add a variant"
+          wait_for_ajax
+        end
+        it { should have_selector('.variant-link', :count => 2) }
+        it { should have_button('New Question') }
+
+        describe "After returning to the first question" do
+          before do
+            click_button "#{assessment_question.title}"
+          end
+          it { should have_selector('.variant-link', :count => 2) }
+          it { should have_button('New Question', :count => 2) }
+        end
+      end
+    end
+
+    describe "when at the assessment task page" do
+      before do
+        click_link "return to parent (#{assessment_question.assessment_task.title})"
+      end
+
+      it { should have_link("#{assessment_question.title}, New Question", href: assessment_question_path(assessment_question.id)) }
+      it { should_not have_link("", href: assessment_question_path(AssessmentQuestion.last)) }
+    end
+
+    describe "after deleting the original assessment question that has multiple children", driver: :selenium do
+      before do
+        click_button "Add a variant"
+        wait_for_ajax
+      end
+
+      it "should delete the assessment question" do
+        expect do
+          click_link("Delete #{assessment_question.title}")
+          page.driver.browser.switch_to.alert.accept
+          wait_for_ajax
+        end.to change(AssessmentQuestion, :count).by(-1)
+      end
+
+      describe "that worked correctly" do
+        before do
+          click_link("Delete #{assessment_question.title}")
+          page.driver.browser.switch_to.alert.accept
+          wait_for_ajax
+        end
+        it { should_not have_link("", href: assessment_question_path(assessment_question.id)) }
+        it { should have_link("New Question, New Question", href: assessment_question_path(AssessmentQuestion.last.id - 1)) }
+      end
+
     end
   end
 
