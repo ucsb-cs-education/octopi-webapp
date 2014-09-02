@@ -16,5 +16,16 @@
         Add New Answer Choice
       </button>
     </td>
+    <td>
+      <%= simple_form_for :assessment_question, url: assessment_task_assessment_questions_path(@assessment_question.assessment_task.id), remote: true do |f| %>
+          <%= f.hidden_field :assessment_question_id, value: (@assessment_question.assessment_question_id.nil?) ?
+                  @assessment_question.id : @assessment_question.assessment_question_id %>
+          <%= f.hidden_field :title, value: 'New Question' %>
+          <%= f.hidden_field :question_body, value: '<p></p>' %>
+          <%= f.hidden_field :answers, value: '[{"text":"<p></p>","correct":true}]' %>
+          <%= f.hidden_field :question_type, value: 'singleAnswer' %>
+          <%= f.submit "Add a variant", class: "btn btn-default" %>
+      <% end %>
+    </td>
   </tr>
 </table>

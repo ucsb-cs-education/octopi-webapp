@@ -4,7 +4,7 @@
     <% end %>
     <% if page.is_a?(AssessmentQuestion) %>
         <% title = page.title%>
-        <% page.assessment_questions.each{|x| title+=", #{x.title}"} %>
+        <% page.children.each{|x| title+=", #{x.title}"} %>
         <%= link_to title, page %>
     <% else %>
         <% if page.visible_to_students %>

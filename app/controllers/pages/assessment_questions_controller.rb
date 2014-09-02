@@ -6,6 +6,11 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
 
   # GET /activity/:id
   def show
+    if @page.assessment_question.nil?
+      @child_assessment_questions = @page.children
+    else
+      @child_assessment_questions = @page.assessment_question.children.where.not(id: @page) << @page.assessment_question
+    end
   end
 
   def update
@@ -53,7 +58,10 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
 
   private
   def assessment_question_params
-    params.require(:assessment_question).permit(:title, :question_body, :answers, :question_type)
+    #unless params[:assessment_question][:assessment_question].nil?
+    #  params[:assessment_question][:assessment_question] = {assessment_question: AssessmentQuestion.find(params[:assessment_question][:assessment_question].to_i)}
+    # end
+    params.require(:assessment_question).permit(:title, :question_body, :answers, :question_type, :assessment_question_id)
   end
 
 end
