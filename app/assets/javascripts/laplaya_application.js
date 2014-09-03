@@ -29,15 +29,17 @@ function set_record_time_functions() {
     });
 
     recordTime = function () {
-        $.ajax({
-            type: 'PATCH',
-            url: '/time_intervals/' + time_interval_id,
-            format: 'json',
+        if (user_is_interacting_with_page) {
+            $.ajax({
+                type: 'PATCH',
+                url: '/time_intervals/' + time_interval_id,
+                format: 'json',
 
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-            }
-        });
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+                }
+            });
+        }
     };
 
     complete_time_interval = function (unload) {

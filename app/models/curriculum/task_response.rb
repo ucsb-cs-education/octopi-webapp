@@ -46,6 +46,7 @@ class TaskResponse < ActiveRecord::Base
 
   def make_new_interval(time = Time.new.to_i)
     new_interval = TimeInterval.create!(task_response: self, begin_time: time)
+    Resque.enqueue_in 5.minutes, CompleteInterval, new_interval.id
     new_interval
   end
 

@@ -29,8 +29,6 @@ class TimeIntervalsController < ApplicationController
   def complete
     @interval = TimeInterval.find(params[:id])
     endtime = Time.new.to_i
-    #If something went wrong and this time interval had to be cleaned up after 5 minues, subtract 5 minutes from now.
-    endtime -= 300 unless params[:from_auto_cleanup].nil?
     if @interval.update!(end_time: endtime)
       @interval.complete
       respond_to do |format|

@@ -147,6 +147,7 @@ gem 'unicorn'
 
 gem 'resque'
 gem 'resque-loner'
+gem 'resque-delayed'
 
 gem 'resque-web', require: 'resque_web'
 
