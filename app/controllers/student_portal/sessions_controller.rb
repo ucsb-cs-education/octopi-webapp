@@ -45,8 +45,12 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
 
 
   def destroy
-    sign_out_student
-    redirect_to student_portal_root_url
+    if current_student == nil
+      redirect_to student_portal_root_url
+    else
+      sign_out_student
+      redirect_to student_portal_root_url
+    end
   end
 
 end
