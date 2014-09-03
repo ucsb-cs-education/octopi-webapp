@@ -1,9 +1,12 @@
 <% provide(:title, 'All students') %>
 <h1>Students at <%= link_to @school.name, @school %></h1>
 
-<ul class="students">
-  <%= render @students %>
-</ul>
+
+<div class="panel panel-default panel-body">
+  <% @school.students.each do |student| %>
+      <p><%= link_to "#{student.name} (#{student.login_name})", student_path(:id => student.id) %></p>
+  <% end %>
+</div>
 
 <p>
   <%= link_to 'Add a new student', new_school_student_path(@school) %>
