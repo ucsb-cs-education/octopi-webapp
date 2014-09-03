@@ -16,8 +16,8 @@ class TimeInterval < ActiveRecord::Base
     begin
       json_array = JSON.parse(task_response.time_intervals)
     rescue Exception => e
-      #deal with an incorrectly formatted json
       json_array = []
+      json_array.push({begin_time: 0, end_time: 0, error_json: task_response.time_intervals, error_message: e.message})
     end
     json_array.push({begin_time: begin_time, end_time: end_time})
     task_response.update(time_intervals: JSON.generate(json_array))

@@ -162,4 +162,31 @@ describe TaskResponse do
     it_behaves_like 'a dependency relationship'
   end
 
+  describe "after running make_new_interval" do
+    before do
+      @TaskResponse.make_new_interval
+    end
+
+    it "should create a new interval" do
+      expect(TimeInterval.count).to eq(1)
+    end
+    it "should have no total time" do
+      expect(TaskResponse.first.total_time).to eq(0)
+    end
+
+    describe "after updating and competing the interval" do
+      before do
+        TimeInterval.last.update(begin_time: 0, end_time: 20)
+        TimeInterval.last.complete
+      end
+
+      it "should delete the time interval" do
+        expect(TimeInterval.count).to eq(0)
+      end
+      it "should update the task response time" do
+        expect(TaskResponse.first.total_time).to eq(20)
+      end
+    end
+  end
+
 end

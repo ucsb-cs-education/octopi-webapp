@@ -50,4 +50,16 @@ class TaskResponse < ActiveRecord::Base
     new_interval
   end
 
+  def total_time
+    total_time = 0;
+    begin
+      JSON.parse(time_intervals).each { |i|
+        total_time += i['end_time'] - i['begin_time']
+      }
+    rescue Exception => e
+      total_time = e.message
+    end
+    total_time
+  end
+
 end
