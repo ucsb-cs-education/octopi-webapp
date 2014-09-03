@@ -7,7 +7,22 @@
   <%= @school_class.name %>
 </p>
 <p>
+  <strong>Teachers:</strong>
+  <% Staff.all.each do |staff| %>
+      <% school_classes = SchoolClass.with_role(:teacher, staff)%>
+      <% class_staff  = Array.new%>
+      <% if school_classes.include?(@school_class) %>
+          <% class_staff.push(staff.name) %>
+      <% end %>
+      <% class_staff.each do |class_staff_name|%>
+          (<%= class_staff_name %>)
+      <% end %>
+  <% end %>
 
+
+</p>
+<p>
+  
 </p>
 <!--Class list-->
 
