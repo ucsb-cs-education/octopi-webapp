@@ -1,4 +1,4 @@
-<h1>Editing school</h1>
+<h1>Edit Students</h1>
 
 <p>
   <strong>School:</strong>
@@ -6,36 +6,21 @@
   <br>
   <strong>Name:</strong>
   <%= @school_class.name %>
-</p>
-<!--Update Class Name-->
-
-<div class="row basic-info">
-  <%= render 'form' %>
-  <%= button_to "Download class spreadsheet", {action: "download_class_csv", id: @school_class.id},
-                class: "btn btn-default", format: :xlsx, method: :post %>
-</div>
-<div class="row">
-  <table id="classlist" class="sortable">
-    <tr>
-      <th>User ID</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Login Name</th>
-    </tr>
-    <%= render partial: 'student_table_row', collection: ordered_students, as: :student %>
-  </table>
-</div>
-<!--Add/modify students via CSV -->
-<div id="file-area">
-  Or add multiple students at once by selecting a spreadsheet with info:
-  <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), js: false, method: 'post' do |f| %>
-      <%= f.file_field :csv %>
-      <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?' %>
-      <%= f.button :submit, 'Submit', id: 'student-csv-submit', disabled: true %>
+  <br>
+  <strong>Teachers:</strong>
+  <% Staff.all.each do |staff| %>
+      <% school_classes = SchoolClass.with_role(:teacher, staff)%>
+      <% class_staff  = Array.new%>
+      <% if school_classes.include?(@school_class) %>
+          <% class_staff.push(staff.name) %>
+      <% end %>
+      <% class_staff.each do |class_staff_name|%>
+          (<%= class_staff_name %>)
+      <% end %>
   <% end %>
-  <%= link_to 'How do I do this?', student_spreadsheet_help_school_class_path(@school_class) %>
-</div>
-
+</p>
+<p></p>
+<%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
 <!--Add existing student to class-->
 
 <div class="row" id="existing_student">
@@ -61,8 +46,25 @@
     <%= button_tag :'Add New Student', class: 'btn btn-primary', type: 'button', id: 'new_student_button' %>
   </div>
 </div>
-
-
-
-<p></p>
-<%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
+<br>
+<div class="row">
+  <table id="classlist" class="sortable" style="width:900px">
+    <tr>
+      <th>User ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Login Name</th>
+    </tr>
+    <%= render partial: 'student_table_row', collection: ordered_students, as: :student %>
+  </table>
+</div>
+<!--Add/modify students via CSV -->
+<div id="file-area">
+  Or add multiple students at once by selecting a spreadsheet with info:
+  <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), js: false, method: 'post' do |f| %>
+      <%= f.file_field :csv %>
+      <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?' %>
+      <%= f.button :submit, 'Submit', id: 'student-csv-submit', disabled: true %>
+  <% end %>
+  <%= link_to 'How do I do this?', student_spreadsheet_help_school_class_path(@school_class) %>
+</div>

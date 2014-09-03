@@ -22,7 +22,10 @@
 
 </p>
 <p>
-  
+
+  <%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
+  <%= link_to 'Edit Students', edit_school_class_path, class: 'btn btn-primary' %>
+  <%= link_to 'Edit Class', edit_class_school_class_path, class: 'btn btn-primary' %>
 </p>
 <!--Class list-->
 
@@ -83,9 +86,5 @@
 <%= render partial: 'list_module_page', collection: @module_pages, as: 'module_page' %>
 <br>
 <br>
-<p>
 
-  <%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
-  <%= link_to 'Edit Class', edit_school_class_path, class: 'btn btn-primary' %>
-</p>
 
