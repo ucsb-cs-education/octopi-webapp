@@ -4,7 +4,7 @@
 function set_record_time_functions() {
     $(document).on("idle.idleTimer", function () {
         //when a user goes idle, record the time it occurred and prevent further recording
-        recordTime()
+        complete_time_interval();
         user_is_interacting_with_page = false;
     });
 
@@ -15,8 +15,7 @@ function set_record_time_functions() {
             url: '/time_intervals',
             format: 'json',
             data: {
-                task_response_id: laplaya_task_response_id,
-                begin_time: (new Date().getTime() / 1000)
+                task_response_id: laplaya_task_response_id
             },
 
             beforeSend: function (xhr) {
@@ -25,41 +24,43 @@ function set_record_time_functions() {
             success: function (data) {
                 time_interval_id = data.id
             }
-        })
+        });
         user_is_interacting_with_page = true;
     });
 
-    recordTime = function (beginTime) {
-        if (user_is_interacting_with_page) {
-            var ajax_data;
-            if (beginTime) {
-                ajax_data = {
-                    begin_time: beginTime,
-                    end_time: (new Date().getTime() / 1000)
-                }
-            } else {
-                ajax_data = {
-                    end_time: (new Date().getTime() / 1000)
-                }
+    recordTime = function () {
+        $.ajax({
+            type: 'PATCH',
+            url: '/time_intervals/' + time_interval_id,
+            format: 'json',
+
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
             }
-            $.ajax({
-                type: 'PATCH',
-                url: '/time_intervals/' + time_interval_id,
-                format: 'json',
-                data: ajax_data,
+        });
+    };
 
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-                }
-            })
-        }
-    }
+    complete_time_interval = function (unload) {
+        unload = unload || false
+        $.ajax({
+            type: 'PATCH',
+            async: false,//!unload,
+            url: '/time_intervals/' + time_interval_id + '/complete',
+            format: 'json',
 
-    recordTime(new Date().getTime() / 1000);
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+            }
+        });
+    };
+
+    recordTime();
     setInterval(recordTime, 30000);
 }
 
 //This actually does work
-$(window).unload(function(){
-    console.log("hello")
+$(window).unload(function () {
+    if (typeof complete_time_interval !== 'undefined') {
+        complete_time_interval(true);
+    }
 });

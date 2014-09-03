@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 20140821164925) do
     t.boolean  "completed",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "time_intervals",  default: "[]"
   end
 
   add_index "task_responses", ["student_id", "school_class_id", "task_id"], name: "task_response_tri_index", unique: true, using: :btree

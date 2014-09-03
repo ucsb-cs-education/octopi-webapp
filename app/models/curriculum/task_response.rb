@@ -3,7 +3,6 @@ class TaskResponse < ActiveRecord::Base
   belongs_to :student
   belongs_to :task
   has_many :task_response_feedbacks, dependent: :destroy
-  has_many :time_intervals, dependent: :destroy
   before_save :unlock_dependencies
   validate :task_is_unlocked
   scope :completed, -> { where(completed: true) }
@@ -46,7 +45,7 @@ class TaskResponse < ActiveRecord::Base
   end
 
   def make_new_interval(time = Time.new.to_i)
-    time_intervals << (new_interval = TimeInterval.create!(task_response: self, begin_time: time))
+    new_interval = TimeInterval.create!(task_response: self, begin_time: time)
     new_interval
   end
 
