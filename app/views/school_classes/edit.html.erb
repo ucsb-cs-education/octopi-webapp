@@ -42,7 +42,7 @@
         <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected: 0, input_html: {id: 'existing_student_list'}, label: false %>
       </div>
       <div class="col-md-1 form-actions">
-        <%= f.button :submit, 'Add', id: 'add_existing_student_button' %>
+        <%= f.button :submit, 'Add Existing Student', id: 'add_existing_student_button' %>
       </div>
   <% end %>
 </div>
