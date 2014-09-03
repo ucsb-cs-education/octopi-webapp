@@ -20,6 +20,7 @@ class Task < ActiveRecord::Base
   # self.route_key = :feeds
   alias_attribute :parent, :activity_page
   include Curriculumify
+  include Versionate
   validates :title, presence: true, length: {maximum: 100}, allow_blank: false
 
   def depend_on(prereq)
@@ -46,6 +47,11 @@ class Task < ActiveRecord::Base
       unlock = Unlock.create(student: student, school_class: school_class, unlockable: self)
     end
     unlock
+  end
+
+  def restore_task_children(id, version)
+    task = self.class.find(id)
+    task.restore_children(version)
   end
 
 end

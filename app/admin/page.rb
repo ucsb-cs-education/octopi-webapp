@@ -21,6 +21,7 @@ ActiveAdmin.register Page do
     @page = Page.find(params[:id])
     @page = @page.versions.find(params[:version].to_i).reify if params[:version]
     @page.save!
+    @page.restore_page_children(@page.id, params[:version])
     redirect_to history_admin_page_path, notice: "File Restored!"
   end
 

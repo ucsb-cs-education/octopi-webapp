@@ -22,6 +22,7 @@ ActiveAdmin.register Task do
     @task = Task.find(params[:id])
     @task = @task.versions.find(params[:version].to_i).reify if params[:version]
     @task.save!
+    @task.restore_task_children(@task.id, params[:version])
     redirect_to history_admin_task_path, notice: "File Restored!"
   end
 

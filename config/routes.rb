@@ -103,9 +103,11 @@ OctopiWebapp::Application.routes.draw do
   scope module: 'pages' do
     resources :curriculum_pages, path: 'curricula', except: [:create, :edit], shallow: true do
       member do
+        post :save_version
       end
       resources :module_pages, path: 'modules', except: [:index, :edit], shallow: true do
         member do
+          post :save_version
           get :project_file, to: :show_project_file
           get :sandbox_base_file, to: :show_sandbox_file
           patch :clone_sandbox
@@ -113,14 +115,19 @@ OctopiWebapp::Application.routes.draw do
         end
         resources :activity_pages, path: 'activities', except: [:index, :edit], shallow: true do
           member do
+            post :save_version
           end
           resources :activity_dependencies, only: [:destroy, :create]
           resources :offline_tasks, except: [:index, :edit], shallow: true do
+            member do
+              post :save_version
+            end
             resources :task_dependencies, only: [:destroy, :create]
             resources :activity_dependencies, only: [:destroy, :create]
           end
           resources :laplaya_tasks, except: [:index, :edit], shallow: true do
             member do
+              post :save_version
               get :base_file, to: :show_base_file
               get :solution_file, to: :show_completed_file
               patch :clone
@@ -136,10 +143,15 @@ OctopiWebapp::Application.routes.draw do
           resources :assessment_tasks, except: [:index, :edit], shallow: true do
             member do
               delete :delete_all_responses
+	      post :save_version
             end
             resources :task_dependencies, only: [:destroy, :create]
             resources :activity_dependencies, only: [:destroy, :create]
-            resources :assessment_questions, except: [:index, :edit], shallow: true
+            resources :assessment_questions, except: [:index, :edit], shallow: true do
+              member do
+                post :save_version
+              end
+            end
           end
         end
       end
