@@ -9,10 +9,10 @@
   <script type="text/javascript">
       var world;
       var serverTime = <%= Time.new.to_i %>;
-      var localStartTime = Math.round(new Date().getTime() / 1000)
+      var localStartTime = Math.floor(new Date().getTime() / 1000)
 
-      function time_in_seconds_since_epoch() {
-          return serverTime + Math.round((new Date().getTime() / 1000) - localStartTime)
+      function getLogTime() {
+          return serverTime + Math.floor((new Date().getTime() / 1000) - localStartTime)
       }
 
       window.onload = function () {
