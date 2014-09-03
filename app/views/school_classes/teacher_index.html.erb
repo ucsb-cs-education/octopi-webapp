@@ -4,11 +4,31 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <%= link_to school[:name], schools_path(school[:id]) %>
+        <label>School Admins: </label>
+        <% Staff.all.each do |staff| %>
+            <% staff_schools = School.with_role(:school_admin, staff)%>
+            <% if school[:classes] != [] %>
+                <% if staff_schools.include?(school[:classes].first.school)%>
+                    (<%= staff.name %>)
+                <% end %>
+            <% end %>
+        <% end %>
       </div>
       <div class="panel-body">
         <% school[:classes].each do |school_class| %>
             <p>
                 <%= link_to school_class.name, school_class_path(school_class) %>
+              <label>Teachers: </label>
+              <% Staff.all.each do |staff| %>
+                  <% school_classes = SchoolClass.with_role(:teacher, staff)%>
+                  <% class_staff  = Array.new%>
+                  <% if school_classes.include?(school_class) %>
+                      <% class_staff.push(staff.name) %>
+                  <% end %>
+                  <% class_staff.each do |class_staff_name|%>
+                      (<%= class_staff_name %>)
+                  <% end %>
+              <% end %>
             </p>
         <% end %>
       </div>
