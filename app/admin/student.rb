@@ -13,6 +13,11 @@ ActiveAdmin.register Student do
     column :last_name
     column :login_name
     actions
+    session[:admin_student_back_url] = request.original_url || school_path(resource.school)
+  end
+
+  action_item :only=> :show do
+    link_to 'Back', session[:admin_student_back_url]
   end
 
   show do

@@ -7,6 +7,11 @@ ActiveAdmin.register School do
     id_column
     column :name
     actions
+    session[:admin_school_back_url] = request.original_url || school_path(resource)
+  end
+
+  action_item :only=> :show do
+    link_to 'Back', session[:admin_school_back_url]
   end
 
   show :title => :name do
@@ -25,15 +30,7 @@ ActiveAdmin.register School do
     end
   end
 
-  form do |f|
-    f.inputs "School details" do
-      f.input :name
-      #f.input :ip_range
-      #f.input :student_remote_access_allowed
-      f.input :curriculum_pages, as: :check_boxes, collection: CurriculumPage.all, label: 'Curricula' # Use formtastic to output my collection of checkboxes
-    end
-    f.actions
-  end
+  form partial: 'form'
 
   filter :curriculum_pages, label: 'Curricula'
 

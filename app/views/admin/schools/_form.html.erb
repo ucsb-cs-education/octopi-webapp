@@ -1,0 +1,14 @@
+<%= semantic_form_for [:admin, @school] do |f| %>
+    <%= f.inputs 'School Details' do %>
+        <%= f.input :name%>
+        <%=f.input :curriculum_pages, as: :check_boxes, collection: CurriculumPage.all, label: 'Curriculums'%>
+    <% end %>
+    <%= f.actions do %>
+        <%= f.action :submit %>
+        <li class="cancel">
+          <%= link_to 'Cancel', :back %>
+        </li>
+    <% end %>
+
+
+<% end %>

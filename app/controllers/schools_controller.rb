@@ -27,7 +27,7 @@ class SchoolsController < ApplicationController
 
   # GET /schools/1
   def show
-
+    session[:admin_school_back_url] = request.original_url || school_path
   end
 
   # POST /schools

@@ -117,10 +117,12 @@ class SchoolClassesController < ApplicationController
   # GET /school_classes/1/edit
   def edit
     @student = Student.new
+    session[:admin_student_back_url] = request.original_url || school_path(@student.school)
   end
 
   def edit_student
     @student = Student.find(params[:student][:id])
+    session[:admin_student_back_url] = edit_school_class_path || school_path(@student.school)
     respond_to do |format|
       format.js do
         js false
