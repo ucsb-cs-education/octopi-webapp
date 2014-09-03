@@ -60,9 +60,9 @@ function set_record_time_functions() {
     setInterval(recordTime, 30000);
 }
 
-//This actually does work
 $(window).unload(function () {
     if (typeof complete_time_interval !== 'undefined') {
+        recordTime()
         complete_time_interval(true);
     }
 });

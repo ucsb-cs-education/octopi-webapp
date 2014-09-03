@@ -19,16 +19,6 @@
           world = new WorldMorph(document.getElementById('world'));
           new IDE_Morph(<%= raw @laplaya_ide_params.to_json %>).openIn(world);
           setInterval(loop, 1);
-          (function () {
-              var unloadHandler = window.onbeforeunload;
-              window.onbeforeunload = function (event) {
-                  if (unloadHandler) unloadHandler(event);
-
-                  if (typeof recordTime() != 'undefined') {
-                      recordTime()
-                  }
-              }
-          })();
       };
       function loop() {
           world.doOneCycle();
