@@ -119,6 +119,15 @@ class SchoolClassesController < ApplicationController
     @student = Student.new
   end
 
+  def edit_student
+    @student = Student.find(params[:student][:id])
+    respond_to do |format|
+      format.js do
+        js false
+      end
+    end
+  end
+
   def edit_class
   end
 

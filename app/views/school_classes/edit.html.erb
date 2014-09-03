@@ -21,6 +21,18 @@
 </p>
 <p></p>
 <%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
+
+<div class="row" id="edit_student">
+  <p><strong>Edit a student in the class:</strong></p>
+  <%= simple_form_for :student, url: edit_student_school_class_path(@school_class), method: 'post', remote: true do |f| %>
+      <div class="col-md-6 form-inputs">
+        <%= f.input :id, collection: @school_class.students.order("last_name ASC"), selected: 0, input_html: {id: 'edit_student_list'}, label: false %>
+      </div>
+      <div class="col-md-1 form-actions">
+        <%= f.button :submit, 'Edit Student' %>
+      </div>
+  <% end %>
+</div>
 <!--Add existing student to class-->
 
 <div class="row" id="existing_student">

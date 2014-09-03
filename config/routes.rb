@@ -59,6 +59,7 @@ OctopiWebapp::Application.routes.draw do
       member do
         get 'remove_class_role'
         get 'edit_class'
+        post 'edit_student'
         post 'add_teacher'
         post 'add_new_student'
         post 'add_student'
