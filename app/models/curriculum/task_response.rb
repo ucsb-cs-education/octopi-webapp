@@ -3,7 +3,7 @@ class TaskResponse < ActiveRecord::Base
   belongs_to :student
   belongs_to :task
   has_many :task_response_feedbacks, dependent: :destroy
-  before_save :unlock_dependencies, :set_task_version
+  before_save :unlock_dependencies
   validate :task_is_unlocked
   validates_presence_of :task
   scope :completed, -> { where(completed: true) }
