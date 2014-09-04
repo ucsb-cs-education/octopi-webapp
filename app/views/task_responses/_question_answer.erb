@@ -1,5 +1,5 @@
 <div class="answer">
   <div class="answer-text">
-    <%= question_answer['text'].html_safe %>
+    <span class="question-number"><%= (question_answer_counter+1).to_s%></span>: <%= question_answer['text'].html_safe %>
   </div>
 </div>
