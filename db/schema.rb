@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140902185930) do
+ActiveRecord::Schema.define(version: 20140904172626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,15 @@ ActiveRecord::Schema.define(version: 20140902185930) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+  create_table "school_class_chart_holders", force: true do |t|
+    t.integer  "school_class_id"
+    t.text     "school_class_overview"
+    t.text     "student_mini_charts"
+    t.text     "activity_progress_charts"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "school_classes", force: true do |t|
     t.integer  "school_id"
     t.string   "name",                          default: "",    null: false
@@ -208,6 +217,7 @@ ActiveRecord::Schema.define(version: 20140902185930) do
     t.boolean  "completed",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "time_intervals",  default: "[]"
   end
 
   add_index "task_responses", ["student_id", "school_class_id", "task_id"], name: "task_response_tri_index", unique: true, using: :btree
@@ -226,6 +236,15 @@ ActiveRecord::Schema.define(version: 20140902185930) do
     t.boolean  "visible_to_students", default: true
     t.boolean  "visible_to_teachers", default: true
     t.boolean  "demo",                default: false
+    t.boolean  "give_feedback",       default: true
+  end
+
+  create_table "time_intervals", force: true do |t|
+    t.integer  "begin_time"
+    t.integer  "end_time"
+    t.integer  "task_response_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "unlocks", force: true do |t|

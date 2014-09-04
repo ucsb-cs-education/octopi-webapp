@@ -14,7 +14,7 @@ class AssessmentTask < Task
     if (unlock = find_unlock_for(student, school_class)).nil?
       :locked
     else
-      unlock.hidden ? false : :visible
+      unlock.hidden ? (give_feedback ? :completed : false) : :visible
     end
   end
 end

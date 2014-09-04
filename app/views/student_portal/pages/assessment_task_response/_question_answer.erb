@@ -1,0 +1,10 @@
+<% if selected.include?(question_answer_counter) %>
+    <% answer_status = ((question_answer['correct'] == true) ? :correct : :incorrect) %>
+<% else %>
+    <% answer_status = ((question_answer['correct'] == true) ? :unanswered_correct : :normal) %>
+<% end %>
+<div class="answer <%= answer_status %>">
+  <div class="answer-text">
+    <%= question_answer['text'].html_safe %>
+  </div>
+</div>

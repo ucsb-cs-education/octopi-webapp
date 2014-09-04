@@ -8,7 +8,12 @@ class SchoolClasses::SchoolClassesStudentProgressController < SchoolClassesContr
     @info = @module_pages.map { |module_page| {title: module_page.title, id: module_page.id, activity_pages: module_page.activity_pages.student_visible.map {
         |activity| {title: activity.title, id: activity.id, unlocked: @unlocks.find_by(student: @student, unlockable: activity).nil? ? false : true,
                     tasks: activity.tasks.student_visible.map {
-                        |task| {title: task.title, id: task.id, visibility: task.get_visibility_status_for(@student, @school_class)}
+                        |task| student_response = @student.task_responses.find_by(task: task)
+                      {title: task.title,
+                       id: task.id,
+                       visibility: task.get_visibility_status_for(@student, @school_class),
+                       feedback: task.give_feedback,
+                       response_id: (student_response.nil? ? nil : student_response.id)}
                     }}
     }}
     }

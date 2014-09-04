@@ -48,6 +48,11 @@
     background-color: rgba(193, 237, 194, 0.38);
   }
 
+  .feedback {
+    border: 2px solid #EEE;
+    background-color: #FDFDFD;
+  }
+
   div#other-links {
     div {
       display: inline-block;
@@ -130,6 +135,19 @@
       font-size: 18px;
       p {
         font-size: inherit;
+      }
+    }
+
+    .question-answers {
+      //for when viewing after answering
+      .correct {
+        background-color: rgb(216, 237, 211);
+      }
+      .incorrect {
+        background-color: rgb(255, 193, 197);
+      }
+      .unanswered_correct {
+        background-color: rgb(255, 240, 175);
       }
     }
   }
