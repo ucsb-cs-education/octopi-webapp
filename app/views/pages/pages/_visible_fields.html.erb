@@ -11,4 +11,5 @@
                   label_html: {class: 'col-sm-2'},
                   input_html: {class: 'col-sm-10'}
       %>
+    <%= f.input :give_feedback, label: "Prove feedback to students?", wrapper_html: {id: 'feedback-checkbox'} if @page.is_a?(AssessmentTask) %>
 <% end %>

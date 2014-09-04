@@ -1,0 +1,27 @@
+<div class="question-box" id="assessment_question_<%= question.id %>">
+  <div class="question-title">
+    <%= question.title %>
+  </div>
+  <hr>
+  <div class="question-body">
+    <%= question.question_body.html_safe %>
+  </div>
+  <div class="question-answers">
+    <%= render partial: "question_answer",
+               collection: JSON.parse(question.answers),
+               locals: {:question => question} %>
+  </div>
+  <div class="student-response">
+    <% unless question.question_type == "freeResponse" %>
+        <%= render partial: "student_response", locals: {
+                :question_type => question.question_type,
+                :answers => JSON.parse(question.answers),
+                :selected => (student_response.selected == "" ? [] : JSON.parse(student_response.selected))
+        } %>
+    <% else %>
+        Student response: <br>
+
+        <%= student_response.selected %>
+    <% end %>
+  </div>
+</div>

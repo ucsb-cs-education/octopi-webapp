@@ -1,0 +1,18 @@
+<div id="page-title">
+  <%= @assessment_task.title %>
+</div>
+<div id='student-link'>
+  <%= link_to "Back to #{@student.name}'s progress", school_class_student_progress_path(@school_class, @student) %>
+</div>
+<div class="student-body">
+  <%= @assessment_task.student_body.html_safe %>
+</div>
+
+<div class="task-response-questions">
+  <% @task_response.assessment_question_responses.each { |aqr| %>
+      <%= render partial: 'questions', locals: {
+              question: aqr.assessment_question,
+              student_response: aqr
+      } %>
+  <% } %>
+</div>

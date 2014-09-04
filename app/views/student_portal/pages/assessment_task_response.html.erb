@@ -1,0 +1,18 @@
+<div id="page-title">
+  <%= @assessment_task.title %>
+</div>
+<div id='parent-link'>
+  <%= link_to "Return to #{@activity_page.title}", student_portal_activity_path(@activity_page) %>
+</div>
+<div class="student-body">
+  <%= @assessment_task.student_body.html_safe %>
+</div>
+
+<div class="form-inputs task-response-questions">
+  <% @student_response.assessment_question_responses.each { |aqr| %>
+      <%= render partial: 'student_portal/pages/assessment_task_response/questions', locals: {
+              question: aqr.assessment_question,
+              student_response: aqr
+      } %>
+  <% } %>
+</div>

@@ -1,0 +1,26 @@
+<div class="assessment_question_fields question-box" id="assessment_question_<%= question.id %>">
+  <div class="question-title">
+    <%= question.title %>
+  </div>
+  <div class="question-body">
+    <%= question.question_body.html_safe %>
+  </div>
+  <% unless question.question_type == "freeResponse" %>
+      <div class="question-answers">
+        <%= render partial: "student_portal/pages/assessment_task_response/question_answer",
+                   collection: JSON.parse(question.answers),
+                   locals: {
+                           :question => question,
+                           :selected => student_response.selected == "" ? [] : JSON.parse(student_response.selected)
+                   } %>
+      </div>
+  <% else %>
+      <div class="question-answers">
+        You answered:<br>
+
+        <div class="answer freeresponse">
+          <%= student_response.selected %>
+        </div>
+      </div>
+  <% end %>
+</div>
