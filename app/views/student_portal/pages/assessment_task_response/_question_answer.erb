@@ -5,6 +5,7 @@
 <% end %>
 <div class="answer <%= answer_status %>">
   <div class="answer-text">
+    <%= "<b>Correct answer:</b>".html_safe if answer_status == :unanswered_correct %>
     <%= question_answer['text'].html_safe %>
   </div>
 </div>

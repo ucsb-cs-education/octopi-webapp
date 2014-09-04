@@ -207,7 +207,11 @@ module Curriculumify
   def update_with_children_helper(klass, params, ids)
     begin
       transaction do
-        child_ids = children.pluck(:id).map { |x| x.to_s }
+        unless self.is_a?(AssessmentTask)
+          child_ids = children.pluck(:id).map { |x| x.to_s }
+        else
+          child_ids = children.where(assessment_question: nil).pluck(:id).map { |x| x.to_s }
+        end
         unless same_elements?(child_ids, ids)
           self.errors.add :children, 'update_children_order ids must match children ids'
           raise ArgumentError
