@@ -1,19 +1,56 @@
 #main-body.task_responses {
   #page-title {
     font-size: 220%;
+    margin-bottom: 2px;
+  }
+  .student-body {
+    padding: .5em;
+    outline: 1px solid black;
+    margin-bottom: 2px;
+    margin-top: 2px;
   }
   .task-response-questions {
+    p {
+      line-height: 10px;
+    }
     .question-box {
       padding: .5em;
       margin-top: 2px;
       margin-bottom: 2px;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
-      border: 2px solid #3e3e3e;
+      border-radius: 5px;
+      border: 1px solid #3e3e3e;
 
-      .question-title{
-        font-size:140%;
+      .question-title {
         padding: .4em;
+      }
+
+      .main-question {
+        padding: 2px;
+
+        .question-body {
+          margin: 2px;
+          margin-bottom: 4px;
+          padding: 4px;
+          border: 1px solid black;
+          border-radius: 2px;
+        }
+
+        .answer-text {
+          border: 1px solid #c9c9c9;
+          padding: .4em;
+          margin-top: -1px;
+          .question-number {
+            font-weight: bold;
+            display: inline-block;
+          }
+        }
+
+        .free-response-answer-div{
+          border: 1px solid #c9c9c9;
+          padding:.4em;
+          border-radius: 2px;
+        }
+
       }
     }
   }

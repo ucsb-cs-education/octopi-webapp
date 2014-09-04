@@ -1,18 +1,14 @@
 <div class="correct-answers">
   Correct Answer<%= "s" if question_type=="multipleAnswers" %>:<br>
-  <% answers.each { |a| %>
+  <% answers.each_with_index { |a, i| %>
       <% if a['correct']==true %>
-          <div class="correct-answer">
-            <%= a['text'].html_safe %>
-          </div>
+          <%= (i+1).to_s %>
       <% end %>
   <% } %>
 </div>
 <div class="student-responses">
   Student Answer<%= "s" if question_type=="multipleAnswers" %>:<br>
   <% selected.each { |r| %>
-      <div class="student-response">
-        <%= answers[r]['text'].html_safe %>
-      </div>
+      <%= (r+1).to_s %>
   <% } %>
 </div>
