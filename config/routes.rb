@@ -49,7 +49,7 @@ OctopiWebapp::Application.routes.draw do
   resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, defaults: {format: :json} do
   end
 
-  resources :task_responses, only: [:show] do
+  resources :task_responses, only: [:show, :index] do
   end
 
   get '/laplaya_files/:id.xml', format: false, defaults: {format: :xml}, to: 'laplaya_files#show'
