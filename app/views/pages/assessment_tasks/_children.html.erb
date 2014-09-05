@@ -1,4 +1,4 @@
-<% if can? :read, TaskResponse.where(task: @page) %>
+<% if can? :view_responses, @page %>
     <%= link_to "View student responses", task_responses_path(:task => @page.id), class: 'btn btn-default'%>
 <% end %>
 <ul id="children" <%= 'class=octopisortable' if can? :update, page %> >

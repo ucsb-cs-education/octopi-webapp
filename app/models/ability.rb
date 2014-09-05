@@ -87,6 +87,9 @@ class Ability
     can :create, AssessmentQuestion
     can :create, AssessmentTask
     can :see_developer_view, LaplayaFile
+
+    can :read, TaskResponse
+    can :view_responses, AssessmentTask
   end
 
   def super_staff(user)
@@ -130,6 +133,10 @@ class Ability
 
     can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, :id => school_classes_ids
     can :activity_page, SchoolClass, :id => school_classes_ids
+
+    feedback_assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids, give_feedback: true).pluck(:id)
+    can :read, TaskResponse, school_class_id: school_classes, task_id: feedback_assessment_task_ids
+    can :view_responses, AssessmentTask, id: feedback_assessment_task_ids
   end
 
   def teacher(user)
@@ -165,6 +172,9 @@ class Ability
     can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
     can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
     can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, id: school_classes
+    feedback_assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids, give_feedback: true).pluck(:id)
+    can :read, TaskResponse, school_class_id: school_classes, task_id: feedback_assessment_task_ids
+    can :view_responses, AssessmentTask, id: feedback_assessment_task_ids
 
     can :create, Student
   end
