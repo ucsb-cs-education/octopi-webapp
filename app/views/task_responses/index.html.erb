@@ -15,7 +15,7 @@
             <ul>
               <% school[:responses].each { |r| %>
                   <li>
-                    <%= link_to r[:student_name], task_response_path(r[:response_id]) %>
+                    <%= link_to r[:student_first_name]+" "+r[:student_last_name], task_response_path(r[:response_id]) %>
                   </li>
               <% } %>
             </ul>
