@@ -2,7 +2,8 @@
   <%= @assessment_task.title %>
 </div><br>
 <div id='student-link'>
-  <%= link_to "Back to #{@student.name}'s progress", school_class_student_progress_path(@school_class, @student) %>
+  <%= link_to "#{@student.name}'s progress", school_class_student_progress_path(@school_class, @student) %><br>
+  <%= link_to "All #{@assessment_task.title} responses", task_responses_path(task: @assessment_task) %>
 </div>
 <div class="student-body">
   <%= @assessment_task.student_body.html_safe %>

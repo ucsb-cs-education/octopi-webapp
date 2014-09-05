@@ -1,0 +1,29 @@
+<div id="page-title">
+  <%= link_to @task.title, assessment_task_path(@task) %>
+</div>
+<% has_answers = false
+   @response_map.each { |x|
+     has_answers = true unless x[:responses].blank?
+   } %>
+<hr>
+<% if has_answers %>
+    <% @response_map.each { |school| %>
+        <% unless school[:responses].blank? %>
+            <div class="class-title">
+              <%= school[:name] %>:
+            </div>
+            <ul>
+              <% school[:responses].each { |r| %>
+                  <li>
+                    <%= link_to r[:student_name], task_response_path(r[:response_id]) %>
+                  </li>
+              <% } %>
+            </ul>
+            <hr>
+        <% end %>
+    <% } %>
+<% else %>
+    <div id="no-answers-div">
+      None of your students have answered this task.
+    </div>
+<% end %>

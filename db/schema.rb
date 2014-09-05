@@ -154,15 +154,6 @@ ActiveRecord::Schema.define(version: 20140904172626) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
-  create_table "school_class_chart_holders", force: true do |t|
-    t.integer  "school_class_id"
-    t.text     "school_class_overview"
-    t.text     "student_mini_charts"
-    t.text     "activity_progress_charts"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "school_classes", force: true do |t|
     t.integer  "school_id"
     t.string   "name",                          default: "",    null: false
@@ -236,7 +227,7 @@ ActiveRecord::Schema.define(version: 20140904172626) do
     t.boolean  "visible_to_students", default: true
     t.boolean  "visible_to_teachers", default: true
     t.boolean  "demo",                default: false
-    t.boolean  "give_feedback",       default: true
+    t.boolean  "give_feedback",       default: false
   end
 
   create_table "time_intervals", force: true do |t|

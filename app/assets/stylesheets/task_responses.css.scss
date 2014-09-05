@@ -3,11 +3,25 @@
     font-size: 220%;
     margin-bottom: 2px;
   }
+  .class-title {
+    padding: .4em;
+    font-weight: bold;
+    font-size: 130%;
+  }
   .student-body {
     padding: .5em;
     outline: 1px solid black;
     margin-bottom: 2px;
     margin-top: 2px;
+  }
+  #no-answers-div {
+    border: 1px solid #c9c9c9;
+    background: #e5e5e5;
+    text-align: center;
+    padding: 20px;
+    border-radius: 3px;
+    font-size: 110%;
+    font-weight: bold;
   }
   .task-response-questions {
     p {
@@ -46,9 +60,9 @@
           }
         }
 
-        .free-response-answer-div{
+        .free-response-answer-div {
           border: 1px solid #c9c9c9;
-          padding:.4em;
+          padding: .4em;
           border-radius: 2px;
         }
 

@@ -1,6 +1,6 @@
 class TaskResponsesController < ApplicationController
   load_and_authorize_resource :task_response
-  before_action :verify_assessment_task
+  before_action :verify_assessment_task, only: [:show]
   #Im going to scope only being able to see ones that provide feedback into ability.rb
 
   def show
@@ -10,6 +10,21 @@ class TaskResponsesController < ApplicationController
     @activity_page = @assessment_task.activity_page
     @module_page = @activity_page.module_page
     @assessment_question_responses = @task_response.assessment_question_responses
+  end
+
+  def index
+    if params['task'].present?
+      authorize! :read, @task = Task.find(params['task'])
+      @school_classes = SchoolClass.accessible_by(@current_ability)
+      @task_responses = @task_responses.where(task: @task)
+      @response_map = @school_classes.map { |sc|
+        {:name => sc.name, :responses => @task_responses.where(school_class: sc).map {|tr|
+          {:student_name => tr.student.name,:response_id => tr.id }
+        }}
+      }
+    else
+      #list them all? Could be ALOT of data.
+    end
   end
 
   def reset
