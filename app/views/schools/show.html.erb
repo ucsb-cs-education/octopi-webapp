@@ -46,6 +46,9 @@
     <%= link_to 'View school\'s students', school_students_path(@school), class: "btn btn-default" %>
 
     <%= link_to 'View school\'s classes', school_school_classes_path(@school), class: "btn btn-default" %>
+    <%if current_staff.school_admin %>
+        <%= link_to 'View school\'s staff', admin_staff_index_path, class: "btn btn-default" %>
+    <% end %>
     <% @school.school_classes.each do |school_class| %>
         <p class = "list-group-item">
           <%= link_to school_class.name, school_class_path(school_class) %>
