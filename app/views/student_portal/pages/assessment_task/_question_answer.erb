@@ -1,6 +1,6 @@
 <div class="answer">
   <div class="input-box">
-    <input class="answer-input" name="question_<%= question.id %>_input" type="<%= (question.question_type == "singleAnswer") ? "radio":"checkbox" %>" value= <%= question_answer_counter %>>
+    <input class="answer-input number_<%= question_answer_counter%>" name="question_<%= question.id %>_input" type="<%= (question.question_type == "singleAnswer") ? "radio":"checkbox" %>" value= <%= question_answer_counter %>>
   </div>
   <div class="answer-text">
     <%= question_answer['text'].html_safe %>
