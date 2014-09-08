@@ -5,7 +5,7 @@
         <div class="form-inputs">
           <% selected_school_id = School.first.id %>
           <%= f.input :school, include_blank: false,
-                      collection: School.all.to_a, selected: selected_school_id %>
+                      collection: School.all.order('name ASC').to_a, selected: selected_school_id %>
           <%= # noinspection RubyStringKeysInHashInspection
               f.input :school_class, collection: School.find(selected_school_id).school_classes, label: 'Class',
                       include_blank: 'Please select a class', selected: 0,
