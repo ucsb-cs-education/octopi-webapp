@@ -29,17 +29,34 @@ class TaskResponsesController < ApplicationController
       @response_map = @school_classes.map { |sc|
         #show only my students and my test student
         students = sc.students.not_teststudents << current_student
-        {:name => sc.name, :responses => @task_responses.where(school_class: sc, student: students).map { |tr|
+        {:name => sc.name, :id => sc.id, :responses => @task_responses.where(school_class: sc, student: students).map { |tr|
           {:student_first_name => tr.student.first_name,
            :student_last_name => tr.student.last_name,
            :response_id => tr.id}
         }.sort_by! { |hsh| hsh[:student_last_name] }}
       }
     else
-      #Here it might instead be a good idea to create a page to
-      #view all of the task responses visible to you?
-      flash[:warning] = "You must specify a task to view the responses of."
-      redirect_to root_path
+      @curriculum_pages = CurriculumPage.accessible_by(@current_ability).order('title')
+      @pages_map = @curriculum_pages.map { |cp|
+        {:title => cp.title,
+         :id => cp.id,
+         :module_pages => cp.module_pages.map { |mp|
+           {
+               :activity_pages => mp.activity_pages.map { |ap|
+                 {
+                     :title => ap.title,
+                     :assessment_tasks => ap.tasks.where(type: 'AssessmentTask').map { |at|
+                       {
+                           name: at.title,
+                           id: at.id
+                       } if can? :view_responses, at
+                     }.compact #remove nil
+                 }
+               }
+           }
+         }
+        }
+      }
     end
   end
 
@@ -47,6 +64,7 @@ class TaskResponsesController < ApplicationController
   def verify_assessment_task
     if params['task'].present?
       authorize! :read, @task = Task.find(params['task'])
+      authorize! :view_responses, @task unless @task.nil?
       if @task.type != 'AssessmentTask'
         flash[:error] = "Only responses to question tasks can be viewed there."
         redirect_to root_path

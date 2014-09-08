@@ -1,0 +1,25 @@
+<% @pages_map.each { |cp| %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= link_to cp[:title], curriculum_page_path(cp[:id]) %></h3>
+      </div>
+      <div class="panel-body">
+        <% cp[:module_pages].each { |mp| %>
+            <% mp[:activity_pages].each { |ap| %>
+                <% unless ap[:assessment_tasks].blank? %>
+                    <div class="activity-page-title">
+                      <%= ap[:title] %>
+                    </div>
+                    <ul>
+                      <% ap[:assessment_tasks].each { |at| %>
+                          <li>
+                            <%= link_to at[:name]+" responses", task_responses_path(task: at[:id]) %>
+                          </li>
+                      <% } %>
+                    </ul>
+                <% end %>
+            <% } %>
+        <% } %>
+      </div>
+    </div>
+<% } %>
