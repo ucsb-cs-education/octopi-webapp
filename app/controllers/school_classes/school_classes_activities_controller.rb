@@ -11,7 +11,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
 
     @info = {:activity => {title: @activity_page.title, id: @activity_page.id, students_who_unlocked: @activity_unlocks.pluck(:student_id)},
              :tasks => @activity_page.tasks.student_visible.map { |task|
-               {id: task.id, title: task.title, type: task.type,
+               {id: task.id, title: task.title, type: task.type, give_feedback: task.give_feedback,
                 statuses: @students.map { |student|
                   {student.id => task.get_visibility_status_for(student, @school_class)}
                 }.reduce({}, :merge)} },

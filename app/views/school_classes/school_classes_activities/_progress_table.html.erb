@@ -13,6 +13,11 @@
     <% @info[:tasks].each { |task| %>
         <th>
           <b><%= link_to task[:title], get_path_for_task(task) %></b>
+          <% if task[:give_feedback] %>
+              <div class="view-student-responses-link">
+                <%= link_to "View student responses", task_responses_path(task: task[:id]) %>
+              </div>
+          <% end %>
         </th>
     <% } %>
   </tr>
