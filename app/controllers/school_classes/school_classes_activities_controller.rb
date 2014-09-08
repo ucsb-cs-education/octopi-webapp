@@ -40,7 +40,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
                 responses: @students.map { |student|
                   #in the removed unlocks branch, change this to also check if it is exists or if it has children
                   {student.id => student.task_responses.find_by(task: task, school_class: @school_class)}
-                }.reduce({}, :merge)} },
+                }.reduce({}, :merge)} if task.type=='LaplayaTask' || task.give_feedback }.compact,
              :students => @students.map { |student|
                {student.id => {id: student.id, name: student.name, first_name: student.first_name, last_name: student.last_name}}
              }.reduce({}, :merge)

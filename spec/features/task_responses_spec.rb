@@ -226,7 +226,7 @@ describe "Task responses page", type: :feature do
               expect(current_path).to eq(root_path)
             end
           end
-          describe "that does provides feedback" do
+          describe "that provides feedback" do
             before do
               visit task_response_path(another_student.task_responses.second)
             end

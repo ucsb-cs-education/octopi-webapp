@@ -411,11 +411,13 @@ class SchoolClassesController < ApplicationController
         @activity_page = ActivityPage.find(params[:activity][:activity_id])
         @activity_page.tasks.each { |task|
           TaskResponse.where(school_class: @school_class, task: task).each { |response|
-            response.destroy!
-            Unlock.find_by(student: response.student, school_class: @school_class, unlockable: response.task).update(hidden: false)
-            #For RemoveUnlocks branch
-            #response.delete_children!
-            #response.update(hidden: false, completed: false)
+            if can? :reset, response
+              response.destroy!
+              Unlock.find_by(student: response.student, school_class: @school_class, unlockable: response.task).update(hidden: false)
+              #For RemoveUnlocks branch
+              #response.delete_children!
+              #response.update(hidden: false, completed: false)
+            end
           }
         }
         flash[:success] = "All progress for #{@activity_page.title} successfully reset."
@@ -433,11 +435,15 @@ class SchoolClassesController < ApplicationController
         @school_class = SchoolClass.find(params[:id])
         @task = Task.find(params[:task][:task_id])
         TaskResponse.where(school_class: @school_class, task: @task).each { |response|
-          response.destroy!
-          Unlock.find_by(student: response.student, school_class: @school_class, unlockable: response.task).update(hidden: false)
-          #For RemoveUnlocks branch
-          #response.delete_children!
-          #response.update(hidden: false, completed: false)
+          if can? :reset, response
+            response.destroy!
+            Unlock.find_by(student: response.student, school_class: @school_class, unlockable: response.task).update(hidden: false)
+            #For RemoveUnlocks branch
+            #response.delete_children!
+            #response.update(hidden: false, completed: false)
+          else
+            raise "You are not authorized to perform this action."
+          end
         }
         flash[:success] = "All progress for #{@task.title} successfully reset."
         redirect_to :back

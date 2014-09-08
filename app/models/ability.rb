@@ -132,8 +132,8 @@ class Ability
     can :see_user_admin_menu
 
     can [:manual_unlock, :reset_task, :reset_activity, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, :id => school_classes_ids
-  	can :reset, TaskResponse, school_class_id: school_classes    
-	can :activity_page, SchoolClass, :id => school_classes_ids
+    can :reset, TaskResponse, school_class_id: school_classes
+    can :activity_page, SchoolClass, :id => school_classes_ids
 
     feedback_assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids, give_feedback: true).pluck(:id)
     can :read, TaskResponse, school_class_id: school_classes, task_id: feedback_assessment_task_ids
@@ -172,9 +172,10 @@ class Ability
     laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
     can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
-    can [:manual_unlock,:reset_task, :reset_activity, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, id: school_classes
+    can [:manual_unlock, :reset_task, :reset_activity, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, id: school_classes
     feedback_assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids, give_feedback: true).pluck(:id)
-    can [:read, :reset], TaskResponse, school_class_id: school_classes, task_id: feedback_assessment_task_ids
+    can :reset, LaplayaTaskResponse, school_class_id: school_classes
+    can [:read, :reset], AssessmentTaskResponse, school_class_id: school_classes, task_id: feedback_assessment_task_ids
     can :view_responses, AssessmentTask, id: feedback_assessment_task_ids
 
     can :create, Student

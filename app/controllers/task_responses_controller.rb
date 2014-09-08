@@ -1,7 +1,7 @@
 class TaskResponsesController < ApplicationController
   load_and_authorize_resource :task_response
-  before_action :verify_assessment_task, only: [:show]
-  #Im going to scope only being able to see ones that provide feedback into ability.rb
+  before_action :verify_assessment_task_response, only: [:show]
+  before_action :verify_assessment_task, only: [:index]
 
   def show
     @student = Student.find(@task_response.student)
