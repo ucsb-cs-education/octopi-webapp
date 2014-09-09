@@ -35,6 +35,12 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #GET /student_portal/modules/:id
   #student_portal_module_path
   def module_page
+  end
+
+  #GET /student_portal/modules/:id
+  #student_portal_curriculum_path
+  def curriculum_page
+    #this lists the activity pages to a module page
     respond_to do |format|
       format.html do
         @activity_pages = @module_page.activity_pages.student_visible
@@ -189,12 +195,12 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def load_project_laplaya_file
     @project_laplaya_file = ::StudentResponse::ProjectResponseLaplayaFile.find_by(
         owner: current_student,
-        module_page: @module_page
+        curriculum_page: @module_page
     )
     if @project_laplaya_file.nil?
       @project_laplaya_file ||= ::StudentResponse::ProjectResponseLaplayaFile.create(
           owner: current_student,
-          module_page: @module_page).clone(@module_page.project_base_laplaya_file)
+          curriculum_page: @module_page).clone(@module_page.project_base_laplaya_file)
       @project_laplaya_file.owner = current_user
       @project_laplaya_file.save!
     end
@@ -203,6 +209,8 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def load_variables
     action = params[:action].to_sym
     case action
+      when :curriculum_page
+        @module_page = ModulePage.find(params[:id])
       when :module_page
         @module_page = ModulePage.find(params[:id])
       when :laplaya_sandbox, :laplaya_sandbox_file

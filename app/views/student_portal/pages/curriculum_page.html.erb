@@ -1,0 +1,13 @@
+<div id="page-title">
+  <%= @module_page.title %>
+</div>
+<div id='parent-link'>
+  <%= link_to "Back", student_portal_module_path(@module_page) %>
+</div>
+<div class="student-body">
+  <%= @module_page.student_body.html_safe %>
+</div>
+
+<div id="children-pages">
+  <%= render partial: 'student_portal/pages/curriculum_page/children', collection: @activity_pages, as: :child %>
+</div>

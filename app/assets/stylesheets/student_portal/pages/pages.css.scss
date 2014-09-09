@@ -49,6 +49,12 @@
   }
 
   div#other-links {
+    table {
+      width: 100%;
+      #curriculum-th {
+        text-align: center;
+      }
+    }
     div {
       display: inline-block;
       text-align: center;
@@ -71,14 +77,28 @@
       p {
       }
     }
-    div + div {
+    #project {
       float: right;
+      a {
+        border: 3px solid darkorange;
+        background-color: sandybrown;
+        &:hover {
+          background-color: darkorange;
+        }
+      }
+    }
+    #curriculum {
       a {
         border: 3px solid deepskyblue;
         background-color: lightskyblue;
         &:hover {
           background-color: deepskyblue;
         }
+       /* border: 3px solid forestgreen;
+        background-color: lightgreen;
+        &:hover {
+          background-color: forestgreen;
+        }*/
       }
     }
   }

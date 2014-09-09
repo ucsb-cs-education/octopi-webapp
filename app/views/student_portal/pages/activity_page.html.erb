@@ -2,7 +2,7 @@
   <%= @activity_page.title %>
 </div>
 <div id='parent-link'>
-  <%= link_to "Return to #{@activity_page.module_page.title}", student_portal_module_path(@module_page) %>
+  <%= link_to "Return to #{@activity_page.module_page.title}", student_portal_curriculum_path(@module_page) %>
 </div>
 <div class="student-body">
   <%= @activity_page.student_body.html_safe %>

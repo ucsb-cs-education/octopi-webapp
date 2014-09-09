@@ -24,21 +24,32 @@
 </div>
 
 <div id="other-links">
-  <div id="sandbox">
-    <%= link_to image_tag('75px-Sandbox.png'), student_portal_module_sandbox_path(@module_page), id: 'sandbox-link' %>
-    <p>
-      Sandbox
-    </p>
-  </div>
-  <div id="project">
-    <%= link_to image_tag('375px-Open_book_nae_02.svg.png'), student_portal_module_project_path(@module_page), id: 'main-project-link' %>
-    <p>
-      Design Thinking Project
-    </p>
-  </div>
+  <table>
+    <tr>
+      <th>
+        <div id="sandbox">
+          <%= link_to image_tag('75px-Sandbox.png'), student_portal_module_sandbox_path(@module_page), id: 'sandbox-link' %>
+          <p>
+            Sandbox
+          </p>
+        </div>
+      </th>
+      <th id="curriculum-th">
+        <div id="curriculum">
+          <%= link_to image_tag('375px-Open_book_nae_02.svg.png'), student_portal_curriculum_path(@module_page), id: 'curriculum-link' %>
+          <p>
+            Curriculum
+          </p>
+        </div>
+      </th>
+      <th>
+        <div id="project">
+          <%= link_to image_tag('crane.png'), student_portal_module_project_path(@module_page), id: 'main-project-link' %>
+          <p>
+            Design Thinking Project
+          </p>
+        </div>
+      </th>
+    </tr>
+  </table>
 </div>
-
-<div id="children-pages">
-  <%= render partial: 'student_portal/pages/module_page/children', collection: @activity_pages, as: :child %>
-</div>
-

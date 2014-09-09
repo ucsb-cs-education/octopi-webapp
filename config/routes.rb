@@ -31,6 +31,7 @@ OctopiWebapp::Application.routes.draw do
       end
     end
 
+    get '/curriculum/:id', to: 'pages#curriculum_page', as: 'curriculum'
     get '/activities/:id', to: 'pages#activity_page', as: 'activity'
 
     get '/question_tasks/:id', to: 'pages#assessment_task', as: 'assessment_task'
