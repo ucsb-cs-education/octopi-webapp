@@ -195,12 +195,12 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def load_project_laplaya_file
     @project_laplaya_file = ::StudentResponse::ProjectResponseLaplayaFile.find_by(
         owner: current_student,
-        curriculum_page: @module_page
+        module_page: @module_page
     )
     if @project_laplaya_file.nil?
       @project_laplaya_file ||= ::StudentResponse::ProjectResponseLaplayaFile.create(
           owner: current_student,
-          curriculum_page: @module_page).clone(@module_page.project_base_laplaya_file)
+          module_page: @module_page).clone(@module_page.project_base_laplaya_file)
       @project_laplaya_file.owner = current_user
       @project_laplaya_file.save!
     end
