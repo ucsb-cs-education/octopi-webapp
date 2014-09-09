@@ -1,14 +1,42 @@
 <% if @page.respond_to? :visible_to %>
-      <%= f.input :visible_to, collection: [
-              {id: :all, label: 'Teachers and Students'},
-              {id: :teachers, label: 'Teachers'},
-              {id: :none, label: 'Only curriculum designers'}
-      ],
-                  value_method: lambda { |x| x[:id] },
-                  label_method: lambda { |x| x[:label] },
-                  include_blank: false,
-                  wrapper_html: {id: 'visibility-select'},
-                  label_html: {class: 'col-sm-2'},
-                  input_html: {class: 'col-sm-10'}
-      %>
+    <%= f.input :visible_to, collection: [
+            {id: :all, label: 'Teachers and Students'},
+            {id: :teachers, label: 'Teachers'},
+            {id: :none, label: 'Only curriculum designers'}
+    ],
+                value_method: lambda { |x| x[:id] },
+                label_method: lambda { |x| x[:label] },
+                include_blank: false,
+                wrapper_html: {id: 'visibility-select'},
+                label_html: {class: 'col-sm-2'},
+                input_html: {class: 'col-sm-10'}
+    %>
+<% end %>
+<% if @page.respond_to? :special_attributes %>
+    <div>
+      <b>Special attributes:</b>
+    </div>
+    <div id="current-attributes">
+      <% attributes = JSON.parse(@page.special_attributes).each { |st| %>
+          <div id="<%= st['value'] %>" class="attribute-div" value="<%= st['value'] %>">
+            <span><%= st['text'] %></span>
+            <button class="remove-attribute btn btn-xs">Remove</button>
+          </div>
+      <% } %>
+    </div>
+    <div id="add-attributes">
+      <select id="attribute-options" class="form-control">
+        <% unless attributes.any? { |h| h['value']=='optional' } %>
+            <option value="optional">Optional</option>
+        <% end %>
+        <% unless attributes.any? { |h| h['value']=='extra-credit' } %>
+            <option value="extra-credit">Extra Credit</option>
+        <% end %>
+        <% unless attributes.any? { |h| h['value']=='important' } %>
+            <option value="important">Important</option>
+        <% end %>
+      </select>
+
+      <div id="add-attributes-button" class="btn btn-default">Add</div>
+    </div>
 <% end %>

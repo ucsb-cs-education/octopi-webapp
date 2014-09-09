@@ -43,6 +43,14 @@ PagesController.prototype.show = () ->
   enableSubmitButton = PagesController.prototype.enableSubmitButton
   $('#page-title').blur(enableSubmitButton)
   $('#visibility-select').change(enableSubmitButton)
+  $("#add-attributes-button").click(enableSubmitButton)
+  $(".remove-attribute").click(enableSubmitButton)
+
+  $(document).on "click", ".remove-attribute", ->
+    me = $(this).parent()
+    $("#attribute-options").append "<option value=" + me.attr("value") + ">" + me.find("span").text() + "</option>"
+    $(this).parent().remove()
+
 
   addPageViewSelectorCallback = () ->
     CKEDITOR.disableAutoInline = true;
@@ -52,6 +60,12 @@ PagesController.prototype.show = () ->
     $("div.octopieditable").each(() ->
       inline(this)
     )
+
+    $("#add-attributes-button").click ->
+      new_attr = $("#attribute-options").val()
+      new_text = $("#attribute-options option[value=" + $("#attribute-options").val() + "]").first().text()
+      $("#current-attributes").append "<div id=" + new_attr + " class=\"attribute-div\" value=\"" + new_attr + "\">" + "<span>" + new_text + "</span>" + " <button class = \"remove-attribute btn btn-xs\" > Remove </button>"
+      $("option[value=" + new_attr + "]").remove()
 
     $("#tabs").tabs({
       activate: (event, ui) ->
@@ -90,6 +104,10 @@ PagesController.prototype.show = () ->
       teacher_body = $('#teacher-body').html()
       student_body = $('#student-body').html()
       designer_note = $('#designer-note').html()
+      special_attributes = []
+      $("#current-attributes div").each ->
+        special_attributes.push {value: $(this).attr("value"), text: $(this).find('span').text()}
+
 
       title = $('#page-title').html()
       children = $("#children")
@@ -101,6 +119,7 @@ PagesController.prototype.show = () ->
         $(this).find('.student_body').val(student_body)
         $(this).find('.designer_note').val(designer_note)
         $(this).find('.title').val(title)
+        $(this).find('.special_attributes').val(JSON.stringify(special_attributes))
         return true;
       else
         alert "Title cannot be blank"

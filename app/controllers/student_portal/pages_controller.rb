@@ -39,11 +39,11 @@ class StudentPortal::PagesController < StudentPortal::BaseController
 
   #GET /student_portal/modules/:id
   #student_portal_curriculum_path
-  def curriculum_page
+  def curriculum_page_activities
     #this lists the activity pages to a module page
     respond_to do |format|
       format.html do
-        @activity_pages = @module_page.activity_pages.student_visible
+        @activity_pages = @module_page.activity_pages.student_visible.includes(:prerequisites)
         @unlocks = Unlock.find_for(current_student, current_school_class, @activity_pages)
       end
     end
@@ -56,7 +56,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     # @tasks = @activity_page.tasks.includes(:unlocks).where("unlocks.student_id" => current_student.id, "unlocks.school_class_id" => current_school_class.id)
     respond_to do |format|
       format.html do
-        @tasks = @activity_page.tasks.student_visible
+        @tasks = @activity_page.tasks.student_visible.includes(:prerequisites)
       end
     end
   end
@@ -209,7 +209,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   def load_variables
     action = params[:action].to_sym
     case action
-      when :curriculum_page
+      when :curriculum_page_activities
         @module_page = ModulePage.find(params[:id])
       when :module_page
         @module_page = ModulePage.find(params[:id])

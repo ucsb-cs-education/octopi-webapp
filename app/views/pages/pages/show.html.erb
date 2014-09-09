@@ -37,6 +37,15 @@
               </div>
           <% end %>
           <%= render 'destroy_link', object: @page %>
+      <% else %>
+          <% if @page.respond_to? :special_attributes %>
+              <% unless (attributes = JSON.parse(@page.special_attributes)).blank? %>
+                  This page is:<br>
+                  <% attributes.each { |sa| %>
+                      <b><%= sa['text'] %></b> <br>
+                  <% } %>
+              <% end %>
+          <% end %>
       <% end %>
   <% end %>
 </div>

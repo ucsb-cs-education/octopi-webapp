@@ -1,0 +1,20 @@
+<% if child.get_visibility_status_for(current_student, current_school_class) == :locked %>
+    <div class="child-link locked <%= render partial: "special_attribute_classes", locals:{model: child} %>">
+      <%= image_tag("padlock.png", size: "21") %>
+      <%= child.title %>
+      <div class="dependency-text">
+        <% if child.prerequisites.count == 1 %>
+            First finish <%= child.prerequisites.first.title %> in <%= child.prerequisites.first.activity_page.title %>.
+        <% else %>
+            First finish
+            <% child.prerequisites.each_with_index { |x, i| %>
+                <%= "and" unless i == 0 %> <%= x.title %> in <%= x.activity_page.title %>
+            <% } %>.
+        <% end %>
+      </div>
+    </div>
+<% else %>
+    <div class="child-link <%= render partial: "special_attribute_classes", locals:{model: child} %>">
+      <%= link_to child.title, student_portal_activity_path(child) %>
+    </div>
+<% end %>

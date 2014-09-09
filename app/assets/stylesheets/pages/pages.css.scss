@@ -54,6 +54,22 @@
           text-align: left;
           padding-right: 0px;
         }
+        .attribute-div {
+          padding: .2em;
+          margin: 2px;
+        }
+        #add-attributes {
+          margin-left: 1px;
+          margin-bottom: 5px;
+          select {
+            display: inline-block;
+            margin-left: 1px;
+          }
+          #add-attributes-button {
+            display: inline-block;
+            margin-top: -3px;
+          }
+        }
       }
     }
 
@@ -211,11 +227,11 @@
     margin: .5em;
     padding: .5em;
     background: pink;
-    #enable-delete-all{
+    #enable-delete-all {
       margin-bottom: .5em;
     }
-    .delete-all-responses-form{
-      margin-bottom:0px;
+    .delete-all-responses-form {
+      margin-bottom: 0px;
     }
   }
 }

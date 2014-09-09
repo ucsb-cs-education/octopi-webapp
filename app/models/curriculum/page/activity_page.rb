@@ -3,6 +3,7 @@ class ActivityPage < Page
   belongs_to :module_page, foreign_key: :page_id
   acts_as_list scope: [:type, :page_id]
   has_many :tasks, -> { order('position ASC') }, foreign_key: :page_id, dependent: :destroy
+  validate :special_attributes_parseable
 
   has_many :activity_dependencies, foreign_key: :activity_dependant_id, dependent: :destroy
   has_many :prerequisites, :through => :activity_dependencies, source: :task_prerequisite
@@ -35,6 +36,18 @@ class ActivityPage < Page
       :locked
     else
       :visible
+    end
+  end
+
+  private
+  def special_attributes_parseable
+    begin
+      json = JSON.parse(special_attributes)
+      json.each { |j|
+        errors.add(:json, "Improperly formatted attributes") if j['value'] == nil || j['text'] == nil
+      }
+    rescue
+      errors.add(:json, "Improperly formatted attributes")
     end
   end
 

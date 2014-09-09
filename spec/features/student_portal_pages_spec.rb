@@ -56,9 +56,6 @@ describe 'student portal', type: :feature do
 
     describe 'after visiting an allowed module page' do
       it_behaves_like 'a standard page'
-      it { should have_selector('#children-pages') }
-      it { should_not have_link("#{activity_page_locked.title}", :href => student_portal_activity_path(activity_page_locked)) }
-      it { should have_link("#{activity_page.title}", :href => student_portal_activity_path(activity_page)) }
 
       describe 'after changing modules', js: true do
         before do
@@ -71,19 +68,38 @@ describe 'student portal', type: :feature do
         end
       end
 
-      describe 'after navigation to an unlocked child' do
-        before do
-          first('.child-link').find('a').click
-        end
-        it 'should redirect to child' do
-          expect(current_path).to eq(student_portal_activity_path(activity_page))
-        end
-      end
     end
 
     describe 'after visiting a module page not in the class' do
       before do
         visit(student_portal_module_path(module_page_not_in_class))
+      end
+      it { should have_warning_message('You do not have permission to visit that page.') }
+    end
+  end
+
+  describe 'curriculum activities page' do
+    let(:thisPath) { student_portal_curriculum_path(module_page) }
+
+    describe "after visiting an allowed curriculum page" do
+      it { should have_selector('#children-pages') }
+      it { should_not have_link("#{activity_page_locked.title}", :href => student_portal_activity_path(activity_page_locked)) }
+      it { should have_link("#{activity_page.title}", :href => student_portal_activity_path(activity_page)) }
+      it { should have_link("Back", :href => student_portal_module_path(module_page)) }
+    end
+
+    describe 'after navigation to an unlocked child' do
+      before do
+        first('.child-link').find('a').click
+      end
+      it 'should redirect to child' do
+        expect(current_path).to eq(student_portal_activity_path(activity_page))
+      end
+    end
+
+    describe 'after visiting a curriculum page not in the class' do
+      before do
+        visit(student_portal_curriculum_path(module_page_not_in_class))
       end
       it { should have_warning_message('You do not have permission to visit that page.') }
     end
@@ -104,8 +120,8 @@ describe 'student portal', type: :feature do
         before do
           find('#parent-link').find('a').click
         end
-        it 'should redirect to the parent module' do
-          expect(current_path).to eq(student_portal_module_path(module_page))
+        it 'should redirect to the parent curriculum page' do
+          expect(current_path).to eq(student_portal_curriculum_path(module_page))
         end
       end
 
@@ -236,7 +252,7 @@ describe 'student portal', type: :feature do
             click_button 'submit-answer-button'
             page.driver.browser.switch_to.alert.accept
             wait_for_ajax
-            visit student_portal_module_path(module_page)
+            visit student_portal_curriculum_path(module_page)
           end
           describe 'should have both activities unlocked' do
             it { should have_link("#{activity_page_locked.title}", :href => student_portal_activity_path(activity_page_locked)) }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140813220117) do
+ActiveRecord::Schema.define(version: 20140909190719) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,7 @@ ActiveRecord::Schema.define(version: 20140813220117) do
     t.text     "designer_note"
     t.boolean  "visible_to_students", default: true
     t.boolean  "visible_to_teachers", default: true
+    t.text     "special_attributes",  default: "[]"
   end
 
   add_index "pages", ["position"], name: "index_pages_on_position", using: :btree
@@ -225,6 +226,7 @@ ActiveRecord::Schema.define(version: 20140813220117) do
     t.boolean  "visible_to_students", default: true
     t.boolean  "visible_to_teachers", default: true
     t.boolean  "demo",                default: false
+    t.text     "special_attributes",  default: "[]"
   end
 
   create_table "unlocks", force: true do |t|

@@ -102,6 +102,6 @@ class Pages::ModulePagesController < Pages::PagesController
   end
 
   def module_page_params
-    params.require(:module_page).permit(:title, :teacher_body, :student_body, :designer_note, :visible_to)
+    params.require(:module_page).permit(:title, :teacher_body, :student_body, :designer_note, :visible_to, :special_attributes)
   end
 end

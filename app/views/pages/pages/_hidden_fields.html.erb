@@ -2,4 +2,5 @@
 <%= f.hidden_field :'student_body', class: 'student_body' %>
 <%= f.hidden_field :'teacher_body', class: 'teacher_body' %>
 <%= f.hidden_field :designer_note, class: 'designer_note' %>
+<%= f.hidden_field :special_attributes, class: 'special_attributes' if page.respond_to? :special_attributes %>
 <%= hidden_field_tag :'children_order', '', class: 'children_order' if page.respond_to? :children %>

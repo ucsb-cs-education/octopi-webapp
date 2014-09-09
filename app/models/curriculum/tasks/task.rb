@@ -21,6 +21,7 @@ class Task < ActiveRecord::Base
   alias_attribute :parent, :activity_page
   include Curriculumify
   validates :title, presence: true, length: {maximum: 100}, allow_blank: false
+  validate :special_attributes_parseable
 
   def depend_on(prereq)
     task_dependencies.create!(prerequisite: prereq)
@@ -46,6 +47,18 @@ class Task < ActiveRecord::Base
       unlock = Unlock.create(student: student, school_class: school_class, unlockable: self)
     end
     unlock
+  end
+
+  private
+  def special_attributes_parseable
+    begin
+      json = JSON.parse(special_attributes)
+      json.each { |j|
+        errors.add(:json, "Improperly formatted attributes") if j['value'] == nil || j['text'] == nil
+      }
+    rescue
+      errors.add(:json, "Improperly formatted attributes")
+    end
   end
 
 end

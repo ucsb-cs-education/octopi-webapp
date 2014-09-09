@@ -4,6 +4,12 @@
 
   }
 
+  #children-pages {
+    .dependency-text {
+      font-size: 60%;
+    }
+  }
+
   #select-module {
     float: right;
   }
@@ -94,11 +100,6 @@
         &:hover {
           background-color: deepskyblue;
         }
-       /* border: 3px solid forestgreen;
-        background-color: lightgreen;
-        &:hover {
-          background-color: forestgreen;
-        }*/
       }
     }
   }

@@ -131,7 +131,7 @@ class Pages::LaplayaTasksController < Pages::TasksController
   end
 
   def laplaya_task_params
-    params.require(:laplaya_task).permit(:title, :teacher_body, :student_body, :designer_note, :visible_to, :demo)
+    params.require(:laplaya_task).permit(:title, :teacher_body, :student_body, :designer_note, :visible_to, :demo, :special_attributes)
   end
 
 
