@@ -1,6 +1,8 @@
 <h1>
   Student Responses
 </h1>
+<%= button_to "Download Spreadsheet", {action: "download_csv_data", question_id: @question.id},
+              class: "btn btn-default", format: :xlsx, method: :get %>
 <% if params['task']!=nil %>
     <%= render partial: "task_param_set_index" %>
 <% elsif params['question']!=nil %>
@@ -15,7 +17,7 @@
             <% title = oq.title %>
             <% oq.children.each { |x| title+=", #{x.title}" } %>
             <div class="other-link-tab">
-              <%= link_to title, task_responses_path(question: oq), class:"btn btn-default" %>
+              <%= link_to title, task_responses_path(question: oq), class: "btn btn-default" %>
             </div>
         <% } %>
       </div>
@@ -63,7 +65,7 @@
                 </thead>
                 <tbody>
                 <!--I have a massive table here but it takes a while to load so I will disable while doing other things -->
-                <%= render partial: "responses_table_row", collection: @responses.where(assessment_question: x), locals: {type: @question.question_type}, as: 'response' %>
+                <%#= render partial: "responses_table_row", collection: @responses.where(assessment_question: x), locals: {type: @question.question_type}, as: 'response' %>
                 </tbody>
               </table>
             </div>

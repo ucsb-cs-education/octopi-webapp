@@ -1,22 +1,30 @@
-<tr>
-  <td>
-    <%= response.task_response.student.school.name %>
-  </td>
-  <td>
-    <%= response.task_response.school_class.name %>
-  </td>
-  <td>
-    <%= response.task_response.student.id.to_s %>
-  </td>
-  <td>
-    <% unless type=="freeResponse" %>
-        <% JSON.parse(response.selected).each { |r| %>
-            <%= (r+1).to_s %>
-        <% } %>
-    <% else %>
-        <div class="student-free-response">
-          <%= response.selected %>
-        </div>
-    <% end %>
-  </td>
-</tr>
+<% unless type=="freeResponse" %>
+    <% ans_array=[] %>
+    <% JSON.parse(response.selected).each { |r| %>
+        <% ans_array.push(r+1) %>
+    <% } %>
+<% else %>
+    <% ans_array=[0] %>
+<% end %>
+<% ans_array.each { |x| %>
+    <tr>
+      <td>
+        <%= response.task_response.student.school.name %>
+      </td>
+      <td>
+        <%= response.task_response.school_class.name %>
+      </td>
+      <td>
+        <%= response.task_response.student.id.to_s %>
+      </td>
+      <td>
+        <% unless type=="freeResponse" %>
+            <%= x.to_s %>
+        <% else %>
+            <div class="student-free-response">
+              <%= response.selected %>
+            </div>
+        <% end %>
+      </td>
+    </tr>
+<% } %>

@@ -43,6 +43,18 @@ class TaskResponsesController < ApplicationController
       @activity = @task.activity_page
       @questions = (AssessmentQuestion.where(assessment_question: @question) << @question).rotate(-1) #bring the first variant back to front
       @responses = AssessmentQuestionResponse.includes(:task_response).where(assessment_question: @questions)
+
+      @charts = []
+      #lets make a-da chart!
+     # case @question.question_type
+      #  when "singleAnswer"
+       #   @questions.each{|q|
+        #    @charts.push(
+        #
+        #    )
+        #  }
+        #when "multipleAnswers"
+      #end
     else
       @curriculum_pages = CurriculumPage.accessible_by(@current_ability).order('title')
       @pages_map = @curriculum_pages.map { |cp|
@@ -65,6 +77,61 @@ class TaskResponsesController < ApplicationController
          }
         }
       }
+    end
+  end
+
+  def download_csv_data
+    #when all else is finished, this will become a simple action that sends a preexisting file
+    #the actual generation will occur in resque workers
+    #perhaps when you tell it to recalculate, it will ask if it should send you an email with the csv once it has completed?
+    unless params['question_id'].nil?
+      @question = AssessmentQuestion.find(params['question_id'])
+      @task = @question.assessment_task
+      @other_questions = @task.assessment_questions.where(assessment_question: nil)
+      @activity = @task.activity_page
+      @questions = (AssessmentQuestion.where(assessment_question: @question) << @question).rotate(-1) #bring the first variant back to front
+      @responses = AssessmentQuestionResponse.includes(:task_response).where(assessment_question: @questions)
+
+      response_book = Axlsx::Package.new
+      wb = response_book.workbook
+
+      @questions.each { |q|
+        unless (type = q.question_type)=="freeResponse"
+          correct_answer = ""
+          JSON.parse(q.answers).each_with_index { |a, i|
+            if a['correct']==true
+              correct_answer+=(i+1).to_s+" "
+            end
+          }
+        end
+        wb.add_worksheet(:name => q.title) do |sheet|
+          sheet.add_row ["School", "Class", "Student Number", (type=="freeResponse" ? "Response" : "Correct Response: #{correct_answer}")]
+          @responses.where(assessment_question: q).each { |response|
+            unless type=="freeResponse"
+              ans_array=[]
+              JSON.parse(response.selected).each { |r|
+                ans_array.push(r+1)
+              }
+            else
+              ans_array=[0]
+            end
+            ans_array.each { |x|
+              sheet.add_row [response.task_response.student.school.name,
+                             response.task_response.school_class.name,
+                             response.task_response.student.id.to_s,
+                             (type=="freeResponse" ? response.selected : x.to_s)]
+            }
+          }
+        end
+      }
+      js false;
+      output = StringIO.new
+      response_book.use_shared_strings = true
+      output.write(response_book.to_stream.read)
+      send_data output.string, filename: "#{@question.title}_student_responses.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    else
+      flash[:warning] = "You must provide a question to download the spreadsheet of"
+      redirect_to root_path
     end
   end
 

@@ -52,6 +52,8 @@ OctopiWebapp::Application.routes.draw do
   resources :task_responses, only: [:show, :index] do
   end
 
+  get '/dowload_response_csv/:question_id', to: 'task_responses#download_csv_data', as: 'download_csv'
+
   get '/laplaya_files/:id.xml', format: false, defaults: {format: :xml}, to: 'laplaya_files#show'
 
   #match '/school_classes/:school_class_id/activities/:id', to: 'school_classes#activity_page', via: 'get', as: 'activity'
