@@ -1,5 +1,5 @@
 <% if can? :view_responses, @page %>
-    <%= link_to "View student responses", task_responses_path(:task => @page.id), class: 'btn btn-default'%>
+    <%= link_to "View student responses", task_responses_path(:question => @page.assessment_questions.first), class: 'btn btn-default' unless @page.assessment_questions.blank?%>
 <% end %>
 <ul id="children" <%= 'class=octopisortable' if can? :update, page %> >
   <%= render partial: 'page', collection: page.children.where(assessment_question: nil) %>

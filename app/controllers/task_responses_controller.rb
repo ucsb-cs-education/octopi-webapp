@@ -23,6 +23,7 @@ class TaskResponsesController < ApplicationController
 
   def index
     if params['task'].present?
+      # THIS MAY BE COMPLETELY OBSELETE?
       authorize! :read, @task = Task.find(params['task'])
       @school_classes = SchoolClass.accessible_by(@current_ability).order('name')
       @task_responses = @task_responses.where(task: @task)
@@ -35,6 +36,13 @@ class TaskResponsesController < ApplicationController
            :response_id => tr.id}
         }.sort_by! { |hsh| hsh[:student_last_name] }}
       }
+    elsif params['question'].present?
+      @question = AssessmentQuestion.find(params['question'])
+      @task = @question.assessment_task
+      @other_questions = @task.assessment_questions.where(assessment_question: nil)
+      @activity = @task.activity_page
+      @questions = (AssessmentQuestion.where(assessment_question: @question) << @question).rotate(-1) #bring the first variant back to front
+      @responses = AssessmentQuestionResponse.includes(:task_response).where(assessment_question: @questions)
     else
       @curriculum_pages = CurriculumPage.accessible_by(@current_ability).order('title')
       @pages_map = @curriculum_pages.map { |cp|

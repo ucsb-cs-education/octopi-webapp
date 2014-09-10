@@ -28,6 +28,38 @@
     display: inline-block;
   }
 
+  #assessment-question-response-index-container {
+    #titles {
+      font-size: 200%;
+      text-align: center;
+      line-height: 1;
+    }
+    #variant-number {
+      text-align: center;
+      font-size: 130%;
+      line-height: 1;
+    }
+    .panel {
+      table {
+        border: 1px solid lightgray;
+        tr:nth-child(odd) {
+          background: #f4f4f4;
+        }
+
+        .student-free-response {
+          width: 400px;
+          overflow-x: auto;
+        }
+      }
+    }
+    #other-question-links {
+      text-align: center;
+      .other-link-tab {
+        display:inline-block;
+      }
+    }
+  }
+
   #select-other-student-form {
     padding: 5px;
     border: 1px solid #c5c5c5;
@@ -44,8 +76,12 @@
     }
   }
 
-  .panel-title{
-    color:#428bca;
+  .panel-title {
+    color: #428bca;
+    div {
+      color: black;
+      font-size: 80%;
+    }
   }
 
   .task-response-questions {
