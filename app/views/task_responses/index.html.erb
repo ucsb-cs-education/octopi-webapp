@@ -33,7 +33,8 @@
           <div>
             <%= column_chart c[:chart], {library: {
                     hAxis: {title: "#{c[:question_title]}, Correct: #{c[:correct_answer]}"},
-                    vAxis: {title: "# of students who chose"}
+                    vAxis: {title: "# of students who chose"},
+                    colors: ["#196419"]
             }} %>
           </div>
       <% } %>
@@ -73,7 +74,7 @@
                 </thead>
                 <tbody>
                 <!--I have a massive table here but it takes a while to load so I will disable while doing other things -->
-                <%= render partial: "responses_table_row", collection: @responses.where(assessment_question: x), locals: {type: @question.question_type}, as: 'response' %>
+                <%#= render partial: "responses_table_row", collection: @responses.where(assessment_question: x), locals: {type: @question.question_type}, as: 'response' %>
                 </tbody>
               </table>
             </div>

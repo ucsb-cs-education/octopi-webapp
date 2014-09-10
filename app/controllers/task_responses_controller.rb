@@ -92,7 +92,7 @@ class TaskResponsesController < ApplicationController
             @responses.where(assessment_question: q).each { |r|
               selected = ""
               JSON.parse(r.selected).sort.each { |x|
-                selected+=(x+1).to_s+" "
+                selected+=(x+1).to_s+", "
               }
               if selected == ""
                 if response_hash["No Answer".to_sym].nil?
@@ -101,10 +101,11 @@ class TaskResponsesController < ApplicationController
                   response_hash["No Answer".to_sym]+=1
                 end
               else
-                if response_hash["Answer #{selected}".to_sym].nil?
-                  response_hash.merge!("Answer #{selected}".to_sym => 1)
+                selected = selected.chomp(', ')
+                if response_hash["Answers: #{selected}".to_sym].nil?
+                  response_hash.merge!("Answers: #{selected}".to_sym => 1)
                 else
-                  response_hash["Answer #{selected}".to_sym]+=1
+                  response_hash["Answers: #{selected}".to_sym]+=1
                 end
               end
             }
@@ -113,9 +114,10 @@ class TaskResponsesController < ApplicationController
             correct_answer = ""
             JSON.parse(q.answers).each_with_index { |a, i|
               if a['correct']==true
-                correct_answer+=(i+1).to_s+" "
+                correct_answer+=(i+1).to_s+", "
               end
             }
+            correct_answer = correct_answer.chomp(', ')
 
             @charts.push(
                 {:question_title => q.title,

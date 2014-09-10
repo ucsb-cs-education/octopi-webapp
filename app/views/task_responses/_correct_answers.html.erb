@@ -1,6 +1,8 @@
 Correct Answer<%= "s" if question.question_type=="multipleAnswers" %>:<br>
+<% correct_answers = "" %>
 <% JSON.parse(question.answers).each_with_index { |a, i| %>
     <% if a['correct']==true %>
-        <%= (i+1).to_s %>
+        <% correct_answers+= (i+1).to_s+", " %>
     <% end %>
 <% } %>
+<%= correct_answers.chomp(', ') %>
