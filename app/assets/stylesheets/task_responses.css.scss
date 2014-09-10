@@ -28,6 +28,20 @@
     display: inline-block;
   }
 
+  .download-spreadsheet-btn {
+    float: right;
+    div {
+      input {
+        position: absolute;
+        left: 69%;
+      }
+    }
+  }
+  #time-div {
+    text-align: center;
+    font-wight: bold;
+    font-size: 110%;
+  }
   #assessment-question-response-index-container {
     #titles {
       font-size: 200%;
@@ -55,7 +69,7 @@
     #other-question-links {
       text-align: center;
       .other-link-tab {
-        display:inline-block;
+        display: inline-block;
       }
     }
   }
