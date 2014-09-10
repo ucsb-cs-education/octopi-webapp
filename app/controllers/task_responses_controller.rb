@@ -22,21 +22,7 @@ class TaskResponsesController < ApplicationController
   end
 
   def index
-    if params['task'].present?
-      # THIS MAY BE COMPLETELY OBSELETE?
-      authorize! :read, @task = Task.find(params['task'])
-      @school_classes = SchoolClass.accessible_by(@current_ability).order('name')
-      @task_responses = @task_responses.where(task: @task)
-      @response_map = @school_classes.map { |sc|
-        #show only my students and my test student
-        students = sc.students.not_teststudents << current_student
-        {:name => sc.name, :id => sc.id, :responses => @task_responses.where(school_class: sc, student: students).map { |tr|
-          {:student_first_name => tr.student.first_name,
-           :student_last_name => tr.student.last_name,
-           :response_id => tr.id}
-        }.sort_by! { |hsh| hsh[:student_last_name] }}
-      }
-    elsif params['question'].present?
+    if params['question'].present?
       @question = AssessmentQuestion.find(params['question'])
       @task = @question.assessment_task
       @other_questions = @task.assessment_questions.where(assessment_question: nil)
@@ -45,7 +31,6 @@ class TaskResponsesController < ApplicationController
       @responses = AssessmentQuestionResponse.includes(:task_response).where(assessment_question: @questions)
 
       @charts = []
-      #lets make a-da chart!
       case @question.question_type
         when "singleAnswer"
           @questions.each { |q|
@@ -140,7 +125,7 @@ class TaskResponsesController < ApplicationController
                      :assessment_tasks => ap.tasks.where(type: 'AssessmentTask').map { |at|
                        {
                            name: at.title,
-                           id: at.id
+                           question_id: at.assessment_questions.first.id
                        } if can? :view_responses, at
                      }.compact #remove nil
                  }

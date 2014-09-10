@@ -1,11 +1,14 @@
-<%= button_to "Download Spreadsheet", {action: "download_csv_data", question_id: @question.id},
-              class: "btn btn-primary btn-lg", form_class: 'download-spreadsheet-btn', format: :xlsx, method: :get %>
-<h1>
-  Student Responses
-</h1>
-<% if params['task']!=nil %>
-    <%= render partial: "task_param_set_index" %>
-<% elsif params['question']!=nil %>
+<% unless params['question'].nil? %>
+    <%= button_to "Download Spreadsheet", {action: "download_csv_data", question_id: @question.id},
+                  class: "btn btn-primary btn-lg", form_class: 'download-spreadsheet-btn', format: :xlsx, method: :get %>
+    <h1>
+      Student Responses
+    </h1>
+
+    <div id="time-div">
+      This page was last updated at
+      <%= Time.new %>.
+    </div>
     <div id="assessment-question-response-index-container">
       <div id="titles">
         <%= link_to @activity.title, activity_page_path(@activity) %>
@@ -82,5 +85,8 @@
       <% } %>
     </div>
 <% else %>
-    <%= render partial: "task_param_not_set_index" %>
+    <h1>
+      Student Responses
+    </h1>
+    <%= render partial: "question_param_not_set_index" %>
 <% end %>

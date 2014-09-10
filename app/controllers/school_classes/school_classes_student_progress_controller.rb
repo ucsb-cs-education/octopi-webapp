@@ -12,7 +12,6 @@ class SchoolClasses::SchoolClassesStudentProgressController < SchoolClassesContr
                       {title: task.title,
                        id: task.id,
                        visibility: task.get_visibility_status_for(@student, @school_class),
-                       feedback: task.give_feedback,
                        response_id: (student_response.nil? ? nil : student_response.id)}
                     }}
     }}

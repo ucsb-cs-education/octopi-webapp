@@ -16,7 +16,6 @@
 <% elsif status == :completed || status == false %>
     <li class="completed-task" id="task_<%= task[:id] %>_student_<%= @student.id %>">
       <%= task[:title] %> - Completed
-      <%= link_to "View answers", task_response_path(task[:response_id]) if task[:feedback] %>
     </li>
 <% else %>
     <li class="unlocked-task" id="task_<%= task[:id] %>_student_<%= @student.id %>">

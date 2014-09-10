@@ -13,7 +13,7 @@
                     <ul>
                       <% ap[:assessment_tasks].each { |at| %>
                           <li>
-                            <%= link_to at[:name]+" responses", task_responses_path(task: at[:id]) %>
+                            <%= link_to at[:name]+" responses", task_responses_path(question: at[:question_id]) %>
                           </li>
                       <% } %>
                     </ul>
