@@ -46,15 +46,85 @@ class TaskResponsesController < ApplicationController
 
       @charts = []
       #lets make a-da chart!
-     # case @question.question_type
-      #  when "singleAnswer"
-       #   @questions.each{|q|
-        #    @charts.push(
-        #
-        #    )
-        #  }
-        #when "multipleAnswers"
-      #end
+      case @question.question_type
+        when "singleAnswer"
+          @questions.each { |q|
+            response_hash = {}
+
+            #Gather response data
+            @responses.where(assessment_question: q).each { |r|
+              if JSON.parse(r.selected) == []
+                if response_hash["No Answer".to_sym].nil?
+                  response_hash.merge!("No Answer".to_sym => 1)
+                else
+                  response_hash["No Answer".to_sym]+=1
+                end
+              else
+                selected = JSON.parse(r.selected)[0]+1
+                if response_hash["Answer #{selected}".to_sym].nil?
+                  response_hash.merge!("Answer #{selected}".to_sym => 1)
+                else
+                  response_hash["Answer #{selected}".to_sym]+=1
+                end
+              end
+            }
+
+            #Gather correct answer
+            correct_answer = ""
+            JSON.parse(q.answers).each_with_index { |a, i|
+              if a['correct']==true
+                correct_answer=(i+1).to_s
+              end
+            }
+
+            @charts.push(
+                {:question_title => q.title,
+                 :chart => response_hash.sort,
+                 :correct_answer => correct_answer
+                }
+            )
+          }
+        when "multipleAnswers"
+          @questions.each { |q|
+            response_hash = {}
+
+            #Gather response data
+            @responses.where(assessment_question: q).each { |r|
+              selected = ""
+              JSON.parse(r.selected).sort.each { |x|
+                selected+=(x+1).to_s+" "
+              }
+              if selected == ""
+                if response_hash["No Answer".to_sym].nil?
+                  response_hash.merge!("No Answer".to_sym => 1)
+                else
+                  response_hash["No Answer".to_sym]+=1
+                end
+              else
+                if response_hash["Answer #{selected}".to_sym].nil?
+                  response_hash.merge!("Answer #{selected}".to_sym => 1)
+                else
+                  response_hash["Answer #{selected}".to_sym]+=1
+                end
+              end
+            }
+
+            #Gather correct answer
+            correct_answer = ""
+            JSON.parse(q.answers).each_with_index { |a, i|
+              if a['correct']==true
+                correct_answer+=(i+1).to_s+" "
+              end
+            }
+
+            @charts.push(
+                {:question_title => q.title,
+                 :chart => response_hash.sort,
+                 :correct_answer => correct_answer
+                }
+            )
+          }
+      end
     else
       @curriculum_pages = CurriculumPage.accessible_by(@current_ability).order('title')
       @pages_map = @curriculum_pages.map { |cp|
@@ -115,12 +185,19 @@ class TaskResponsesController < ApplicationController
             else
               ans_array=[0]
             end
-            ans_array.each { |x|
+            unless ans_array == []
+              ans_array.each { |x|
+                sheet.add_row [response.task_response.student.school.name,
+                               response.task_response.school_class.name,
+                               response.task_response.student.id.to_s,
+                               (type=="freeResponse" ? response.selected : x.to_s)]
+              }
+            else
               sheet.add_row [response.task_response.student.school.name,
                              response.task_response.school_class.name,
                              response.task_response.student.id.to_s,
-                             (type=="freeResponse" ? response.selected : x.to_s)]
-            }
+                             "No Answer"]
+            end
           }
         end
       }

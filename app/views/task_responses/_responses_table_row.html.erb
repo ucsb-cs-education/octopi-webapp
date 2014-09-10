@@ -6,6 +6,7 @@
 <% else %>
     <% ans_array=[0] %>
 <% end %>
+<% unless ans_array == [] %>
 <% ans_array.each { |x| %>
     <tr>
       <td>
@@ -28,3 +29,19 @@
       </td>
     </tr>
 <% } %>
+<% else %>
+    <tr>
+      <td>
+        <%= response.task_response.student.school.name %>
+      </td>
+      <td>
+        <%= response.task_response.school_class.name %>
+      </td>
+      <td>
+        <%= response.task_response.student.id.to_s %>
+      </td>
+      <td>
+        <i>No Answer</i>
+      </td>
+    </tr>
+<%end %>
