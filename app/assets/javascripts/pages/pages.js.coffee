@@ -43,7 +43,6 @@ PagesController.prototype.show = () ->
   enableSubmitButton = PagesController.prototype.enableSubmitButton
   $('#page-title').blur(enableSubmitButton)
   $('#visibility-select').change(enableSubmitButton)
-  $('#feedback-checkbox').change(enableSubmitButton)
 
   addPageViewSelectorCallback = () ->
     CKEDITOR.disableAutoInline = true;

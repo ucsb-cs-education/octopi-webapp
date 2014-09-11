@@ -4,26 +4,6 @@ class TaskResponsesController < ApplicationController
   before_action :verify_assessment_task, only: [:index]
   before_action :make_no_cache
 
-  def show
-    redirect_to :back and return
-
-    @student = Student.find(@task_response.student)
-    @school_class = @task_response.school_class
-    @assessment_task = AssessmentTask.find(@task_response.task)
-    @activity_page = @assessment_task.activity_page
-    @module_page = @activity_page.module_page
-    @assessment_question_responses = @task_response.assessment_question_responses
-
-    #for the dropdown
-    @students = @school_class.students.not_teststudents.includes(:task_responses).where(:task_responses => {:task_id => @assessment_task, :school_class_id => @school_class}).order('last_name')
-    if current_student
-      @students << current_student if current_student.task_responses.find_by(task: @assessment_task, school_class: @school_class)
-    end
-    @responses_map = @students.map { |s|
-      s.task_responses.find_by(task: @assessment_task, school_class: @school_class).id
-    }
-  end
-
   def index
     if params['question'].present?
       @question_num = params['question']

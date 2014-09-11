@@ -14,7 +14,6 @@ class StudentPortal::PagesController < StudentPortal::BaseController
       :assessment_task,
       :offline_task,
       :laplaya_task_response,
-      :assessment_task_response,
       :assessment_response
   ], unless: :json_request?
   before_action :verify_valid_task, only: [
@@ -53,7 +52,6 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     respond_to do |format|
       format.html do
         @tasks = @activity_page.tasks.student_visible
-        @feedbacks = @current_student.task_responses.where(task: @tasks.provide_feedback)
       end
     end
   end
@@ -84,7 +82,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
         @assessment_task.children.where(assessment_question: nil).each { |x|
           child_array = (x.children << x).rotate(-1)
           @children << (
-            child_array[current_student.id%child_array.length]
+          child_array[current_student.id%child_array.length]
           )
         }
         @children.each do |x|
@@ -96,12 +94,6 @@ class StudentPortal::PagesController < StudentPortal::BaseController
         render json: {unlocked: unlocked}
       end
     end
-  end
-
-  #GET /student_portal/question_tasks/:id
-  #for viewing answers afterwards
-  def assessment_task_response
-    @assessment_question_responses = @student_response.assessment_question_responses
   end
 
   #GET /student_portal/laplaya_tasks/:id
@@ -134,11 +126,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
       format.html do
         task_response = AssessmentTaskResponse.create(assessment_response_params)
         if task_response.errors.empty?
-          if @assessment_task.give_feedback
-            redirect_to student_portal_view_assessment_task_response_path(@assessment_task)
-          else
-            redirect_to student_portal_activity_path(@assessment_task.activity_page)
-          end
+          redirect_to student_portal_activity_path(@assessment_task.activity_page)
         else
           bad_request_with_errors task_response
         end
@@ -241,12 +229,6 @@ class StudentPortal::PagesController < StudentPortal::BaseController
         @assessment_task = AssessmentTask.find(params[:id])
         @activity_page = @assessment_task.activity_page
         @module_page = @activity_page.module_page
-      when :assessment_task_response
-        @assessment_task = AssessmentTask.find(params[:id])
-        @activity_page = @assessment_task.activity_page
-        @module_page = @activity_page.module_page
-        @student_response = @current_student.task_responses.includes(:assessment_question_responses).find_by(task: @assessment_task,
-                                                                                                     school_class: current_school_class)
       when :laplaya_task, :laplaya_task_response
         @laplaya_task = LaplayaTask.find(params[:id])
         @activity_page = @laplaya_task.activity_page

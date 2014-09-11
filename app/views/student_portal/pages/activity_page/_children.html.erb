@@ -6,15 +6,9 @@
           <%= child.title %>
         </div>
     <% elsif status == :completed %>
-        <% if child.is_a?(AssessmentTask) && child.give_feedback %>
-            <div class="child-link feedback">
-              <%= link_to "View your answers to "+child.title, student_portal_view_assessment_task_response_path(child) %>
-            </div>
-        <% else %>
-            <div class="child-link complete">
-              <%= link_to child.title, path %>
-            </div>
-        <% end %>
+        <div class="child-link complete">
+          <%= link_to child.title, path %>
+        </div>
     <% else %>
         <div class="child-link">
           <%= link_to child.title, path %>
