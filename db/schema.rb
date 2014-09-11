@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140904172626) do
+ActiveRecord::Schema.define(version: 20140911205829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 20140904172626) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "assessment_question_id"
+    t.boolean  "randomize",              default: true
   end
 
   create_table "ckeditor_assets", force: true do |t|
@@ -208,7 +209,6 @@ ActiveRecord::Schema.define(version: 20140904172626) do
     t.boolean  "completed",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "time_intervals",  default: "[]"
   end
 
   add_index "task_responses", ["student_id", "school_class_id", "task_id"], name: "task_response_tri_index", unique: true, using: :btree
@@ -228,14 +228,6 @@ ActiveRecord::Schema.define(version: 20140904172626) do
     t.boolean  "visible_to_teachers", default: true
     t.boolean  "demo",                default: false
     t.boolean  "give_feedback",       default: false
-  end
-
-  create_table "time_intervals", force: true do |t|
-    t.integer  "begin_time"
-    t.integer  "end_time"
-    t.integer  "task_response_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "unlocks", force: true do |t|

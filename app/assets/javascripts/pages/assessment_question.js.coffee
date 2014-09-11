@@ -49,6 +49,9 @@ AssessmentController.prototype.show = () ->
     $('input.choices').change ->
       choicesChangeListener()
 
+    $("#assessment_question_randomize").change ->
+      enableSubmitButton()
+
     #change question type
     $("#ansType").change ->
       enableSubmitButton()

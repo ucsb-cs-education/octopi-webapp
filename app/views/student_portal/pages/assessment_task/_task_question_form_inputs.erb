@@ -6,18 +6,31 @@
     <%= question.question_body.html_safe %>
   </div>
   <div id="question-answers">
+    <!-- This thing is used to randomize the displayed answer order but keep the selection consistent. -->
+    <% if question.randomize %>
+        <% ans_array = JSON.parse(question.answers) %>
+        <% shuffled_array = ans_array.shuffle %>
+        <% index_array = [] %>
+        <% ans_array.length.times { |x| %>
+            <% index_array.push(ans_array.index(shuffled_array[x])) %>
+        <% } %>
+    <% else %>
+        <% shuffled_array = JSON.parse(question.answers) %>
+        <% index_array = (0..shuffled_array.length).map { |x| x } %>
+    <% end %>
     <%= render partial: "student_portal/pages/assessment_task/question_answer",
-               collection: JSON.parse(question.answers),
+               collection: shuffled_array,
                locals: {
+                       :index_array => index_array,
                        :question => question,
                        f: p,
                        p: p
                } %>
-    <% #hidden field needs a class so that it can be accessed in javascript  %>
+    <% #hidden field needs a class so that it can be accessed in javascript       %>
     <% unless question.question_type=="freeResponse" %>
         <%= p.hidden_field :selected, class: 'question-input' %>
     <% else %>
-        <%= p.input :selected, class: 'question-input', label: "Answer:", input_html:{rows: 4}%>
+        <%= p.input :selected, class: 'question-input', label: "Answer:", input_html: {rows: 4} %>
     <% end %>
     <%= p.hidden_field :assessment_question_id %>
   </div>

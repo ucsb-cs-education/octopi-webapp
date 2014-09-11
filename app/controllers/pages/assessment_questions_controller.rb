@@ -58,7 +58,7 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
 
   private
   def assessment_question_params
-    params.require(:assessment_question).permit(:title, :question_body, :answers, :question_type, :assessment_question_id)
+    params.require(:assessment_question).permit(:title, :question_body, :answers, :question_type, :assessment_question_id, :randomize)
   end
 
 end
