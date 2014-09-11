@@ -4,6 +4,8 @@ class TaskResponsesController < ApplicationController
   before_action :verify_assessment_task, only: [:index]
 
   def show
+    redirect_to :back and return
+
     @student = Student.find(@task_response.student)
     @school_class = @task_response.school_class
     @assessment_task = AssessmentTask.find(@task_response.task)

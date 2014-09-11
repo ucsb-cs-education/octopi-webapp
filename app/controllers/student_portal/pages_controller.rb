@@ -82,8 +82,9 @@ class StudentPortal::PagesController < StudentPortal::BaseController
             task: @assessment_task)
         @children = []
         @assessment_task.children.where(assessment_question: nil).each { |x|
+          child_array = (x.children << x).rotate(-1)
           @children << (
-          (x.children << x).sample
+            child_array[current_student.id%child_array.length]
           )
         }
         @children.each do |x|
