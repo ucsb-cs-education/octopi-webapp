@@ -23,7 +23,12 @@ class TaskResponsesController < ApplicationController
 
   def index
     if params['question'].present?
-      send_data "tmp/AssessmentQuestion_#{params['question']}_page"
+      @question_num = params['question']
+
+      @question = AssessmentQuestion.find(@question_num)
+      @task = @question.assessment_task
+      @other_questions = @task.assessment_questions.where(assessment_question: nil)
+      @activity = @task.activity_page
     else
       @curriculum_pages = CurriculumPage.accessible_by(@current_ability).order('title')
       @pages_map = @curriculum_pages.map { |cp|
@@ -49,63 +54,41 @@ class TaskResponsesController < ApplicationController
     end
   end
 
-  def download_csv_data
-    #when all else is finished, this will become a simple action that sends a preexisting file
-    #the actual generation will occur in resque workers
-    #perhaps when you tell it to recalculate, it will ask if it should send you an email with the csv once it has completed?
-    unless params['question_id'].nil?
-      @question = AssessmentQuestion.find(params['question_id'])
-      @task = @question.assessment_task
-      @other_questions = @task.assessment_questions.where(assessment_question: nil)
-      @activity = @task.activity_page
-      @questions = (AssessmentQuestion.where(assessment_question: @question) << @question).rotate(-1) #bring the first variant back to front
-      @responses = AssessmentQuestionResponse.includes(:task_response).where(assessment_question: @questions)
-
-      response_book = Axlsx::Package.new
-      wb = response_book.workbook
-
-      @questions.each { |q|
-        unless (type = q.question_type)=="freeResponse"
-          correct_answer = ""
-          JSON.parse(q.answers).each_with_index { |a, i|
-            if a['correct']==true
-              correct_answer+=(i+1).to_s+", "
-            end
-          }
-          correct_answer = correct_answer.chomp(', ')
-        end
-        wb.add_worksheet(:name => q.title) do |sheet|
-          sheet.add_row ["School", "Class", "Student Number", (type=="freeResponse" ? "Response" : "Correct Response: #{correct_answer}")]
-          @responses.where(assessment_question: q).each { |response|
-            unless type=="freeResponse"
-              ans_array=[]
-              JSON.parse(response.selected).each { |r|
-                ans_array.push(r+1)
-              }
-            else
-              ans_array=[0]
-            end
-            unless ans_array == []
-              ans_array.each { |x|
-                sheet.add_row [response.task_response.student.school.name,
-                               response.task_response.school_class.name,
-                               response.task_response.student.id.to_s,
-                               (type=="freeResponse" ? response.selected : x.to_s)]
-              }
-            else
-              sheet.add_row [response.task_response.student.school.name,
-                             response.task_response.school_class.name,
-                             response.task_response.student.id.to_s,
-                             "No Answer"]
-            end
-          }
-        end
+  def gather_assessment_task_response_data
+    js false;
+    begin
+      @assessment_task = AssessmentTask.find(params['task_id'])
+      @assessment_task.assessment_questions.each { |aq|
+        Resque.enqueue(BundleAssessmentTaskResponseData, aq.id) if aq.assessment_question.nil?
       }
-      js false;
-      output = StringIO.new
-      response_book.use_shared_strings = true
-      output.write(response_book.to_stream.read)
-      send_data output.string, filename: "#{@question.title}_student_responses.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      render :nothing => true, :status => :ok
+    rescue Exception => e
+      render js: "bootbox.alert('An error has occurred and the data is not being gathered. Please refresh and try again in a bit.')"
+    end
+  end
+
+  def gather_assessment_question_response_data
+    js false;
+    begin
+      Resque.enqueue(BundleAssessmentTaskResponseData, params['question_id'])
+      render :nothing => true, :status => :ok
+    rescue Exception => e
+      render js: "bootbox.alert('An error has occurred and the data is not being gathered. Please refresh and try again in a bit.')"
+    end
+  end
+
+  def download_csv_data
+    js false;
+    unless params['question_id'].nil?
+      #if file exists send it
+      file = "tmp/AssessmentQuestion_#{params['question_id']}_spreadsheet.xlsx"
+      if File.exists?(file)
+        @question = AssessmentQuestion.find(params['question_id'])
+        send_file file, :filename => "#{@question.assessment_task.activity_page.title}_#{@question.assessment_task.title}_#{@question.title}_responses.xlsx", :type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      else
+        flash[:warning]="The spreadsheet for this question does not appear to exist. Gathering the data again for this question may solve the problem."
+        redirect_to :back
+      end
     else
       flash[:warning] = "You must provide a question to download the spreadsheet of"
       redirect_to root_path

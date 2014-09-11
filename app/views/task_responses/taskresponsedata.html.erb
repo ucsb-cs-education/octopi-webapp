@@ -7,6 +7,16 @@
 <div id="time-div">
   This page was last updated at
   <%= Time.new %>.
+  <div id="no-data-yet-div">
+    <div>
+      <%= button_to "Gather Question Data", {controller: 'task_responses', action: "gather_assessment_question_response_data", question_id: @question.id},
+                    class: "btn btn-default btn-sm", form_class: 'gather-data-btn', method: :get, remote: true %>
+    </div>
+    <div>
+      <%= button_to "Gather Task Data", {controller: 'task_responses', action: "gather_assessment_task_response_data", task_id: @task.id},
+                    class: "btn btn-primary btn-sm", form_class: 'gather-data-btn', method: :get, remote: true %>
+    </div>
+  </div>
 </div>
 <div id="assessment-question-response-index-container">
   <div id="titles">

@@ -42,6 +42,15 @@
     font-wight: bold;
     font-size: 110%;
   }
+  #no-data-yet-div {
+    text-align: center;
+    .gather-data-button {
+      margin: 2px;
+    }
+    div{
+      display:inline-block;
+    }
+  }
   #assessment-question-response-index-container {
     #titles {
       font-size: 200%;

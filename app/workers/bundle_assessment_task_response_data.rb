@@ -9,6 +9,61 @@ class BundleAssessmentTaskResponseData
     @questions = (AssessmentQuestion.where(assessment_question: @question) << @question).rotate(-1) #bring the first variant back to front
     @responses = AssessmentQuestionResponse.includes(:task_response).where(assessment_question: @questions)
 
+    #the records are loaded
+    #*************************************Generate the spreadsheet!
+    response_book = Axlsx::Package.new
+    wb = response_book.workbook
+
+    @questions.each { |q|
+      unless (type = q.question_type)=="freeResponse"
+        correct_answer = ""
+        JSON.parse(q.answers).each_with_index { |a, i|
+          if a['correct']==true
+            correct_answer+=(i+1).to_s+", "
+          end
+        }
+        correct_answer = correct_answer.chomp(', ')
+      end
+      wb.add_worksheet(:name => q.title) do |sheet|
+        sheet.add_row ["School", "Class", "Student Number", (type=="freeResponse" ? "Response" : "Correct Response: #{correct_answer}")]
+        @responses.where(assessment_question: q).each { |response|
+          unless type=="freeResponse"
+            ans_array=[]
+            JSON.parse(response.selected).each { |r|
+              ans_array.push(r+1)
+            }
+          else
+            ans_array=[0]
+          end
+          unless ans_array == []
+            ans_array.each { |x|
+              sheet.add_row [response.task_response.student.school.name,
+                             response.task_response.school_class.name,
+                             response.task_response.student.id.to_s,
+                             (type=="freeResponse" ? response.selected : x.to_s)]
+            }
+          else
+            sheet.add_row [response.task_response.student.school.name,
+                           response.task_response.school_class.name,
+                           response.task_response.student.id.to_s,
+                           "No Answer"]
+          end
+        }
+      end
+    }
+
+    response_book.use_shared_strings = true
+    speadsheet_title = "AssessmentQuestion_#{question_id}_spreadsheet"
+    begin
+      sfile = File.open("tmp/#{speadsheet_title}.xlsx", "w")
+      response_book.serialize(sfile)
+    rescue IOError => e
+      #something went wrong...
+    ensure
+      sfile.close unless sfile == nil
+    end
+
+    #*************************************Finish loading for and generate the page
     @charts = []
     case @question.question_type
       when "singleAnswer"
@@ -92,12 +147,10 @@ class BundleAssessmentTaskResponseData
         }
     end
 
-
-    #render and save the webpage and spreadsheet
+    #*************************************render and save the webpage
     file_title = "AssessmentQuestion_#{question_id}_page"
     begin
-      file = File.open("tmp/#{file_title}", "w")
-      #rendered_page = control.render_to_string 'task_responses/taskresponsedata'
+      file = File.open("tmp/#{file_title}.html", "w")
       rendered_page = Renderer.new.renderer.render(
           :template => 'task_responses/taskresponsedata',
           :locals => {:@question => @question, :@task => @task,

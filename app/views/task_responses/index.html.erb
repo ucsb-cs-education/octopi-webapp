@@ -1,5 +1,42 @@
 <% unless params['question'].nil? %>
-    Something.
+    <% file = "tmp/AssessmentQuestion_#{@question_num}_page.html" %>
+    <% if File.exists?(file) %>
+        <%= render :file => file %>
+    <% else %>
+        <div id="assessment-question-response-index-container">
+          <div id="titles">
+            <%= link_to @activity.title, activity_page_path(@activity) %>
+            <br>
+            <%= link_to @task.title, assessment_task_path(@task) %>
+          </div>
+          <div id="other-question-links">
+            <% @other_questions.each { |oq| %>
+                <% title = oq.title %>
+                <% oq.children.each { |x| title+=", #{x.title}" } %>
+                <div class="other-link-tab">
+                  <%= link_to title, task_responses_path(question: oq), class: "btn btn-default" %>
+                </div>
+            <% } %>
+          </div>
+          <div class="student-body">
+            <%= @task.student_body.html_safe %>
+          </div>
+        </div>
+        <div id="no-data-yet-div">
+          <h2>
+            The data for this assessment question has yet to be gathered.
+          </h2>
+
+          <div>
+            <%= button_to "Generate Data ", {controller: 'task_responses', action: "gather_assessment_question_response_data", question_id: @question.id},
+                          class: "btn btn-default btn-lg", form_class: 'gather-data-btn', method: :get, remote: true %>
+          </div>
+          <div>
+            <%= button_to "Gather Task Data", {controller: 'task_responses', action: "gather_assessment_task_response_data", task_id: @task.id},
+                          class: "btn btn-primary btn-lg", form_class: 'gather-data-btn', method: :get, remote: true %>
+          </div>
+        </div>
+    <% end %>
 <% else %>
     <h1>
       Student Responses
