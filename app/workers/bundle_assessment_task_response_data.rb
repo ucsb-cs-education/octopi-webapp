@@ -2,7 +2,6 @@ class BundleAssessmentTaskResponseData
   @queue = :task_response_data
 
   def self.perform(question_id)
-    control = ActionController::Base.new
     @question = AssessmentQuestion.find(question_id)
     @task = @question.assessment_task
     @other_questions = @task.assessment_questions.where(assessment_question: nil)
@@ -94,12 +93,21 @@ class BundleAssessmentTaskResponseData
     end
 
 
-
     #render and save the webpage and spreadsheet
     file_title = "AssessmentQuestion_#{question_id}_page"
     begin
       file = File.open("tmp/#{file_title}", "w")
-      rendered_page = control.render_to_string 'task_responses/taskresponsedata',locals: {question: @question}
+      #rendered_page = control.render_to_string 'task_responses/taskresponsedata'
+      rendered_page = Renderer.new.renderer.render(
+          :template => 'task_responses/taskresponsedata',
+          :locals => {:@question => @question, :@task => @task,
+                      :@other_questions => @other_questions,
+                      :@activity => @activity,
+                      :@questions => @questions,
+                      :@responses => @responses,
+                      :@charts => @charts}
+      )
+
       file.write(rendered_page)
     rescue IOError => e
       #something went wrong...

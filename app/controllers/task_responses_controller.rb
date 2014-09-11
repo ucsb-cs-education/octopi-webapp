@@ -23,7 +23,7 @@ class TaskResponsesController < ApplicationController
 
   def index
     if params['question'].present?
-
+      send_data "tmp/AssessmentQuestion_#{params['question']}_page"
     else
       @curriculum_pages = CurriculumPage.accessible_by(@current_ability).order('title')
       @pages_map = @curriculum_pages.map { |cp|

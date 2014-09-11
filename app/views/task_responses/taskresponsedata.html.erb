@@ -1,4 +1,4 @@
-<%= button_to "Download Spreadsheet", {action: "download_csv_data", question_id: question.id},
+<%= button_to "Download Spreadsheet", {controller: 'task_responses', action: "download_csv_data", question_id: @question.id},
               class: "btn btn-primary btn-lg", form_class: 'download-spreadsheet-btn', format: :xlsx, method: :get %>
 <h1>
   Student Responses
@@ -47,7 +47,7 @@
             <%= link_to x.title, assessment_question_path(x) %>
             <% unless @question.question_type == "freeResponse" %>
                 <div>
-                  <%= render partial: "correct_answers", locals: {question: x} %>
+                  <%= render partial: "task_responses/correct_answers", locals: {question: x} %>
                 </div>
             <% end %>
           </h3>
@@ -76,7 +76,7 @@
             </thead>
             <tbody>
             <!--I have a massive table here but it takes a while to load so I will disable while doing other things -->
-            <%= render partial: "responses_table_row", collection: @responses.where(assessment_question: x), locals: {type: @question.question_type}, as: 'response' %>
+            <%= render partial: "task_responses/responses_table_row", collection: @responses.where(assessment_question: x), locals: {type: @question.question_type}, as: 'response' %>
             </tbody>
           </table>
         </div>
