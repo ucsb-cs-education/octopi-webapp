@@ -52,7 +52,7 @@ OctopiWebapp::Application.routes.draw do
   resources :task_responses, only: [:show, :index] do
   end
 
-  get '/dowload_response_csv/:question_id', to: 'task_responses#download_csv_data', as: 'download_csv'
+  get '/dowload_response_csv/:task_id', to: 'task_responses#download_csv_data', as: 'download_csv'
   get '/gather_assessment_task_response_data/:task_id', to: 'task_responses#gather_assessment_task_response_data', as: 'gather_task_data'
   get '/gather_assessment_question_response_data/:question_id', to: 'task_responses#gather_assessment_question_response_data', as: 'gather_question_data'
 

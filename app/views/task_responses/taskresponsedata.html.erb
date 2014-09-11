@@ -1,4 +1,4 @@
-<%= button_to "Download Spreadsheet", {controller: 'task_responses', action: "download_csv_data", question_id: @question.id},
+<%= button_to "Download Spreadsheet", {controller: 'task_responses', action: "download_csv_data", task_id: @task.id},
               class: "btn btn-primary btn-lg", form_class: 'download-spreadsheet-btn', format: :xlsx, method: :get %>
 <h1>
   Student Responses
@@ -9,12 +9,12 @@
   <%= Time.new %>.
   <div id="no-data-yet-div">
     <div>
-      <%= button_to "Gather Question Data", {controller: 'task_responses', action: "gather_assessment_question_response_data", question_id: @question.id},
+      <%= button_to "Regenerate Data for this Question", {controller: 'task_responses', action: "gather_assessment_question_response_data", question_id: @question.id},
                     class: "btn btn-default btn-sm", form_class: 'gather-data-btn', method: :get, remote: true %>
     </div>
     <div>
-      <%= button_to "Gather Task Data", {controller: 'task_responses', action: "gather_assessment_task_response_data", task_id: @task.id},
-                    class: "btn btn-primary btn-sm", form_class: 'gather-data-btn', method: :get, remote: true %>
+      <%= button_to "Regenerate Data for all Questions", {controller: 'task_responses', action: "gather_assessment_task_response_data", task_id: @task.id},
+                    class: "btn btn-default btn-sm", form_class: 'gather-data-btn', method: :get, remote: true %>
     </div>
   </div>
 </div>
