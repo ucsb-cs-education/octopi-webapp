@@ -194,124 +194,16 @@ describe 'student portal', type: :feature do
           it { should change(Unlock, :count).by(2) }
         end
         describe 'after redirecting', driver: :selenium do
-          describe 'if the assessment task provides feedback' do
-            describe 'if the question has multiple answers' do
-              before do
-                assessment_question.update(question_type: 'multipleAnswers')
-                visit student_portal_assessment_task_path(assessment_task)
-              end
-              describe 'if the student answered correctly' do
-                before do
-                  first(".number_1").click
-                  assessment_task.update(give_feedback: true)
-                  wait_for_ajax
-                  click_button 'submit-answer-button'
-                  page.driver.browser.switch_to.alert.accept
-                  wait_for_ajax
-                end
-                it "should redirect to the page to view responses" do
-                  expect(current_path).to eq(student_portal_view_assessment_task_response_path(assessment_task))
-                end
-                it { should have_link("Return to #{activity_page.title}", :href => student_portal_activity_path(activity_page.id)) }
-                it { should have_button("Done") }
-                it { should have_selector(".normal", :count => 3) }
-                it { should_not have_selector(".incorrect") }
-                it { should_not have_selector(".unanswered_correct") }
-                it { should have_selector(".correct", :count => 1) }
-              end
-              describe 'if the student did not answer correctly' do
-                before do
-                  first(".number_0").click
-                  first(".number_2").click
-                  assessment_task.update(give_feedback: true)
-                  wait_for_ajax
-                  click_button 'submit-answer-button'
-                  page.driver.browser.switch_to.alert.accept
-                  wait_for_ajax
-                end
-                it "should redirect to the page to view responses" do
-                  expect(current_path).to eq(student_portal_view_assessment_task_response_path(assessment_task))
-                end
-                it { should have_link("Return to #{activity_page.title}", :href => student_portal_activity_path(activity_page.id)) }
-                it { should have_button("Done") }
-                it { should have_selector(".normal", :count => 1) }
-                it { should have_selector(".incorrect", :count => 2) }
-                it { should have_selector(".unanswered_correct", :count => 1) }
-                it { should_not have_selector(".corrent") }
-              end
-              describe 'if the student answered correctly and incorrectly' do
-                before do
-                  first(".number_1").click
-                  first(".number_2").click
-                  assessment_task.update(give_feedback: true)
-                  wait_for_ajax
-                  click_button 'submit-answer-button'
-                  page.driver.browser.switch_to.alert.accept
-                  wait_for_ajax
-                end
-                it "should redirect to the page to view responses" do
-                  expect(current_path).to eq(student_portal_view_assessment_task_response_path(assessment_task))
-                end
-                it { should have_link("Return to #{activity_page.title}", :href => student_portal_activity_path(activity_page.id)) }
-                it { should have_button("Done") }
-                it { should have_selector(".normal", :count => 2) }
-                it { should have_selector(".incorrect", :count => 1) }
-                it { should_not have_selector(".unanswered_correct") }
-                it { should have_selector(".correct", :count => 1) }
-              end
-            end
-            describe 'if the question has a single answer' do
-              describe 'if the student answered correctly' do
-                before do
-                  first(".number_1").click
-                  assessment_task.update(give_feedback: true)
-                  wait_for_ajax
-                  click_button 'submit-answer-button'
-                  page.driver.browser.switch_to.alert.accept
-                  wait_for_ajax
-                end
-                it "should redirect to the page to view responses" do
-                  expect(current_path).to eq(student_portal_view_assessment_task_response_path(assessment_task))
-                end
-                it { should have_link("Return to #{activity_page.title}", :href => student_portal_activity_path(activity_page.id)) }
-                it { should have_button("Done") }
-                it { should have_selector(".normal", :count => 3) }
-                it { should_not have_selector(".incorrect") }
-                it { should_not have_selector(".unanswered_correct") }
-                it { should have_selector(".correct", :count => 1) }
-              end
-              describe 'if the student did not answer correctly' do
-                before do
-                  assessment_task.update(give_feedback: true)
-                  wait_for_ajax
-                  click_button 'submit-answer-button'
-                  page.driver.browser.switch_to.alert.accept
-                  wait_for_ajax
-                end
-                it "should redirect to the page to view responses" do
-                  expect(current_path).to eq(student_portal_view_assessment_task_response_path(assessment_task))
-                end
-                it { should have_link("Return to #{activity_page.title}", :href => student_portal_activity_path(activity_page.id)) }
-                it { should have_button("Done") }
-                it { should have_selector(".normal", :count => 2) }
-                it { should have_selector(".incorrect", :count => 1) }
-                it { should have_selector(".unanswered_correct", :count => 1) }
-                it { should_not have_selector(".corrent") }
-              end
-            end
+          before do
+            click_button 'submit-answer-button'
+            page.driver.browser.switch_to.alert.accept
+            wait_for_ajax
           end
-          describe 'if the assessment task does not provide feedback' do
-            before do
-              click_button 'submit-answer-button'
-              page.driver.browser.switch_to.alert.accept
-              wait_for_ajax
-            end
-            it 'should redirect to the parent activity' do
-              expect(current_path).to eq(student_portal_activity_path(activity_page))
-            end
-            it { should have_link("#{assessment_task_locked.title}", :href => student_portal_assessment_task_path(assessment_task_locked)) }
-            it { should_not have_link("#{assessment_task.title}", :href => student_portal_assessment_task_path(assessment_task)) }
+          it 'should redirect to the parent activity' do
+            expect(current_path).to eq(student_portal_activity_path(activity_page))
           end
+          it { should have_link("#{assessment_task_locked.title}", :href => student_portal_assessment_task_path(assessment_task_locked)) }
+          it { should_not have_link("#{assessment_task.title}", :href => student_portal_assessment_task_path(assessment_task)) }
         end
 
         describe 'after attempting to visit the newly unlocked assessment task', driver: :selenium do
