@@ -207,7 +207,7 @@ class LaplayaFile < ActiveRecord::Base
   def cloudify_media_node(node, attr, type)
     if node
       data = node.attributes[attr]
-      if data && data.start_with?('data')
+      if data && data.start_with?('data') && data != 'data:,'
         asset = LaplayaFileAsset.asset_for_data_uri!(data, type)
         node.attributes[attr] = asset.data.url
         @_media_xml_content_changed = true
