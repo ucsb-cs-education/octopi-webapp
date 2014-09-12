@@ -1,6 +1,7 @@
 require 'student_signin_module'
 class ApplicationController < ActionController::Base
   include StudentSigninModule
+  before_filter :set_cache_buster, only: [:index]
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -74,6 +75,14 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :password, :password_confirmation, :super_staff, :school_admin, :teacher, :first_name, :last_name, roles: [], role_ids: [], school_id: []) }
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :super_staff, :school_admin, :teacher, :password, :password_confirmation, :first_name, :last_name, :current_password, roles: [], role_ids: [], school_id: []) }
+  end
+
+  def set_cache_buster
+    if self.is_a?(TaskResponsesController)
+      response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+      response.headers["Pragma"] = "no-cache"
+      response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+    end
   end
 
 end

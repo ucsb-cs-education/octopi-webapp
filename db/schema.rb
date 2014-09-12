@@ -227,7 +227,6 @@ ActiveRecord::Schema.define(version: 20140911205829) do
     t.boolean  "visible_to_students", default: true
     t.boolean  "visible_to_teachers", default: true
     t.boolean  "demo",                default: false
-    t.boolean  "give_feedback",       default: false
   end
 
   create_table "unlocks", force: true do |t|

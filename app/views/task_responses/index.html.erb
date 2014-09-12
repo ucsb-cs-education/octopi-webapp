@@ -1,7 +1,7 @@
 <% unless params['question'].nil? %>
     <% file = "tmp/AssessmentQuestion_#{@question_num}_page.html" %>
     <% if File.exists?(file) %>
-        <!-- Problems with browser page cacheibng are making this not work correctly -->
+        <!-- Rails is only ever sending the first version of this made. How do we stop that? -->
         <%= render :file => file %>
     <% else %>
         <div id="assessment-question-response-index-container">

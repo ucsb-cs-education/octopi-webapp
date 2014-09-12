@@ -2,7 +2,6 @@ class TaskResponsesController < ApplicationController
   load_and_authorize_resource :task_response
   before_action :verify_assessment_task_response, only: [:show]
   before_action :verify_assessment_task, only: [:index]
-  before_action :make_no_cache
 
   def index
     if params['question'].present?
@@ -103,12 +102,5 @@ class TaskResponsesController < ApplicationController
       flash[:error] = "Only responses to question tasks can be viewed there."
       redirect_to root_path
     end
-  end
-
-  def make_no_cache
-    #This doesnt actually seem to work?
-    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 end

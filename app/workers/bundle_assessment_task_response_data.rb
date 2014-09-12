@@ -17,6 +17,7 @@ class BundleAssessmentTaskResponseData
       response_book = Axlsx::Package.new
       wb = response_book.workbook
 
+      taken_names = []
       @task.assessment_questions.each { |q|
         unless (type = q.question_type)=="freeResponse"
           correct_answer = ""
@@ -27,7 +28,14 @@ class BundleAssessmentTaskResponseData
           }
           correct_answer = correct_answer.chomp(', ')
         end
-        wb.add_worksheet(:name => q.title) do |sheet|
+
+        #prevent name collisions
+        ws_title = q.title
+        taken_names.push(ws_title)
+        if taken_names.count(ws_title)>1
+          ws_title = ws_title+"(#{taken_names.count(ws_title)})"
+        end
+        wb.add_worksheet(:name => ws_title) do |sheet|
           sheet.add_row ["School", "Class", "Student Number", (type=="freeResponse" ? "Response" : "Correct Response: #{correct_answer}")]
           @all_responses.where(assessment_question: q).each { |response|
             unless type=="freeResponse"
@@ -151,9 +159,9 @@ class BundleAssessmentTaskResponseData
     end
 
     #*************************************render and save the webpage
-    file_title = "AssessmentQuestion_#{question_id}_page"
+    file_title = "AssessmentQuestion_#{question_id}_page.html"
     begin
-      file = File.open("tmp/#{file_title}.html", "w")
+      file = File.open("tmp/#{file_title}", "w")
       rendered_page = Renderer.new.renderer.render(
           :template => 'task_responses/taskresponsedata',
           :locals => {:@question => @question, :@task => @task,

@@ -31,6 +31,7 @@ describe 'page', type: :feature do
         describe 'should still have an editable title' do
           before do
             title = find('#page-title')
+            click_link "",:href => "#teacher-body"
             find('#teacher-body').click
             title.click
             title.native.send_keys('ThisIsATestToMakeSureYouCanStillClickOnABlankTitle')
@@ -41,6 +42,7 @@ describe 'page', type: :feature do
         describe 'should not be updatable' do
           before do
             title = find('#page-title')
+            click_link "",:href => "#teacher-body"
             teacher_body = find('#teacher-body')
             clear_text_box(teacher_body)
             teacher_body.native.send_keys('INVALID UPDATE')
@@ -60,6 +62,7 @@ describe 'page', type: :feature do
 
     describe 'that can be edited correctly', js: true do
       before do
+        click_link "",:href => "#teacher-body"
         teacher_body=find('#teacher-body')
         teacher_body.click
         teacher_body.set('SampleTeacherBody')
@@ -169,6 +172,7 @@ describe 'page', type: :feature do
         before do
           click_button('Add a new', match: :first)
           wait_for_ajax
+          click_link "",:href => "#teacher-body"
           find('#teacher-body').click
           find('#page-title').click
           wait_for_and_click_on_button('Save changes to')
@@ -215,6 +219,7 @@ describe 'page', type: :feature do
 
     describe 'after attempting to edit the boxes', js: true do
       before do
+        click_link "",:href => "#teacher-body"
         teacher_body=find('#teacher-body')
         teacher_body.native.send_keys('SampleTeacherBody')
 
@@ -447,6 +452,7 @@ describe 'page', type: :feature do
           wait_for_ajax
           click_button('Add a new Assessment Task')
           wait_for_ajax
+          click_link "",:href => "#teacher-body"
           find('#teacher-body').click
           find('#page-title').click
           wait_for_and_click_on_button('Save changes to')
