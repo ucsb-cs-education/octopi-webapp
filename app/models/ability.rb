@@ -128,9 +128,9 @@ class Ability
     can :read, LaplayaFile, {:curriculum_id => page_ids, :type => 'TaskBaseLaplayaFile'}
     can :see_user_admin_menu
 
-    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help:reset_task, :reset_activity], SchoolClass, :id => school_classes_ids
-can :reset, TaskResponse, school_class_id: school_classes    
-can :activity_page, SchoolClass, :id => school_classes_ids
+    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help, :reset_task, :reset_activity], SchoolClass, :id => school_classes_ids
+    can :reset, TaskResponse, school_class_id: school_classes
+    can :activity_page, SchoolClass, :id => school_classes_ids
   end
 
   def teacher(user)
@@ -139,7 +139,7 @@ can :activity_page, SchoolClass, :id => school_classes_ids
 
     schools = School.with_role(:teacher, user).pluck(:id)
     can :read, School, :id => schools
-    can :read, Student, :id => Student.select(:id,:school_id).where(school_id: schools).ids
+    can :read, Student, :id => Student.select(:id, :school_id).where(school_id: schools).ids
 
     school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
     school_classes_teacher = SchoolClass.with_role(:teacher, user).pluck(:school_id)
@@ -160,12 +160,12 @@ can :activity_page, SchoolClass, :id => school_classes_ids
     can :read_update, SchoolClass, :id => school_classes
     can :crud, Student, :id => Student.select(:id).joins(:school_classes).where(school_classes: {id: school_classes}).distinct.ids
     can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
-    can [:read,:show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
+    can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
     assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
     can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
-    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help:reset_task, :reset_activity], SchoolClass, id: school_classes
+    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help, :reset_task, :reset_activity], SchoolClass, id: school_classes
     can :reset, TaskResponse, school_class_id: school_classes
 
     can :create, Student
