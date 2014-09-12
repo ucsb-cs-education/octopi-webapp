@@ -35,7 +35,7 @@
           <%= f.button :submit, 'Sign in' %>
         </div>
     <% end %>
-    <%= link_to 'Not a student? Click here.', new_staff_session_path %>
+    <%= link_to 'Not a student? Click here.', (current_staff.nil?) ? new_staff_session_path : staff_home_redirect_path %>
 
 <% else %>
 
