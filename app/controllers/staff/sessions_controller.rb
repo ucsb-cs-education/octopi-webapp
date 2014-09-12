@@ -3,14 +3,15 @@ class Staff::SessionsController < Devise::SessionsController
   include StudentSigninModule
 
   def after_sign_in_path_for(resource)
-    if Rails.env.production?
-      sign_in_url = url_for(:action => 'new', :controller => 'sessions', :only_path => false, protocol: 'https')
+    if action_name == 'new'
+      redirect_url = staff_root_path
     else
-      sign_in_url = url_for(:action => 'new', :controller => 'sessions', :only_path => false, protocol: 'http' )
+      protocol = (Rails.env.production?) ? 'https' : 'http'
+      sign_in_url = url_for(:action => 'new', :controller => 'sessions', :only_path => false, protocol: protocol)
+      redirect_url = stored_location_for(resource) || request.referer || staff_root_path
+      redirect_url = super if redirect_url == sign_in_url
+      redirect_url = staff_root_path if redirect_url == sign_in_url
     end
-    redirect_url = stored_location_for(resource) || request.referer || staff_root_path
-    redirect_url = super if redirect_url == sign_in_url
-    redirect_url = staff_root_path if redirect_url == sign_in_url
     redirect_url
   end
 

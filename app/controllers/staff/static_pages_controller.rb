@@ -21,6 +21,11 @@ class Staff::StaticPagesController < ApplicationController
   def home
   end
 
+  def continue_session
+    flash[:info] = 'You were already signed in. Welcome back!'
+    redirect_to controller: controller_name, action: :home
+  end
+
   private
   def staff_laplaya_helper
     if params[:debug] === 'true'

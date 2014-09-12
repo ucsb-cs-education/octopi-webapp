@@ -89,6 +89,7 @@ OctopiWebapp::Application.routes.draw do
   namespace :staff do
     root 'static_pages#home'
     get 'home', to: 'static_pages#home'
+    get 'home_redirect', to: 'static_pages#continue_session'
     get 'laplaya', to: 'static_pages#laplaya'
     get 'laplaya/:id', to: 'static_pages#laplaya_file', as: 'laplaya_file'
   end
