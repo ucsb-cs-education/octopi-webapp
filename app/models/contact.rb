@@ -9,7 +9,7 @@ class Contact < MailForm::Base
   def headers
     {
         :subject => 'Octopi-Webapp Contact Form',
-        :to => 'jhenkens@cs.ucsb.edu',
+        :to => 'octopi@lists.cs.ucsb.edu',
         :from => %("#{name}" <#{email}>)
     }
   end
