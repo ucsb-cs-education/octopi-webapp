@@ -35,7 +35,7 @@ class SchoolClasses::SchoolClassesActivitiesController < SchoolClassesController
     @students = ordered_students
 
     @info = {:activity => {title: @activity_page.title, id: @activity_page.id, students_who_unlocked: @activity_unlocks.pluck(:student_id)},
-             :tasks => @activity_page.tasks.student_visible.map { |task|
+             :tasks => @activity_page.tasks.where(type: 'LaplayaTask').student_visible.map { |task|
                {id: task.id, title: task.title, type: task.type,
                 responses: @students.map { |student|
                   #in the removed unlocks branch, change this to also check if it is exists or if it has children

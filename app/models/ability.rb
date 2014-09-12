@@ -129,8 +129,8 @@ class Ability
     can :see_user_admin_menu
 
     can [:manual_unlock, :reset_task, :reset_activity, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, :id => school_classes_ids
-  	can :reset, TaskResponse, school_class_id: school_classes    
-	can :activity_page, SchoolClass, :id => school_classes_ids
+    can :reset, TaskResponse, school_class_id: school_classes, type: 'LaplayaTask'
+    can :activity_page, SchoolClass, :id => school_classes_ids
   end
 
   def teacher(user)
@@ -160,13 +160,13 @@ class Ability
     can :read_update, SchoolClass, :id => school_classes
     can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
     can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
-    can [:read,:show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
+    can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
     assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
     can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
-    can [:manual_unlock,:reset_task, :reset_activity, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, id: school_classes
-	can :reset, TaskResponse, school_class_id: school_classes
+    can [:manual_unlock, :reset_task, :reset_activity, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, id: school_classes
+    can :reset, TaskResponse, school_class_id: school_classes, type: 'LaplayaTask'
 
     can :create, Student
   end

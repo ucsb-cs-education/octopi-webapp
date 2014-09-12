@@ -409,7 +409,7 @@ class SchoolClassesController < ApplicationController
       SchoolClass.transaction do
         @school_class = SchoolClass.find(params[:id])
         @activity_page = ActivityPage.find(params[:activity][:activity_id])
-        @activity_page.tasks.each { |task|
+        @activity_page.tasks.where(type: 'LaplayaTask').each { |task|
           TaskResponse.where(school_class: @school_class, task: task).each { |response|
             response.destroy!
             Unlock.find_by(student: response.student, school_class: @school_class, unlockable: response.task).update(hidden: false)
