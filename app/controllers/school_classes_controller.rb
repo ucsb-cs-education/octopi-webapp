@@ -65,7 +65,7 @@ class SchoolClassesController < ApplicationController
     @school_class = SchoolClass.find(params[:school_class_id])
     pass = SecureRandom.uuid
     test_student = current_staff.test_student
-    test_student ||= TestStudent.create(first_name: "TestStudent", last_name: current_staff.last_name,
+    test_student ||= TestStudent.create(first_name: 'TestStudent', last_name: current_staff.last_name,
                                         login_name: SecureRandom.uuid, password: pass,
                                         password_confirmation: pass, school: @school_class.school,
                                         staff: current_staff)
@@ -81,7 +81,7 @@ class SchoolClassesController < ApplicationController
     if teacher_using_test_student?
       sign_out_student current_student
     else
-      flash[:error] = "You are not signed in as a test student."
+      flash[:error] = 'You are not signed in as a test student.'
     end
     redirect_to :back
   end
@@ -91,9 +91,9 @@ class SchoolClassesController < ApplicationController
       @school_class = SchoolClass.find(params[:school_class_id])
       current_student.delete_all_data_for(@school_class)
       current_student.school_classes << @school_class
-      flash[:success] = "All progress for Test Student reset."
+      flash[:success] = 'All progress for Test Student reset.'
     else
-      flash[:error] = "You are not signed in as a test student."
+      flash[:error] = 'You are not signed in as a test student.'
     end
     redirect_to :back
   end
@@ -152,90 +152,6 @@ class SchoolClassesController < ApplicationController
 
   def student_spreadsheet_help
     #dont need to do anything
-  end
-
-  def find_columns
-    errors = []
-    begin
-      #open the file
-      if params[:student_csv][:csv].nil?
-        raise "You must choose a spreadsheet to do this."
-      end
-      tmpfl = params[:student_csv][:csv]
-      extension = File.extname(tmpfl.original_filename)
-      if supported_filetype.include?(extension)
-        @sheet = Roo::Spreadsheet.open(tmpfl.tempfile.to_path, extension: extension.to_sym).to_a
-      else
-        raise "Cannot read a '#{extension}' file. Try saving as a .xls, .xlsx, .ods, or .csv file."
-      end
-
-      #parse the file into something usable
-      @sheet[0].each_with_index { |header, num|
-        unless (header =~ /first(\s*name)?\s*\z/i).nil?
-          errors.push("Columns '#{@sheet[0][@first_name_column]}' and '#{header}' are both valid headers for First name.
-          Please remove or rename one and try again.") unless @first_name_column.nil?
-          @first_name_column = num
-        end
-        unless (header =~ /last(\s*name)?\s*\z/i).nil?
-          errors.push("Columns '#{@sheet[0][@last_name_column]}' and '#{header}' are both valid headers for Last name.
-          Please remove or rename one and try again.") unless @last_name_column.nil?
-          @last_name_column = num
-        end
-        unless (header =~ /password\s*\z/i).nil?
-          errors.push("Columns '#{@sheet[0][@password_column]}' and '#{header}' are both valid headers for Password.
-          Please remove or rename one and try again.") unless @password_column.nil?
-          @password_column = num
-        end
-        unless (header =~ /password(\s*|[-_])confirm/i).nil?
-          errors.push("Columns '#{@sheet[0][@password_confirmation_column]}' and '#{header}'
-          are both valid headers for Password confirmation. Please remove or rename one and try again.") unless @password_confirmation_column.nil?
-          @password_confirmation_column = num
-        end
-        unless (header =~ /login(\s*name)?\s*\z/i).nil?
-          errors.push("Columns '#{@sheet[0][@login_name_column]}' and '#{header}' are both valid headers for Login name.
-          Please remove or rename one and try again.") unless @login_name_column.nil?
-          @login_name_column = num
-        end
-        unless (header =~ /octopi(\s*student)?\s*(id|num)/i).nil?
-          errors.push("Columns '#{@sheet[0][@id_column]}' and '#{header}' are both valid headers for Octopi student number.
-          Please remove or rename one and try again.") unless @id_column.nil?
-          @id_column = num
-        end
-      }
-
-      if @first_name_column == nil
-        errors.push("Could not find a first name column. Please create a column with the header 'First' or 'First name' and try again.")
-      end
-      if @last_name_column == nil
-        errors.push("Could not find a last name column. Please create a column with the header 'Last' or 'Last name' and try again.")
-      end
-      if @login_name_column == nil
-        errors.push("Could not find a login name column. Please create a column with the header 'Login' or 'Login name' and try again.")
-      end
-      if @password_column == nil
-        errors.push("Could not find a password column. Please create a column with the header 'Password' and try again.")
-      end
-      if @password_confirmation_column == nil
-        errors.push("Could not find a password confirmation column. Please create a column with the header 'Password confirmation' or 'Password confirm' and try again.")
-      end
-      if @id_column == nil
-        msg = "Could not find an 'Octopi student number' or 'Octopi id' column. This is valid, but some duplicate students may be created. Please carefully
-        check that no unintended changes are made."
-        if errors.empty?
-          flash[:warning] = msg
-        else
-          errors.push(msg)
-        end
-      end
-
-    rescue Exception => e
-      errors.push(e.message)
-    end
-
-    unless errors.empty?
-      flash[:error] = errors.join("<br/>").html_safe
-      redirect_to :back
-    end
   end
 
   # POST /school_classes/:id/edit_students_via_csv
@@ -332,7 +248,7 @@ class SchoolClassesController < ApplicationController
 
   def student_found(student, pass = nil)
     if student.school_classes.include?(@school_class)
-      if params[:student_csv][:change_passwords] == "1" && pass!=nil
+      if params[:student_csv][:change_passwords] == '1' && pass!=nil
         :change_password
       end
     else
@@ -371,8 +287,8 @@ class SchoolClassesController < ApplicationController
         redirect_to edit_school_class_path(@school_class)
       end
     rescue Exception => e
-      flash[:error] = "An error has occured. Please contact us so we can resolve the issue. Possible causes include attempts to do some
-      actions twice and using the incorrect Octopi student number. Please check your sheet for problems and try again."
+      flash[:error] = 'An error has occured. Please contact us so we can resolve the issue. Possible causes include attempts to do some
+      actions twice and using the incorrect Octopi student number. Please check your sheet for problems and try again.'
       redirect_to edit_school_class_path(@school_class)
     end
   end
@@ -380,8 +296,8 @@ class SchoolClassesController < ApplicationController
   def download_class_csv
     class_book = Axlsx::Package.new
     wb = class_book.workbook
-    wb.add_worksheet(:name => "Class Info") do |sheet|
-      sheet.add_row ["First Name", "Last Name", "Login Name", "Octopi Student Number", "Password", "Password Confirmation"]
+    wb.add_worksheet(:name => 'Class Info') do |sheet|
+      sheet.add_row ['First Name', 'Last Name', 'Login Name', 'Octopi Student Number', 'Password', 'Password Confirmation']
       ordered_students.each { |student|
         sheet.add_row [student.first_name, student.last_name, student.login_name, student.id]
       }
@@ -390,7 +306,7 @@ class SchoolClassesController < ApplicationController
     output = StringIO.new
     class_book.use_shared_strings = true
     output.write(class_book.to_stream.read)
-    send_data output.string, filename: "#{@school_class.name}_info.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    send_data output.string, filename: "#{@school_class.name}_info.xlsx", type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   end
 
   # POST /school_classes/:school_class_id/manual_unlock
@@ -418,6 +334,90 @@ class SchoolClassesController < ApplicationController
   end
 
   private
+  def find_columns
+    errors = []
+    begin
+      #open the file
+      if params[:student_csv][:csv].nil?
+        raise 'You must choose a spreadsheet to do this.'
+      end
+      tmpfl = params[:student_csv][:csv]
+      extension = File.extname(tmpfl.original_filename)
+      if supported_filetype.include?(extension)
+        @sheet = Roo::Spreadsheet.open(tmpfl.tempfile.to_path, extension: extension.to_sym).to_a
+      else
+        raise "Cannot read a '#{extension}' file. Try saving as a .xls, .xlsx, .ods, or .csv file."
+      end
+
+      #parse the file into something usable
+      @sheet[0].each_with_index { |header, num|
+        unless (header =~ /first(\s*name)?\s*\z/i).nil?
+          errors.push("Columns '#{@sheet[0][@first_name_column]}' and '#{header}' are both valid headers for First name.
+          Please remove or rename one and try again.") unless @first_name_column.nil?
+          @first_name_column = num
+        end
+        unless (header =~ /last(\s*name)?\s*\z/i).nil?
+          errors.push("Columns '#{@sheet[0][@last_name_column]}' and '#{header}' are both valid headers for Last name.
+          Please remove or rename one and try again.") unless @last_name_column.nil?
+          @last_name_column = num
+        end
+        unless (header =~ /password\s*\z/i).nil?
+          errors.push("Columns '#{@sheet[0][@password_column]}' and '#{header}' are both valid headers for Password.
+          Please remove or rename one and try again.") unless @password_column.nil?
+          @password_column = num
+        end
+        unless (header =~ /password(\s*|[-_])confirm/i).nil?
+          errors.push("Columns '#{@sheet[0][@password_confirmation_column]}' and '#{header}'
+          are both valid headers for Password confirmation. Please remove or rename one and try again.") unless @password_confirmation_column.nil?
+          @password_confirmation_column = num
+        end
+        unless (header =~ /login(\s*name)?\s*\z/i).nil?
+          errors.push("Columns '#{@sheet[0][@login_name_column]}' and '#{header}' are both valid headers for Login name.
+          Please remove or rename one and try again.") unless @login_name_column.nil?
+          @login_name_column = num
+        end
+        unless (header =~ /octopi(\s*student)?\s*(id|num)/i).nil?
+          errors.push("Columns '#{@sheet[0][@id_column]}' and '#{header}' are both valid headers for Octopi student number.
+          Please remove or rename one and try again.") unless @id_column.nil?
+          @id_column = num
+        end
+      }
+
+      if @first_name_column == nil
+        errors.push("Could not find a first name column. Please create a column with the header 'First' or 'First name' and try again.")
+      end
+      if @last_name_column == nil
+        errors.push("Could not find a last name column. Please create a column with the header 'Last' or 'Last name' and try again.")
+      end
+      if @login_name_column == nil
+        errors.push("Could not find a login name column. Please create a column with the header 'Login' or 'Login name' and try again.")
+      end
+      if @password_column == nil
+        errors.push("Could not find a password column. Please create a column with the header 'Password' and try again.")
+      end
+      if @password_confirmation_column == nil
+        errors.push("Could not find a password confirmation column. Please create a column with the header 'Password confirmation' or 'Password confirm' and try again.")
+      end
+      if @id_column == nil
+        msg = "Could not find an 'Octopi student number' or 'Octopi id' column. This is valid, but some duplicate students may be created. Please carefully
+        check that no unintended changes are made."
+        if errors.empty?
+          flash[:warning] = msg
+        else
+          errors.push(msg)
+        end
+      end
+
+    rescue Exception => e
+      errors.push(e.message)
+    end
+
+    unless errors.empty?
+      flash[:error] = errors.join('<br/>').html_safe
+      redirect_to :back
+    end
+  end
+
   def student_params
     params.require(:student).permit(:first_name, :last_name, :login_name, :password, :password_confirmation)
   end
