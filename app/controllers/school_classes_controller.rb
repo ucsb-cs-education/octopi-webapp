@@ -163,8 +163,8 @@ class SchoolClassesController < ApplicationController
     school = @school_class.school
     @actions = @sheet.each_with_index.map { |student, i|
       unless i == 0
-        action = nil;
-        flags = [];
+        action = nil
+        flags = []
         student[@login_name_column] = student[@login_name_column].downcase unless student[@login_name_column]==nil
         if @id_column == nil || student[@id_column] == nil
           if this_student = school.students.find_by(login_name: student[@login_name_column])
@@ -179,36 +179,19 @@ class SchoolClassesController < ApplicationController
               end
             end
           else
-            if student[@login_name_column].nil?
-              action = :nil_login
-              flags.push(:error)
-            elsif student[@first_name_column].nil?
-              action = :nil_first_name
-              flags.push(:error)
-            elsif student[@last_name_column].nil?
-              action = :nil_last_name
-              flags.push(:error)
-            elsif student[@password_column].nil?
-              action = :nil_password
-              flags.push(:error)
-            elsif @login_name_list.include?(student[@login_name_column])
-              action = :repeat_new_login
-              flags.push(:error)
-            elsif school.students.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column])!=nil
-              action = :create
-              flags.push(:duplicate)
-              @login_name_list.push(student[@login_name_column])
-            else
-              action = :create
-              @login_name_list.push(student[@login_name_column])
-            end
-            if student[@password_column] != student[@password_confirmation_column] && action!=:nil_password
-              flags.push :incorrect_confirmation
-            end
+            action = make_new_student_from_csv(student, flags)
           end
         else
-          begin
-            this_student = Student.find(student[@id_column].to_i)
+          this_student = Student.find_by(id: student[@id_column].to_i)
+          if this_student.nil?
+            action = :student_does_not_exist
+            flags.push(:error)
+            flags.push(student[@id_column].to_i)
+            if this_student = school.students.find_by(login_name: student[@login_name_column])
+              flags.push(this_student.name)
+              flags.push(this_student.id)
+            end
+          else
             if school.students.include?(this_student)
               action = student_found(this_student, student[@password_column])
               flags.push(this_student.id)
@@ -227,14 +210,6 @@ class SchoolClassesController < ApplicationController
                 flags.push(this_student.id)
               end
             end
-          rescue ActiveRecord::RecordNotFound => e
-            action = :student_does_not_exist
-            flags.push(:error)
-            flags.push(student[@id_column].to_i)
-            if this_student = school.students.find_by(login_name: student[@login_name_column])
-              flags.push(this_student.name)
-              flags.push(this_student.id)
-            end
           end
         end
 
@@ -244,16 +219,6 @@ class SchoolClassesController < ApplicationController
          flags: flags}
       end
     }
-  end
-
-  def student_found(student, pass = nil)
-    if student.school_classes.include?(@school_class)
-      if params[:student_csv][:change_passwords] == '1' && pass!=nil
-        :change_password
-      end
-    else
-      :add_to_class
-    end
   end
 
   # POST /school_classes/:id/do_csv_actions
@@ -302,7 +267,7 @@ class SchoolClassesController < ApplicationController
         sheet.add_row [student.first_name, student.last_name, student.login_name, student.id]
       }
     end
-    js false;
+    js false
     output = StringIO.new
     class_book.use_shared_strings = true
     output.write(class_book.to_stream.read)
@@ -334,6 +299,45 @@ class SchoolClassesController < ApplicationController
   end
 
   private
+  def student_found(student, pass = nil)
+    if student.school_classes.include?(@school_class)
+      if params[:student_csv][:change_passwords] == '1' && pass!=nil
+        :change_password
+      end
+    else
+      :add_to_class
+    end
+  end
+
+  def make_new_student_from_csv(student, school, flags)
+    if student[@login_name_column].nil?
+      action = :nil_login
+      flags.push(:error)
+    elsif student[@first_name_column].nil?
+      action = :nil_first_name
+      flags.push(:error)
+    elsif student[@last_name_column].nil?
+      action = :nil_last_name
+      flags.push(:error)
+    elsif student[@password_column].nil?
+      action = :nil_password
+      flags.push(:error)
+    elsif @login_name_list.include?(student[@login_name_column])
+      action = :repeat_new_login
+      flags.push(:error)
+    elsif school.students.find_by(first_name: student[@first_name_column], last_name: student[@last_name_column])!=nil
+      action = :create
+      flags.push(:duplicate)
+      @login_name_list.push(student[@login_name_column])
+    else
+      action = :create
+      @login_name_list.push(student[@login_name_column])
+    end
+    if student[@password_column] != student[@password_confirmation_column] && action!=:nil_password
+      flags.push :incorrect_confirmation
+    end
+  end
+
   def find_columns
     errors = []
     begin
