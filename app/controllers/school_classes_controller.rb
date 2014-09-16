@@ -232,6 +232,7 @@ class SchoolClassesController < ApplicationController
   # POST /school_classes/:id/do_csv_actions
   def do_csv_actions
     begin
+      school = @school_class.school
       #All of the '.strip's are here to prevent whitespace from causing problems.
       SchoolClass.transaction do
         unless params[:student_csv].nil?
@@ -239,20 +240,43 @@ class SchoolClassesController < ApplicationController
             action = JSON.parse action[1]
             case action['action']
               when 'create'
+                first_name = action['first_name'].strip
+                last_name = action['last_name'].strip
+                login_name = action['login_name'].strip
+                password = action['password'].strip
+                password_confirmation = action['password'].strip
                 Student.transaction do
-                  @student = Student.new(first_name: action['first_name'].strip, last_name: action['last_name'].strip,
-                                         login_name: action['login_name'].strip, password: action['password'].strip,
-                                         password_confirmation: action['password'].strip, school: @school_class.school)
+                  @student = Student.new(
+                      first_name: first_name,
+                      last_name: last_name,
+                      login_name: login_name,
+                      password: password,
+                      password_confirmation: password_confirmation,
+                      school: school
+                  )
                   @student.save!
                   @school_class.students << @student unless @school_class.students.include? @student
                 end
               when 'change_password'
+                password = action['password'].strip
+                password_confirmation = action['password'].strip
                 @student = Student.find(action['flags'][0])
-                @student.update_attributes({password: action['password'].strip, password_confirmation: action['password'].strip})
+                unless @student.school == school
+                  raise 'Student must belong to this school'
+                end
+                @student.update_attributes({
+                                               password: password,
+                                               password_confirmation: password_confirmation
+                                           })
                 @student.save!
               when 'add_to_class'
                 @student = Student.find(action['flags'][0])
+                unless @student.school == school
+                  raise 'Student must belong to this school'
+                end
                 @student.school_classes << @school_class unless @student.school_classes.include?(@school_class)
+              else
+                # type code here
             end
           }
           flash[:success] = 'Success!'
@@ -279,7 +303,7 @@ class SchoolClassesController < ApplicationController
     output = StringIO.new
     class_book.use_shared_strings = true
     output.write(class_book.to_stream.read)
-    send_data output.string, filename: "#{@school_class.name}_info.xlsx", type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    send_data output.string, filename: "#{@school_class.name} class info.xlsx", type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   end
 
   # POST /school_classes/:school_class_id/manual_unlock
