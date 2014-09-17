@@ -8,6 +8,8 @@ class AssessmentQuestion < ActiveRecord::Base
   validate :valid_answer_type
   has_paper_trail :on=> [:update, :destroy]
   include Curriculumify
+  undef :visible_to
+  undef :visible_to=
 
   protected
   def type
