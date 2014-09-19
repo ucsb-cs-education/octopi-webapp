@@ -2,10 +2,10 @@ module Curriculumify
   def self.included(base)
     base.after_create :initialize_curriculum_id
     base.before_validation :update_curriculum_id, unless: :new_record?
-    base.validates :parent, presence: true, unless: :curriculum_page?
-    base.validates :curriculum_id, presence: true, unless: :new_record?
+    base.validates_presence_of :parent, unless: :curriculum_page?
+    base.validates_presence_of :curriculum_id, unless: :new_record?
+    base.validates_presence_of :title, allow_blank: false, if: :has_title?
     base.validate :curriculum_id_validator, unless: :new_record?
-    base.validate :title, presence: true, allow_blank: false, if: :has_title?
     base.before_save :set_visibility_statuses, if: :has_visibility_status?
     base.after_initialize :initialize_visible_to, if: :has_visibility_status?
     attr_accessor :visible_to
@@ -57,7 +57,17 @@ module Curriculumify
   end
 
 
+  protected
+  def curriculumify_type
+    if self.respond_to? :type
+      self.type
+    else
+      self.class.to_s
+    end
+  end
+
   private
+
   def cloudify_helper(text, params)
     regex = /data:(?<mime>[\w\/\-\.]+);(?<encoding>\w+),(?<data>[^"'>]+)|http:\/\/i\.imgur\.com\/[^"'>]+/
     text.gsub(regex) do |match|
@@ -111,15 +121,15 @@ module Curriculumify
     type == 'Page' || type == 'Task'
   end
 
-  def has_visibility_status?(type = self.type)
+  def has_visibility_status?(type = self.curriculumify_type)
     (type =~ /((Task|Project|Sandbox)Base|TaskCompleted)LaplayaFile|CurriculumPage|AssessmentQuestion/).nil?
   end
 
-  def has_title?
+  def has_title?(type = self.curriculumify_type)
     (type =~ /((Task|Project|Sandbox)Base|TaskCompleted)LaplayaFile/).nil?
   end
 
-  def curriculum_page?
+  def curriculum_page?(type = self.curriculumify_type)
     type == 'CurriculumPage'
   end
 
@@ -181,7 +191,6 @@ module Curriculumify
     end
   end
 
-  private
   def set_visibility_statuses
     visible_to = self.visible_to.to_sym
     if [:all, :teachers, :none].include? visible_to

@@ -48,7 +48,6 @@ describe "Assessment question page", type: :feature do
     it { should_not have_selector('input[type=radio]') }
     it { should have_selector('input[type=checkbox]', :count => 5) }
     it { should_not have_selector('div.ischecked') }
-    it { should have_selector('div.isNotchecked') }
   end
   describe "after changing question type to Free Response", js: true do
     before do
@@ -58,7 +57,6 @@ describe "Assessment question page", type: :feature do
     it { should_not have_selector('input[type=radio]') }
     it { should_not have_selector('input[type=checkbox]') }
     it { should_not have_selector('div.ischecked') }
-    it { should_not have_selector('div.isNotchecked') }
     it { should_not have_selector('#addAns')}
     it { should have_selector('#free-response-note')}
   end

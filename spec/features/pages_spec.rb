@@ -363,8 +363,8 @@ describe 'page', type: :feature do
         visit thisPath
       end
 
-      it { should have_content('Edit LaPlaya') }
-      it { should_not have_content('Open LaPlaya') }
+      it { should have_content('Edit file in LaPlaya') }
+      it { should_not have_content('Open file in LaPlaya') }
       it { should have_content('Design Thinking Project File') }
       it { should have_content('Sandbox File') }
 
@@ -384,8 +384,8 @@ describe 'page', type: :feature do
         visit thisPath
       end
 
-      it { should_not have_content('Edit LaPlaya') }
-      it { should have_content('Open LaPlaya') }
+      it { should_not have_content('Edit file in LaPlaya') }
+      it { should have_content('Open file in LaPlaya') }
       it { should have_content('Design Thinking Project File') }
       it { should have_content('Sandbox File') }
 
@@ -484,8 +484,9 @@ describe 'page', type: :feature do
         visit thisPath
       end
 
-      it { should have_content('Edit LaPlaya') }
-      it { should have_content('Task Base LaPlaya File') }
+      it { should have_content('Edit file in LaPlaya') }
+      it { should have_content('Starting File') }
+      it { should have_content('Solution File') }
 
       it_behaves_like 'a page'
       it_behaves_like 'a child page'
@@ -503,9 +504,10 @@ describe 'page', type: :feature do
         visit thisPath
       end
 
-      it { should_not have_content('Edit LaPlaya') }
-      it { should have_content('Open LaPlaya') }
-      it { should have_content('Task Base LaPlaya File') }
+      it { should_not have_content('Edit file in LaPlaya') }
+      it { should have_content('Open file in LaPlaya') }
+      it { should have_content('Starting File') }
+      it { should have_content('Solution File') }
       it { should_not have_selector('div[id=edit-dependencies]') }
 
       describe 'without a clone button' do

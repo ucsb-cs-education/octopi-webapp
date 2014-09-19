@@ -10,21 +10,21 @@ describe UnlocksController, type: :controller do
     sign_in_as(super_staff)
   end
 
-  describe "Unlock" do
-    describe "when created" do
+  describe 'Unlock' do
+    describe 'when created' do
       before do
         school_class
         student
         task
         unlock
       end
-      it "should increment the count" do
+      it 'should increment the count' do
         expect do
           xhr :post, :create, student_id: student.id, school_class_id: school_class.id, unlock:
               {unlockable: task, student: student, school_class: school_class, hidden: false}
         end.to change(Unlock, :count).by(1)
       end
-      it "should respond with OK" do
+      it 'should respond with OK' do
         xhr :post, :create, student_id: student.id, school_class_id: school_class.id, unlock:
             {unlockable: task, student: student, school_class: school_class, hidden: false}
         expect(response.status).to eq(200)

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 
-describe "SchoolClasses", type: :feature do
-  shared_examples_for "visible new student form" do
-    describe "the new student form" do
+describe 'SchoolClasses', type: :feature do
+  shared_examples_for 'visible new student form' do
+    describe 'the new student form' do
       it 'should be visible' do
         visibility = :visible
         expect(find('#new_student', visible: visibility)).to have_field('First name', visible: visibility)
@@ -22,8 +22,8 @@ describe "SchoolClasses", type: :feature do
     end
   end
 
-  shared_examples_for "hidden new student form" do
-    describe "the new student form" do
+  shared_examples_for 'hidden new student form' do
+    describe 'the new student form' do
       it 'should be hidden' do
         visibility = :hidden
         expect(find('#new_student', visible: visibility)).to have_field('First name', visible: visibility)
@@ -47,7 +47,7 @@ describe "SchoolClasses", type: :feature do
   let(:student_in_class) { FactoryGirl.create(:student, school: school_class.school, school_class: school_class) }
   subject { page }
 
-  describe "Show page" do
+  describe 'Show page' do
     before do
       sign_in_as_staff(staff)
       student_in_class
@@ -56,9 +56,9 @@ describe "SchoolClasses", type: :feature do
     it { should have_content('Curriculum') }
     it { should have_content('About') }
     it { should have_content('School:') }
-    it { should have_link('Edit Students', href: edit_school_class_path(school_class)) }
+    it { should have_link('Edit Class', href: edit_school_class_path(school_class)) }
     it { should have_link('Back', href: school_school_classes_path(school_class.school)) }
-    it { should have_table("classlist") }
+    it { should have_table('classlist') }
     it 'should contain info for the students in the table' do
       expect(find('table#classlist')).to have_content(student_in_class.first_name)
       expect(find('table#classlist')).to have_content(student_in_class.last_name)
@@ -66,7 +66,7 @@ describe "SchoolClasses", type: :feature do
     end
   end
 
-  describe "Edit Page" do
+  describe 'Edit Page' do
     before(:each) do
       sign_in_as_staff(staff)
       add_existing_student
@@ -81,9 +81,9 @@ describe "SchoolClasses", type: :feature do
     end
     let(:module_page) { FactoryGirl.create(:assessment_question).assessment_task.activity_page.module_page }
 
-    it { should have_table("classlist") }
-    it { should have_link("Back", href: school_class_path(school_class)) }
-    it { should have_content("School:") }
+    it { should have_table('classlist') }
+    it { should have_link('Back', href: school_class_path(school_class)) }
+    it { should have_content('School:') }
     it { should have_content("Modules in #{module_page.curriculum_page.title.downcase}") }
     it { should have_content(module_page.title) }
     it 'should contain info for the students in the table' do
@@ -92,22 +92,22 @@ describe "SchoolClasses", type: :feature do
       expect(find('table#classlist')).to have_content(student_in_class.login_name)
     end
 
-    describe "Updating a class" do
+    describe 'Updating a class' do
       before do
         fill_in 'Class Name', with: 'This is a test class name'
         check "school_class_module_page_ids_#{module_page.id}"
         click_button 'Save class settings'
       end
-      it { should have_content("Class was successfully updated.") }
+      it { should have_content('Class was successfully updated.') }
       it 'should update the model' do
         expect(school_class.reload.name).to eq('This is a test class name')
         expect(school_class.reload.module_pages).to eq([module_page])
       end
     end
 
-    describe "Add existing student" do
+    describe 'Add existing student' do
       before do
-        select add_existing_student.name, from: "existing_student_list"
+        select add_existing_student.name, from: 'existing_student_list'
       end
       it 'should add student to class', js: true do
         expect do
@@ -117,19 +117,19 @@ describe "SchoolClasses", type: :feature do
       end
     end
 
-    describe "adding a new student", js: true do
+    describe 'adding a new student', js: true do
 
       let (:student) { FactoryGirl.build(:student) }
 
       before { click_button 'Add New Student' }
 
-      include_examples "visible new student form"
+      include_examples 'visible new student form'
 
-      describe "clicking the cancel new student button" do
+      describe 'clicking the cancel new student button' do
         before { click_button 'Cancel' }
-        include_examples "hidden new student form"
+        include_examples 'hidden new student form'
       end
-      describe "with the right info" do
+      describe 'with the right info' do
         before do
           fill_in 'First name', with: student.first_name
           fill_in 'Last name', with: student.last_name
@@ -148,7 +148,7 @@ describe "SchoolClasses", type: :feature do
             click_button 'Add New Student'
             wait_for_ajax
           end
-          include_examples "hidden new student form"
+          include_examples 'hidden new student form'
           it 'should contain info for the new student in the table' do
             expect(find('table#classlist')).to have_content(student.first_name)
             expect(find('table#classlist')).to have_content(student.last_name)
@@ -157,7 +157,7 @@ describe "SchoolClasses", type: :feature do
           it { should_not have_content('Please review the problems below:') }
         end
       end
-      describe "with a different password and confirmation" do
+      describe 'with a different password and confirmation' do
         before do
           fill_in 'First name', with: student.first_name
           fill_in 'Last name', with: student.last_name
@@ -177,7 +177,7 @@ describe "SchoolClasses", type: :feature do
             wait_for_ajax
           end
           it { should_not have_content(student.name) }
-          include_examples "visible new student form"
+          include_examples 'visible new student form'
           it { should have_content('doesn\'t match Password') }
           it { should have_error_message('Please review the problems below:') }
         end

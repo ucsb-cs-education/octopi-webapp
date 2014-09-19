@@ -254,6 +254,5 @@ class LaplayaFile < ActiveRecord::Base
 
   def add_invalidation(key, value)
     self.manual_invalidations << {key => value}
-    self.errors.add key, value
   end
 end
