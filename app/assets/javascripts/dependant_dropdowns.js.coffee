@@ -29,8 +29,11 @@ updateDropDowns = ->
         $.getJSON url, (data) ->
           observer.empty().append prompt
           $.each data, (i, object) ->
-            observer.append $("<option>").attr("value", object[key_method]).text(object[value_method])
-            observer.attr "disabled", false
+            if object[key_method] == '__optgroup'
+              observer.append $("<optgroup>").attr("label", object[value_method])
+            else
+              observer.append $("<option>").attr("value", object[key_method]).text(object[value_method])
+              observer.attr "disabled", false
       else
         observer.append empty_prompt
       observer.change()

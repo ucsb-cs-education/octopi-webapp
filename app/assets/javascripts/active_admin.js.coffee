@@ -26,6 +26,7 @@ AdminStaffController.prototype.edit = () ->
               $('#staff_basic_roles_input').find('ol.choices-group').
               append(string.replace(/:id:/g, data.id).replace(/:name:/g, data.name))
             role_dropdown.val('').change()
+            role_dropdown.focus()
 
           error: (jqXHR, textStatus, error) ->
             alert(error)
