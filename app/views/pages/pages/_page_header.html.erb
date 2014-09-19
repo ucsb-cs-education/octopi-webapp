@@ -1,0 +1,16 @@
+<div class="page-header">
+  <h1>
+    <span id="page-title" <%= 'contenteditable=true' if can? :update, @page %> ><%= @page.title %></span>
+  </h1>
+
+  <p>Last updated: <%= get_time(@page) %>.
+    <% if @page.respond_to?(:visible_to) && @page.visible_to != :all %>
+        Visible to <strong><%= @page.visible_to.to_s.sub('_',' ') %></strong>.
+    <% end %>
+  </p>
+  <% if @page.respond_to? :parent %>
+      <div class='parent'>
+        <%= link_to "return to parent (#{@page.parent.title})", @page.parent %>
+      </div>
+  <% end %>
+</div>

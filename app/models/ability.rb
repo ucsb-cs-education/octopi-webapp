@@ -70,7 +70,9 @@ class Ability
   def curriculum_designer(user)
     can :add_basic_roles, Staff
     page_ids = CurriculumPage.with_role(:curriculum_designer, user).pluck(:id)
-    can [:crud, :add_designer, :show_sandbox_file, :show_project_file], Page, :curriculum_id => page_ids
+    can [:crud, :add_designer, :show_sandbox_file, :show_project_file, :show_designer_note, :show_teacher_body], Page, :curriculum_id => page_ids
+    can [:show_student_body], Page, visible_to: :all
+    can [:show_student_body], Page, visible_to: :designers_only
     can [:crud, :clone, :clone_completed,
          :update_laplaya_analysis_file, :get_laplaya_analysis_file,
          :show_completed_file, :show_base_file, :delete_all_responses], Task, :curriculum_id => page_ids
@@ -158,7 +160,8 @@ class Ability
     page_ids = CurriculumPage.all.pluck(:id)
     can :read_update, SchoolClass, :id => school_classes
     can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
-    can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
+    can [:read, :show_teacher_body], Page, {curriculum_id: page_ids, visible_to_teachers: true}
+    can [:show_student_body], Page, {curriculum_id: page_ids, visible_to_teachers: true, visible_to_students: true}
     can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
     assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)

@@ -1,0 +1,10 @@
+<%= link_to child, class: 'list-group-item' do %>
+    <% if child.respond_to? :visible_to %>
+        <% if child.visible_to == :teachers %>
+            <span class="badge">Teachers Only</span>
+        <% elsif child.visible_to == :designers_only %>
+            <span class="badge">Designers Only</span>
+        <% end %>
+    <% end %>
+    <%= child.title %>
+<% end %>

@@ -1,0 +1,18 @@
+<div id="tabs">
+  <ul>
+    <li><a href="#designer-note">Designer Notes</a></li>
+    <li><a href="#teacher-body">Teacher Instructions</a></li>
+    <% unless page.visible_to == :teachers %>
+        <li><a href="#student-body">Student Instructions</a></li>
+    <% end %>
+  </ul>
+  <div id="designer-note">
+    <%= f.cktext_area :designer_note, ckeditor: {height: 400} %>
+  </div>
+  <div id="teacher-body">
+    <%= f.cktext_area :teacher_body, ckeditor: {height: 400} %>
+  </div>
+  <div id="student-body">
+    <%= f.cktext_area :student_body, ckeditor: {height: 400} %>
+  </div>
+</div>

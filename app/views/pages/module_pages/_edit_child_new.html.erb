@@ -1,0 +1,7 @@
+<%= simple_form_for([@page, @page.children.build], html: {class: 'new_child_page'}, remote: true) do |f| %>
+    <%= f.hidden_field :title, value: 'New Activity' %>
+    <%= f.hidden_field :teacher_body, value: '<p></p>' %>
+    <%= f.hidden_field :student_body, value: '<p></p>' %>
+    <%= f.hidden_field :designer_note, value: '<p></p>' %>
+    <%= f.submit 'Add a new activity', class: 'btn btn-default', id: 'add-new-child-btn' %>
+<% end %>

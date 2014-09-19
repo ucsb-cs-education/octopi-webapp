@@ -1,0 +1,6 @@
+<div id="child-pages">
+  <div class="list-group">
+    <%= render partial: 'show_child_row', collection: children_visible_to_me, as: :child %>
+  </div>
+  <%= render 'show_children_special' %>
+</div>

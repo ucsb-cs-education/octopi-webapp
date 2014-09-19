@@ -1,0 +1,8 @@
+<div id="child-pages">
+  <ul id="children" class="octopisortable">
+    <%= render partial: 'edit_child_row', collection: children_visible_to_me, as: :child %>
+  </ul>
+  <%= render 'edit_child_new' %>
+  <%= render 'edit_children_special' %>
+</div>
+

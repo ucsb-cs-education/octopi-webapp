@@ -8,6 +8,9 @@ class Pages::CurriculumPagesController < Pages::PagesController
 
   # GET /curriculums/:id
   def show
+    if can_update_page?
+      render 'edit'
+    end
   end
 
   def update

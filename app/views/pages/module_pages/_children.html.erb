@@ -1,5 +1,5 @@
 <ul id="children" <%= 'class=octopisortable' if can? :update, page %> >
-  <%= render partial: "page", collection: children_visible_to_me(page) %>
+  <%= render partial: "page", collection: children_visible_to_me %>
 </ul>
 <% if can? :update, @page %>
     <%= simple_form_for([page, page.children.build], html: {class: 'new_child_page'}, remote: true) do |f| %>

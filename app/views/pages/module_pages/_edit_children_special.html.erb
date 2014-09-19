@@ -1,0 +1,28 @@
+<div class="row" id="base_laplaya_files">
+  <%= render layout: 'layouts/pages/base_laplaya_file', locals: {
+          id: 'project_base',
+          klass: 'col-md-6 edit',
+          title: 'Design Thinking Project File',
+          laplaya_file: @page.project_base_laplaya_file
+  } do %>
+      <%= render partial: 'edit_laplaya_file_form', locals: {
+              laplaya_file: @page.project_base_laplaya_file,
+              open_url: project_file_module_page_path(@page),
+              clone_url: clone_project_module_page_path(@page),
+              laplaya_files_collection: @user_laplaya_files
+      } %>
+  <% end %>
+  <%= render layout: 'layouts/pages/base_laplaya_file', locals: {
+          id: 'sandbox_base',
+          klass: 'col-md-6 edit',
+          title: 'Sandbox File',
+          laplaya_file: @page.sandbox_base_laplaya_file
+  } do %>
+      <%= render partial: 'edit_laplaya_file_form', locals: {
+              laplaya_file: @page.sandbox_base_laplaya_file,
+              open_url: sandbox_base_file_module_page_path(@page),
+              clone_url: clone_sandbox_module_page_path(@page),
+              laplaya_files_collection: @user_laplaya_files
+      } %>
+  <% end %>
+</div>

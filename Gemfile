@@ -68,6 +68,7 @@ gem 'arbre', '~> 1.0.1'
 
 gem 'acts_as_list', '~> 0.4.0'
 gem 'ckeditor', '~> 4.1.0'
+gem 'mediaelement_rails', '~> 0.8'
 
 #For AWS-ckeditor assets and Laplaya Media
 gem 'aws-sdk', '~> 1.51.0'

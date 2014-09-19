@@ -14,6 +14,9 @@ class Pages::ModulePagesController < Pages::PagesController
   def show
     @user_laplaya_files = LaplayaFile.where(owner: current_user) if current_user.has_role? :super_staff
     @user_laplaya_files ||= LaplayaFile.accessible_by(current_ability, :index)
+    if can_update_page?
+      render 'edit'
+    end
   end
 
   def update

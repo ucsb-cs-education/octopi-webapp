@@ -1,0 +1,39 @@
+@import "bootstrap";
+$grayMediumLight: #eaeaea;
+
+body {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif !important;
+}
+/* typography */
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1;
+}
+
+h1 {
+  font-size: 3em;
+  letter-spacing: -1px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: normal;
+  color: $gray;
+}
+
+h3 {
+  font-size: 0.9em;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: normal;
+  color: $gray-light;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.7em;
+}

@@ -177,14 +177,14 @@ module Curriculumify
         self.visible_to = :teachers
       end
     else
-      self.visible_to = :none
+      self.visible_to = :designers_only
     end
   end
 
   private
   def set_visibility_statuses
     visible_to = self.visible_to.to_sym
-    if [:all, :teachers, :none].include? visible_to
+    if [:all, :teachers, :designers_only].include? visible_to
       unless visible_to_teachers_changed?
         new_val = (visible_to == :all || visible_to == :teachers)
         if visible_to_teachers != new_val
@@ -199,7 +199,7 @@ module Curriculumify
       end
       true
     else
-      self.errors.add :visible_to, 'must be either :all, :teachers, or :none'
+      self.errors.add :visible_to, 'must be either :all, :teachers, or :designers_only'
       false
     end
   end

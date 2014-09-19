@@ -5,17 +5,17 @@ CKEDITOR.editorConfig = (config) ->
     { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
     { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt' ] },
     { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
-    { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak' ] },
+    { name: 'insert', items: [ 'Image', 'Youtube', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak' ] },
     { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-',
                                     'RemoveFormat' ] },
     '/',
     { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
     { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
                'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-    { name: 'document' , items: [ 'Sourcedialog', '-', 'Maximize', 'ShowBlocks'] }
+    { name: 'document' , items: [ 'Sourcedialog', '-', 'Maximize', 'Preview', 'ShowBlocks'] }
   ]
   config.toolbar = 'Pure'
-  config.extraPlugins = 'openlink,sourcedialog'
+  config.extraPlugins = 'openlink,sourcedialog,youtube,preview'
   config.font_names = (CKEDITOR.config.font_names + ";Century Gothic/Century Gothic").split(';').sort().join(';');
 
 
@@ -23,6 +23,15 @@ CKEDITOR.editorConfig = (config) ->
   # Define changes to default configuration here. For example:
   # config.language = 'fr';
   # config.uiColor = '#AADC6E';
+
+  config.youtube_width = '640';
+  config.youtube_height = '480';
+  config.youtube_related = false;
+  config.youtube_older= false;
+  config.youtube_privacy = false;
+
+  config.extraAllowedContent = 'video[*]{*};source[*]{*}'
+
 
   # Filebrowser routes
   # The location of an external file browser, that should be launched when "Browse Server" button is pressed.

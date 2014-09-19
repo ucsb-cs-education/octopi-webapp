@@ -29,6 +29,10 @@
       }
     }
     form {
+      div.form-actions input{
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
       #demo-mode-checkbox label {
         margin-left: 6px;
         margin-bottom: 15px;
@@ -40,20 +44,13 @@
           margin: 0px;
         }
       }
-
-      width: 60%;
-      .visible-fields {
-        select {
-          width: auto;
-          margin-left: 15px;
-        }
-        input {
-          margin-left: 15px;
-        }
-        label {
-          text-align: left;
-          padding-right: 0px;
-        }
+      #visibility-select select {
+        width: auto;
+        margin-left: 15px;
+      }
+      label {
+        text-align: left;
+        padding-right: 0px;
       }
     }
 
@@ -64,15 +61,23 @@
       font-family: inherit;
       margin-top: 5px;
       font-size: 18px;
+      #teacher-body, #student-body, #designer-note {
+        padding: 2px;
+      }
       p {
         font-size: inherit;
       }
     }
+    #child-pages {
+      margin: 15px 0 0 0;
+      a.list-group-item {
+        text-decoration: underline;
+      }
+    }
     #children {
       list-style-type: none;
-      margin: 15px 0 0;
+      margin: 0;
       padding: 0;
-      width: 60%;
       li {
         margin: 0 3px 3px 3px;
         padding: 0.4em 0.4em 0.4em 1.5em;
@@ -118,10 +123,19 @@
         min-height: 45px;
       }
       .col-md-4, .col-md-6 {
-        min-height: 300px;
+        &.edit {
+          min-height: 300px;
+        }
+        min-height: 135px;
       }
       form {
+        div {
+          margin: 0;
+        }
         width: 100%;
+        select {
+          width: 100%;
+        }
       }
       .base_laplaya_file, .laplaya-analysis-file {
         h2, h3 {
@@ -211,11 +225,11 @@
     margin: .5em;
     padding: .5em;
     background: pink;
-    #enable-delete-all{
+    #enable-delete-all {
       margin-bottom: .5em;
     }
-    .delete-all-responses-form{
-      margin-bottom:0px;
+    .delete-all-responses-form {
+      margin-bottom: 0px;
     }
   }
 }

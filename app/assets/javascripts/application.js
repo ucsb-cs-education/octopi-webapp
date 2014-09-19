@@ -26,6 +26,7 @@
 //= require sorttable
 //= require dependant_dropdowns
 //= require bootbox
+//= require mediaelement_rails
 
 var confirmationPrompt = function (message, confirmationText, callbacks, errorText, hasErrored) {
     var success = null;

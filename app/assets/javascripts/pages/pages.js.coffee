@@ -87,9 +87,11 @@ PagesController.prototype.show = () ->
       $('#child-pages').find('#base-file, #analysis-file').each(method)
 
     submitFunction = () ->
-      teacher_body = $('#teacher-body').html()
-      student_body = $('#student-body').html()
-      designer_note = $('#designer-note').html()
+      for key of CKEDITOR.instances
+        CKEDITOR.instances[key].updateElement()
+      teacher_body = CKEDITOR.instances.page_teacher_body.getData()
+      student_body = CKEDITOR.instances.page_student_body.getData()
+      designer_note = CKEDITOR.instances.page_designer_note.getData()
 
       title = $('#page-title').html()
       children = $("#children")

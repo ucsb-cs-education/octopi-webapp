@@ -1,0 +1,11 @@
+<%= content_tag_for :li, child, class: 'ui-state-default child-child-li' do %>
+    <span class='ui-icon ui-icon-arrowthick-2-n-s'></span>
+    <%= link_to child.title, child %>
+    <% if child.respond_to? :visible_to %>
+        <% if child.visible_to == :teachers %>
+            <div class="teacher-div"><span>Teacher</span><span>Only</span></div>
+        <% elsif child.visible_to == :designers_only %>
+            <div class="designer-div"><span>Designer</span><span>Only</span></div>
+        <% end %>
+    <% end %>
+<% end %>

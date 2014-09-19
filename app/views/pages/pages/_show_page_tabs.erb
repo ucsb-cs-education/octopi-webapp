@@ -1,0 +1,28 @@
+<div id="tabs">
+  <ul>
+    <% if can? :show_designer_note, @page %>
+        <li><a href="#designer-note">Designer Notes</a></li>
+    <% end %>
+    <% if can? :show_teacher_body, @page %>
+        <li><a href="#teacher-body">Teacher Instructions</a></li>
+    <% end %>
+    <% if can? :show_student_body, @page %>
+        <li><a href="#student-body">Student Instructions</a></li>
+    <% end %>
+  </ul>
+  <% if can? :show_designer_note, @page %>
+      <div id="designer-note">
+        <%= (page.designer_note || '').html_safe %>
+      </div>
+  <% end %>
+  <% if can? :show_teacher_body, @page %>
+      <div id="teacher-body">
+        <%= (page.teacher_body || '').html_safe %>
+      </div>
+  <% end %>
+  <% if can? :show_student_body, @page %>
+      <div id="student-body">
+        <%= (page.student_body || '').html_safe %>
+      </div>
+  <% end %>
+</div>

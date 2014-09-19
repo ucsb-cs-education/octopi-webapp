@@ -1,14 +1,14 @@
-<% if @page.respond_to? :visible_to %>
+<% if page.respond_to? :visible_to %>
       <%= f.input :visible_to, collection: [
               {id: :all, label: 'Teachers and Students'},
               {id: :teachers, label: 'Teachers'},
-              {id: :none, label: 'Only curriculum designers'}
+              {id: :designers_only, label: 'Only curriculum designers'}
       ],
                   value_method: lambda { |x| x[:id] },
                   label_method: lambda { |x| x[:label] },
                   include_blank: false,
                   wrapper_html: {id: 'visibility-select'},
-                  label_html: {class: 'col-sm-2'},
-                  input_html: {class: 'col-sm-10'}
+                  label_html: {class: 'col-sm-1'},
+                  input_html: {class: 'col-sm-11'}
       %>
 <% end %>

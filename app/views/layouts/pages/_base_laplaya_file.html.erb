@@ -1,0 +1,14 @@
+<div id="<%= id %>" class="base_laplaya_file <%= klass %>">
+  <div class="files-header">
+    <h2><%= title %></h2>
+    <% if defined? note %>
+        <h3><%= note %></h3>
+    <% end %>
+  </div>
+  <div class="laplaya-file-title">
+    <p>Title: <%= laplaya_file.file_name %></p>
+
+    <p>Updated at: <%= get_time(laplaya_file) %></p>
+  </div>
+  <%= yield %>
+</div>

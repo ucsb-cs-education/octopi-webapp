@@ -1,5 +1,8 @@
 //= require jquery-ui
-@import "custom";
+//= require mediaelement_rails
+//= require mediaelement_rails/mejs-skins
+@import "main";
+@import "fonts";
 @import "scaffolds";
 @import "pages/pages";
 @import "school_classes";

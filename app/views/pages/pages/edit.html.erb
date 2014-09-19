@@ -1,0 +1,20 @@
+<% provide(:title, @page.title) %>
+<div class='pages'>
+  <%= div_for @page, class: 'page', :'data-update-url' => url_for(@page), :'data-resource-type' => 'CurriculumPage', :'data-resource-id' => @page.curriculum_id do %>
+      <%= render 'page_header' %>
+      <%= simple_form_for @page, html: {id: 'page-form', class: 'page-form form-horizontal', role: 'form'}, remote: true do |f| %>
+          <div class="form-inputs">
+            <%= render partial: 'edit_page_tabs', object: @page, as: :page, locals: {f: f} %>
+            <% if @page.respond_to? :prerequisites %>
+                <%= render partial: 'edit_page_dependencies' %>
+            <% end %>
+            <% if @page.respond_to? :children %>
+                <%= render 'edit_children' %>
+            <% end %>
+            <%= render partial: 'edit_visibility_status', locals: {f: f, page: @page} %>
+          </div>
+      <% end %>
+      <input class="btn btn-primary" type="submit" form="page-form" value="Save changes to <%= @page.title %>"/>
+      <%= render 'destroy_link', object: @page %>
+  <% end %>
+</div>

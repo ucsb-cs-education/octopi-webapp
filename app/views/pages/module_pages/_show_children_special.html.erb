@@ -1,0 +1,18 @@
+<div class="row" id="base_laplaya_files">
+  <%= render layout: 'layouts/pages/base_laplaya_file', locals: {
+          id: 'project_base',
+          klass: 'col-md-6',
+          title: 'Design Thinking Project File',
+          laplaya_file: @page.project_base_laplaya_file
+  } do %>
+      <%= link_to 'Open file in LaPlaya', project_file_module_page_path(@page) %>
+  <% end %>
+  <%= render layout: 'layouts/pages/base_laplaya_file', locals: {
+          id: 'sandbox_base',
+          klass: 'col-md-6',
+          title: 'Sandbox File',
+          laplaya_file: @page.sandbox_base_laplaya_file
+  } do %>
+      <%= link_to 'Open file in LaPlaya', sandbox_base_file_module_page_path(@page) %>
+  <% end %>
+</div>

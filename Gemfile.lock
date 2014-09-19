@@ -225,6 +225,9 @@ GEM
     mail_form (1.5.0)
       actionmailer (>= 3.2, < 5)
       activemodel (>= 3.2, < 5)
+    mediaelement_rails (0.8.0)
+      jquery-rails (>= 1.0)
+      railties (>= 3.1)
     meta_request (0.3.4)
       callsite (~> 0.0, >= 0.0.11)
       rack-contrib (~> 1.1)
@@ -471,6 +474,7 @@ DEPENDENCIES
   libxml-ruby (~> 2.7.0)
   lograge
   mail_form (~> 1.5.0)
+  mediaelement_rails (~> 0.8)
   meta_request
   newrelic_rpm
   paloma (~> 4.1.0)
