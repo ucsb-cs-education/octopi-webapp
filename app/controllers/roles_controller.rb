@@ -7,19 +7,30 @@ class RolesController < ApplicationController
                    when 'teacher'
                      School.accessible_by(current_ability, :add_teacher).
                          pluck(:id, :name).
-                         map { |x| {id: "school/#{x[0]}", name: x[1]} }
+                         map { |x| {id: "school/#{x[0]}", name: x[1]} }.sort_by{|school| [school[:name]]}
                    when 'school_admin'
                      School.accessible_by(current_ability, :add_school_admin).
                          pluck(:id, :name).
-                         map { |x| {id: "school/#{x[0]}", name: x[1]} }
+                         map { |x| {id: "school/#{x[0]}", name: x[1]} }.sort_by{|school| [school[:name]]}
                    when 'teacher_class'
-                       SchoolClass.accessible_by(current_ability, :add_class_teacher).
-                           pluck(:id, :name).
-                           map { |x| {id: "school_class/#{x[0]}", name: x[1]} }
+                     classes = SchoolClass.accessible_by(current_ability, :add_class_teacher).includes(:school).map { |x|
+                       {school_name: x.school.name, name: x.name, id: x.id}
+                     }
+                     classes.sort_by! { |klass| [klass[:school_name], klass[:name]] }
+                     result = []
+                     prev_school = nil
+                     classes.each { |x|
+                       if x[:school_name] != prev_school
+                         result.push({id: '__optgroup', name: x[:school_name]})
+                       end
+                       prev_school = x[:school_name]
+                       result.push({id: "school_class/#{x[:id]}", name: x[:name]})
+                     }
+                     result
                    when 'curriculum_designer'
-                       CurriculumPage.accessible_by(current_ability, :add_designer).
-                           pluck(:id, :title).
-                           map { |x| {id: "curriculum/#{x[0]}", name: x[1]} }
+                     CurriculumPage.accessible_by(current_ability, :add_designer).
+                         pluck(:id, :title).
+                         map { |x| {id: "curriculum/#{x[0]}", name: x[1]} }.sort_by{|curr| [curr[:name]]}
                    else
                      []
                  end
