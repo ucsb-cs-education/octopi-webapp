@@ -33,16 +33,17 @@ class Ability
 
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :create, :show, :update, :destroy, :to => :csud #crud without index
+    alias_action :read, :update, :destroy, :to => :rud
     alias_action :read, :update, :to => :read_update
     if user
       can :create_public_laplaya_files, LaplayaFile
       can :access, :ckeditor
       files = LaplayaFile.with_role(:owner, user).pluck(:id)
-      can :crud, LaplayaFile, id: files
-      can :crud, LaplayaFile, user_id: user.id
-      can :create, LaplayaFile
+      can :rud, LaplayaFile, id: files
+      can :rud, LaplayaFile, user_id: user.id
 
       if user.is_a? Staff
+        can :create, LaplayaFile
         #All users can edit themselves
         can :crud, Staff, :id => user.id
         can :read, ActiveAdmin::Page, :name => 'Dashboard'

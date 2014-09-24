@@ -67,16 +67,15 @@ class LaplayaFilesController < ApplicationController
     head :no_content
   end
 
-  rescue_from CanCan::AccessDenied do |exception|
-    if current_user && current_user.is_a?(TestStudent)
-      @_elevated ||= false
-      if @_elevated
-        raise exception
-      else
-        @_elevated = true
-        Ability.new(current_staff).authorize!(action_name.to_sym, @laplaya_file)
-        self.send(action_name)
-      end
+  def access_denied_handler(exception)
+    @_elevated ||= false
+    if !@_elevated && current_user && current_user.is_a?(TestStudent)
+      @_elevated = true
+      Ability.new(current_staff).authorize!(action_name.to_sym, @laplaya_file)
+      @_current_user = current_staff
+      self.send(action_name)
+    else
+      super(exception)
     end
   end
 
@@ -86,15 +85,16 @@ class LaplayaFilesController < ApplicationController
   end
 
   def current_user
-    if current_staff
-      if teacher_using_test_student?
-        current_student
-      else
-        current_staff
-      end
-    else
-      current_student
-    end
+    @_current_user ||= if current_staff
+                         if teacher_using_test_student?
+                           current_student
+                         else
+                           current_staff
+                         end
+                       else
+                         current_student
+                       end
+    @_current_user
   end
 
   def laplaya_file_params

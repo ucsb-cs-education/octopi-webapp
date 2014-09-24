@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from CanCan::AccessDenied do |exception|
+  def access_denied_handler(exception)
     respond_to do |format|
       format.html do
         redirect_to exception_redirect_path(true), :alert => exception.message
@@ -32,6 +32,8 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  rescue_from CanCan::AccessDenied, with: :access_denied_handler
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     respond_to do |format|

@@ -9,8 +9,12 @@ class StudentResponse::TaskResponseLaplayaFile < StudentResponse::StudentRespons
           laplaya_task_response.task.laplaya_analysis_file.present? &&
           laplaya_task_response.task.laplaya_analysis_file.data.present?
 
-        Resque.enqueue(ProcessLaplayaFileById,
-                       id, laplaya_task_response.task.laplaya_analysis_file.id, parent_id)
+        begin
+          Resque.enqueue(ProcessLaplayaFileById,
+                         id, laplaya_task_response.task.laplaya_analysis_file.id, parent_id)
+        rescue Exception => e
+          logger.error "Could not enque analysis job! #{e.to_s}"
+        end
       end
     end
   end
