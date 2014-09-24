@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140813220117) do
+ActiveRecord::Schema.define(version: 20140923232228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,8 @@ ActiveRecord::Schema.define(version: 20140813220117) do
     t.integer  "curriculum_id"
     t.string   "type"
     t.integer  "user_id"
+    t.text     "log",           default: [],                 array: true
+    t.string   "save_uuid",     default: ""
   end
 
   add_index "laplaya_files", ["type", "parent_id"], name: "index_laplaya_files_on_type_and_parent_id", using: :btree
@@ -207,6 +209,7 @@ ActiveRecord::Schema.define(version: 20140813220117) do
     t.boolean  "completed",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "version_date"
   end
 
   add_index "task_responses", ["student_id", "school_class_id", "task_id"], name: "task_response_tri_index", unique: true, using: :btree

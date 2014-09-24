@@ -27,35 +27,52 @@ class LaplayaFilesController < ApplicationController
   end
 
   def update
-    success = false
-    if params[:laplaya_task].nil? || params[:laplaya_file]
-      params = laplaya_file_params
-      success = params.any? && @laplaya_file.update_attributes(params)
-    end
-    if @laplaya_file.is_a? StudentResponse::TaskResponseLaplayaFile
-      begin
-        params = task_response_feedback_params
+    LaplayaFile.transaction do
+      pre_success = true
+      if params[:laplaya_task].nil? || params[:laplaya_file]
+        pre_success = false
+        params = laplaya_file_params
         if params.any?
-          task_response = @laplaya_file.laplaya_task_response
-          task_response.task_response_feedbacks.create!(task_response_feedback_params)
-          #add feedback to feedback file
-          success = 'laplaya_feedback_created'
+          @laplaya_file.assign_attributes(params)
+          pre_success = update_log
+          unless pre_success && @laplaya_file.save
+            pre_success = false
+          end
         end
-      rescue ActionController::ParameterMissing
-        # ignored
       end
-    end
-    if success === true
-      head :no_content, location: laplaya_file_url(@laplaya_file)
-    elsif render text: success, status: 200, location: laplaya_file_url(@laplaya_file)
-    else
-      bad_request_with_errors @laplaya_file
+      if pre_success && @laplaya_file.is_a?(StudentResponse::TaskResponseLaplayaFile)
+        success = false
+        begin
+          params = task_response_feedback_params
+          if params.any?
+            task_response = @laplaya_file.laplaya_task_response
+            task_response.task_response_feedbacks.create!(task_response_feedback_params)
+            #add feedback to feedback file
+            success = [true, 'laplaya_feedback_created']
+            if pre_success.is_a? Array
+              success[1] = "#{success[1]} & #{pre_success[1]}"
+            end
+          end
+        rescue ActionController::ParameterMissing
+          success = pre_success
+        end
+      else
+        success = pre_success
+      end
+      if success === true
+        head :no_content, location: laplaya_file_url(@laplaya_file)
+      elsif success.is_a?(Array) && (success[0] === true)
+        render text: success[1], status: 200, location: laplaya_file_url(@laplaya_file)
+      else
+        bad_request_with_errors @laplaya_file
+      end
     end
   end
 
+
   def create
     @laplaya_file.owner = current_user
-    if @laplaya_file.save
+    if update_log && @laplaya_file.save
       create_post_success_response(:created, laplaya_file_url(@laplaya_file), @laplaya_file.id)
     else
       bad_request_with_errors @laplaya_file
@@ -67,6 +84,7 @@ class LaplayaFilesController < ApplicationController
     head :no_content
   end
 
+  private
   def access_denied_handler(exception)
     @_elevated ||= false
     if !@_elevated && current_user && current_user.is_a?(TestStudent)
@@ -79,7 +97,34 @@ class LaplayaFilesController < ApplicationController
     end
   end
 
-  private
+  def update_log
+    if params[:log] && @laplaya_file.is_a?(StudentResponse::StudentResponseLaplayaFile)
+      log_params = params[:log]
+      if log_params[:logHash] && log_params[:data]
+        old_data = log_params[:data]
+        log_entry = {data: nil, log_hash: log_params[:logHash], parent_hash: log_params[:parentHash]}
+        data = []
+        curr = 0
+        while true
+          if old_data.has_key?(curr.to_s)
+            data.append(old_data[curr.to_s])
+          else
+            break
+          end
+          curr+=1
+        end
+        log_entry[:data] = data
+        @laplaya_file.log = @laplaya_file.log + [log_entry.to_json]
+        @laplaya_file.save_uuid = log_entry[:log_hash]
+        return [true, 'log updated']
+      else
+        @laplaya_file.errors.add(:log, 'an updated log requires the log data, and a log hash')
+        return false
+      end
+    end
+    return true
+  end
+
   def signed_in_user
     authenticate_staff! unless current_staff || current_student
   end

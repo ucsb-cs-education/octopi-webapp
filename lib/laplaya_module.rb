@@ -16,6 +16,7 @@ module LaplayaModule
     js false
     @laplaya_ide_params = {}
     @laplaya_ide_params['root_path'] = Rails.application.config.laplaya_root_path
+    @laplaya_ide_params['server_load_time'] = (Time.now.to_f*1000).to_i
   end
 
   #Should be used whenever we are loading a specific file
