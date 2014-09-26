@@ -22,7 +22,7 @@ namespace :octopi do
       result = spreadsheet.workbook
       rows = 0
       result.add_worksheet(name: 'Responses') do |sheet|
-        sheet.add_row ['School Name', 'Class Name', 'Student Number', 'Activity Name', 'Task Name', 'Question ID', 'Question Title', 'Question Type', 'Question Text', 'Correct IDs', 'Correct Texts', 'Selected Answer IDs', 'Selected Text', 'Free response text', 'Link to the Question']
+        sheet.add_row ['QuestionResponse ID', 'Response Date', 'School Name', 'Class Name', 'Student Number', 'Activity Name', 'Task Name', 'Question ID', 'Question Title', 'Question Type', 'Question Text', 'Correct IDs', 'Correct Texts', 'Selected Answer IDs', 'Selected Text', 'Free response text', 'Link to the Question']
         AssessmentQuestionResponse.all.each do |response|
           puts response.id
           if response.task_response.task.nil? ||
@@ -31,7 +31,8 @@ namespace :octopi do
               response.task_response.student.is_a?(TestStudent)
             next
           end
-
+          question_response_id = response.id
+          response_time = response.created_at
           school_name = response.task_response.student.school.name
           class_name = response.task_response.school_class.name
           student_number = response.task_response.student.id
@@ -65,7 +66,7 @@ namespace :octopi do
             free_response_text = response.selected
           end
           link = url_for(response.assessment_question)
-          sheet.add_row [school_name, class_name, student_number, activity_name, task_name, question_id, question_title, question_type, question_text, correct_ids, correct_texts, selected_ids, selected_texts, free_response_text, link]
+          sheet.add_row [question_response_id, response_time, school_name, class_name, student_number, activity_name, task_name, question_id, question_title, question_type, question_text, correct_ids, correct_texts, selected_ids, selected_texts, free_response_text, link]
           rows+=1
         end
       end
