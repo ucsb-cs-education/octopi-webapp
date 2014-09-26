@@ -51,7 +51,7 @@ namespace :octopi do
               temp = JSON.parse(response.selected)
               selected_ids = response.selected
               answer_texts = JSON.parse(response.assessment_question.answers).map { |x| {text: x['text'].html_sanitize, correct: x['correct']} }
-              selected_texts = temp.map { |x| answer_texts[x]['text'] }
+              selected_texts = temp.map { |x| answer_texts[x][:text] }
               selected_texts = selected_texts.to_json
               correct_texts = (answer_texts.select { |x| x[:correct] }).map { |x| x[:text] }
               correct_ids = (answer_texts.each_with_index.map { |x, i| [x[:correct], i] })
