@@ -78,6 +78,6 @@ namespace :octopi do
       spreadsheet
     end
 
-    CSVMailer.csv('johan@henkens.com charlottehill@umail.ucsb.edu', 'Octopi Student Assessment Responses', 'Here is the data, hopefully it works.\n', 'data.xls', get_data.to_stream.read).deliver
+    CSVMailer.csv('johan@henkens.com, charlottehill@umail.ucsb.edu', 'Octopi Student Assessment Responses', 'Here is the data, hopefully it works.\n', 'data.xls', get_data.to_stream.read).deliver
   end
 end
