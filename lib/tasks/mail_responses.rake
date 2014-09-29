@@ -1,6 +1,6 @@
 namespace :octopi do
   desc 'Mail Assessment Question Responses'
-  task :mail_responses => :environment  do
+  task :mail_responses => :environment do
     class String
       def html_sanitize
         ActionView::Base.full_sanitizer.sanitize(self)
@@ -22,11 +22,10 @@ namespace :octopi do
       result = spreadsheet.workbook
       rows = 0
       result.add_worksheet(name: 'Responses') do |sheet|
-        sheet.add_row ['School Name', 'Class Name', 'Student Number', 'Activity Name', 'Task Name', 'Question ID', 'Question Title', 'Question Type', 'Question Text', 'Correct IDs', 'Correct Texts', 'Selected Answer IDs', 'Selected Text', 'Free response text', 'Link to the Question']
+        sheet.add_row ['School Name', 'Class Name', 'Student Number', 'Activity Name', 'Task Name', 'Question ID', 'Question Title', 'Question Type', 'Question Text', 'Response Date', 'Correct IDs', 'Correct Texts', 'Selected Answer IDs', 'Selected Text', 'Free response text', 'Link to the Question']
         AssessmentQuestionResponse.all.each do |response|
           puts response.id
-          if response.task_response.task.nil? ||
-              response.assessment_question.nil? ||
+          if response.assessment_question.nil? ||
               ([1, 3].include?(response.task_response.student.school.id) && !(response.task_response.school_class.id == 3)) ||
               response.task_response.student.is_a?(TestStudent)
             next
@@ -35,12 +34,17 @@ namespace :octopi do
           school_name = response.task_response.student.school.name
           class_name = response.task_response.school_class.name
           student_number = response.task_response.student.id
-          activity_name = response.task_response.task.activity_page.title
-          task_name = response.task_response.task.title
+          activity_name = 'nil'
+          task_name = 'nil'
+          unless response.task_response.task.nil?
+            activity_name = response.task_response.task.activity_page.title
+            task_name = response.task_response.task.title
+          end
           question_id = response.assessment_question.id
           question_title = response.assessment_question.title
           question_type = response.assessment_question.question_type
           question_text = response.assessment_question.question_body.html_sanitize
+          response_date = response.created_at
           correct_ids = ''
           correct_texts = ''
           selected_ids = ''
@@ -62,10 +66,10 @@ namespace :octopi do
               free_response_text = response.selected
             end
           rescue
-            free_response_text = response.selected
+            free_respose_text = response.selected
           end
           link = url_for(response.assessment_question)
-          sheet.add_row [school_name, class_name, student_number, activity_name, task_name, question_id, question_title, question_type, question_text, correct_ids, correct_texts, selected_ids, selected_texts, free_response_text, link]
+          sheet.add_row [school_name, class_name, student_number, activity_name, task_name, question_id, question_title, question_type, question_text, response_date, correct_ids, correct_texts, selected_ids, selected_texts, free_response_text, link]
           rows+=1
         end
       end
@@ -74,6 +78,6 @@ namespace :octopi do
       spreadsheet
     end
 
-    CSVMailer.csv('johan@henkens.com', 'Assessment Question Data', 'Here is the data, hopefully it works.\n', 'data.xls', get_data.to_stream.read).deliver
+    CSVMailer.csv('johan@henkens.com charlottehill@umail.ucsb.edu', 'Octopi Student Assessment Responses', 'Here is the data, hopefully it works.\n', 'data.xls', get_data.to_stream.read).deliver
   end
 end
