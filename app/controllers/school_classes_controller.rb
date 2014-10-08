@@ -160,11 +160,12 @@ class SchoolClassesController < ApplicationController
     #its going to be in a worker anyway
 
     @login_name_list = []
-    school = @school_class.school
-    @actions = @sheet.to_a
-    @actions.shift
-    @actions.map! { |student|
+    @school = @school_class.school
+    rows = @sheet.to_a
+    rows.shift
+    @actions = rows.each_with_index.map { |student, i|
       action = nil
+      errors = []
       flags = []
       first_name = (get_col(student, :first_name) || '').strip
       last_name = (get_col(student, :last_name) || '').strip
@@ -172,22 +173,9 @@ class SchoolClassesController < ApplicationController
       student_id = get_col(student, :student_id).to_i
       password = get_col(student, :password)
       password_confirmation = get_col(student, :password_confirmation)
+      student = find_or_build_student_for_csv(first_name, last_name, login_name, student_id, password, password_confirmation, errors, flags)
       if student_id.nil?
-        this_student = school.students.find_by(login_name: login_name)
-        if this_student.nil?
-          action = make_new_student_from_csv(login_name, first_name, last_name, password, password_confirmation, flags)
-        else
-          if (this_student.first_name == first_name) && (this_student.last_name == last_name)
-            action = student_found(this_student, password)
-            flags.push(this_student.id)
-            unless password == password_confirmation
-              flags.push :incorrect_confirmation
-            end
-          else
-            action = :repeat_login_name
-            flags.push(:error)
-          end
-        end
+        action, student_id = handle_row_with_nil_student_id(first_name, last_name, login_name, password, password_confirmation, errors, flags)
       else
         this_student = Student.find_by(id: student_id)
         if this_student.nil?
@@ -222,10 +210,16 @@ class SchoolClassesController < ApplicationController
         end
       end
 
-      {action: action, first_name: first_name,
-       last_name: last_name, login_name: login_name,
-       password: password, password_confirmation: password_confirmation,
-       flags: flags}
+      {
+          action: action,
+          first_name: first_name,
+          last_name: last_name,
+          login_name: login_name,
+          password: password,
+          password_confirmation: password_confirmation,
+          student_id: student_id,
+          flags: flags
+      }
     }
   end
 
@@ -331,6 +325,28 @@ class SchoolClassesController < ApplicationController
   end
 
   private
+  def handle_row_with_nil_student_id(first_name, last_name, login_name, password, password_confirmation, errors, flags)
+    #if we have no id, first let's try to find a student by their login_name
+    student = @school.students.find_by(login_name: login_name)
+    if student.nil?
+      student = make_new_student(login_name, first_name, last_name, password, password_confirmation, errors, flags)
+      if errors.empty?
+        action = :
+      end
+    else
+      if (student.first_name == first_name) && (student.last_name == last_name)
+        action = student_found(student, password)
+        flags.push(student.id)
+        unless password == password_confirmation
+          flags.push :incorrect_confirmation
+        end
+      else
+        action = :repeat_login_name
+        flags.push(:error)
+      end
+    end
+  end
+
   # noinspection RubyStringKeysInHashInspection
   def get_col(student_row, col_symbol)
     student_row[@headers[col_symbol]]
@@ -346,23 +362,23 @@ class SchoolClassesController < ApplicationController
     end
   end
 
-  def make_new_student_from_csv(login_name, first_name, last_name, password, password_confirmation, flags)
+  def make_new_student(login_name, first_name, last_name, password, password_confirmation, errors, flags)
     if login_name.empty?
-      action = :nil_login
-      flags.push(:error)
+      errors[:login_name] .push(:nil_login)
+      return nil
     elsif first_name.empty?
-      action = :nil_first_name
-      flags.push(:error)
+      errors.push(:nil_first_name)
+      return nil
     elsif last_name.empty?
-      action = :nil_last_name
-      flags.push(:error)
+      errors.push(:nil_last_name)
+      return nil
     elsif password.nil?
-      action = :nil_password
-      flags.push(:error)
+      errors.push(:nil_password)
+      return nil
     elsif @login_name_list.include?(login_name)
-      action = :repeat_new_login
-      flags.push(:error)
-    elsif school.students.find_by(first_name: first_name, last_name: last_name)!=nil
+      errors.push(:repeat_new_login)
+      return nil
+    elsif @school.students.find_by(first_name: first_name, last_name: last_name).present?
       action = :create
       flags.push(:duplicate)
       @login_name_list.push(login_name)
