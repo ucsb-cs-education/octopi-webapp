@@ -396,7 +396,7 @@ class SchoolClassesController < ApplicationController
       extension = File.extname(tmpfl.original_filename)
 
       if supported_filetype.include?(extension)
-        @sheet = Roo::Spreadsheet.open(tmpfl.tempfile.to_path, extension: extension.to_sym).to_a
+        @sheet = Roo::Spreadsheet.open(tmpfl.tempfile.to_path, extension: extension.to_sym)
       else
         raise "Cannot read a '#{extension}' file. Try saving as a .xls, .xlsx, .ods, or .csv file."
       end
