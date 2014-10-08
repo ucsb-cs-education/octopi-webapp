@@ -163,7 +163,7 @@ class SchoolClassesController < ApplicationController
     school = @school_class.school
     @actions = @sheet.to_a
     @actions.shift
-    @actions.each_with_index.map { |student, i|
+    @actions.map! { |student|
       action = nil
       flags = []
       first_name = (get_col(student, :first_name) || '').strip
