@@ -374,6 +374,7 @@ class SchoolClassesController < ApplicationController
     if (password != password_confirmation) && (action != :nil_password)
       flags.push :incorrect_confirmation
     end
+    action
   end
 
   def find_columns
