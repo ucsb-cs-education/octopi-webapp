@@ -160,7 +160,7 @@ class SchoolClassesController < ApplicationController
     #its going to be in a worker anyway
 
     @login_name_list = []
-    school = @school_class.school
+    @school = @school_class.school
     @actions = @sheet.to_a
     @actions.shift
     @actions.map! { |student|
@@ -174,7 +174,7 @@ class SchoolClassesController < ApplicationController
       password = get_col(student, :password)
       password_confirmation = get_col(student, :password_confirmation)
       if student_id.nil?
-        this_student = school.students.find_by(login_name: login_name)
+        this_student = @school.students.find_by(login_name: login_name)
         if this_student.nil?
           action = make_new_student_from_csv(login_name, first_name, last_name, password, password_confirmation, flags)
         else
@@ -195,13 +195,13 @@ class SchoolClassesController < ApplicationController
           action = :student_does_not_exist
           flags.push(:error)
           flags.push(student_id)
-          this_student = school.students.find_by(login_name: login_name)
+          this_student = @school.students.find_by(login_name: login_name)
           if this_student
             flags.push(this_student.name)
             flags.push(this_student.id)
           end
         else
-          if school.students.include?(this_student)
+          if @school.students.include?(this_student)
             action = student_found(this_student, password)
             flags.push(this_student.id)
             unless password == password_confirmation
@@ -214,7 +214,7 @@ class SchoolClassesController < ApplicationController
             action = :student_not_in_school
             flags.push(:error)
             flags.push(student_id)
-            this_student = school.students.find_by(login_name: login_name)
+            this_student = @school.students.find_by(login_name: login_name)
             if this_student
               flags.push(this_student.name)
               flags.push(this_student.id)
@@ -233,7 +233,7 @@ class SchoolClassesController < ApplicationController
   # POST /school_classes/:id/do_csv_actions
   def do_csv_actions
     begin
-      school = @school_class.school
+      @school = @school_class.school
       #All of the '.strip's are here to prevent whitespace from causing problems.
       SchoolClass.transaction do
         unless params[:student_csv].nil?
@@ -253,7 +253,7 @@ class SchoolClassesController < ApplicationController
                       login_name: login_name,
                       password: password,
                       password_confirmation: password_confirmation,
-                      school: school
+                      school: @school
                   )
                   @student.save!
                   @school_class.students << @student unless @school_class.students.include? @student
@@ -262,7 +262,7 @@ class SchoolClassesController < ApplicationController
                 password = action['password'].strip
                 password_confirmation = action['password'].strip
                 @student = Student.find(action['flags'][0])
-                unless @student.school == school
+                unless @student.school == @school
                   raise 'Student must belong to this school'
                 end
                 @student.update_attributes({
@@ -272,7 +272,7 @@ class SchoolClassesController < ApplicationController
                 @student.save!
               when 'add_to_class'
                 @student = Student.find(action['flags'][0])
-                unless @student.school == school
+                unless @student.school == @school
                   raise 'Student must belong to this school'
                 end
                 @student.school_classes << @school_class unless @student.school_classes.include?(@school_class)
@@ -363,7 +363,7 @@ class SchoolClassesController < ApplicationController
     elsif @login_name_list.include?(login_name)
       action = :repeat_new_login
       flags.push(:error)
-    elsif school.students.find_by(first_name: first_name, last_name: last_name)!=nil
+    elsif @school.students.find_by(first_name: first_name, last_name: last_name)!=nil
       action = :create
       flags.push(:duplicate)
       @login_name_list.push(login_name)
