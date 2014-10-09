@@ -169,7 +169,8 @@ class SchoolClassesController < ApplicationController
       first_name = (get_col(student, :first_name) || '').strip
       last_name = (get_col(student, :last_name) || '').strip
       login_name = (get_col(student, :login_name) || '').strip.downcase
-      student_id = get_col(student, :student_id).to_i
+      student_id = get_col(student, :student_id)
+      student_id = (student_id.nil? || student_id.empty?) ? nil : student_id.to_i
       password = get_col(student, :password)
       password_confirmation = get_col(student, :password_confirmation)
       if student_id.nil?
