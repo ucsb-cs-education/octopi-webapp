@@ -1,4 +1,6 @@
 <% provide(:title, @page.title) %>
+<% breadcrumb @page.class.name.underscore.to_sym, @page %>
+
 <div class='pages'>
   <%= div_for @page, class: 'page', :'data-update-url' => url_for(@page), :'data-resource-type' => 'CurriculumPage', :'data-resource-id' => @page.curriculum_id do %>
       <div class="page-header">
@@ -7,11 +9,6 @@
         </h1>
 
         <p>Last updated: <%= get_time(@page) %></p>
-        <% if @page.respond_to? :parent %>
-            <div class='parent'>
-              <%= link_to "return to parent (#{@page.parent.title})", @page.parent %>
-            </div>
-        <% end %>
       </div>
       <%= render partial: 'page_body', object: @page, as: :page %>
       <% if @page.respond_to? :prerequisites %>
@@ -37,11 +34,11 @@
               </div>
           <% end %>
           <%= render 'destroy_link', object: @page %>
-          <p>
-              <div class="col-md-6 row">
+          <div class="row">
+              <div class="col-md-6">
                 <%= button_to 'Save a version', controller: controller_name, action: 'save_version'%>
               </div>
-          </p>
+          </div>
       <% end %>
   <% end %>
 </div>

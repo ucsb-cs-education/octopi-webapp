@@ -1,89 +1,81 @@
-<%= link_to 'Back', school_school_classes_path(@school_class.school), class: 'btn btn-default' %>
-<%= link_to 'Edit Class', edit_class_school_class_path, class: 'btn btn-primary' %>
-<%= link_to 'Edit Students', edit_school_class_path, class: 'btn btn-primary' %>
-<p></p>
-<p>
-  <strong>School:</strong>
-  <%= @school_class.school.name %>
-</p>
-<p>
-  <strong>Class name:</strong>
-  <%= @school_class.name %>
-</p>
-<p>
-  <strong>Teachers:</strong>
-  <% Staff.all.each do |staff| %>
-      <% school_classes = SchoolClass.with_role(:teacher, staff)%>
-      <% class_staff  = Array.new%>
-      <% if school_classes.include?(@school_class) %>
-          <% class_staff.push(staff.name) %>
-      <% end %>
-      <% class_staff.each do |class_staff_name|%>
-          (<%= class_staff_name %>)
-      <% end %>
-  <% end %>
-
-
-</p>
-<p>
-
-</p>
-<!--Class list-->
-
-<body>
-<table id="classlist" class="sortable" style="width:900px">
-  <thead>
-  <tr>
-    <th>User ID</th>
-    <th>First Name</th>
-    <th class="sorttable_alpha">Last Name</th>
-    <th class="sorttable_alpha">Login Name</th>
-    <th>Progress</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% ordered_students.each do |s| %>
-      <tr>
-        <td><%= s.id %></td>
-        <td><%= s.first_name %></td>
-        <td><%= s.last_name %></td>
-        <td><%= s.login_name %></td>
-        <td><%= link_to 'View Progress', school_class_student_progress_path(@school_class, s) %></td>
-      </tr>
-  <% end %>
-  </tbody>
-  <tfoot></tfoot>
-</table>
-
-</body>
-
-
-<div id="curriculum-div">
-  Curriculum:
-</div>
-<hr>
-<div id="overall progress">
-  <%= bar_chart ({'Completed %' => average_task_completion*100, 'Unlocked %' => average_task_unlock*100}),
-                max: 101,
-                height: '100px',
-                library: {hAxis: {title: 'Percent of tasks completed and unlocked, averaged over all students'}} %>
-</div>
-<% unless teacher_using_test_student? %>
-    <div id="test-student-div">
-      <%= button_to "Sign in as Test Student", {action: "view_as_student", school_class_id: @school_class.id},
-                    class: "btn btn-default", method: :get %>
+<% provide(:title, @school_class.name) %>
+<% breadcrumb :staff_school_class, @school_class %>
+<div class="row">
+  <div class="col-md-6">
+    <%= render 'class_info_well' %>
+  </div>
+  <div class="col-md-6">
+    <div class="well well-sm">
+      <div class="row">
+        <div class="col-sm-12">
+          <%= link_to 'Edit Class', edit_school_class_path, class: 'btn btn-primary' %>
+          <%= link_to 'Edit Students', edit_students_school_class_path, class: 'btn btn-primary' %>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-12">
+          <% if teacher_using_test_student? %>
+              <div id="test-student-div">
+                <%= button_to 'View as Test Student', {action: 'view_as_student', school_class_id: @school_class.id},
+                              class: 'btn btn-default', method: :get %>
+                <%= button_to 'Sign Out Test Student', {action: 'signout_test_student', school_class_id: @school_class.id},
+                              class: 'btn btn-default', method: :delete %>
+                <%= button_to 'Reset Test Student', {action: 'reset_test_student', school_class_id: @school_class.id},
+                              class: 'btn btn-default', method: :delete %>
+              </div>
+          <% else %>
+              <div id="test-student-div">
+                <%= button_to 'Sign in as Test Student', {action: 'view_as_student', school_class_id: @school_class.id},
+                              class: 'btn btn-default', method: :get %>
+              </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-<% else %>
-    <div class="small-font">Includes test student when signed in as one.</div>
-    <div id="test-student-div">
-      <%= button_to "View as Test Student", {action: "view_as_student", school_class_id: @school_class.id},
-                    class: "btn btn-default", method: :get %>
-      <%= button_to "Sign Out Test Student", {action: "signout_test_student", school_class_id: @school_class.id},
-                    class: "btn btn-default", method: :delete %>
-      <%= button_to "Reset Test Student", {action: "reset_test_student", school_class_id: @school_class.id},
-                    class: "btn btn-default", method: :delete %>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title nocenter">Class List</h3>
+  </div>
+  <table id="classlist" class="table sortable">
+    <thead>
+    <tr>
+      <th>User ID</th>
+      <th>First Name</th>
+      <th class="sorttable_alpha">Last Name</th>
+      <th class="sorttable_alpha">Login Name</th>
+      <th>Progress</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% ordered_students.each do |s| %>
+        <tr>
+          <td><%= s.id %></td>
+          <td><%= s.first_name %></td>
+          <td><%= s.last_name %></td>
+          <td><%= s.login_name %></td>
+          <td><%= link_to 'View Progress', school_class_student_progress_path(@school_class, s) %></td>
+        </tr>
+    <% end %>
+    </tbody>
+    <tfoot></tfoot>
+  </table>
+  <small>Includes test student when signed in as one.</small>
+</div>
+
+<div id="curriculum-div" class="panel panel-default top-buffer">
+  <div class="panel-heading">
+    <h3 class="panel-title nocenter">Curriculum Progress</h3>
+  </div>
+  <div class="panel-body">
+    <div id="overall_progress">
+      <%= bar_chart ({'Completed %' => average_task_completion*100, 'Unlocked %' => average_task_unlock*100}),
+                    max: 101,
+                    height: '100px',
+                    library: {hAxis: {title: 'Percent of tasks completed and unlocked, averaged over all students'}} %>
     </div>
-<% end %>
-<%= render partial: 'list_module_page', collection: @module_pages, as: 'module_page' %>
-
-
+    <%= render partial: 'list_module_page', collection: @module_pages, as: 'module_page' %>
+  </div>
+</div>

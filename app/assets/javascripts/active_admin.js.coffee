@@ -19,12 +19,13 @@ AdminStaffController.prototype.edit = () ->
           url: '/admin/staff/roles/' + url + '.json',
           success: (data, textStatus, jqXHR) ->
             found = false
-            $('#staff_basic_roles_input').find('#staff_basic_roles_' + data.id).each ->
-              found = true
-            unless found
-              string = '<li class="choice"><label for="staff_basic_roles_:id:"><input checked="checked" id="staff_basic_roles_:id:" name="staff[basic_roles][]" type="checkbox" value=":id:">:name:</label></li>'
-              $('#staff_basic_roles_input').find('ol.choices-group').
-              append(string.replace(/:id:/g, data.id).replace(/:name:/g, data.name))
+            for role in data
+              $('#staff_basic_roles_input').find('#staff_basic_roles_' + role.id).each ->
+                found = true
+              unless found
+                string = '<li class="choice"><label for="staff_basic_roles_:id:"><input checked="checked" id="staff_basic_roles_:id:" name="staff[basic_roles][]" type="checkbox" value=":id:">:name:</label></li>'
+                $('#staff_basic_roles_input').find('ol.choices-group').
+                append(string.replace(/:id:/g, role.id).replace(/:name:/g, role.name))
             role_dropdown.val('').change()
             role_dropdown.focus()
 

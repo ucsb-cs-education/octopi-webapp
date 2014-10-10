@@ -16,28 +16,28 @@ ActiveAdmin.register Task do
   member_action :history do
     @task = Task.find(params[:id])
     @versions = @task.versions
-    render "layouts/history"
   end
+
   member_action :restore do
     @task = Task.find(params[:id])
-    if params[:version]
-      @task = @task.versions.find(params[:version].to_i).reify 
-      @task.save!
-      @task.restore_task_children(@task.id, params[:version])
+    @resource = @task
+    @version = @task.versions.find(params[:version])
+    unless params[:recursive].nil?
+      @task.restore_version(@version, params[:recursive] != 'false')
+      redirect_to history_admin_task_path, notice: 'File Restored!'
     end
-    redirect_to history_admin_task_path, notice: "File Restored!"
   end
 
   show  do |page|
     attributes_table do
-      row "Id" do
+      row 'Id' do
         page.id
       end
       [:type, :teacher_body, :student_body, :created_at, :updated_at, :curriculum_id, :designer_note, :position, :page_id].each do |attribute|
         row attribute
       end
-      row " " do
-        link_to "versions", history_admin_task_path
+      row ' ' do
+        link_to 'versions', history_admin_task_path
       end
     end
   end
@@ -50,7 +50,7 @@ ActiveAdmin.register Task do
       show! #it seems to need this
     end
   end
-  sidebar :versionate, :partial => "layouts/version", :only => :show
+  sidebar :versionate, :partial => 'layouts/version', :only => :show
 
 
 

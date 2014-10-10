@@ -38,5 +38,29 @@ class ActivityPage < Page
     end
   end
 
+  def save_children_versions!(paper_trail_event, recursive)
+    if recursive
+      child_versions = []
+      tasks.each do |child|
+        child_versions.append(child.save_current_version_helper!(paper_trail_event, recursive))
+      end
+      child_versions.map { |x| {type: :task, version_id: x.id} }.to_json
+    else
+      'false'
+    end
+  end
+
+  def restore_children_helper!(child_versions, duplicate)
+    if duplicate
+      task_versions = child_versions.select { |x| x[:type] == 'task' }
+      task_versions.each do |version|
+        version = PaperTrail::Version.find_by(item_type: 'Task', id: version[:version_id])
+        unless version
+          raise ActiveRecord::Rollback.new "Couldn't find version for Task with id: #{version[:version_id]}"
+        end
+        self.class.restore_version_helper(version, duplicate, self)
+      end
+    end
+  end
 end
 

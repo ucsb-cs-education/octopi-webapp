@@ -17,6 +17,7 @@ module Curriculumify
 
   end
 
+
   def cloudify_page!(user_for_assets)
     changed = false
     resource = CurriculumPage.find(curriculum_id)

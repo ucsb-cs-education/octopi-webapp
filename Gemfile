@@ -89,6 +89,8 @@ gem 'chartkick', '~> 1.3.2'
 gem 'roo', '~> 1.13.2'
 gem 'axlsx', '~> 2.0.1'
 
+#Breadcrumbs
+gem 'gretel', '~> 3.0'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

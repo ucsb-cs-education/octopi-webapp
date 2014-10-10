@@ -130,18 +130,19 @@ class StudentPortal::PagesController < StudentPortal::BaseController
   #POST /student_portal/laplaya_tasks/:id
   #student_portal_laplaya_task_response_path
   def laplaya_task_response
-    respond_to do |format|
-      format.html do
-        @laplaya_task_response.completed = true
-        @laplaya_task_response.save
-
-        if @laplaya_task_response.errors.empty?
-          redirect_to student_portal_activity_path(@laplaya_task.activity_page)
-        else
-          head :bad_request
-        end
-      end
-    end
+    raise 'Route not implemented'
+    # respond_to do |format|
+    #   format.html do
+    #     @laplaya_task_response.completed = true
+    #     @laplaya_task_response.save
+    #
+    #     if @laplaya_task_response.errors.empty?
+    #       redirect_to student_portal_activity_path(@laplaya_task.activity_page)
+    #     else
+    #       head :bad_request
+    #     end
+    #   end
+    # end
   end
 
   #GET /student_portal/modules/:id/laplaya_sandbox

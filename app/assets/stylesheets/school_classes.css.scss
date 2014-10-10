@@ -20,8 +20,6 @@
     }
   }
   #classlist {
-    margin-left: 15px;
-    width: 90%;
     thead {
       background-color: #B2B2FF;
       color: #666666;
@@ -36,23 +34,11 @@
       padding: 5px;
     }
   }
-  #existing_student {
-    p {
-      margin-left: 16px;
-      margin-top: 8px;
-    }
-    .form-inputs {
-      padding-left: 0px;
-    }
-  }
   #new_student {
-    form {
-      padding-left: 0px;
-    }
+    display: inline-block;
+    width: 100%;
   }
   #file-area {
-    display: inline-block;
-    float: right;
     .student_csv_change_passwords {
       margin-bottom: 0px;
     }
@@ -70,18 +56,16 @@
     margin-top: 2px;
   }
 
-  .black-link {
-    a {
-      color: black;
-      text-decoration: underline;
-    }
-    a:hover {
+  a.black-link {
+    color: black;
+    text-decoration: underline;
+    &:hover {
       color: #160e5d;
     }
   }
 
   .module-title-box {
-    font-size: 110%;
+    font-size: 14px;
     margin-top: 2px;
   }
 

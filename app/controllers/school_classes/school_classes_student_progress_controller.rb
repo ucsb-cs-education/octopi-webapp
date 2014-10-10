@@ -5,14 +5,29 @@ class SchoolClasses::SchoolClassesStudentProgressController < SchoolClassesContr
     @student = Student.find(params[:id])
     @module_pages = @school_class.module_pages.student_visible.includes(activity_pages: [:tasks])
     @unlocks = Unlock.where(student: @student, school_class: @school_class)
-    @info = @module_pages.map { |module_page| {title: module_page.title, id: module_page.id, activity_pages: module_page.activity_pages.student_visible.map {
-        |activity| {title: activity.title, id: activity.id, unlocked: @unlocks.find_by(student: @student, unlockable: activity).nil? ? false : true,
-                    tasks: activity.tasks.student_visible.map {
-                        |task| {title: task.title, id: task.id, visibility: task.get_visibility_status_for(@student, @school_class)}
-                    }}
-    }}
-    }
-    session[:admin_student_back_url] = request.original_url || school_path(@student.school)
+    @info = @module_pages.map do |module_page|
+      activity_pages = module_page.activity_pages.student_visible.map do |activity|
+        tasks = activity.tasks.student_visible.map do |task|
+          {
+              title: task.title,
+              id: task.id,
+              visibility: task.get_visibility_status_for(@student, @school_class)
+          }
+        end
+        {
+            title: activity.title,
+            id: activity.id,
+            unlocked: @unlocks.find_by(student: @student, unlockable: activity).present?,
+            tasks: tasks
+        }
+      end
+
+      {
+          title: module_page.title,
+          id: module_page.id,
+          activity_pages: activity_pages
+      }
+    end
     @graph_info = @school_class.student_progress_graph_array_for(@student)
   end
 

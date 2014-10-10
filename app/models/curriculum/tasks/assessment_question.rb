@@ -4,6 +4,7 @@ class AssessmentQuestion < ActiveRecord::Base
   belongs_to :assessment_task, foreign_key: :assessment_task_id
   alias_attribute :parent, :assessment_task
   alias_attribute :children, :answers
+  after_save :update_parent_updated_time
   validate :JSON_validator
   validate :valid_answer_type
   has_paper_trail on: [:update, :destroy]
@@ -16,6 +17,10 @@ class AssessmentQuestion < ActiveRecord::Base
 
 
   private
+  def update_parent_updated_time
+    parent.update_attributes!(updated_at: updated_at)
+  end
+
   def self.answer_types
     [OpenStruct.new(val: 'singleAnswer', label:'One Correct'),
      OpenStruct.new(val: 'multipleAnswers', label:'Multiple Correct'),

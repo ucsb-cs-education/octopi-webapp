@@ -2,11 +2,10 @@ require 'student_signin_module'
 module ApplicationHelper
   include StudentSigninModule
   def full_title(page_title)
-    base_title = 'Octopi'
     if page_title.empty?
-      base_title
+      'Octopi'
     else
-      "#{base_title} | #{page_title}"
+      page_title
     end
   end
 

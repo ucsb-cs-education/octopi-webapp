@@ -29,28 +29,20 @@
         </p>
 
 
-          <%= link_to 'Change school settings', edit_admin_school_path(@school), class: "btn btn-default" %>
+        <%= link_to 'Change school settings', edit_admin_school_path(@school), class: 'btn btn-default' %>
     <% end %>
 
-      <%= link_to 'View school\'s students', school_students_path(@school), class: "btn btn-default" %>
+    <%= link_to 'View school\'s students', school_students_path(@school), class: 'btn btn-default' %>
 
-      <%= link_to 'View school\'s classes', school_school_classes_path(@school), class: "btn btn-default" %>
-      <% @school.school_classes.each do |school_class| %>
-        <p class = "list-group-item">
+    <% @school.school_classes.each do |school_class| %>
+        <p class="list-group-item">
           <%= link_to school_class.name, school_class_path(school_class) %>
           <label>Teachers: </label>
-          <% Staff.all.each do |staff| %>
-              <% school_classes = SchoolClass.with_role(:teacher, staff)%>
-              <% class_staff  = Array.new%>
-              <% if school_classes.include?(school_class) %>
-                  <% class_staff.push(staff.name) %>
-              <% end %>
-              <% class_staff.each do |class_staff_name|%>
-                  (<%= class_staff_name %>)
-              <% end %>
+          <% @school.teachers.each do |staff| %>
+              (<%= staff.name %>)
           <% end %>
         </p>
-      <% end %>
+    <% end %>
   </div>
 
 </div>

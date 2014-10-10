@@ -1,9 +1,6 @@
-$('.page-form .btn-primary').prop('disabled', true);
-$("#update-page-btn").prop('value', 'Saving...');
-$("#update-page-btn").prop('value', 'Saved!');
-setTimeout(function() {
-    $("#update-page-btn").prop('value', 'Save changes to <%= @page.title %>');
-    $('.page-form .btn-primary').prop('disabled', false);
-}, 1000);
+var elem = $("#update-page-btn").val('Saved!');
+AddFlash.show('Changes to <%= @page.title %> have been saved!');
+setTimeout( function(){elem.val('Save changes to <%= @page.title %>')}, 2000);
+$('#delete-page-link').text('Delete <%= @page.title %>').attr('data-confirm','Are you sure you want to delete\n<%=@page.title%> and all of its children?');
 
 

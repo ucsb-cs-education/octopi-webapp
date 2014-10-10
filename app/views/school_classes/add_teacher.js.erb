@@ -1,4 +1,0 @@
-$(function() {
-    $("#teacher_list").append('(<%= @teacher.name %>--<%= link_to "remove", controller: "school_classes", action: "remove_class_role", staff_id: @teacher.id%>--)')
-    $('#add_teacher_list').find('option[value="<%= @teacher.id%>"]').remove();
-});

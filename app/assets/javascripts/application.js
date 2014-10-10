@@ -70,28 +70,33 @@ var confirmationPrompt = function (message, confirmationText, callbacks, errorTe
             failure();
         }
     });
-}
+};
 
-var AddFlash = (function() {
+var AddFlash = (function () {
     "use strict";
     var elem,
         hideHandler,
         that = {};
 
-    that.init = function(options) {
+    that.init = function (options) {
         elem = $(options.selector);
     };
 
-    that.show = function(text) {
+    that.show = function (text, fade) {
+        if (typeof fade == 'undefined') {
+            fade = 4000;
+        }
         clearTimeout(hideHandler);
-
         elem.find("span").html(text);
-        elem.delay(200).fadeIn().delay(4000).fadeOut();
+        elem.fadeIn();
+        if (fade != 0) {
+            elem.delay(fade).fadeOut();
+        }
     };
 
     return that;
 }());
 
-$(document).ready(function() {
+$(document).ready(function () {
     AddFlash.init({"selector": "#runtime_flash"})
 });

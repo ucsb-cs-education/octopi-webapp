@@ -1,88 +1,25 @@
-<h1>Edit Students</h1>
-
-<%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
-<p>
-  <strong>School:</strong>
-  <%= @school_class.school.name %>
-  <br>
-  <strong>Name:</strong>
-  <%= @school_class.name %>
-  <br>
-  <strong>Teachers:</strong>
-  <% Staff.all.each do |staff| %>
-      <% school_classes = SchoolClass.with_role(:teacher, staff)%>
-      <% class_staff  = Array.new%>
-      <% if school_classes.include?(@school_class) %>
-          <% class_staff.push(staff.name) %>
-      <% end %>
-      <% class_staff.each do |class_staff_name|%>
-          (<%= class_staff_name %>)
-      <% end %>
-  <% end %>
-</p>
-<div class="row basic-info">
-  <%= button_to "Download class spreadsheet", {action: "download_class_csv", id: @school_class.id},
-                class: "btn btn-default", format: :xlsx, method: :post %>
-</div>
-<!--Add/modify students via CSV -->
-<div id="file-area">
-  Or add multiple students at once by selecting a spreadsheet with info:
-  <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), js: false, method: 'post' do |f| %>
-      <%= f.file_field :csv %>
-      <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?' %>
-      <%= f.button :submit, 'Submit', id: 'student-csv-submit', disabled: true %>
-  <% end %>
-  <%= link_to 'How do I do this?', student_spreadsheet_help_school_class_path(@school_class) %>
-</div>
-
-<div class="row" id="edit_student">
-  <p><strong>Edit a student in the class:</strong></p>
-  <%= simple_form_for :student, url: edit_student_school_class_path(@school_class), method: 'post', remote: true do |f| %>
-      <div class="col-md-6 form-inputs">
-        <%= f.input :id, collection: @school_class.students.order("last_name ASC"), selected: 0, input_html: {id: 'edit_student_list'}, label: false %>
-      </div>
-      <div class="col-md-1 form-actions">
-        <%= f.button :submit, 'Edit Student' %>
-      </div>
-  <% end %>
-</div>
-<!--Add existing student to class-->
-
-<div class="row" id="existing_student">
-  <p><strong>Add an existing student at the school to the class:</strong></p>
-  <%= simple_form_for :student, url: add_student_school_class_path(@school_class), method: 'post', remote: true do |f| %>
-      <div class="col-md-6 form-inputs">
-        <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected: 0, input_html: {id: 'existing_student_list'}, label: false %>
-      </div>
-      <div class="col-md-1 form-actions">
-        <%= f.button :submit, 'Add Existing Student', id: 'add_existing_student_button' %>
-      </div>
-  <% end %>
-</div>
-
-<!--Add new student to class-->
-<div class="row hidden" id="new_student">
-  <%= render 'new_student_form' %>
-</div>
-
-<p></p>
-<div class="row">
+<% provide(:title, "#{@school_class.name} - Edit") %>
+<% breadcrumb :staff_school_class_edit, @school_class %>
+<div class="row ">
   <div class="col-md-6">
-    <%= button_tag :'Add New Student', class: 'btn btn-primary', type: 'button', id: 'new_student_button' %>
+    <%= render 'class_info_well' %>
+  </div>
+  <div class="col-md-6">
+    <div class="well well-sm" id="add_teacher">
+        <p><strong>Add a teacher to the class:</strong></p>
+        <%= simple_form_for :staff, url: add_teacher_school_class_path(@school_class), method: 'post' do |f| %>
+            <div class="form-inputs">
+              <%= f.input :id, collection: (Staff.with_role(:teacher, @school_class.school) - @school_class.teachers),
+                          input_html: {id: 'add_teacher_list'}, selected: 0, label: false %>
+            </div>
+            <div class="form-actions">
+              <%= f.button :submit, 'Add Teacher' %>
+            </div>
+        <% end %>
+    </div>
   </div>
 </div>
-<br>
-<div class="row">
-  <table id="classlist" class="sortable" style="width:900px">
-    <tr>
-      <th>User ID</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Login Name</th>
-    </tr>
-    <%= render partial: 'student_table_row', collection: ordered_students, as: :student %>
-  </table>
-</div>
 
-<p></p>
-<%= link_to 'Back', school_class_path, class: 'btn btn-default' %>
+<div class="well">
+  <%= render 'form' %>
+</div>

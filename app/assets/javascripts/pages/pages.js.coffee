@@ -101,7 +101,8 @@ PagesController.prototype.show = () ->
         $(this).find('.student_body').val(student_body)
         $(this).find('.designer_note').val(designer_note)
         $(this).find('.title').val(title)
-        return true;
+        $(this).find('.btn-primary').val('Saving...').prop('disabled', true)
+        return true
       else
         alert "Title cannot be blank"
         return false

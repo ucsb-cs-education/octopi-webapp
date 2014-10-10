@@ -15,4 +15,29 @@ class CurriculumPage < Page
     title
   end
 
+  def save_children_versions!(paper_trail_event, recursive)
+    if recursive
+      child_versions = []
+      module_pages.each do |child|
+        child_versions.append(child.save_current_version_helper!(paper_trail_event, recursive))
+      end
+      child_versions.map { |x| {type: :module_page, version_id: x.id} }.to_json
+    else
+      'false'
+    end
+  end
+
+
+  def restore_children_helper!(child_versions, duplicate)
+    if duplicate
+      module_pages_versions = child_versions.select { |x| x[:type] == 'module_page' }
+      module_pages_versions.each do |version|
+        version = PaperTrail::Version.find_by(item_type: 'Page', id: version[:version_id])
+        unless version
+          raise ActiveRecord::Rollback.new "Couldn't find version for Module Page with id: #{version[:version_id]}"
+        end
+        self.class.restore_version_helper(version, duplicate, self)
+      end
+    end
+  end
 end

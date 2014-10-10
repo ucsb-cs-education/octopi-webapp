@@ -29,4 +29,53 @@ class LaplayaTask < Task
     end
   end
 
+
+  def save_children_versions!(paper_trail_event, recursive)
+    child_versions = []
+    [
+        [task_base_laplaya_file, :task_base_laplaya_file],
+        [task_completed_laplaya_file, :task_completed_laplaya_file],
+        [laplaya_analysis_file, :laplaya_analysis_file]
+    ].each do |child|
+      child_versions.append(
+          {
+              type: child[1],
+              version_id: (child[0].save_current_version_helper!(paper_trail_event, recursive)).id
+          })
+    end
+    child_versions.to_json
+  end
+
+  def restore_children_helper!(child_versions, duplicate)
+    base_version = child_versions.select { |x| x[:type] == 'task_base_laplaya_file' }.first
+    completed_version = child_versions.select { |x| x[:type] == 'task_completed_laplaya_file' }.first
+    analysis_version = child_versions.select { |x| x[:type] == 'laplaya_analysis_file' }.first
+    base_version = PaperTrail::Version.find_by(
+        item_type: 'LaplayaFile', id: base_version[:version_id])
+    completed_version = PaperTrail::Version.find_by(
+        item_type: 'LaplayaFile', id: completed_version[:version_id])
+    analysis_version = PaperTrail::Version.find_by(
+        item_type: 'LaplayaAnalysisFile', id: analysis_version[:version_id])
+    unless base_version && completed_version && analysis_version
+      raise ActiveRecord::Rollback.new 'Number of child versions found does not match number saved!'
+    end
+    override_parent = (duplicate) ? self : nil
+    unless duplicate
+      if base_version.item_id != task_base_laplaya_file.id
+        task_base_laplaya_file.destroy!
+      end
+
+      if completed_version.item_id != task_completed_laplaya_file.id
+        task_completed_laplaya_file.destroy!
+      end
+
+      if analysis_version.item_id != laplaya_analysis_file.id
+        laplaya_analysis_file.destroy!
+      end
+    end
+
+    self.class.restore_version_helper(base_version, duplicate, override_parent)
+    self.class.restore_version_helper(completed_version, duplicate, override_parent)
+    self.class.restore_version_helper(analysis_version, duplicate, override_parent)
+  end
 end

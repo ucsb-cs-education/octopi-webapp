@@ -7,7 +7,7 @@ SchoolClassesController = Paloma.controller('SchoolClasses');
 SchoolClassesController.prototype.show = () ->
   SortableJS()
 
-SchoolClassesController.prototype.edit = () ->
+SchoolClassesController.prototype.edit_students = () ->
   showFormAndHideAddNewStudentButton = () ->
     $("#new_student").removeClass("hidden")
     $("#new_student_button").addClass("hidden")

@@ -31,4 +31,15 @@ body.active_admin {
       color: #5e6469;
     }
   }
+  .restore_underline {
+    text-decoration: underline;
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+
+  #restore_links {
+    .button-light {
+      @include light-button;
+    }
+  }
 }

@@ -1,15 +1,9 @@
 class SchoolClassesController < ApplicationController
   include SchoolClassesHelper
   load_and_authorize_resource :school_class, except: [:teacher_index]
-  load_and_authorize_resource :school, only: [:index, :new, :create]
+  load_and_authorize_resource :school, only: [:new, :create]
   before_action :load_school, only: [:edit]
   before_action :find_columns, only: [:edit_students_via_csv]
-
-  # Deep actions
-  # GET /schools/:school_id/school_classes
-  def index
-    @school_classes = @school.school_classes
-  end
 
   def teacher_index
     authenticate_staff!
@@ -24,7 +18,7 @@ class SchoolClassesController < ApplicationController
     else
       schools = {}
       @schools.each do |school|
-        schools[school.name] = {id: school.id, name: school.name, classes: []}
+        schools[school.name] = {id: school.id, name: school.name, classes: [], admins: school.school_admins}
         #'ERROR:  bind message supplies 2 parameters, but prepared statement "a4" requires 1'
         classes = school.school_classes
         unless current_staff.super_staff?
@@ -41,6 +35,7 @@ class SchoolClassesController < ApplicationController
         v[:classes].sort { |x, y| x.name <=> y.name }
         @schools << v
       end
+      @schools.sort {|x, y| x[:name] <=> y[:name]}
     end
 
   end
@@ -114,42 +109,33 @@ class SchoolClassesController < ApplicationController
                             unlockable_type: 'Task')
   end
 
+  # GET /school_classes/1/edit_students
+  def edit_students
+    @student = Student.new
+  end
+
   # GET /school_classes/1/edit
   def edit
-    @student = Student.new
-    session[:admin_student_back_url] = request.original_url || school_path(@student.school)
   end
 
-  def edit_student
-    @student = Student.find(params[:student][:id])
-    session[:admin_student_back_url] = edit_school_class_path || school_path(@student.school)
-    respond_to do |format|
-      format.js do
-        js false
-      end
-    end
-     #redirect_to edit_admin_student_path(@student)
-  end
-
-  def edit_class
-  end
-
-  def remove_class_role
-    Staff.find(params[:staff_id]).remove_role :teacher, SchoolClass.find(@school_class.id)
-    redirect_to edit_class_school_class_path
+  def remove_teacher
+    @teacher = Staff.find(params[:teacher_id])
+    authorize! :update, @teacher
+    @teacher.remove_role(:teacher, SchoolClass.find(@school_class.id))
+    flash[:info] = "#{@teacher.name} has been removed as a teacher."
+    redirect_to edit_school_class_path(@school_class)
   end
 
 
   def add_teacher
     @teacher = Staff.find(params[:staff][:id])
     authorize! :update, @teacher
-    @teacher.grant :teacher, SchoolClass.find(@school_class.id)
-    respond_to do |format|
-      format.js do
-        js false
-      end
-    end
+    raise 'Teacher must be in same school as class' unless @teacher.has_role? :teacher, @school_class.school
+    @teacher.add_role(:teacher, @school_class) unless @teacher.has_role? :teacher, @school_class
+    flash[:success] = "#{@teacher.name} has been added as a teacher."
+    redirect_to edit_school_class_path(@school_class)
   end
+
   def add_new_student
     @student = Student.new(student_params)
     @student.school = @school_class.school
@@ -312,12 +298,12 @@ class SchoolClassesController < ApplicationController
           }
           flash[:success] = 'Success!'
         end
-        redirect_to edit_school_class_path(@school_class)
+        redirect_to edit_students_school_class_path(@school_class)
       end
     rescue Exception => e
       flash[:error] = 'An error has occured. Please contact us so we can resolve the issue. Possible causes include attempts to do some
       actions twice and using the incorrect Octopi student number. Please check your sheet for problems and try again.'
-      redirect_to edit_school_class_path(@school_class)
+      redirect_to edit_students_school_class_path(@school_class)
     end
   end
 

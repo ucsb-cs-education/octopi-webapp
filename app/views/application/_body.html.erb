@@ -2,6 +2,7 @@
 <%= render 'header' %>
 <%= content_for?(:pre_container) ? yield(:pre_container) : '' %>
 <div class="container">
+  <%= breadcrumbs pretext: 'You are here: ', autoroot: false, style: :bootstrap %>
   <div class="flashes">
     <%= render 'flashes' %>
   </div>

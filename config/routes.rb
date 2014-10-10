@@ -54,18 +54,17 @@ OctopiWebapp::Application.routes.draw do
   get '/school_classes/', to: 'school_classes#teacher_index', as: 'teacher_school_classes'
   resources :schools, only: [:show, :index], shallow: true do
     resources :students, except: [:update, :edit, :destroy]
-    resources :school_classes do
+    resources :school_classes, except: [:index] do
       member do
-        get 'remove_class_role'
-        get 'edit_class'
-        post 'edit_student'
+        delete 'remove_teacher/:teacher_id', to: 'school_classes#remove_teacher', as: 'remove_teacher'
+        get 'edit_students'
         post 'add_teacher'
         post 'add_new_student'
         post 'add_student'
         post 'manual_unlock', format: false
         post 'edit_students_via_csv'
         post 'do_csv_actions'
-        post 'download_class_csv'
+        get 'download_class_csv'
         get 'student_spreadsheet_help'
       end
       resources :unlocks, only: [:destroy, :create]

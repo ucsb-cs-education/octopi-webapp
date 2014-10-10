@@ -1,0 +1,25 @@
+panel 'Restore' do
+  para "You are about to restore #{assigns[:resource].title} to the version:"
+
+  table_for assigns[:version] do
+    column 'Version Date', :created_at
+    column 'Changed By', :whodunnit
+    column 'Event', :event
+  end
+
+  para 'There are two ways to perform this restore'
+  div do
+    h3 'Recursive restore', class: 'restore_underline'
+    para 'This will create a new, duplicate entry for this entity and all of its children, as saved at the time of this version. This is only possible if the event does not specifically note that children have not been saved. This does not change the existing copy of this entity, but does add a new element to this entity\'s parent, set to developer only visibility.'
+  end
+  div do
+    h3 'In place restore', class: 'restore_underline'
+    para 'This will restore the data for this node in place, but will not alter the nodes children. For example, it will change the student and teacher bodies of a module page, as well as its sandbox and project files, but will not affect the activity pages for the module page'
+  end
+  para 'Please make your decision as to which restore type you would like and click the appropriate link below.'
+  div id: 'restore_links' do
+    link_to('Recursive Restore', {controller: controller.controller_name, action: 'restore', version: version.id, recursive: true}, class: 'button') +
+        link_to('In Place Restore', {controller: controller.controller_name, action: 'restore', version: version.id, recursive: false}, class: 'button') +
+        link_to('Cancel', {controller: controller.controller_name, action: 'show'}, class: 'button-light')
+  end
+end

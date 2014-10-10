@@ -50,8 +50,8 @@ class Task < ActiveRecord::Base
   end
 
   def restore_task_children(id, version)
-    task = self.class.find(id)
-    task.restore_children(version)
+    task = find(id)
+    task.restore_with_children(version)
   end
 
 

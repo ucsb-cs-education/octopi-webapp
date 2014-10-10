@@ -48,7 +48,11 @@ class TaskResponse < ActiveRecord::Base
 
   private
   def set_task_version
-    update_attribute(:version_date, task.updated_at)
+    unless task.versions.last &&
+        %w(manual_version auto_task_version).include?(task.versions.last.event) &&
+        task.versions.last.created_at == task.updated_at
+      task.save_current_version(paper_trail_event: 'auto_task_version')
+    end
+    assign_attributes(version_date: task.updated_at)
   end
-
 end

@@ -39,18 +39,16 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
   end
 
   def list_student_logins
-    students  = SchoolClass.find(params[:school_class_id]).students.where(type: 'Student')
+    students = SchoolClass.find(params[:school_class_id]).students.where(type: 'Student')
     render json: students.order('login_name ASC').select(:login_name, :school_class_id, :id)
   end
 
 
   def destroy
-    if current_student == nil
-      redirect_to student_portal_root_url
-    else
+    unless current_student.nil?
       sign_out_student
-      redirect_to student_portal_root_url
     end
+    redirect_to student_portal_root_url
   end
 
 end

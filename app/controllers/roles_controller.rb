@@ -53,7 +53,11 @@ class RolesController < ApplicationController
     role_name = 'teacher' if role_name == 'teacher_class'
     if Role.basic_role_strs.include?(role_name) && resource
       role = Role.find_or_create_by!(name: role_name, resource_type: resource.class.to_s, resource_id: resource.id)
-      result = {id: role.id, name: role.to_label}
+      result = [{id: role.id, name: role.to_label}]
+      if role.name == 'teacher' && role.resource_type == 'SchoolClass'
+        role = Role.find_or_create_by!(name: 'teacher', resource_type: 'School', resource_id: resource.school.id)
+        result.append({id: role.id, name: role.to_label})
+      end
       respond_with result
     else
       head :bad_request

@@ -3,7 +3,7 @@
 
 
   <div class="panel panel-default panel-body">
-    <% @school.students.each do |student| %>
+    <% @school.students.not_teststudents.each do |student| %>
         <p><%= link_to "#{student.name} (#{student.login_name})", student_path(:id => student.id) %></p>
     <% end %>
   </div>

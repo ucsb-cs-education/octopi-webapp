@@ -16,10 +16,7 @@ ActiveAdmin.register SchoolClass do
       [:name, :school].each do |attribute|
         row attribute
       end
-      row 'Edit' do
-        link_to 'Edit Class', edit_school_class_path(school_class)
-      end
-      table_for school_class.students.where(type: "Student").order('first_name ASC') do
+      table_for school_class.students.where(type: 'Student').order('first_name ASC') do
         column 'Students' do |student|
           link_to student.name, [:admin, student]
         end

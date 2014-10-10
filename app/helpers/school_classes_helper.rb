@@ -33,4 +33,8 @@ module SchoolClassesHelper
     end
   end
 
+  def display_teacher_remove_links?
+    action_name == 'edit'
+  end
+
 end

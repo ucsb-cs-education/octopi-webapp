@@ -5,7 +5,7 @@
             <%= link_to activity_page.title, activity_page_path(activity_page) %>
             <div class="teacher-only-note"> Teacher only activity</div>
         <% else %>
-            <span class="black-link"><%= link_to activity_page.title, activity_page_path(activity_page) %> </span>
+            <%= link_to activity_page.title, activity_page_path(activity_page), class: 'black-link' %>
             <br>
             <%= link_to "View Class Progress", school_class_activity_path(@school_class, activity_page) %>
         <% end %>

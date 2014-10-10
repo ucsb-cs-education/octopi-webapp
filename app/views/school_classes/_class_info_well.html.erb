@@ -1,0 +1,22 @@
+<div class="well well-sm">
+  <p>
+    <strong>Class name:</strong>
+    <%= @school_class.name %>
+  </p>
+
+  <p>
+    <strong>School:</strong>
+    <%= @school_class.school.name %>
+  </p>
+
+  <p id="teacher_list">
+    <strong>Teachers:</strong><br>
+    <% @school_class.teachers.each do |teacher| %>
+        <% if display_teacher_remove_links? %>
+            <%= render partial: 'remove_teacher_row', locals: {teacher: teacher} %>
+        <% else %>
+            <%= teacher.name %> <br>
+        <% end %>
+    <% end %>
+  </p>
+</div>
