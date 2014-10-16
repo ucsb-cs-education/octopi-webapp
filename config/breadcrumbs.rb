@@ -56,6 +56,11 @@ crumb :assessment_task do |page|
   parent :activity_page, page.parent
 end
 
+crumb :offline_task do |page|
+  link page.title, assessment_task_path(page)
+  parent :activity_page, page.parent
+end
+
 crumb :assessment_question do |page|
   link page.title, assessment_question_path(page)
   parent :assessment_task, page.parent
