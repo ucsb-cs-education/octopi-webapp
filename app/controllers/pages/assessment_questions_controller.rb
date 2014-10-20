@@ -1,6 +1,7 @@
 class Pages::AssessmentQuestionsController < Pages::PagesController
   load_and_authorize_resource
   load_and_authorize_resource :assessment_task, only: [:new, :create]
+  before_action :verify_parent_visible_to_current_ability, only: [:show, :update]
   before_filter :set_page_variable
   js 'Pages/AssessmentQuestion'
 
@@ -56,4 +57,7 @@ class Pages::AssessmentQuestionsController < Pages::PagesController
     params.require(:assessment_question).permit(:title, :question_body, :answers, :question_type)
   end
 
+  def verify_parent_visible_to_current_ability
+    authorize! action_name.to_sym, @assessment_question.parent
+  end
 end

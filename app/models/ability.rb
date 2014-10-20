@@ -96,20 +96,16 @@ class Ability
 
   def school_admin(user)
     can :add_basic_roles, Staff
-    schools = School.with_role(:school_admin, user)
-    school_ids = schools.pluck(:id)
-    can [:read_update, :add_teacher, :add_school_admin], School, id: school_ids
+    can :see_user_admin_menu
 
-    can [:crud, :change_class, :remove_class], Student, :id => Student.where(school_id: school_ids).pluck(:id)
-    can :create, Student
+    schools = School.with_role(:school_admin, user).pluck(:id)
+    can [:read_update, :add_teacher, :add_school_admin], School, id: schools
+    can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
+    school_classes = SchoolClass.where(school_id: schools).pluck(:id)
+    school_admin_teacher_shared(user, school_classes, schools)
 
-    school_classes = SchoolClass.where(school_id: school_ids)
-    school_classes_ids = school_classes.pluck(:id)
-    can [:crud, :add_class_teacher, :add_new_student, :add_student], SchoolClass, id: school_classes_ids
-    can :create, SchoolClass
-
-    staff_school_roles = Role.where(name: [:teacher, :school_admin], resource_type: 'School', resource_id: school_ids)
-    staff_school_class_roles = Role.where(name: [:teacher], resource_type: 'SchoolClass', resource_id: school_classes_ids)
+    staff_school_roles = Role.where(name: [:teacher, :school_admin], resource_type: 'School', resource_id: schools)
+    staff_school_class_roles = Role.where(name: [:teacher], resource_type: 'SchoolClass', resource_id: school_classes)
     roles = []
     [staff_school_roles, staff_school_class_roles].each do |staff_roles|
       roles.push *(staff_roles.map { |x| {name: x.name, resource: x.resource} })
@@ -121,52 +117,48 @@ class Ability
     staff_ids.uniq!
     can :crud, Staff, id: staff_ids
     can :create, Staff
-
-    page_ids = CurriculumPage.all.pluck(:id)
-    can :read, Page, :curriculum_id => page_ids
-    can :read, Task, :curriculum_id => page_ids
-    can :read, AssessmentQuestion, :curriculum_id => page_ids
-    can :read, LaplayaFile, {:curriculum_id => page_ids, :type => 'TaskBaseLaplayaFile'}
-    can :see_user_admin_menu
-
-    can [:manual_unlock, :edit_students_via_csv, :do_csv_actions, :download_class_csv, :student_spreadsheet_help], SchoolClass, :id => school_classes_ids
-    can :activity_page, SchoolClass, :id => school_classes_ids
   end
 
   def teacher(user)
     can :add_basic_roles, Staff
-    #this is really awful. We need to clean this up, a lot...
-
     schools = School.with_role(:teacher, user).pluck(:id)
     can :read, School, :id => schools
     can :read, Student, :id => Student.where(school_id: schools).pluck(:id)
-
     school_classes = SchoolClass.with_role(:teacher, user).pluck(:id)
-    school_classes_teacher = SchoolClass.with_role(:teacher, user).pluck(:school_id)
-    schools_teacher = School.with_role(:teacher, user).pluck(:id)
-    if School.with_role(:teacher, user) != []
-      can :read, School, :id => schools_teacher
-      can [:crud, :change_class, :remove_class], Student, :id => Student.where(school_id: schools_teacher).pluck(:id)
-      can [:read_update, :add_new_student, :add_student,
-           :view_as_student, :signout_test_student, :reset_test_student], SchoolClass, :id => SchoolClass.where(school_id: schools_teacher).pluck(:id)
-    else
-      can :read, School, :id => school_classes_teacher
-      can [:read, :update], Student, :id => Student.where(school_id: school_classes_teacher).pluck(:id)
-      can :crud, Student, :id => SchoolClass.with_role(:teacher, user).map { |school_class| school_class.students.map {
-          |student| student.id }.flatten(1) }.flatten(1).uniq
-      can [:read_update, :add_new_student, :add_student], SchoolClass, :id => school_classes
-    end
-    page_ids = CurriculumPage.all.pluck(:id)
-    can :read_update, SchoolClass, :id => school_classes
-    can :crud, Student, :id => Student.joins(:school_classes).where(school_classes: {id: school_classes}).distinct.pluck(:id)
-    can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
-    can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
-    assessment_task_ids = AssessmentTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
-    laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
-    can :read, AssessmentQuestion, assessment_task_id: assessment_task_ids
-    can :show, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile)}
-    can :manual_unlock, SchoolClass, id: school_classes
+    school_admin_teacher_shared(user, school_classes, schools)
 
+  end
+
+  def school_admin_teacher_shared(user, school_classes_ids, school_ids)
+    # school = user.school
+    # page_ids = school.curriculum_pages.pluck(:id)
+    # I Really don't like this. I'd like to do what is above, but I have no idea how to do it efficiently
+    # Really, we just need to remove the concept of multiple curriculums entirely. It would make everything SO much easier to permission
+    page_ids = CurriculumPage.all
+    can :read, Page, id: page_ids
+    can :read, Page, {curriculum_id: page_ids, teacher_visible: true}
+    can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, teacher_visible: true}
+    can :read, AssessmentQuestion, {curriculum_id: page_ids}
+    laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
+    can :read, LaplayaFile, {parent_id: laplaya_task_ids, type: 'TaskBaseLaplayaFile TaskCompletedLaplayaFile SandboxBaseLaplayaFile ProjectBaseLaplayaFile'}
+
+    can [
+            :read_update,
+            :manual_unlock,
+            :edit_students_via_csv,
+            :do_csv_actions,
+            :download_class_csv,
+            :student_spreadsheet_help,
+            :add_new_student,
+            :add_student,
+            :edit_students,
+            :view_as_student,
+            :signout_test_student,
+            :reset_test_student,
+            :activity_page
+        ], SchoolClass, :id => school_classes_ids
+    can [:crud, :change_class, :remove_class], Student, school_id: school_ids
+    can :create, Student
   end
 
   def student(user)

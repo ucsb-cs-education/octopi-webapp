@@ -35,7 +35,7 @@ class SchoolClassesController < ApplicationController
         v[:classes].sort { |x, y| x.name <=> y.name }
         @schools << v
       end
-      @schools.sort {|x, y| x[:name] <=> y[:name]}
+      @schools.sort { |x, y| x[:name] <=> y[:name] }
     end
 
   end
@@ -349,7 +349,11 @@ class SchoolClassesController < ApplicationController
   private
   # noinspection RubyStringKeysInHashInspection
   def get_col(student_row, col_symbol)
-    student_row[@headers[col_symbol]]
+    result = student_row[@headers[col_symbol]]
+    if result.class == Float || result.class == Fixnum
+      result = result.to_i.to_s
+    end
+    result
   end
 
   def student_found(student, pass = nil)
