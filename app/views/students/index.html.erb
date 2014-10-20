@@ -1,18 +1,12 @@
-<% provide(:title, 'All students') %>
-<h1>Students at <%= link_to @school.name, @school %></h1>
-
-
-  <div class="panel panel-default panel-body">
-    <% @school.students.not_teststudents.each do |student| %>
-        <p><%= link_to "#{student.name} (#{student.login_name})", student_path(:id => student.id) %></p>
-    <% end %>
-  </div>
-
+<% provide(:title, "Students at #{@school.name}") %>
+<% breadcrumb :staff_school_students, @school %>
+<div class="well well-sm">
+  <% @school.students.not_teststudents.each do |student| %>
+      <p><%= link_to "#{student.name} (#{student.login_name})", student_path(:id => student.id) %></p>
+  <% end %>
+</div>
 <p>
-  <%= link_to 'Add a new student', new_school_student_path(@school) %>
+  <%= link_to 'Add a new student', new_school_student_path(@school), class: 'btn btn-default' %>
 </p>
 
-<p>
-  <%= link_to 'Back to '+@school.name, @school %>
-</p>
 

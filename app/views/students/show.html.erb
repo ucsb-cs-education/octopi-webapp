@@ -1,4 +1,5 @@
 <% provide(:title, "#{@student.school.name} | #{@student.name}") %>
+<% breadcrumb :staff_school_student, @student %>
 <%= @student.name %>
 <% if can? :destroy, @student %>
     <p>

@@ -1,10 +1,7 @@
-<%= simple_form_for @school_class, html: {class: 'edit_school_class'} do |f| %>
-    <%= f.error_notification %>
-    <%= f.input :name, label: 'Class Name:', required: false %>
-    <% @school_class.school.curriculum_pages.each do |curr_page| %>
-        <%= f.label "Modules in #{curr_page.title}" %>
-        <%= f.association :module_pages, as: :check_boxes, label: false, wrapper_html: {class: 'row'}, collection: curr_page.module_pages.teacher_visible %>
-    <% end %>
-    <%= f.button :submit, 'Save class settings', id: 'edit_school_class_submit' %>
+<%= f.error_notification %>
+<%= f.input :name, label: 'Class Name:', required: false %>
+<% school_class.school.curriculum_pages.each do |curr_page| %>
+    <%= f.label "Modules in #{curr_page.title}" %>
+    <%= f.association :module_pages, as: :check_boxes, label: false, wrapper_html: {class: 'row'}, collection: curr_page.module_pages.teacher_visible %>
 <% end %>
 

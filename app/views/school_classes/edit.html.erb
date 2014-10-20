@@ -6,20 +6,23 @@
   </div>
   <div class="col-md-6">
     <div class="well well-sm" id="add_teacher">
-        <p><strong>Add a teacher to the class:</strong></p>
-        <%= simple_form_for :staff, url: add_teacher_school_class_path(@school_class), method: 'post' do |f| %>
-            <div class="form-inputs">
-              <%= f.input :id, collection: (Staff.with_role(:teacher, @school_class.school) - @school_class.teachers),
-                          input_html: {id: 'add_teacher_list'}, selected: 0, label: false %>
-            </div>
-            <div class="form-actions">
-              <%= f.button :submit, 'Add Teacher' %>
-            </div>
-        <% end %>
+      <p><strong>Add a teacher to the class:</strong></p>
+      <%= simple_form_for :staff, url: add_teacher_school_class_path(@school_class), method: 'post' do |f| %>
+          <div class="form-inputs">
+            <%= f.input :id, collection: (Staff.with_role(:teacher, @school_class.school) - @school_class.teachers),
+                        input_html: {id: 'add_teacher_list'}, selected: 0, label: false %>
+          </div>
+          <div class="form-actions">
+            <%= f.button :submit, 'Add Teacher' %>
+          </div>
+      <% end %>
     </div>
   </div>
 </div>
 
 <div class="well">
-  <%= render 'form' %>
+  <%= simple_form_for @school_class, html: {class: 'edit_school_class'} do |f| %>
+      <%= render partial: 'form', locals: {f: f, school_class: @school_class} %>
+      <%= f.button :submit, 'Save class settings', id: 'edit_school_class_submit' %>
+  <% end %>
 </div>

@@ -3,6 +3,11 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 #main-body.school_classes {
+  form#new_school_class {
+    div.form-group.check_boxes {
+      margin-left: 0px;
+    }
+  }
   form.edit_school_class {
     border: '1px solid #cccccc';
     div.school_class_name {

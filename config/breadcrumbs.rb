@@ -6,6 +6,26 @@ crumb :staff_root do
   link 'Staff Home', staff_root_path
 end
 
+crumb :staff_school do |school|
+  link school.name, school_path(school)
+  parent :staff_root
+end
+
+crumb :staff_school_new_class do |school|
+  link 'New Class', new_school_school_class_path(school)
+  parent :staff_school, school
+end
+
+crumb :staff_school_students do |school|
+  link 'Students', school_students_path(school)
+  parent :staff_school, school
+end
+
+crumb :staff_school_student do |student|
+  link student.name, student_path(student)
+  parent :staff_school_students, student.school
+end
+
 crumb :staff_school_classes do
   link 'Your classes', teacher_school_classes_path
   parent :staff_root
@@ -13,7 +33,7 @@ end
 
 crumb :staff_school_class do |klass|
   link klass.name, school_class_path(klass)
-  parent :staff_school_classes
+  parent :staff_school, klass.school
 end
 
 crumb :staff_school_class_edit do |klass|

@@ -73,11 +73,13 @@ module StudentSigninModule
 
   def sign_out_student(student=nil)
     student ||= current_student
-    student.update_attribute(:remember_token,
-                             Student.create_remember_hash(Student.new_remember_token))
-    session.delete(:remember_token)
-    self.current_student = nil
-    self.current_school_class = nil
+    if student
+      student.update_attribute(:remember_token,
+                               Student.create_remember_hash(Student.new_remember_token))
+      session.delete(:remember_token)
+      self.current_student = nil
+      self.current_school_class = nil
+    end
   end
 
   def store_location

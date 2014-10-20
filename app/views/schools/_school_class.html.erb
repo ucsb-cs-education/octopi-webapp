@@ -1,0 +1,13 @@
+<div class="panel panel-default top-buffer">
+  <div class="panel-heading">
+    <h3 class="panel-title nocenter">
+      <%= link_to school_class.name, school_class_path(school_class), class: 'restore_underline' %>
+    </h3>
+  </div>
+  <div class="panel-body">
+    <strong>Teachers: </strong><br/>
+    <% @school.teachers.each do |staff| %>
+        <%= staff.name %><br/>
+    <% end %>
+  </div>
+</div>

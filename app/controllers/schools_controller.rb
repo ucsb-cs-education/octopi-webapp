@@ -28,6 +28,7 @@ class SchoolsController < ApplicationController
   # GET /schools/1
   def show
     session[:admin_school_back_url] = request.original_url || school_path
+    @accessible_schools = School.accessible_by(current_ability, :show).order(:name)
   end
 
   # POST /schools
@@ -59,7 +60,7 @@ class SchoolsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def school_params
     #Only super_staffs should be able to change the name of a school
-    if can?(:change_school_name, @school) || can?( :create, School)
+    if can?(:change_school_name, @school) || can?(:create, School)
       params.require(:school).permit(:name, :ip_range, :student_remote_access_allowed)
     else
       params.require(:school).permit(:ip_range, :student_remote_access_allowed)

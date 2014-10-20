@@ -42,8 +42,7 @@ class SchoolClassesController < ApplicationController
 
   # POST /schools/:school_id/school_classes
   def new
-    @school_class = SchoolClass.new
-    render(:layout => 'layouts/devise')
+    @school_class.school = @school
   end
 
   # GET /schools/:school_id/school_classes/new

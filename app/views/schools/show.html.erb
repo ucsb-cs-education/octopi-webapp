@@ -1,48 +1,49 @@
+<% provide(:title, @school.name) %>
+<% breadcrumb :staff_school, @school %>
+
 <div class="row">
-
-  <div class="col-xs-12 col-sm-4 col-sm-push-8">
-    <%= simple_form_for :school, url: schools_path, method: 'get' do |f| %>
-        <div class="form-inputs">
-          <%= f.input :id, include_blank: false, collection: School.accessible_by(current_ability, :show), selected: @school.id, label: 'Select a different school to administer' %>
-        </div>
-
-        <div class="form-actions">
-          <%= f.button :submit, 'Switch schools' %>
-        </div>
-    <% end %>
-  </div>
-  <div class="col-xs-12 col-sm-8 col-sm-pull-4">
-    <p>
-      <strong>Name:</strong>
-      <%= @school.name %>
-    </p>
-
-    <p>
-      <strong>Student remote access allowed:</strong>
-      <%= @school.student_remote_access_allowed %>
-    </p>
-
-    <% if can? :update, @school %>
-        <p>
-          <strong>Ip range:</strong>
-          <%= @school.ip_range %>
-        </p>
-
-
-        <%= link_to 'Change school settings', edit_admin_school_path(@school), class: 'btn btn-default' %>
-    <% end %>
-
-    <%= link_to 'View school\'s students', school_students_path(@school), class: 'btn btn-default' %>
-
-    <% @school.school_classes.each do |school_class| %>
-        <p class="list-group-item">
-          <%= link_to school_class.name, school_class_path(school_class) %>
-          <label>Teachers: </label>
-          <% @school.teachers.each do |staff| %>
-              (<%= staff.name %>)
+  <div class="col-xs-12 col-md-6 col-md-push-6">
+    <div class="well well-sm">
+      <% if @accessible_schools.count > 1 %>
+          <div class="row">
+            <div class="col-xs-12">
+              <%= render 'school_switcher_well' %>
+            </div>
+          </div>
+      <% end %>
+      <div class="row">
+        <div class="col-xs-12">
+          <p>
+            <%= link_to 'View school\'s students', school_students_path(@school), class: 'btn btn-default' %>
+          </p>
+          <% if can? :update, @school %>
+              <p>
+                <%= link_to 'Change school settings', edit_admin_school_path(@school), class: 'btn btn-default' %>
+              </p>
           <% end %>
-        </p>
+          <% if can? :create, SchoolClass %>
+              <p>
+                <%= link_to 'Create a new class', new_school_school_class_path(@school), class: 'btn btn-default' %>
+              </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-6 col-md-pull-6">
+    <%= render 'school_info_well' %>
+  </div>
+</div>
+
+
+<div class="panel panel-default top-buffer">
+  <div class="panel-heading">
+    <h3 class="panel-title nocenter">School Classes:</h3>
+  </div>
+  <div class="panel-body">
+    <% @school.school_classes.each do |school_class| %>
+        <%= render partial: 'school_class', object: school_class %>
     <% end %>
   </div>
-
 </div>
+
