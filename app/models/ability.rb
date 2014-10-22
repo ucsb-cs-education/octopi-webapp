@@ -136,8 +136,8 @@ class Ability
     # Really, we just need to remove the concept of multiple curriculums entirely. It would make everything SO much easier to permission
     page_ids = CurriculumPage.all
     can :read, Page, id: page_ids
-    can :read, Page, {curriculum_id: page_ids, teacher_visible: true}
-    can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, teacher_visible: true}
+    can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
+    can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
     can :read, AssessmentQuestion, {curriculum_id: page_ids}
     laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
     can :read, LaplayaFile, {parent_id: laplaya_task_ids, type: 'TaskBaseLaplayaFile TaskCompletedLaplayaFile SandboxBaseLaplayaFile ProjectBaseLaplayaFile'}
