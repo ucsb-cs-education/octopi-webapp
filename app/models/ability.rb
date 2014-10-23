@@ -134,7 +134,7 @@ class Ability
     # page_ids = school.curriculum_pages.pluck(:id)
     # I Really don't like this. I'd like to do what is above, but I have no idea how to do it efficiently
     # Really, we just need to remove the concept of multiple curriculums entirely. It would make everything SO much easier to permission
-    page_ids = CurriculumPage.all
+    page_ids = CurriculumPage.all.pluck(:id)
     can :read, Page, id: page_ids
     can :read, Page, {curriculum_id: page_ids, visible_to_teachers: true}
     can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
