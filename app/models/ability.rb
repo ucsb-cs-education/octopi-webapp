@@ -152,6 +152,7 @@ class Ability
             :add_new_student,
             :add_student,
             :add_teacher,
+            :remove_teacher,
             :edit_students,
             :view_as_student,
             :signout_test_student,
