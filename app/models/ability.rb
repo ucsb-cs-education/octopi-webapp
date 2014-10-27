@@ -117,6 +117,7 @@ class Ability
     staff_ids.uniq!
     can :crud, Staff, id: staff_ids
     can :create, Staff
+    can :create, SchoolClass
   end
 
   def teacher(user)
