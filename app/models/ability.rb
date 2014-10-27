@@ -151,6 +151,7 @@ class Ability
             :student_spreadsheet_help,
             :add_new_student,
             :add_student,
+            :add_teacher,
             :edit_students,
             :view_as_student,
             :signout_test_student,
