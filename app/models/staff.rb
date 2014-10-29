@@ -125,7 +125,6 @@ class Staff < User
     user.valid_password?(password) ? user : nil
   end
 
-
   def self.role_adapter
     self.superclass.role_adapter
   end

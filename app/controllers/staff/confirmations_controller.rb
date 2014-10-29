@@ -1,13 +1,24 @@
 class Staff::ConfirmationsController < Devise::ConfirmationsController
 
-  # POST /resource/confirmation
-  def create
-    # self.resource = resource_class.send_confirmation_instructions(resource_params)
-    self.resource = resource_class.send_confirmation_instructions({email: current_user.email})
-    if successfully_sent?(resource)
-      respond_with({}, :location => after_resending_confirmation_instructions_path_for(resource_name))
-    else
-      respond_with(resource)
+  def show
+    if params[:confirmation_token]
+      self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+      yield resource if block_given?
+
+      if resource.errors.empty?
+        set_flash_message(:notice, :confirmed) if is_flashing_format?
+        respond_with_navigational(resource) { redirect_to after_confirmation_path_for(resource_name, resource) }
+      else
+        if resource.errors[:email].present? && resource.persisted?
+          resource.resend_confirmation_instructions
+          set_flash_message(:notice, :send_instructions) if is_flashing_format?
+          set_flash_message(:info, :resent_instructions, email: resource.email) if is_flashing_format?
+          respond_with_navigational(resource, status: :unprocessable_entity)
+        else
+          set_flash_message(:alert, :no_matching_account) if is_flashing_format?
+          respond_with_navigational(resource.errors, status: :unprocessable_entity)
+        end
+      end
     end
   end
 
@@ -15,11 +26,6 @@ class Staff::ConfirmationsController < Devise::ConfirmationsController
 
   # The path used after resending confirmation instructions.
   def after_resending_confirmation_instructions_path_for(resource_name)
-    resend_url = url_for(:action => 'create', :controller => 'staff/confirmations', :only_path => false, :protocol => 'http')
-    if request.referer == resend_url
-      root_path
-    else
-      stored_location_for(resource) || request.referer || admin_staff_index_path
-    end
+    staff_confirmation_path
   end
 end

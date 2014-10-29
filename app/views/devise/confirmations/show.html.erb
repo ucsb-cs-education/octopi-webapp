@@ -1,0 +1,19 @@
+<% provide(:title, 'Account confirmation') %>
+<h2>Confirm your staff account</h2>
+
+<p>From your confirmation email, either click the link or enter the token below.<p>
+  <%= form_tag confirmation_path(resource_name), method: :get, class: 'form' do |f| %>
+
+    <div class="form-inputs">
+      <div class="form-group confirmation_token required">
+        <%= label_tag(:confirmation_token, 'Confirmation token:', class: 'control-label') %>
+        <%= text_field_tag(:confirmation_token, nil, required: true, autofocus: true, class: 'string required form-control') %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= submit_tag('Confirm my account', class: 'btn btn-primary') %>
+    </div>
+<% end %>
+
+<p><%= link_to 'Send new confirmation instructions', new_staff_confirmation_path %></p>

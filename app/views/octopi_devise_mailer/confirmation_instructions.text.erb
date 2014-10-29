@@ -15,3 +15,5 @@ Your account was created with the email: <%= @staff.email %>
 You must first confirm your account by using the following url:
 
 <%= confirmation_url(@resource, confirmation_token: @token) %>
+
+Alternatively, you may visit <%= confirmation_url(@resource) %> and enter the token <%= @token %>.
