@@ -12,7 +12,8 @@ PagesController.prototype.ckeditor_inline = (element) ->
   resource_id = $('#main-body').find('div.page').attr('data-resource-id')
   config = {
     toolbar: 'Pure',
-    on: { blur: PagesController.prototype.enableSubmitButton
+    on: {
+      blur: PagesController.prototype.enableSubmitButton
     }
   }
   if resource_id and resource_type
@@ -29,15 +30,15 @@ PagesController.prototype.ckeditor_inline = (element) ->
   CKEDITOR.inline(element, config);
 
 PagesController.prototype.show = () ->
-
   $(".delete-all-responses-form").submit (e) ->
     currentForm = this
     prompt = "This will delete all student responses to this task in ALL schools."
     email = $(currentForm).find("input[type=submit]").attr("data-email")
     errorMessage = "You must enter your email to continue, or press cancel to quit."
     e.preventDefault()
-    confirmationPrompt prompt, email, {success: ->
-      currentForm.submit()
+    confirmationPrompt prompt, email, {
+      success: ->
+        currentForm.submit()
     }, errorMessage
 
   enableSubmitButton = PagesController.prototype.enableSubmitButton
@@ -52,6 +53,8 @@ PagesController.prototype.show = () ->
     $("div.octopieditable").each(() ->
       inline(this)
     )
+
+    $('#tabs textarea').on('keyup', enableSubmitButton)
 
     $("#tabs").tabs({
       activate: (event, ui) ->
@@ -87,9 +90,9 @@ PagesController.prototype.show = () ->
       $('#child-pages').find('#base-file, #analysis-file').each(method)
 
     submitFunction = () ->
-      teacher_body = $('#teacher-body').html()
-      student_body = $('#student-body').html()
-      designer_note = $('#designer-note').html()
+      teacher_body = $('textarea#teacher-body').val() || $('#teacher-body').html()
+      student_body = $('textarea#student-body').val() || $('#student-body').html()
+      designer_note = $('textarea#designer-note').val() || $('#designer-note').html()
 
       title = $('#page-title').html()
       children = $("#children")

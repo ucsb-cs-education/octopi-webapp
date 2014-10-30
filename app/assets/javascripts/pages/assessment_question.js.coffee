@@ -87,7 +87,7 @@ AssessmentController.prototype.show = () ->
       deleteAnswerListener(this)
 
     submitFunction = () ->
-      question_body = $('#question-body').html()
+      question_body = $('textarea#question-body').val() || $('#question-body').html()
       question_type = $('#ansType').val();
       hasAnAnswer = false
       ansArray = []

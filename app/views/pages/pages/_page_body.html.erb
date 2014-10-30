@@ -8,15 +8,29 @@
         <li><a href="#student-body">Student Instructions</a></li>
     <% end %>
   </ul>
-  <div id="teacher-body" <%= 'class=octopieditable' if can? :update, @page %>>
-    <%= page.teacher_body.html_safe if page.teacher_body.present? %>
-  </div>
-  <div id="student-body" <%= 'class=octopieditable' if can? :update, @page %>>
-    <%= page.student_body.html_safe if page.student_body.present? %>
-  </div>
-  <% if can? :update, @page %>
-      <div id="designer-note" class="octopieditable">
-        <%= page.designer_note.html_safe if page.designer_note.present? %>
+  <% if @raw %>
+      <textarea id="teacher-body" >
+        <%= page.teacher_body.html_safe if page.teacher_body.present? %>
+      </textarea>
+      <textarea id="student-body">
+        <%= page.student_body.html_safe if page.student_body.present? %>
+      </textarea>
+      <% if can? :update, @page %>
+          <textarea id="designer-note">
+            <%= page.designer_note.html_safe if page.designer_note.present? %>
+          </textarea>
+      <% end %>
+  <% else %>
+      <div id="teacher-body" <%= 'class=octopieditable' if can? :update, @page %>>
+        <%= page.teacher_body.html_safe if page.teacher_body.present? %>
       </div>
+      <div id="student-body" <%= 'class=octopieditable' if can? :update, @page %>>
+        <%= page.student_body.html_safe if page.student_body.present? %>
+      </div>
+      <% if can? :update, @page %>
+          <div id="designer-note" class="octopieditable">
+            <%= page.designer_note.html_safe if page.designer_note.present? %>
+          </div>
+      <% end %>
   <% end %>
 </div>

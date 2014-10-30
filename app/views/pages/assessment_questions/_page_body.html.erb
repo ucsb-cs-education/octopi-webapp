@@ -2,7 +2,13 @@
   <ul>
     <li><a href="#question-body">Question</a></li>
   </ul>
-    <div id="question-body" <%= "class=octopieditable" if can? :update, @page%>>
+  <% if @raw %>
+      <textarea id="question-body">
         <%= @assessment_question.question_body.html_safe if @assessment_question.question_body.present? %>
-    </div>
+      </textarea>
+  <% else %>
+      <div id="question-body" <%= "class=octopieditable" if can? :update, @page %>>
+        <%= @assessment_question.question_body.html_safe if @assessment_question.question_body.present? %>
+      </div>
+  <% end %>
 </div>
