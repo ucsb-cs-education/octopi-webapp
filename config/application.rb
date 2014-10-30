@@ -9,6 +9,7 @@ Bundler.require(*Rails.groups)
 module OctopiWebapp
   class Application < Rails::Application
     config.autoload_paths += Dir[
+        Rails.root.join('lib'),
         Rails.root.join('app', 'models', 'ckeditor'),
         Rails.root.join('app', 'models', 'curriculum', 'page'),
         Rails.root.join('app', 'models', 'curriculum', 'tasks'),
