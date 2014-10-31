@@ -112,10 +112,12 @@ ActiveAdmin.register Staff do
       school_admin_roles&=new_roles
       curriculum_roles&=new_roles
       school_class_teacher_roles&=new_roles
+      existing_roles = resource.basic_roles & new_roles
       new_roles = school_teacher_roles.to_set.
           merge(school_admin_roles).
           merge(curriculum_roles).
-          merge(school_class_teacher_roles).to_a
+          merge(school_class_teacher_roles).
+          merge(existing_roles).to_a
       new_roles.map! { |x| x.id }
       params[:staff][:basic_roles] = new_roles
       unless new_roles.any? || current_staff == resource || current_staff.super_staff?
