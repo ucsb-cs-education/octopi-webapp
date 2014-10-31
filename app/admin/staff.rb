@@ -118,7 +118,7 @@ ActiveAdmin.register Staff do
           merge(school_class_teacher_roles).to_a
       new_roles.map! { |x| x.id }
       params[:staff][:basic_roles] = new_roles
-      unless new_roles.any? || current_staff.super_staff?
+      unless new_roles.any? || current_staff == resource || current_staff.super_staff?
         {
             basic_roles: "Cannnot #{params[:action]} a user without a role you manage"
         }
