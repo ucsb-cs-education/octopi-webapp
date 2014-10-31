@@ -27,6 +27,21 @@
 //= require dependant_dropdowns
 //= require bootbox
 
+$(document).ready(function(){
+    $('a[href^="#"].smoothscroll').on('click',function (e) {
+        e.preventDefault();
+
+        var target = this.hash;
+        $target = $(target);
+
+        $('html, body').stop().animate({
+            'scrollTop': $target.offset().top
+        }, 500, 'swing', function () {
+            window.location.hash = target;
+        });
+    });
+});
+
 var confirmationPrompt = function (message, confirmationText, callbacks, errorText, hasErrored) {
     var success = null;
     var failure = null;

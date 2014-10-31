@@ -14,6 +14,11 @@
       </div>
       <div class="row top-buffer">
         <div class="col-sm-12">
+          <%= link_to 'View this class\' curriculum', '#curriculum-div', class: 'btn btn-default smoothscroll' %>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-12">
           <% if teacher_using_test_student? %>
               <div id="test-student-div">
                 <%= button_to 'View as Test Student', {action: 'view_as_student', school_class_id: @school_class.id},
