@@ -141,7 +141,7 @@ class Ability
     can [:read, :show_completed_file, :show_base_file], Task, {curriculum_id: page_ids, visible_to_teachers: true}
     can :read, AssessmentQuestion, {curriculum_id: page_ids}
     laplaya_task_ids = LaplayaTask.teacher_visible.where(curriculum_id: page_ids).pluck(:id)
-    can :read, LaplayaFile, {parent_id: laplaya_task_ids, type: 'TaskBaseLaplayaFile TaskCompletedLaplayaFile SandboxBaseLaplayaFile ProjectBaseLaplayaFile'}
+    can :read, LaplayaFile, {parent_id: laplaya_task_ids, type: %w(TaskBaseLaplayaFile TaskCompletedLaplayaFile SandboxBaseLaplayaFile ProjectBaseLaplayaFile)}
 
     can [
             :read_update,
