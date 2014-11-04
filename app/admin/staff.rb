@@ -88,6 +88,11 @@ ActiveAdmin.register Staff do
 
 
     def assign_roles
+      if params[:action] == 'create'
+        current_resource = Staff.new
+      else
+        current_resource = resource
+      end
       new_roles = Role.array_to_roles(params[:staff][:basic_roles]).to_a
       school_teacher_roles = []
       if can? :add_teacher, School
@@ -112,7 +117,7 @@ ActiveAdmin.register Staff do
       school_admin_roles&=new_roles
       curriculum_roles&=new_roles
       school_class_teacher_roles&=new_roles
-      existing_roles = resource.basic_roles & new_roles
+      existing_roles = current_resource.basic_roles & new_roles
       new_roles = school_teacher_roles.to_set.
           merge(school_admin_roles).
           merge(curriculum_roles).
@@ -120,7 +125,7 @@ ActiveAdmin.register Staff do
           merge(existing_roles).to_a
       new_roles.map! { |x| x.id }
       params[:staff][:basic_roles] = new_roles
-      unless new_roles.any? || current_staff == resource || current_staff.super_staff?
+      unless new_roles.any? || current_staff.super_staff? || current_staff == current_resource
         {
             basic_roles: "Cannnot #{params[:action]} a user without a role you manage"
         }
