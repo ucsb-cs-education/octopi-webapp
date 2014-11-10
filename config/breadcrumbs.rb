@@ -46,19 +46,9 @@ crumb :staff_school_class_edit_students do |klass|
   parent :staff_school_class, klass
 end
 
-crumb :curriculum_index do
-  link 'All curricula', curriculum_pages_path
-  parent :staff_root
-end
-
-crumb :curriculum_page do |page|
-  link page.title, curriculum_page_path(page)
-  parent :curriculum_index
-end
-
 crumb :module_page do |page|
   link page.title, module_page_path(page)
-  parent :curriculum_page, page.parent
+  parent :staff_root
 end
 
 crumb :activity_page do |page|

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140929204626) do
+ActiveRecord::Schema.define(version: 20141108220604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,7 +55,6 @@ ActiveRecord::Schema.define(version: 20140929204626) do
     t.text     "question_type"
     t.integer  "position"
     t.integer  "assessment_task_id"
-    t.integer  "curriculum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -71,13 +70,10 @@ ActiveRecord::Schema.define(version: 20140929204626) do
     t.integer  "height"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "resource_id"
-    t.string   "resource_type"
   end
 
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
-  add_index "ckeditor_assets", ["resource_id", "resource_type"], name: "index_ckeditor_assets_on_resource_id_and_resource_type", using: :btree
 
   create_table "curriculum_pages_schools", id: false, force: true do |t|
     t.integer "school_id",          null: false
@@ -103,20 +99,19 @@ ActiveRecord::Schema.define(version: 20140929204626) do
   end
 
   create_table "laplaya_files", force: true do |t|
-    t.string   "file_name",     default: "",    null: false
+    t.string   "file_name",  default: "",    null: false
     t.binary   "project"
     t.binary   "media"
     t.binary   "thumbnail"
-    t.text     "note",          default: "",    null: false
-    t.boolean  "public",        default: false
+    t.text     "note",       default: "",    null: false
+    t.boolean  "public",     default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "parent_id"
-    t.integer  "curriculum_id"
     t.string   "type"
     t.integer  "user_id"
-    t.text     "log",           default: [],                 array: true
-    t.string   "save_uuid",     default: ""
+    t.text     "log",        default: [],                 array: true
+    t.string   "save_uuid",  default: ""
   end
 
   add_index "laplaya_files", ["type", "parent_id"], name: "index_laplaya_files_on_type_and_parent_id", using: :btree
@@ -134,7 +129,6 @@ ActiveRecord::Schema.define(version: 20140929204626) do
     t.string   "type"
     t.integer  "position"
     t.integer  "page_id"
-    t.integer  "curriculum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "designer_note"
@@ -223,7 +217,6 @@ ActiveRecord::Schema.define(version: 20140929204626) do
     t.integer  "page_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "curriculum_id"
     t.text     "designer_note"
     t.boolean  "visible_to_students", default: true
     t.boolean  "visible_to_teachers", default: true

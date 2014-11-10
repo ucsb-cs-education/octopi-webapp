@@ -30,7 +30,7 @@ ActiveAdmin.register Page do
 
   show :title => :title do |page|
     attributes_table do
-      [:id, :type, :page_id, :curriculum_id, :teacher_body, :student_body, :designer_note, :created_at, :updated_at].each do |attribute|
+      [:id, :type, :page_id, :teacher_body, :student_body, :designer_note, :created_at, :updated_at].each do |attribute|
         row attribute
       end
       row ' ' do

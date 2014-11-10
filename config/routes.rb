@@ -104,56 +104,51 @@ OctopiWebapp::Application.routes.draw do
   get '/curriculums*curriculapath', to: redirect { |params, req| "/curricula#{params[:curriculapath]}" }
   get '/curriculums', to: redirect('/curricula')
   scope module: 'pages' do
-    resources :curriculum_pages, path: 'curricula', except: [:create, :edit], shallow: true do
+    resources :module_pages, path: 'modules', except: [:index, :edit], shallow: true do
       member do
         post :save_version
+        get :project_file, to: :show_project_file
+        get :sandbox_base_file, to: :show_sandbox_file
+        patch :clone_sandbox
+        patch :clone_project
       end
-      resources :module_pages, path: 'modules', except: [:index, :edit], shallow: true do
+      resources :activity_pages, path: 'activities', except: [:index, :edit], shallow: true do
         member do
           post :save_version
-          get :project_file, to: :show_project_file
-          get :sandbox_base_file, to: :show_sandbox_file
-          patch :clone_sandbox
-          patch :clone_project
         end
-        resources :activity_pages, path: 'activities', except: [:index, :edit], shallow: true do
+        resources :activity_dependencies, only: [:destroy, :create]
+        resources :offline_tasks, except: [:index, :edit], shallow: true do
           member do
             post :save_version
           end
+          resources :task_dependencies, only: [:destroy, :create]
           resources :activity_dependencies, only: [:destroy, :create]
-          resources :offline_tasks, except: [:index, :edit], shallow: true do
-            member do
-              post :save_version
-            end
-            resources :task_dependencies, only: [:destroy, :create]
-            resources :activity_dependencies, only: [:destroy, :create]
+        end
+        resources :laplaya_tasks, except: [:index, :edit], shallow: true do
+          member do
+            post :save_version
+            get :base_file, to: :show_base_file
+            get :solution_file, to: :show_completed_file
+            patch :clone
+            patch :clone_completed
+            patch :analysis_file, to: :update_laplaya_analysis_file
+            delete :delete_all_responses
+            get :analysis_file, to: :get_laplaya_analysis_file
           end
-          resources :laplaya_tasks, except: [:index, :edit], shallow: true do
-            member do
-              post :save_version
-              get :base_file, to: :show_base_file
-              get :solution_file, to: :show_completed_file
-              patch :clone
-              patch :clone_completed
-              patch :analysis_file, to: :update_laplaya_analysis_file
-              delete :delete_all_responses
-              get :analysis_file, to: :get_laplaya_analysis_file
-            end
-            resources :task_dependencies, only: [:destroy, :create]
-            resources :activity_dependencies, only: [:destroy, :create]
-          end
+          resources :task_dependencies, only: [:destroy, :create]
+          resources :activity_dependencies, only: [:destroy, :create]
+        end
 
-          resources :assessment_tasks, except: [:index, :edit], shallow: true do
+        resources :assessment_tasks, except: [:index, :edit], shallow: true do
+          member do
+            delete :delete_all_responses
+            post :save_version
+          end
+          resources :task_dependencies, only: [:destroy, :create]
+          resources :activity_dependencies, only: [:destroy, :create]
+          resources :assessment_questions, except: [:index, :edit], shallow: true do
             member do
-              delete :delete_all_responses
-             post :save_version
-            end
-            resources :task_dependencies, only: [:destroy, :create]
-            resources :activity_dependencies, only: [:destroy, :create]
-            resources :assessment_questions, except: [:index, :edit], shallow: true do
-              member do
-                post :save_version
-              end
+              post :save_version
             end
           end
         end

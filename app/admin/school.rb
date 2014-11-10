@@ -1,6 +1,6 @@
 ActiveAdmin.register School do
 
-  permit_params :name, :ip_range, :student_remote_access_allowed,curriculum_page_ids: []
+  permit_params :name, :ip_range, :student_remote_access_allowed
 
   index do
     selectable_column
@@ -21,12 +21,6 @@ ActiveAdmin.register School do
           link_to school_class.name, [:admin, school_class]
         end
       end
-      table_for school.curriculum_pages.order('title ASC') do
-        column 'Curricula' do |curriculum|
-          link_to curriculum.title, curriculum
-        end
-      end
-
     end
   end
 
@@ -43,7 +37,4 @@ ActiveAdmin.register School do
     f.actions
   end
 =end
-  filter :curriculum_pages, label: 'Curricula'
-
-
 end

@@ -33,7 +33,7 @@ ActiveAdmin.register Task do
       row 'Id' do
         page.id
       end
-      [:type, :teacher_body, :student_body, :created_at, :updated_at, :curriculum_id, :designer_note, :position, :page_id].each do |attribute|
+      [:type, :teacher_body, :student_body, :created_at, :updated_at, :designer_note, :position, :page_id].each do |attribute|
         row attribute
       end
       row ' ' do

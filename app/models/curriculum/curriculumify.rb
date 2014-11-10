@@ -1,11 +1,6 @@
 module Curriculumify
   def self.included(base)
-    base.after_create :initialize_curriculum_id
-    base.before_validation :update_curriculum_id, unless: :new_record?
-    base.validates_presence_of :parent, unless: :curriculum_page?
-    base.validates_presence_of :curriculum_id, unless: :new_record?
     base.validates_presence_of :title, allow_blank: false, length: {maximum: 100}, if: :has_title?
-    base.validate :curriculum_id_validator, unless: :new_record?
     base.before_save :set_visibility_statuses, if: :has_visibility_status?
     base.after_initialize :initialize_visible_to, if: :has_visibility_status?
     attr_accessor :visible_to
@@ -20,9 +15,8 @@ module Curriculumify
 
   def cloudify_page!(user_for_assets)
     changed = false
-    resource = CurriculumPage.find(curriculum_id)
     @_assets = {}
-    params = {assetable: user_for_assets, resource: resource}
+    params = {assetable: user_for_assets}
     cloudify_fields.each do |field|
       val = self.send(field)
       if val

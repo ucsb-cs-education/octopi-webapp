@@ -3,14 +3,14 @@ module Ckeditor::PicturesControllerExtension
   extend Ckeditor::BaseExtension
 
   def index
-    @pictures = Ckeditor.picture_adapter.find_all(ckeditor_pictures_scope resource_params).accessible_by(current_ability)
+    @pictures = Ckeditor.picture_adapter.find_all(ckeditor_pictures_scope).accessible_by(current_ability)
     @pictures = Ckeditor::Paginatable.new(@pictures).page(params[:page])
 
     respond_with(@pictures, :layout => @pictures.first_page?)
   end
 
   def create
-    @picture = Ckeditor.picture_model.new resource_params
+    @picture = Ckeditor.picture_model.new
     respond_with_asset(@picture)
   end
 
