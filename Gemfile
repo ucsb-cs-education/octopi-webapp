@@ -30,12 +30,11 @@ gem 'coffee-rails', '~> 4.0.0'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '~> 5.0.0'
+#Allow us to do global hotkeys in our site (admin user switcher for example)
+gem 'jquery-hotkeys-rails'
 
 gem 'active_model_serializers', '~> 0.9.0.alpha1'
 
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
-gem 'jquery-turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 #gem 'jbuilder', '~> 1.2'
@@ -91,6 +90,7 @@ gem 'axlsx', '~> 2.0.1'
 
 #Breadcrumbs
 gem 'gretel', '~> 3.0'
+gem 'newrelic_rpm'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -100,7 +100,6 @@ end
 group :production do
 # If running on Heroku
   gem 'rails_12factor'
-  gem 'newrelic_rpm'
   gem 'lograge'
 
 end

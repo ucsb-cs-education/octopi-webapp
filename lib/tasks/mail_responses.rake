@@ -22,7 +22,7 @@ namespace :octopi do
       result = spreadsheet.workbook
       rows = 0
       result.add_worksheet(name: 'Responses') do |sheet|
-        sheet.add_row ['School Name', 'Class Name', 'Student Number', 'Activity Name', 'Task Name', 'Question ID', 'Question Title', 'Question Type', 'Question Text', 'Response Date', 'Correct IDs', 'Correct Texts', 'Selected Answer IDs', 'Selected Text', 'Free response text', 'Link to the Question']
+        sheet.add_row ['School Name', 'Class Name', 'Student Number', 'Activity Name', 'Activity ID', 'Task Name', 'Task ID' 'Question ID', 'Question Title', 'Question Type', 'Question Text', 'Response Date', 'Task Version Date', 'Task Version ID', 'All Answer Texts', 'Correct IDs', 'Correct Texts', 'Selected Answer IDs', 'Selected Text', 'Free response text']
         AssessmentQuestionResponse.all.each do |response|
           puts response.id
           if response.assessment_question.nil? ||
@@ -30,31 +30,46 @@ namespace :octopi do
               response.task_response.student.is_a?(TestStudent)
             next
           end
+          tr = response.task_response
+          version_date = tr.version_date
+          tv = response.task.versions.where(created_at: version_date).first
+          version_id = tv.id
+          t = tv.reify
+          cv = PaperTrail::Version.where(id: JSON.parse(tv.child_versions).map { |x| x['version_id'] }).where(item_id: response.assessment_question_id, item_type: 'AssessmentQuestion')
+          q = cv.first.reify
 
-          school_name = response.task_response.student.school.name
-          class_name = response.task_response.school_class.name
-          student_number = response.task_response.student.id
+          school_name = tr.student.school.name
+          class_name = tr.school_class.name
+          student_number = tr.student.id
           activity_name = 'nil'
+          activity_id = 'nil'
           task_name = 'nil'
-          unless response.task_response.task.nil?
-            activity_name = response.task_response.task.activity_page.title
-            task_name = response.task_response.task.title
+          task_id = 'nil'
+          unless t.nil?
+            unless t.activity_page.nil?
+              activity_name = t.activity_page.title
+              activity_id = t.activity_page.id
+            end
+            task_name = t.title
+            task_id = t.id
           end
-          question_id = response.assessment_question.id
-          question_title = response.assessment_question.title
-          question_type = response.assessment_question.question_type
-          question_text = response.assessment_question.question_body.html_sanitize
+          question_id = q.id
+          question_title = q.title
+          question_type = q.question_type
+          question_text = q.question_body.html_sanitize
           response_date = response.created_at
           correct_ids = ''
           correct_texts = ''
           selected_ids = ''
           selected_texts = ''
+          all_texts = ''
           free_response_text = ''
           begin
             if question_type != 'freeResponse'
               temp = JSON.parse(response.selected)
               selected_ids = response.selected
               answer_texts = JSON.parse(response.assessment_question.answers).map { |x| {text: x['text'].html_sanitize, correct: x['correct']} }
+              all_texts = answer_texts.map { |x| x[:text] }.to_json
               selected_texts = temp.map { |x| answer_texts[x][:text] }
               selected_texts = selected_texts.to_json
               correct_texts = (answer_texts.select { |x| x[:correct] }).map { |x| x[:text] }
@@ -68,8 +83,7 @@ namespace :octopi do
           rescue
             free_respose_text = response.selected
           end
-          link = url_for(response.assessment_question)
-          sheet.add_row [school_name, class_name, student_number, activity_name, task_name, question_id, question_title, question_type, question_text, response_date, correct_ids, correct_texts, selected_ids, selected_texts, free_response_text, link]
+         sheet.add_row [school_name, class_name, student_number, activity_name, activity_id, task_name, task_id, question_id, question_title, question_type, question_text, response_date, version_date, version_id, all_texts, correct_ids, correct_texts, selected_ids, selected_texts, free_response_text]
           rows+=1
         end
       end

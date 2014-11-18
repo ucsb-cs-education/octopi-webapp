@@ -128,7 +128,6 @@ class SchoolClassesController < ApplicationController
 
   def add_teacher
     @teacher = Staff.find(params[:staff][:id])
-    authorize! :update, @teacher
     raise 'Teacher must be in same school as class' unless @teacher.has_role? :teacher, @school_class.school
     @teacher.add_role(:teacher, @school_class) unless @teacher.has_role? :teacher, @school_class
     flash[:success] = "#{@teacher.name} has been added as a teacher."

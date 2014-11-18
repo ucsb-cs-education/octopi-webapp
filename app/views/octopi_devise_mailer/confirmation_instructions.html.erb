@@ -25,6 +25,6 @@
 
 <p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
 <br/>
-<p>Alternatively, you may visit <%= confirmation_url(@resource) %> and enter the token <%= @token %>.</p>
+<p>Alternatively, if your client doesn't support links you may visit <%= confirmation_url(@resource) %> and enter the token <%= @token %>.</p>
 </body>
 </html>

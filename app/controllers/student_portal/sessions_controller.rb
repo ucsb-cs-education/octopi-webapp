@@ -45,10 +45,18 @@ class StudentPortal::SessionsController < StudentPortal::BaseController
 
 
   def destroy
+    original_user = get_original_user
+    session.delete(REMEMBER_USER_KEY)
     if current_student
       sign_out_student
     end
-    redirect_to student_portal_root_url
+    if original_user
+      flash[:notice] = 'Your original session has been restored'
+      sign_in original_user
+      redirect_to staff_root_path
+    else
+      redirect_to student_portal_root_path
+    end
   end
 
 end

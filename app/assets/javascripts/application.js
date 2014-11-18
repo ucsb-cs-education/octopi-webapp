@@ -25,6 +25,7 @@
 //= require school_classes
 //= require sorttable
 //= require dependant_dropdowns
+//= require jquery-hotkeys
 //= require bootbox
 
 $(document).ready(function(){

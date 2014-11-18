@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  REMEMBER_USER_KEY = :admin_switch_user_original_user_id
+
   def set_staff_laplaya_file_base_path
     @laplaya_ide_params[:pushStateBase] = staff_laplaya_path + '/'
   end
@@ -19,6 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def access_denied_handler(exception)
+
     respond_to do |format|
       format.html do
         redirect_to exception_redirect_path(true), :alert => exception.message
@@ -77,4 +80,15 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :super_staff, :school_admin, :teacher, :password, :password_confirmation, :first_name, :last_name, :current_password, roles: [], role_ids: [], school_id: []) }
   end
 
+  def remember_user
+    session[REMEMBER_USER_KEY] = current_user.id
+  end
+
+  def get_original_user
+    if session[REMEMBER_USER_KEY]
+      User.find_by_id(session[REMEMBER_USER_KEY])
+    else
+      nil
+    end
+  end
 end

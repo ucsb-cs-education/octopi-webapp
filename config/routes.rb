@@ -46,6 +46,9 @@ OctopiWebapp::Application.routes.draw do
 
 
   resources :laplaya_files, only: [:show, :update, :destroy, :create, :index], format: false, defaults: {format: :json} do
+    collection do
+      get 'file_for_student_class_task', to: 'laplaya_files#file_for_student_class_task'
+    end
   end
 
   get '/laplaya_files/:id.xml', format: false, defaults: {format: :xml}, to: 'laplaya_files#show'
@@ -99,6 +102,7 @@ OctopiWebapp::Application.routes.draw do
   as :staff do
     get 'staff/sign_up', to: 'staff/registrations#new', as: 'new_staff_registration'
     post 'staff', to: 'staff/registrations#create', as: 'staff_registration'
+    post 'switch_user', to: 'staff/sessions#switch_user', as: 'user_switch_user'
   end
   ActiveAdmin.routes(self)
   get '/curriculums*curriculapath', to: redirect { |params, req| "/curricula#{params[:curriculapath]}" }

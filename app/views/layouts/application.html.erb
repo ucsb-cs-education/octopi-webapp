@@ -3,9 +3,8 @@
 <head>
   <title><%= full_title(yield(:title)) %></title>
   <%= favicon_link_tag 'favicon.ico' %>
-  <%= stylesheet_link_tag 'application', media: 'all',
-                          'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
   <%= content_for?(:one_time_script) ? yield(:one_time_script) : '' %>

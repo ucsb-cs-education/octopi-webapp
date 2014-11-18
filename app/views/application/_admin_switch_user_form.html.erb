@@ -1,0 +1,18 @@
+<u>Login as another user</u>
+<%= form_tag user_switch_user_path, method: :post, class: 'form' do %>
+    <div class="form-group">
+      <%= label_tag 'user_id', 'User ID' %>
+      <%= text_field_tag 'user_id', '', class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= label_tag 'school_class_id', 'School Class ID (for students)' %>
+      <%= text_field_tag 'school_class_id', '', class: 'form-control' %>
+    </div>
+    <div class="checkbox">
+      <%= label_tag 'remember' do %>
+          <% concat check_box_tag 'remember', 'true' %>
+          <% concat 'Log me back in when I am done' %>
+      <% end %>
+    </div>
+    <button type="submit" class="btn btn-default">Switch to User</button>
+<% end %>

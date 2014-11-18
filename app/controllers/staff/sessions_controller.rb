@@ -21,10 +21,40 @@ class Staff::SessionsController < Devise::SessionsController
     end
   end
 
+  def destroy
+    original_user = get_original_user
+    session.delete(REMEMBER_USER_KEY)
+    super
+    if original_user
+      flash[:notice] = 'Your original session has been restored'
+      sign_in original_user
+    end
+  end
+
   def sign_out(*args)
     super(*args)
     if signed_in_student? && current_student.is_a?(TestStudent)
       sign_out_student
     end
   end
+
+  def switch_user
+    unless current_staff && current_staff.super_staff?
+      head :unauthorized and return
+    end
+    user = User.find(params[:user_id])
+    if params[:remember] == 'true'
+      remember_user
+    end
+    sign_out :staff
+    if user.is_a? Staff
+      sign_in user
+    else
+      sign_in_student(user, user.school_classes.find(params[:school_class_id]))
+    end
+    flash[:notice] = 'You have successfuly switched to another user'
+    redirect_to (request.referrer || root_path)
+  end
+
+
 end

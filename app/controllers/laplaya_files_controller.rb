@@ -26,6 +26,11 @@ class LaplayaFilesController < ApplicationController
     end
   end
 
+  def file_for_student_class_task
+    authorize! :manage, :all
+    redirect_to laplaya_file_path(TaskResponse.where(student_id: params[:student_id], task_id: params[:task_id], school_class_id: params[:school_class_id]).first.laplaya_file, format: :xml)
+  end
+
   def update
     LaplayaFile.transaction do
       pre_success = true
