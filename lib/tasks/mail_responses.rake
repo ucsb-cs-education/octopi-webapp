@@ -22,7 +22,7 @@ namespace :octopi do
       result = spreadsheet.workbook
       rows = 0
       result.add_worksheet(name: 'Responses') do |sheet|
-        sheet.add_row ['School Name', 'Class Name', 'Student Number', 'Activity Name', 'Activity ID', 'Task Name', 'Task ID' 'Question ID', 'Question Title', 'Question Type', 'Question Text', 'Response Date', 'Task Version Date', 'Task Version ID', 'All Answer Texts', 'Correct IDs', 'Correct Texts', 'Selected Answer IDs', 'Selected Text', 'Free response text']
+        sheet.add_row ['School Name', 'Class Name', 'Student Number', 'Activity Name', 'Activity ID', 'Task Name', 'Task ID', 'Question ID', 'Question Title', 'Question Type', 'Question Text', 'Response Date', 'Task Version Date', 'Task Version ID', 'Versioning Worked', 'All Answer Texts', 'All Answer Texts Raw', 'Correct IDs', 'Correct Texts', 'Correct Texts Raw', 'Selected Answer IDs', 'Selected Text', 'Selected Texts raw','Free response text']
         AssessmentQuestionResponse.all.each do |response|
           puts response.id
           if response.assessment_question.nil? ||
@@ -32,11 +32,20 @@ namespace :octopi do
           end
           tr = response.task_response
           version_date = tr.version_date
-          tv = response.task.versions.where(created_at: version_date).first
-          version_id = tv.id
-          t = tv.reify
-          cv = PaperTrail::Version.where(id: JSON.parse(tv.child_versions).map { |x| x['version_id'] }).where(item_id: response.assessment_question_id, item_type: 'AssessmentQuestion')
-          q = cv.first.reify
+          versioning_worked = 'false'
+          if tr.version_date
+            tv = tr.task.versions.where(created_at: version_date).first
+            version_id = tv.id
+            t = tv.reify
+            cv = PaperTrail::Version.where(id: JSON.parse(tv.child_versions).map { |x| x['version_id'] }).where(item_id: response.assessment_question_id, item_type: 'AssessmentQuestion')
+            q = cv.first.reify
+            versioning_worked = 'true'
+          else
+            t = tr.task
+            q = response.assessment_question
+            version_date = 'nil'
+            version_id = 'nil'
+          end
 
           school_name = tr.student.school.name
           class_name = tr.school_class.name
@@ -60,19 +69,24 @@ namespace :octopi do
           response_date = response.created_at
           correct_ids = ''
           correct_texts = ''
+          correct_texts_raw = ''
           selected_ids = ''
           selected_texts = ''
+          selected_texts_raw = ''
           all_texts = ''
+          all_texts_raw = ''
           free_response_text = ''
           begin
             if question_type != 'freeResponse'
               temp = JSON.parse(response.selected)
               selected_ids = response.selected
-              answer_texts = JSON.parse(response.assessment_question.answers).map { |x| {text: x['text'].html_sanitize, correct: x['correct']} }
+              answer_texts = JSON.parse(response.assessment_question.answers).map { |x| {text: x['text'].html_sanitize, correct: x['correct'], raw_text: x['text']} }
               all_texts = answer_texts.map { |x| x[:text] }.to_json
-              selected_texts = temp.map { |x| answer_texts[x][:text] }
-              selected_texts = selected_texts.to_json
-              correct_texts = (answer_texts.select { |x| x[:correct] }).map { |x| x[:text] }
+              all_texts_raw = answer_texts.map { |x| x[:raw_text] }.to_json
+              selected_texts = temp.map { |x| answer_texts[x][:text] }.to_json
+              selected_texts_raw = temp.map { |x| answer_texts[x][:raw_text] }.to_json
+              correct_texts = (answer_texts.select { |x| x[:correct] }).map { |x| x[:text] }.to_json
+              correct_texts_raw = (answer_texts.select { |x| x[:correct] }).map { |x| x[:raw_text] }.to_json
               correct_ids = (answer_texts.each_with_index.map { |x, i| [x[:correct], i] })
               correct_ids = correct_ids.select { |x| x[0] }
               correct_ids = correct_ids.map { |x| x[1] }
@@ -83,7 +97,7 @@ namespace :octopi do
           rescue
             free_respose_text = response.selected
           end
-         sheet.add_row [school_name, class_name, student_number, activity_name, activity_id, task_name, task_id, question_id, question_title, question_type, question_text, response_date, version_date, version_id, all_texts, correct_ids, correct_texts, selected_ids, selected_texts, free_response_text]
+         sheet.add_row [school_name, class_name, student_number, activity_name, activity_id, task_name, task_id, question_id, question_title, question_type, question_text, response_date, version_date, version_id, versioning_worked, all_texts, all_texts_raw, correct_ids, correct_texts, correct_texts_raw, selected_ids, selected_texts, selected_texts_raw, free_response_text]
           rows+=1
         end
       end

@@ -90,7 +90,6 @@ gem 'axlsx', '~> 2.0.1'
 
 #Breadcrumbs
 gem 'gretel', '~> 3.0'
-gem 'newrelic_rpm'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -99,6 +98,7 @@ end
 
 group :production do
 # If running on Heroku
+  gem 'newrelic_rpm'
   gem 'rails_12factor'
   gem 'lograge'
 
