@@ -163,6 +163,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     respond_to do |format|
       format.html do
         @laplaya_ide_params[:fileID] = @project_laplaya_file.id
+        @laplaya_ide_params[:designThinkingMode] = true
         laplaya_helper
       end
     end
