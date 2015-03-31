@@ -1,0 +1,29 @@
+<div id="page-title">
+  Enter the Sandbox
+</div>
+
+<div class="student-body">
+  Please give a name for the new sandbox file, or select an existing one from the list.
+</div>
+
+<%= form_tag(student_portal_module_sandbox_launcher_path, method: 'post') do %>
+    <div class="form-inputs">
+      <%= label_tag(:new_sandbox_name, "Do you want to create a new sandbox project? ") %>
+      <%= text_field_tag(:new_sandbox_name) %>
+    </div>
+    <div class="form-actions">
+      <%= submit_tag "Create" %>
+    </div>
+<% end %>
+<br>
+<% if !@sandbox_files.empty? %>
+    <%= form_tag(student_portal_module_sandbox_launcher_path, method: 'post') do %>
+      <div class="form-inputs">
+        <%= label_tag(:file_id, "Or open an existing one? ") %>
+        <%= select_tag(:file_id, options_for_select(@sandbox_files.collect{ |f| [f.file_name, f.id] })) %> 
+      </div>
+      <div class="form-actions">
+        <%= submit_tag "Open" %>
+      </div>
+    <% end %>
+<% end %>
