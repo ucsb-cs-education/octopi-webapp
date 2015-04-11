@@ -23,6 +23,8 @@ OctopiWebapp::Application.routes.draw do
     scope 'modules' do
       get ':id', to: 'pages#module_page', as: 'module'
       get ':id/laplaya_sandbox', to: 'pages#laplaya_sandbox', as: 'module_sandbox'
+      get ':id/laplaya_sandbox/launcher', to: 'pages#laplaya_sandbox_launcher', as: 'module_sandbox_launcher'
+      post ':id/laplaya_sandbox/launcher', to: 'pages#laplaya_sandbox_launcher'
       get ':id/design_thinking_project', to: 'pages#design_thinking_project', as: 'module_project'
       get ':id/laplaya_sandbox/:file_id', to: 'pages#laplaya_sandbox_file', as: 'module_sandbox_laplaya_file'
       scope module: 'laplaya' do
