@@ -34,14 +34,18 @@ class LaplayaFile < ActiveRecord::Base
   end
 
   def rename(new_name)
-    doc = REXML::Document.new(self.project)
-    REXML::XPath.first(doc, "//project").attributes["name"] = new_name
-    self.project = doc.to_s
-
-    doc = REXML::Document.new(self.media)
-    REXML::XPath.first(doc, "//media").attributes["name"] = new_name
-    self.media = doc.to_s
-
+    if self.project
+      doc = REXML::Document.new(self.project)
+      REXML::XPath.first(doc, "//project").attributes["name"] = new_name
+      self.project = doc.to_s
+    end
+    
+    if self.media
+      doc = REXML::Document.new(self.media)
+      REXML::XPath.first(doc, "//media").attributes["name"] = new_name
+      self.media = doc.to_s
+    end
+    
     update_attributes!(file_name: new_name)
     self
   end    
