@@ -1,6 +1,7 @@
 require 'xml'
 require 'rexml/text'
 require 'rexml/document'
+require 'filterrific' 
 
 class LaplayaFile < ActiveRecord::Base
   resourcify
@@ -273,4 +274,49 @@ class LaplayaFile < ActiveRecord::Base
   def add_invalidation(key, value)
     self.manual_invalidations << {key => value}
   end
+
+  filterrific(
+      default_filter_params: {sorted_by: 'id_asc'},
+  available_filters:[
+      :file_name,
+      :sorted_by
+  ])
+  scope :sorted_by, lambda {|sort_option|
+      direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
+      order("laplaya_files.id #{direction}")
+  }
+  def self.options_for_sorted_by
+    [
+        ['File ID (Smallest First)', 'id_asc'],
+        ['File ID (Largest First)', 'id_desc']
+    ]
+  end
+  scope :file_name, lambda {|query|
+      # Searches the students table on the 'first_name' and 'last_name' columns.
+      # Matches using LIKE, automatically appends '%' to each term.
+      # LIKE is case INsensitive with MySQL, however it is case
+      # sensitive with PostGreSQL. To make it work in both worlds,
+      # we downcase everything.
+      return nil  if query.blank?
+
+      # condition query, parse into individual keywords
+      terms = query.downcase.split(/\s+/)
+
+      # replace "*" with "%" for wildcard searches,
+      # append '%', remove duplicate '%'s
+      terms = terms.map { |e|
+        (e.gsub('*', '%') + '%').gsub(/%+/, '%')
+      }
+      # configure number of OR conditions for provision
+      # of interpolation arguments. Adjust this if you
+      # change the number of OR conditions.
+      num_or_conds = 2
+      where(
+          terms.map { |term|
+            "(LOWER(laplaya_files.file_name) LIKE ? OR LOWER(laplaya_files.type) LIKE ?)"
+          }.join(' AND '),
+          *terms.map { |e| [e] * num_or_conds }.flatten
+      )
+    }
+
 end

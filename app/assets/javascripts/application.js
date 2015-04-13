@@ -27,6 +27,7 @@
 //= require dependant_dropdowns
 //= require jquery-hotkeys
 //= require bootbox
+//= require filterrific/filterrific-jquery
 
 $(document).ready(function(){
     $('a[href^="#"].smoothscroll').on('click',function (e) {
