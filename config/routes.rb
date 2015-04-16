@@ -4,8 +4,6 @@ OctopiWebapp::Application.routes.draw do
 
   get 'teacher_portal/index'
 
-  get 'teacher_portal/demo'
-
   get 'teacher_portal/edit_class'
 
   get 'teacher_portal/check_progress'
