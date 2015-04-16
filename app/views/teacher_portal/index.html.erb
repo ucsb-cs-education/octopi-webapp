@@ -1,2 +1,72 @@
-<h1>TeacherPortal#index</h1>
-<p>Find me in app/views/teacher_portal/index.html.erb</p>
+<% provide(:title, 'Welcome Teacher!') %>
+<h1>Welcome Teacher!</h1>
+
+
+
+  <div class="row">
+    <a target="_blank" href="http://discover.cs.ucsb.edu/kelpcs/educators.html" class="btn btn-default col-sm-6 col-sm-offset-3">View instructional materials.</a>
+  </div>
+  
+  <div class="row">
+    <% if teacher_using_test_student? %>
+      <%= button_to 'Exit Demo', 
+	  {  
+	  controller: 'school_classes', 
+	  action: 'signout_test_student', 
+	  school_class_id: @schools[0][:classes][0].id
+	  },
+          class: 'btn btn-default col-sm-3 col-sm-offset-3', method: :delete %>
+      <%= button_to 'Reset Demo', 
+	  {
+	  controller: 'school_classes', 
+	  action: 'reset_test_student', 
+	  school_class_id: @schools[0][:classes][0].id
+	  },
+          class: 'btn btn-default col-sm-3', method: :delete %>
+    </div>
+    <% else %>
+      <%= button_to 'Demo the curriculum.', 
+	  {
+	  controller: 'school_classes',
+	  action: 'view_as_student', 
+	  school_class_id: @schools[0][:classes][0].id
+	  },
+          class: 'btn btn-default col-sm-6 col-sm-offset-3', method: :get %>
+    </div>
+    <% end %> <!-- end test student -->
+  </div>
+
+    <% @schools.each do |school| %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<%= school[:name] %>
+      </div>
+      <div class="panel-body">
+	<% school[:classes].each do |school_class| %>
+	<ul class="list-unstyled">
+	  <li>
+	    <span class="col-sm-4"><%= school_class.name %></span>
+	    <%= link_to 'Edit Students',
+		{
+		action: 'edit_class',
+		school_class_id: school_class.id
+		},
+		class: 'btn btn-default'
+		%>
+	    <%= link_to 'See Progress',
+		{
+		action: 'check_progress',
+		school_class_id: school_class.id
+		},
+		class: 'btn btn-default'
+		%>
+	  </li>
+	</ul>
+	<% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+
+
+<p>If you prefer to use the original interface, you may do so <%=link_to 'here', teacher_school_classes_path %> </p>

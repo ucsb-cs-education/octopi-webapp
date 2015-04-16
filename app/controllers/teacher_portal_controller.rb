@@ -1,7 +1,6 @@
 class TeacherPortalController < ApplicationController
   load_and_authorize_resource :school_class, :except => [ :index ]
-  
-  
+   
   def index
     authenticate_staff!
     if current_staff.super_staff?
@@ -10,19 +9,23 @@ class TeacherPortalController < ApplicationController
       schools_for_user = School.with_role(:teacher, current_staff).reorder(:name)
     end
 
-    if @schools.empty?
+    if schools_for_user.empty?
       flash[:error] = ('You are not a teacher at any schools!'
                        + 'You must be a teacher to access this page.')
       redirect_to staff_root_path
 
     else
       @schools = schools_for_user.collect do |school|
-        record = {id: school.id, name: school.name, admins: school.school_admins, classes: school.school_classes }
+        classes = school.school_classes
+        record = {id: school.id, name: school.name, admins: school.school_admins, classes: classes }
         if not current_staff.super_staff?
-          record[:classes] = school.classes.select { |c| current_staff.has_role? :teacher, c}
+          record[:classes] = classes.select { |c| current_staff.has_role? :teacher, c}
         end
+        record[:classes] = record[:classes].select { |c| not c.module_pages.empty? }
         record
-      end
+      end #end collect
+      @schools = @schools.select {|s| not s[:classes].empty? }
+    end # end else
   end
 
   def edit_class

@@ -4,6 +4,8 @@
 @import 'assessment_questions';
 @import 'curriculum_pages';
 
+form.button_to { margin: 0px }
+
 #main-body.pages {
   .pages {
     background-color: transparent;
