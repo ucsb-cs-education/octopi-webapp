@@ -29,9 +29,19 @@ class TeacherPortalController < ApplicationController
   end
 
   def edit_class
+    @students = @school_class.students.reorder(first_name: :asc, last_name: :asc)
+    @student = Student.new
   end
 
   def check_progress
+    @students = @school_class.students.reorder(first_name: :asc, last_name: :asc)
+    @module_pages = @school_class.module_pages.teacher_visible.includes(:activity_pages)
+    @tasks = Task.teacher_visible.where(activity_page: (ActivityPage.where(module_page: @module_pages)))
+    task_ids = @tasks.pluck(:id)
+    @responses = TaskResponse.completed.where(student: @students, school_class: @school_class, task_id: task_ids)
+
+    @avg_task_completion = @responses.count/(@tasks.count * @school_class.students.count).to_f
+
   end
 
 

@@ -1,2 +1,16 @@
-<h1>TeacherPortal#check_progress</h1>
-<p>Find me in app/views/teacher_portal/check_progress.html.erb</p>
+<% provide(:title, @school_class.name) %>
+
+<div id="curriculum-div" class="panel panel-default top-buffer">
+  <div class="panel-heading">
+    <h3 class="panel-title nocenter">Curriculum Progress</h3>
+  </div>
+  <div class="panel-body">
+    <div id="overall_progress">
+      <%= bar_chart ({'Completed %' => @avg_task_completion*100}),
+                    max: 101,
+                    height: '100px',
+                    library: {hAxis: {title: 'Percent of tasks completed, averaged over all students'}} %>
+    </div>
+    <%= render partial: 'list_module_page', collection: @module_pages, as: 'module_page' %>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<%= simple_form_for @student, url: add_new_student_school_class_path(@school_class.id),
+                    method: 'post', remote: true,
+                    html: {  } do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-inputs">
+      <%= f.input :first_name, required: true, autofocus: true %>
+      <%= f.input :last_name, required: true, autofocus: true %>
+      <%= f.input :login_name, required: true, autofocus: true %>
+      <%= f.input :password, required: true %>
+      <%= f.input :password_confirmation, required: true %>
+    </div>
+    <div class="form-actions">
+      <%= f.button :submit, 'Add New Student' %>
+      <%= button_tag :Cancel, class: 'btn btn-default', type: 'button', id: 'cancel_new_student_button' %>
+    </div>
+<% end %>
