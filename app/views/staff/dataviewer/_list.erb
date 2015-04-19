@@ -9,29 +9,29 @@
       <th>Name</th>
       <th>ID</th>
       <th>Owner</th>
-      <th>School</th>
-      <th>Teacher</th>
-      <th>Class</th>
+      <th>Created At</th>
+      <th>Updated At</th>
     </tr>
     <% filelist.each do |file| %>
         <% if !file.user.nil? %>
         <% @user = User.find(file.user) %>
         <% else %>
-        <% user = nil %>
+        <% @user = nil %>
             <% end %>
         <tr>
           <td><%= file.file_name %></td>
           <td><a href = "/staff/laplaya/<%= file.id %>"><%= file.id %></a></td>
           <td>
             <% if (!@user.nil?) %>
-                <%= @user.name %>
+                <%= @user.name %> (<%= @user.id %>)
                 <% end %>
           </td>
           <td>
+                <%= file.created_at %>
           </td>
           <td>
+            <%= file.updated_at %>
           </td>
-          <td></td>
         </tr>
     <% end %>
     </tbody>

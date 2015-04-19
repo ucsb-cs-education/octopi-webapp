@@ -7,21 +7,6 @@ class StaticPagesController < ApplicationController
     #   redirect_to student_portal_root_path
     # end
   end
-
-  def dataviewer
-    @filterrific = initialize_filterrific(
-      LaplayaFile,
-      params[:filterrific],
-      select_options: {
-          sorted_by: LaplayaFile.options_for_sorted_by
-      }
-    )or return
-    @files = @filterrific.find.page(params[:page])
-    respond_to do |format|
-        format.html
-        format.js {render :js => false}
-    end
-  end
   
   def help
   end

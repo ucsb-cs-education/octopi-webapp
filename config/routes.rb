@@ -85,7 +85,6 @@ OctopiWebapp::Application.routes.draw do
   end
   root 'static_pages#home'
   get 'home', to: 'static_pages#home'
-  get 'dataviewer',to: 'static_pages#dataviewer'
   get '/help', to: 'static_pages#help'
   get '/contact', to: 'static_pages#contact'
   post '/contact', to: 'static_pages#send_contact'
@@ -100,6 +99,7 @@ OctopiWebapp::Application.routes.draw do
     get 'home_redirect', to: 'static_pages#continue_session'
     get 'laplaya', to: 'static_pages#laplaya'
     get 'laplaya/:id', to: 'static_pages#laplaya_file', as: 'laplaya_file'
+    get 'dataviewer',to: '/staff/dataviewer#dataviewer'
   end
   devise_for :staff, controllers: {sessions: 'staff/sessions', confirmations: 'staff/confirmations'}, skip: [:registrations]
   as :staff do

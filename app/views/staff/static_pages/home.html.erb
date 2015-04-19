@@ -16,7 +16,7 @@
       <br/>
   <% end %>
   <% if current_staff.curriculum_designer?(true) %>
-      <%= link_to 'View Data', dataviewer_path, class: 'btn btn-default' %>
+      <%= link_to 'View Data', staff_dataviewer_path, class: 'btn btn-default' %>
       <br/>
   <% end %>
   <% if current_staff.teacher?(true) %>

@@ -1,6 +1,6 @@
 <% js = escape_javascript(
         render(
-        :partial => 'static_pages/list',
+        :partial => 'staff/dataviewer/list',
         :locals => { :filelist => @files })
 ) %>
 $("#results").html("<%= js %>");
