@@ -10,8 +10,8 @@ class TeacherPortalController < ApplicationController
     end
 
     if schools_for_user.empty?
-      flash[:error] = ('You are not a teacher at any schools!'
-                       + 'You must be a teacher to access this page.')
+      flash[:error] = ( "You are not a teacher at any schools!"         \
+                        "You must be a teacher to access this page." )
       redirect_to staff_root_path
 
     else
