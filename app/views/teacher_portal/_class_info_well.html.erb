@@ -1,0 +1,18 @@
+<div class="well well-sm">
+  <p>
+    <strong>Class name:</strong>
+    <%= @school_class.name %>
+  </p>
+
+  <p>
+    <strong>School:</strong>
+    <%= @school_class.school.name %>
+  </p>
+
+  <p id="teacher_list">
+    <strong>Teachers:</strong><br>
+    <% @school_class.teachers.each do |teacher| %>
+            <%= teacher.name %> <br>
+    <% end %>
+  </p>
+</div>
