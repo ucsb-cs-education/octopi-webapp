@@ -20,7 +20,7 @@
             <% end %>
         <tr>
           <td><%= file.file_name %></td>
-          <td><a href = "/staff/laplaya/<%= file.id %>"><%= file.id %></a></td>
+          <td><a href = "/staff/readonlylaplaya/<%= file.id %>"><%= file.id %></a></td>
           <td>
             <% if (!@user.nil?) %>
                 <%= @user.name %> (<%= @user.id %>)
