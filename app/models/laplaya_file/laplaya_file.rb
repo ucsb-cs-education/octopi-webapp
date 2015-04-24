@@ -1,5 +1,6 @@
 require 'xml'
 require 'rexml/text'
+require 'rexml/document'
 
 class LaplayaFile < ActiveRecord::Base
   resourcify
@@ -31,6 +32,23 @@ class LaplayaFile < ActiveRecord::Base
     )
     self
   end
+
+  def rename(new_name)
+    if self.project
+      doc = REXML::Document.new(self.project)
+      REXML::XPath.first(doc, "//project").attributes["name"] = new_name
+      self.project = doc.to_s
+    end
+    
+    if self.media
+      doc = REXML::Document.new(self.media)
+      REXML::XPath.first(doc, "//media").attributes["name"] = new_name
+      self.media = doc.to_s
+    end
+    
+    update_attributes!(file_name: new_name)
+    self
+  end    
 
   def cloudify!
     @_force_cloudify = true

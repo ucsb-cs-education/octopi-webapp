@@ -158,6 +158,33 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     end
   end
 
+  #GET /student_portal/modules/:id/laplaya_sandbox/launcher
+  def laplaya_sandbox_launcher
+    if request.post?
+      if params[:new_sandbox_name]
+        new_file = ::StudentResponse::SandboxResponseLaplayaFile.new().clone(@module_page.sandbox_base_laplaya_file)
+        new_file.module_page = @module_page
+        new_file.owner = current_student
+        new_file.rename(params[:new_sandbox_name])
+        new_file.save!
+        redirect_to student_portal_module_sandbox_laplaya_file_path( :file_id => new_file.id )
+      elsif params[:file_id]
+        redirect_to student_portal_module_sandbox_laplaya_file_path( :file_id => params[:file_id] )
+      else
+        render text: 'Invalid option specified', status: :bad_request        
+      end
+    else
+      respond_to do |format|
+        format.html do
+          @sandbox_files = ((::StudentResponse::SandboxResponseLaplayaFile
+                             ).where(module_page: @module_page)
+                            ).where(owner: current_student)
+          
+        end
+      end
+    end
+  end
+
   #GET /student_portal/modules/:id/laplaya_sandbox
   def design_thinking_project
     respond_to do |format|
@@ -208,7 +235,7 @@ class StudentPortal::PagesController < StudentPortal::BaseController
     case action
       when :module_page
         @module_page = ModulePage.find(params[:id])
-      when :laplaya_sandbox, :laplaya_sandbox_file
+      when :laplaya_sandbox, :laplaya_sandbox_file, :laplaya_sandbox_launcher
         @module_page = ModulePage.find(params[:id])
       when :design_thinking_project
         @module_page = ModulePage.find(params[:id])

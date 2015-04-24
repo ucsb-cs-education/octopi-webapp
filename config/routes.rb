@@ -2,6 +2,10 @@ require 'resque_web'
 
 OctopiWebapp::Application.routes.draw do
 
+  get 'teacher_portal/index'
+  match 'teacher_portal', to: 'teacher_portal#index', via: 'get'
+  get 'teacher_portal/:school_class_id/:action', controller: 'teacher_portal'
+
   namespace :student_portal do
     resources :sessions, only: [:create] #, :destroy]
     root 'static_pages#home', as: ''
@@ -23,6 +27,8 @@ OctopiWebapp::Application.routes.draw do
     scope 'modules' do
       get ':id', to: 'pages#module_page', as: 'module'
       get ':id/laplaya_sandbox', to: 'pages#laplaya_sandbox', as: 'module_sandbox'
+      get ':id/laplaya_sandbox/launcher', to: 'pages#laplaya_sandbox_launcher', as: 'module_sandbox_launcher'
+      post ':id/laplaya_sandbox/launcher', to: 'pages#laplaya_sandbox_launcher'
       get ':id/design_thinking_project', to: 'pages#design_thinking_project', as: 'module_project'
       get ':id/laplaya_sandbox/:file_id', to: 'pages#laplaya_sandbox_file', as: 'module_sandbox_laplaya_file'
       scope module: 'laplaya' do

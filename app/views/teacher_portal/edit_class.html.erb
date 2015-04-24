@@ -1,0 +1,72 @@
+<% provide(:title, "#{@school_class.name} - Edit Students") %>
+
+<div class="row ">
+  <div class="col-md-6">
+    <%= render 'class_info_well' %>
+  </div>
+  <div class="col-md-6">
+    <div class="well well-sm">
+      <p><strong>Change the entire class at once via file uploading:</strong></p>
+      <div id="file-area">
+        <%= simple_form_for :student_csv, url: edit_students_via_csv_school_class_path(@school_class), js: false, method: 'post' do |f| %>
+            <div class="row">
+              <div class="col-sm-6">
+                <%= f.file_field :csv %>
+              </div>
+              <div class="col-sm-6">
+                <%= f.input :change_passwords, as: :boolean, label: false, inline_label: 'Allow password changing?' %>
+              </div>
+            </div>
+            <%= f.button :submit, 'Submit', id: 'student-csv-submit', disabled: true %>
+            <%= link_to 'Download current file', download_class_csv_school_class_path(@school_class), class: 'btn btn-default' %>
+        <% end %>
+        <small>
+          Please do not change or add student numbers. The system will provide these in the downloaded file for existing students, otherwise it assumes they will be blank.
+        </small>
+        <p>
+          <%= link_to 'How do I do this?', student_spreadsheet_help_school_class_path(@school_class) %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="well well-sm" id="existing_student">
+  <p><strong>Add an existing student at the school to the class:</strong></p>
+  <div class="row">
+    <%= simple_form_for :student, url: add_student_school_class_path(@school_class), method: 'post', remote: true do |f| %>
+        <div class="col-md-6 form-inputs">
+          <%= f.input :id, collection: (@school_class.school.students-@school_class.students), selected: 0, input_html: {id: 'existing_student_list'}, label: false %>
+        </div>
+        <div class="col-md-1 form-actions">
+          <%= f.button :submit, 'Add Existing Student', id: 'add_existing_student_button' %>
+        </div>
+    <% end %>
+  </div>
+</div>
+
+<!--Add new student to class-->
+<div class="well well-sm">
+  <p><strong>Create and add a new student to the school and the class:</strong></p>
+  <div class="hidden" id="new_student">
+    <%= render 'new_student_form' %>
+  </div>
+  <div>
+    <%= button_tag :'Add New Student', class: 'btn btn-primary', type: 'button', id: 'new_student_button' %>
+  </div>
+</div>
+<br>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title nocenter">Class List</h3>
+  </div>
+  <table id="classlist" class="table sortable">
+    <tr>
+      <th>User ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Login Name</th>
+    </tr>
+    <%= render partial: 'student_table_row', collection: @students, as: :student %>
+  </table>
+</div>
