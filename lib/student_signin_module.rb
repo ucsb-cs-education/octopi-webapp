@@ -31,10 +31,11 @@ module StudentSigninModule
         expires_at = session[:student_autosignout_time]
         if expires_at && expires_at < Time.now
           sign_out_student(@current_student)
-        end
-        update_autosignout_time
-        if session[:school_class_id]
-          @current_student.current_class ||= SchoolClass.find_by(id: session[:school_class_id])
+        else
+          update_autosignout_time
+          if session[:school_class_id]
+            @current_student.current_class ||= SchoolClass.find_by(id: session[:school_class_id])
+          end
         end
       end
     end

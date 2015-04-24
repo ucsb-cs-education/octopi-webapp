@@ -1,0 +1,2 @@
+module TeacherPortalHelper
+end

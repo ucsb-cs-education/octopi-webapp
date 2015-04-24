@@ -1,0 +1,11 @@
+<div class = "module-title-box">
+  <%= link_to module_page.title, module_page_path(module_page) %>
+  <% unless module_page.visible_to_students %>
+    <div class = "teacher-only-note"> Teacher only module </div>
+  <% else %>
+    <br>
+  <% end %>
+</div>
+<table class = "table table-striped table-bordered">
+    <%= render partial: "list_activity_page",collection: module_page.activity_pages, as: "activity_page" %>
+</table>
