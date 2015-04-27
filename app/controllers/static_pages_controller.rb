@@ -1,5 +1,3 @@
-require 'filterrific'
-require 'will_paginate'
 class StaticPagesController < ApplicationController
   def home
     #TODO: Do we want this? I thought it might be good to auto redirect to student login..

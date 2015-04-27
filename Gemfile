@@ -94,9 +94,6 @@ gem 'gretel', '~> 3.0'
 #Filter student projects more easily
 gem 'filterrific', '~> 2.0.4'
 
-#for displaying pretty pages
-gem 'will_paginate', '~> 3.0.6'
-
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
