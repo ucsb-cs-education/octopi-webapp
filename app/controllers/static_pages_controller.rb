@@ -5,7 +5,7 @@ class StaticPagesController < ApplicationController
     #   redirect_to student_portal_root_path
     # end
   end
-
+  
   def help
   end
 

@@ -1,0 +1,43 @@
+
+<div id="results">
+  <div class ="well well-small" >
+    <%= page_entries_info filelist%>
+  </div>
+  <table class = "table">
+    <tbody>
+    <tr>
+      <th>Name</th>
+      <th>ID</th>
+      <th>Owner</th>
+      <th>Created At</th>
+      <th>Updated At</th>
+    </tr>
+    <% filelist.each do |file| %>
+        <% if !file.user.nil? %>
+        <% @user = User.find(file.user) %>
+        <% else %>
+        <% @user = nil %>
+            <% end %>
+        <tr>
+          <td><%= file.file_name %></td>
+          <td><a href = "/staff/readonlylaplaya/<%= file.id %>"><%= file.id %></a></td>
+          <td>
+            <% if (!@user.nil?) %>
+                <%= @user.name %> (<%= @user.id %>)
+                <% end %>
+          </td>
+          <td>
+                <%= file.created_at %>
+          </td>
+          <td>
+            <%= file.updated_at %>
+          </td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= paginate filelist %>
+</div>
+
+
+

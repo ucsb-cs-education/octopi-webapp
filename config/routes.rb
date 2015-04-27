@@ -103,6 +103,8 @@ OctopiWebapp::Application.routes.draw do
     get 'home_redirect', to: 'static_pages#continue_session'
     get 'laplaya', to: 'static_pages#laplaya'
     get 'laplaya/:id', to: 'static_pages#laplaya_file', as: 'laplaya_file'
+    get 'readonlylaplaya/:id',to: 'static_pages#readonlylaplaya_file', as: 'readonlylaplaya_file'
+    get 'dataviewer',to: '/staff/dataviewer#dataviewer'
   end
   devise_for :staff, controllers: {sessions: 'staff/sessions', confirmations: 'staff/confirmations'}, skip: [:registrations]
   as :staff do

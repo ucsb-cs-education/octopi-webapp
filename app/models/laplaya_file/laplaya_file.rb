@@ -1,6 +1,7 @@
 require 'xml'
 require 'rexml/text'
 require 'rexml/document'
+require 'filterrific' 
 
 class LaplayaFile < ActiveRecord::Base
   resourcify
@@ -273,4 +274,77 @@ class LaplayaFile < ActiveRecord::Base
   def add_invalidation(key, value)
     self.manual_invalidations << {key => value}
   end
+
+  filterrific(
+      default_filter_params: {sorted_by: 'id_asc'},
+  available_filters:[
+      :file_name,
+      :sorted_by,
+      :with_created_at_gte,
+      :created_at_lt
+  ])
+  scope :sorted_by, lambda {|sort_option|
+      direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
+      order("laplaya_files.id #{direction}")
+  }
+  def self.options_for_sorted_by
+    [
+        ['File ID (Smallest First)', 'id_asc'],
+        ['File ID (Largest First)', 'id_desc']
+    ]
+  end
+  scope :with_created_at_gte, lambda { |reference_time|
+                         where('laplaya_files.created_at >= ?', reference_time)
+                       }
+
+  # always exclude the upper boundary for semi open intervals
+  scope :with_created_at_lt, lambda { |reference_time|
+                        where('laplaya_files.created_at < ?', reference_time)
+                      }
+  scope :file_name, lambda {|query|
+
+      return nil  if query.blank?
+      query = query.to_s #in case a number is entered
+
+
+      # condition query, parse into individual keywords
+      terms = query.downcase.split(/\s+/)
+
+
+      # replace "*" with "%" for wildcard searches,
+      # append '%', remove duplicate '%'s
+
+
+
+      # configure number of OR conditions for provision
+      # of interpolation arguments. Adjust this if you
+      # change the number of OR conditions.
+      @flag = false
+      terms.each do |term|
+        if(term.to_i == 0)
+          @flag = true #contains a string, don't try to search by #g
+        end
+      end
+      if (@flag)
+        terms = terms.map { |e|
+          (e.gsub('*', '%') + '%').gsub(/%+/, '%')
+        }
+      num_or_conds = 2
+      where(
+          terms.map { |term|
+            "(LOWER(laplaya_files.file_name) LIKE ? OR CAST(laplaya_files.id AS varchar) LIKE ?)"
+          }.join(' AND '),
+          *terms.map { |e| [e] * num_or_conds }.flatten
+      )
+      else
+        num_or_conds = 3
+        where(
+            terms.map { |term|
+              "(LOWER(laplaya_files.file_name) LIKE ? OR CAST(laplaya_files.id AS varchar) LIKE ? OR laplaya_files.user_id IN (Select CAST(? AS int) FROM users ))"
+            }.join(' AND '),
+            *terms.map { |e| [e] * num_or_conds }.flatten
+        )
+      end
+    }
+
 end

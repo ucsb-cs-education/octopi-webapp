@@ -91,6 +91,9 @@ gem 'axlsx', '~> 2.0.1'
 #Breadcrumbs
 gem 'gretel', '~> 3.0'
 
+#Filter student projects more easily
+gem 'filterrific', '~> 2.0.4'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
