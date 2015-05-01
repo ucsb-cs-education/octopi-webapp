@@ -27,6 +27,10 @@ class Staff::StaticPagesController < ApplicationController
   def home
   end
 
+  def researchertools
+
+  end
+
   def continue_session
     flash[:info] = 'You were already signed in. Welcome back!'
     redirect_to controller: controller_name, action: :home

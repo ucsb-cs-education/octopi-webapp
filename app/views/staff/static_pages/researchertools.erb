@@ -1,0 +1,14 @@
+<p>
+  This is the homepage for researcher tools.
+</p>
+<p>
+  As a staff member you can use these tools to gather data on student projects.
+</p>
+<br>
+<p>
+  <% if current_staff.curriculum_designer?(true) %>
+      <%= link_to 'View Data', staff_dataviewer_path, class: 'btn btn-default' %>
+      <br/>
+  <% end %>
+
+</p>
