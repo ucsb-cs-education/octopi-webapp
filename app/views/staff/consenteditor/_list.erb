@@ -1,0 +1,26 @@
+
+<div id="results">
+  <div class ="well well-small" >
+    <%= page_entries_info userlist%>
+  </div>
+  <table class = "table">
+    <tbody>
+    <tr>
+      <th>Name</th>
+      <th>ID</th>
+      <th>Consent?</th>
+    </tr>
+    <% userlist.each do |user| %>
+        <tr>
+          <td><%= user.first_name + " " + user.last_name%></td>
+          <td><%= user.id%></td>
+          <td><%= check_box("consent","true",{},true,false )%></td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= paginate userlist %>
+</div>
+
+
+

@@ -105,6 +105,7 @@ OctopiWebapp::Application.routes.draw do
     get 'laplaya/:id', to: 'static_pages#laplaya_file', as: 'laplaya_file'
     get 'readonlylaplaya/:id',to: 'static_pages#readonlylaplaya_file', as: 'readonlylaplaya_file'
     get 'dataviewer',to: '/staff/dataviewer#dataviewer'
+    get 'consenteditor', to: '/staff/consenteditor#consenteditor'
     get 'researchertools' ,to: 'static_pages#researchertools'
   end
   devise_for :staff, controllers: {sessions: 'staff/sessions', confirmations: 'staff/confirmations'}, skip: [:registrations]
