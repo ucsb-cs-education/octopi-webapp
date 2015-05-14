@@ -2,6 +2,7 @@ require 'resque_web'
 
 OctopiWebapp::Application.routes.draw do
 
+
   get 'teacher_portal/index'
   match 'teacher_portal', to: 'teacher_portal#index', via: 'get'
   get 'teacher_portal/:school_class_id/:action', controller: 'teacher_portal'
@@ -56,6 +57,11 @@ OctopiWebapp::Application.routes.draw do
       get 'file_for_student_class_task', to: 'laplaya_files#file_for_student_class_task'
     end
   end
+  resources :users, :path => 'staff/consenteditor#consenteditor'
+  resources :staff, :path => 'staff/consenteditor#consenteditor'
+  patch "staff/consenteditor/update" => "staff/consenteditor#update", :as => "staff/consenteditor/update"
+  post "staff/consenteditor" => "staff/consenteditor#update_multiple", :as => "staff/consenteditor/update_multiple"
+
 
   get '/laplaya_files/:id.xml', format: false, defaults: {format: :xml}, to: 'laplaya_files#show'
 
@@ -96,7 +102,6 @@ OctopiWebapp::Application.routes.draw do
   get '/signin', to: redirect('/student_portal/signin')
   get '/admin/staff/roles/:role_name', to: 'roles#get_resources', format: true
   get '/admin/staff/roles/:role_name/:resource_name/:resource_id', to: 'roles#get_roles', format: true
-
   namespace :staff do
     root 'static_pages#home'
     get 'home', to: 'static_pages#home'

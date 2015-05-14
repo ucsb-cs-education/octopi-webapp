@@ -281,12 +281,20 @@ class LaplayaFile < ActiveRecord::Base
       :file_name,
       :sorted_by,
       :with_created_at_gte,
-      :created_at_lt
+      :created_at_lt,
+      :with_school_id,
+      :with_class_id
   ])
   scope :sorted_by, lambda {|sort_option|
       direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
       order("laplaya_files.id #{direction}")
   }
+  scope :with_school_id, lambda { |school_id|
+                         where('? IN (select school_id FROM (select * FROM users WHERE id = laplaya_files.user_id) AS tmp)',school_id)
+                       }
+  scope :with_class_id, lambda { |class_id|
+                        where('laplaya_files.user_id IN (select student_id FROM (select * FROM school_classes_students WHERE school_class_id = ?) AS tmp)',class_id)
+                      }
   def self.options_for_sorted_by
     [
         ['File ID (Smallest First)', 'id_asc'],
