@@ -1,0 +1,53 @@
+
+<div id="results">
+  <div class ="well well-small" >
+    <%= page_entries_info userlist%>
+  </div>
+  <%= form_tag :url => "consenteditor/update", :method => :post  do%>
+      <table class="table">
+        <tbody>
+        <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th><input type="checkbox" id="select-all_" style="margin: 0px; vertical-align: middle "> Consent?</th>
+          </tr>
+  <% userlist.each do |item|%>
+          <%= fields_for "users[]", item do |f| %>
+                <tr><td>
+              <%= f.hidden_field(:first_name) %>
+              <%= item.first_name %>
+                </td><td>
+              <%= f.hidden_field(:last_name) %>
+              <%= item.last_name %>
+                  </td><td>
+              <%= f.check_box(:has_consent) %>
+              <%= f.hidden_field(:id)%>
+                  </td>
+              </tr>
+              <% end %>
+          <% end %>
+        </tbody>
+      </table>
+      <%= submit_tag("Update") %>
+<% end %>
+
+  <script>
+      $('#select-all_').click(function(event) {
+          if(this.checked) {
+              // Iterate each checkbox
+              $(':checkbox').each(function() {
+                  this.checked = true;
+              });
+          }
+          else{
+              $(':checkbox').each(function() {
+                  this.checked = false;
+              });
+          }
+      });
+  </script>
+  <%= paginate userlist %>
+</div>
+
+
+
