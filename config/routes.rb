@@ -2,6 +2,8 @@ require 'resque_web'
 
 OctopiWebapp::Application.routes.draw do
 
+  resources :reports
+
   get 'teacher_portal/index'
   match 'teacher_portal', to: 'teacher_portal#index', via: 'get'
   get 'teacher_portal/:school_class_id/:action', controller: 'teacher_portal'

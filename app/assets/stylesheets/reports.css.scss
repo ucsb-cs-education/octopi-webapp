@@ -1,0 +1,16 @@
+// Place all the styles related to the reports controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#school-list > .panel-body > ul { height: 20em; overflow-y: scroll; border: 1px solid #DDD; }
+#school-list > .panel-body > ul > li { border-left: none; border-right: none; }
+#school-list > .panel-body > ul > li:first-child { border-top: none; }
+#school-list > .panel-body > ul > li:last-child { border-bottom: none; }
+#school-list > .panel-header { margin-bottom: 1em; font-weight: bold; }
+
+
+#module-list > .panel-body > ul { height: 20em; overflow-y: scroll; border: 1px solid #DDD; }
+#module-list > .panel-body > ul > li { border-left: none; border-right: none; }
+#module-list > .panel-body > ul > li:first-child { border-top: none; }
+#module-list > .panel-body > ul > li:last-child { border-bottom: none; }
+#module-list > .panel-header { margin-bottom: 1em; font-weight: bold; }

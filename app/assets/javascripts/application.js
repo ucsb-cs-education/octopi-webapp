@@ -23,6 +23,7 @@
 //= require_tree ./pages
 //= require_tree ./student_portal
 //= require school_classes
+//= require reports
 //= require teacher_portal
 //= require sorttable
 //= require dependant_dropdowns

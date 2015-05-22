@@ -49,6 +49,10 @@ class ActivityPage < Page
       'false'
     end
   end
+  
+  def has_laplaya_tasks?
+    self.tasks.where(type: 'LaplayaTask').pluck(:id).count > 0
+  end
 
   def restore_children_helper!(child_versions, duplicate)
     if duplicate

@@ -39,6 +39,10 @@ class SchoolClass < ActiveRecord::Base
      "Locked tasks" => [0,number_of_locked_tasks].max}
   end
 
+  def has_students?
+    self.students.where(type: 'Student').pluck(:id).count > 0
+  end
+
   private
   def verify_student student
     self.errors.add(:students, 'cannot contain a student from a different school')

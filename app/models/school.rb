@@ -27,6 +27,14 @@ class School < ActiveRecord::Base
     Staff.with_any_role({name: :teacher, resource: self}, {name: :school_admin, resource: self})
   end
 
+  def has_active_classes?
+    (self.school_classes.select { |sc| sc.has_students? }).length > 0
+  end
+
+  def active_classes
+    self.school_classes.select { |sc| sc.has_students? }
+  end
+
   def to_s
     self.name
   end
