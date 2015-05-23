@@ -15,7 +15,7 @@
                 <ul class="list-group">
 	        <% @schools.each do |school| %>
                     <li class="list-group-item">
-                        <div id="school-<%= school.id %>-classes" class="panel">
+                        <div class="school-classes panel">
                             <div class="panel-header"><%= school.name %></div>
                             <div class="panel-body">
                                 <ul class="list-group">
@@ -40,19 +40,19 @@
                 <ul class="list-group">
                     <% @module_pages.each do |mp| %>
                         <li class="list-group-item">
-                            <div class="panel">
+                            <div class="module panel">
                                 <div class="panel-header"><%= mp.title %></div>
                                 <div class="panel-body" id="module-<%= mp.id %>-activity-list">
                                     <ul class="list-group">
                                         <% mp.activity_pages.select{ |ap| ap.has_laplaya_tasks? }.each do |ap| %>
                                             <li class="list-group-item">
-                                                <div class="panel">
+                                                <div class="activity panel">
                                                     <div class="panel-header"><%= ap.title %></div>
                                                     <div class="panel-body" id="module-<%= mp.id %>-activity-<%= ap.id %>">
                                                         <ul class="list-group">
                                                             <% ap.tasks.where(type: 'LaplayaTask').each do |task| %>
                                                                 <li class="list-group-item"> 
-                                                                    <%= task.title %>
+                                                                    <input type="checkbox" name="selected_tasks[]" value="<%= task.id %>"><%= task.title %>
                                                                 </li>
                                                             <% end %>
                                                         </ul>
