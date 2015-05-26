@@ -15,6 +15,8 @@ class ReportsController < ApplicationController
   # GET /reports/1
   # GET /reports/1.json
   def show
+    @report_classes = SchoolClass.where(id: @report.students.joins(:school_classes).pluck('school_class_id'))
+    @report_tasks = LaplayaTask.where(id: @report.tasks.pluck(:id))
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @report }
@@ -37,11 +39,8 @@ class ReportsController < ApplicationController
   def create
     @report = Report.new(report_params)
 
-    params[:selected_school_classes].each do |id|
-      SchoolClass.find(id).students.where(type: 'Student').each do |s|
-        @report.students << s
-      end
-    end
+    @report.students = Student.where(id: SchoolClass.where(id: params[:selected_school_classes]).joins(:students).pluck(:student_id))
+    @report.tasks = LaplayaTask.where(id: params[:selected_tasks])
 
     respond_to do |format|
       if @report.save

@@ -14,3 +14,12 @@
 #module-list > .panel-body > ul > li:first-child { border-top: none; }
 #module-list > .panel-body > ul > li:last-child { border-bottom: none; }
 #module-list > .panel-header { margin-bottom: 1em; font-weight: bold; }
+
+#show_report_classes > .panel-body,#show_report_tasks > .panel-body { 
+                     height: 20em; 
+                     overflow-y: scroll; 
+                     border: 1px solid #DDD; }
+
+#index_report_list > li > .badge > a {
+                                        color: #fff;
+                                     }                  

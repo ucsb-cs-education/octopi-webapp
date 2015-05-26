@@ -1,29 +1,20 @@
 <h1>Listing reports</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Code</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
+<ul id="index_report_list" class="list-group">
     <% @reports.each do |report| %>
-      <tr>
-        <td><%= report.name %></td>
-        <td><%= report.description %></td>
-        <td><%= report.code %></td>
-        <td><%= link_to 'Show', report %></td>
-        <td><%= link_to 'Edit', edit_report_path(report) %></td>
-        <td><%= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+      <li class="list-group-item">
+        <span class="badge"><%= link_to 'Show', report %> <%= link_to 'Edit', edit_report_path(report) %> <%= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' } %></span>
 
+          <div class="panel report">
+              <div class="panel-header"><%= report.name %></div>
+              <div class="panel-body">
+                  <p><strong>Description: </strong> <%= report.description %></p>
+                  <p><strong>Students: </strong> <%= report.students.count %></p>
+              </div>
+          </div>
+      </li>
+    <% end %>
+</ul>
 <br>
 
 <%= link_to 'New Report', new_report_path %>

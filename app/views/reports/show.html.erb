@@ -15,5 +15,30 @@
   <%= @report.code %>
 </p>
 
+<div id="show_report_classes" class="panel">
+    <div class="panel-header"><strong>Classes: (<%= @report.students.count %> students total)</strong></div>
+    <div class="panel-body">
+    <ul class="list-group">
+        <% @report_classes.each do |cls| %>
+            <li class="list-group-item">
+                <span class="badge"><%= cls.students.length %> students</span>
+                <%= cls.name %>
+            </li>
+        <% end %>
+    </ul>
+    </div>
+</div>
+
+<div id="show_report_tasks" class="panel">
+    <div class="panel-header"><strong>Tasks:</strong></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            <% @report_tasks.each do |task| %>
+                <li class="list-group-item"><%= task.title %></li>
+            <% end %>
+        </ul>
+    </div>
+</div>
+
 <%= link_to 'Edit', edit_report_path(@report) %> |
 <%= link_to 'Back', reports_path %>

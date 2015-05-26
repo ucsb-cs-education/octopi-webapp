@@ -4,6 +4,24 @@
 
 ReportsController = Paloma.controller('Reports');
 
+ReportsController.prototype.index = () ->
+   setupUI = () ->
+      $('.panel.report > .panel-body').hide()
+      $('.panel.report > .panel-header').prepend('<a class="collapser">-</a>')
+      $('.panel.report > .panel-header').prepend('<a class="expander">+</a>')
+      $('.collapser').hide()
+      $('.expander').click(->
+         $(this).hide()
+         $(this.parentNode.parentNode).find('.panel-body').slideDown()
+         $(this.parentNode).find('.collapser').show()
+      )
+      $('.collapser').click(->
+         $(this).hide()
+         $(this.parentNode.parentNode).find('.panel-body').slideUp()
+         $(this.parentNode).find('.expander').show()
+      )
+   $(document).ready(setupUI)   
+
 ReportsController.prototype.new = () ->
    debug = (stuff) ->
       $('#foo').append(stuff)
