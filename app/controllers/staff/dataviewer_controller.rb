@@ -5,7 +5,9 @@ def dataviewer
       LaplayaFile,
       params[:filterrific],
       select_options: {
-          sorted_by: LaplayaFile.options_for_sorted_by
+          sorted_by: LaplayaFile.options_for_sorted_by,
+          with_school_id: School.options_for_select,
+          with_class_id: SchoolClass.options_for_select
       }
   )or return
   @files = @filterrific.find.page(params[:page])

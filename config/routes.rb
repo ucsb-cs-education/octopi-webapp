@@ -2,6 +2,7 @@ require 'resque_web'
 
 OctopiWebapp::Application.routes.draw do
 
+
   resources :reports, except: [:edit,:update]
   get 'reports/:report_id/clone', to: 'reports#clone', as: 'clone_report'
 
@@ -59,6 +60,11 @@ OctopiWebapp::Application.routes.draw do
       get 'file_for_student_class_task', to: 'laplaya_files#file_for_student_class_task'
     end
   end
+  resources :users, :path => 'staff/consenteditor#consenteditor'
+  resources :staff, :path => 'staff/consenteditor#consenteditor'
+  patch "staff/consenteditor/update" => "staff/consenteditor#update", :as => "staff/consenteditor/update"
+  post "staff/consenteditor" => "staff/consenteditor#update_multiple", :as => "staff/consenteditor/update_multiple"
+
 
   get '/laplaya_files/:id.xml', format: false, defaults: {format: :xml}, to: 'laplaya_files#show'
 
@@ -99,7 +105,6 @@ OctopiWebapp::Application.routes.draw do
   get '/signin', to: redirect('/student_portal/signin')
   get '/admin/staff/roles/:role_name', to: 'roles#get_resources', format: true
   get '/admin/staff/roles/:role_name/:resource_name/:resource_id', to: 'roles#get_roles', format: true
-
   namespace :staff do
     root 'static_pages#home'
     get 'home', to: 'static_pages#home'
@@ -108,6 +113,7 @@ OctopiWebapp::Application.routes.draw do
     get 'laplaya/:id', to: 'static_pages#laplaya_file', as: 'laplaya_file'
     get 'readonlylaplaya/:id',to: 'static_pages#readonlylaplaya_file', as: 'readonlylaplaya_file'
     get 'dataviewer',to: '/staff/dataviewer#dataviewer'
+    get 'consenteditor', to: '/staff/consenteditor#consenteditor'
     get 'researchertools' ,to: 'static_pages#researchertools'
   end
   devise_for :staff, controllers: {sessions: 'staff/sessions', confirmations: 'staff/confirmations'}, skip: [:registrations]

@@ -14,6 +14,10 @@ class SchoolClass < ActiveRecord::Base
     self.name
   end
 
+  def self.options_for_select
+    order('LOWER(name)').map { |e| [e.name, e.id] }
+  end
+
 
   def activity_progress_graph_array_for(activity)
     @activity_page = ActivityPage.includes(:tasks).find(activity)
@@ -48,5 +52,6 @@ class SchoolClass < ActiveRecord::Base
     self.errors.add(:students, 'cannot contain a student from a different school')
     raise ActiveRecord::RecordInvalid.new(self) if student.school_id != self.school_id
   end
+
 
 end

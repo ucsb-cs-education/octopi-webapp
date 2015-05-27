@@ -1,0 +1,29 @@
+<div class = "well">
+  <%= form_for_filterrific @filterrific do |f| %>
+
+      <div>
+        Search
+        <%# give the search field the 'filterrific-periodically-observed' class for live updates %>
+        <%= f.text_field(
+                    :user_query,
+                    class: 'filterrific-periodically-observed'
+            ) %>
+        Sorted by
+        <%= f.select(:sorted_by, @filterrific.select_options[:sorted_by]) %>
+        School
+        <%= f.select(:with_school_id, @filterrific.select_options[:with_school_id], { include_blank: '- Any -' }) %>
+        <br><br>Class
+        <%= f.select(:with_class_id, @filterrific.select_options[:with_class_id],{ include_blank: '- Any -' }) %>
+      </div>
+      </div>
+      <%= render_filterrific_spinner %>
+
+  <% end %>
+  </div>
+
+
+  <%= render(
+              partial: 'staff/consenteditor/list',
+              locals: { userlist: @users }
+      ) %>
+

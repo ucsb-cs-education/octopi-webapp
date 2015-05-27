@@ -1,0 +1,6 @@
+<% js = escape_javascript(
+        render(
+        :partial => 'staff/consenteditor/list',
+        :locals => { :userlist=> @users })
+) %>
+$("#results").html("<%= js %>");
