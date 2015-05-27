@@ -22,7 +22,7 @@
                                     <% school.active_classes.each do |cls| %>
                                         <li class="list-group-item">
                                             <span class="badge"><%= cls.students.length %> students</span>
-                                            <input type="checkbox" name="selected_school_classes[]" value="<%= cls.id %>"><%= cls.name %>
+                                            <input type="checkbox" name="selected_school_classes[]" value="<%= cls.id %>" <%= 'checked' if @selected_classes.include? cls.id %>><%= cls.name %>
                                         </li>
                                     <% end %>
                                 </ul>
@@ -52,7 +52,7 @@
                                                         <ul class="list-group">
                                                             <% ap.tasks.where(type: 'LaplayaTask').each do |task| %>
                                                                 <li class="list-group-item"> 
-                                                                    <input type="checkbox" name="selected_tasks[]" value="<%= task.id %>"><%= task.title %>
+                                                                    <input type="checkbox" name="selected_tasks[]" value="<%= task.id %>" <%= 'checked' if @selected_tasks.include? task.id %>><%= task.title %>
                                                                 </li>
                                                             <% end %>
                                                         </ul>

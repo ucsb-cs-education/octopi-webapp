@@ -1,5 +1,6 @@
 class ReportsController < ApplicationController
-  before_action :set_report, only: [:show, :edit, :update, :destroy]
+  before_action :set_report, only: [:show, :destroy]
+  before_action :set_modules_and_schools, only: [:new, :create, :clone]
 
   # GET /reports
   # GET /reports.json
@@ -26,12 +27,17 @@ class ReportsController < ApplicationController
   # GET /reports/new
   def new
     @report = Report.new
-    @schools = School.all.order('name').select { |s| s.has_active_classes? }
-    @module_pages = ModulePage.where(curriculum_id: 1).order('position ASC').select { |mp| mp.activity_pages.reduce(false) { |n, ap|  n |= ap.has_laplaya_tasks? } }
   end
 
-  # GET /reports/1/edit
-  def edit
+  # GET /reports/1/clone
+  def clone
+    @orig = Report.find(params[:report_id])
+    @report = Report.new
+    @report.code = @orig.code
+    @report.description = @orig.description
+    @report.name = 'Clone of ' + @orig.name
+    @selected_classes = @orig.students.joins(:school_classes).pluck('school_class_id').uniq
+    @selected_tasks = @orig.tasks.pluck(:id)
   end
 
   # POST /reports
@@ -41,6 +47,9 @@ class ReportsController < ApplicationController
 
     @report.students = Student.where(id: SchoolClass.where(id: params[:selected_school_classes]).joins(:students).pluck(:student_id))
     @report.tasks = LaplayaTask.where(id: params[:selected_tasks])
+    @selected_classes = params[:selected_school_classes]
+    @selected_tasks = params[:selected_tasks]
+
 
     respond_to do |format|
       if @report.save
@@ -53,19 +62,6 @@ class ReportsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /reports/1
-  # PATCH/PUT /reports/1.json
-  def update
-    respond_to do |format|
-      if @report.update(report_params)
-        format.html { redirect_to @report, notice: 'Report was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @report.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 
   # DELETE /reports/1
   # DELETE /reports/1.json
@@ -81,6 +77,19 @@ class ReportsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_report
       @report = Report.find(params[:id])
+    end
+
+    def set_modules_and_schools
+      @schools = School.all.order('name').select { |s| s.has_active_classes? }
+      @module_pages = ModulePage.where(curriculum_id: 1).order('position ASC').select { |mp| mp.activity_pages.reduce(false) { |n, ap|  n |= ap.has_laplaya_tasks? } }
+      if @report
+        @selected_classes = @report.students.joins(:school_classes).pluck('school_class_id').uniq
+        @selected_tasks = @report.tasks.pluck(:id)
+      else
+        @selected_classes = []
+        @selected_tasks = []
+      end
+      
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
