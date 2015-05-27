@@ -10,7 +10,7 @@ class Student < User
   attr_accessor :current_class
   attr_reader :current_password
   scope :not_teststudents, -> {where.not(type: 'TestStudent')}
-
+  has_and_belongs_to_many :reports
   has_secure_password
 
 

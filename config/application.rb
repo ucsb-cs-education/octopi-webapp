@@ -32,6 +32,7 @@ module OctopiWebapp
     config.browserify_rails.commandline_options = '-t coffeeify --extension=".js.coffee"' if config.respond_to? :browserify_rails
     config.generators do |g|
       g.test_framework :rspec
+      g.scaffold_controller :scaffold_controller
     end
     require 'rails/generators'
     Rails::Generators.fallbacks[:rspec] = :test_unit

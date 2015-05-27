@@ -1,0 +1,77 @@
+<%= simple_form_for(@report, :html => { :multipart => true }) do |f| %>
+    <%= f.error_notification %>
+
+    <div id="foo"></div>
+
+    <div class="form-inputs">
+	<%= f.input :name %>
+	<%= f.input :description %>
+        <%= f.input :code, as: :file%>
+
+
+
+	<div id="school-list" class="panel">
+            <div class="panel-header">All schools</div>
+            <div class="panel-body">
+                <ul class="list-group">
+	        <% @schools.each do |school| %>
+                    <li class="list-group-item">
+                        <div class="school-classes panel">
+                            <div class="panel-header"><%= school.name %></div>
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    <% school.active_classes.each do |cls| %>
+                                        <li class="list-group-item">
+                                            <span class="badge"><%= cls.students.length %> students</span>
+                                            <input type="checkbox" name="selected_school_classes[]" value="<%= cls.id %>" <%= 'checked' if @selected_classes.include? cls.id %>><%= cls.name %>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+	        <% end %>
+                </ul>
+            </div>
+	</div>
+
+        <div id="module-list" class="panel">
+            <div class="panel-header">All modules</div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <% @module_pages.each do |mp| %>
+                        <li class="list-group-item">
+                            <div class="module panel">
+                                <div class="panel-header"><%= mp.title %></div>
+                                <div class="panel-body" id="module-<%= mp.id %>-activity-list">
+                                    <ul class="list-group">
+                                        <% mp.activity_pages.select{ |ap| ap.has_laplaya_tasks? }.each do |ap| %>
+                                            <li class="list-group-item">
+                                                <div class="activity panel">
+                                                    <div class="panel-header"><%= ap.title %></div>
+                                                    <div class="panel-body" id="module-<%= mp.id %>-activity-<%= ap.id %>">
+                                                        <ul class="list-group">
+                                                            <% ap.tasks.where(type: 'LaplayaTask').each do |task| %>
+                                                                <li class="list-group-item"> 
+                                                                    <input type="checkbox" name="selected_tasks[]" value="<%= task.id %>" <%= 'checked' if @selected_tasks.include? task.id %>><%= task.title %>
+                                                                </li>
+                                                            <% end %>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <% end %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+
+    
+    <div class="form-actions">
+	<%= f.button :submit %>
+    </div>
+<% end %>
