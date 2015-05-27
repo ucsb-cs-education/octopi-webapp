@@ -43,8 +43,8 @@ class ReportsController < ApplicationController
   # POST /reports
   # POST /reports.json
   def create
+    
     @report = Report.new(report_params)
-
     @report.students = Student.where(id: SchoolClass.where(id: params[:selected_school_classes]).joins(:students).pluck(:student_id))
     @report.tasks = LaplayaTask.where(id: params[:selected_tasks])
     @selected_classes = params[:selected_school_classes]
@@ -66,6 +66,8 @@ class ReportsController < ApplicationController
   # DELETE /reports/1
   # DELETE /reports/1.json
   def destroy
+    @report.code = nil
+    @report.save
     @report.destroy
     respond_to do |format|
       format.html { redirect_to reports_url }

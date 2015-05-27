@@ -1,4 +1,4 @@
-<%= simple_form_for(@report) do |f| %>
+<%= simple_form_for(@report, :html => { :multipart => true }) do |f| %>
     <%= f.error_notification %>
 
     <div id="foo"></div>
@@ -6,7 +6,8 @@
     <div class="form-inputs">
 	<%= f.input :name %>
 	<%= f.input :description %>
-	<%= f.input :code %>
+        <%= f.input :code, as: :file%>
+
 
 
 	<div id="school-list" class="panel">
