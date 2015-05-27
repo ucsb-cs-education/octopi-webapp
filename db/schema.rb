@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150504025435) do
+ActiveRecord::Schema.define(version: 20150527201723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,33 @@ ActiveRecord::Schema.define(version: 20150504025435) do
   end
 
   add_index "pages", ["position"], name: "index_pages_on_position", using: :btree
+
+  create_table "reports", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "code_file_name"
+    t.string   "code_content_type"
+    t.integer  "code_file_size"
+    t.datetime "code_updated_at"
+  end
+
+  create_table "reports_students", id: false, force: true do |t|
+    t.integer "student_id"
+    t.integer "report_id"
+  end
+
+  add_index "reports_students", ["report_id", "student_id"], name: "index_reports_students_on_report_id_and_student_id", unique: true, using: :btree
+  add_index "reports_students", ["report_id"], name: "index_reports_students_on_report_id", using: :btree
+  add_index "reports_students", ["student_id"], name: "index_reports_students_on_student_id", using: :btree
+
+  create_table "reports_tasks", id: false, force: true do |t|
+    t.integer "task_id"
+    t.integer "report_id"
+  end
+
+  add_index "reports_tasks", ["task_id"], name: "index_reports_tasks_on_task_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
