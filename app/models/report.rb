@@ -12,5 +12,5 @@ class Report < ActiveRecord::Base
   validates :description, presence: true
   validates_uniqueness_of :name
   validates :code, :attachment_presence => true
-  validates_attachment_content_type :code, :content_type => ["application/javascript"]
+  validates_attachment_content_type :code, :content_type => ["application/javascript", "text/plain"]
 end
