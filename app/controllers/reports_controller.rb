@@ -50,6 +50,8 @@ class ReportsController < ApplicationController
     @selected_classes = params[:selected_school_classes]
     @selected_tasks = params[:selected_tasks]
 
+    @selected_classes ||= []
+    @selected_tasks ||= []
 
     respond_to do |format|
       if @report.save

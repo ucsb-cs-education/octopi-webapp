@@ -16,14 +16,14 @@
                 <ul class="list-group">
 	        <% @schools.each do |school| %>
                     <li class="list-group-item">
-                        <div class="school-classes panel">
-                            <div class="panel-header"><%= school.name %></div>
+                        <div class="school-class-list panel">
+                            <div class="school-name panel-header"><%= school.name %></div>
                             <div class="panel-body">
                                 <ul class="list-group">
                                     <% school.active_classes.each do |cls| %>
                                         <li class="list-group-item">
                                             <span class="badge"><%= cls.students.length %> students</span>
-                                            <input type="checkbox" name="selected_school_classes[]" value="<%= cls.id %>" <%= 'checked' if @selected_classes.include? cls.id %>><%= cls.name %>
+                                            <input type="checkbox" name="selected_school_classes[]" value="<%= cls.id %>" <%= 'checked="checked"' if @selected_classes.include? cls.id %>><%= cls.name %>
                                         </li>
                                     <% end %>
                                 </ul>
@@ -41,13 +41,18 @@
                 <ul class="list-group">
                     <% @module_pages.each do |mp| %>
                         <li class="list-group-item">
-                            <div class="module panel">
-                                <div class="panel-header"><%= mp.title %></div>
-                                <div class="panel-body" id="module-<%= mp.id %>-activity-list">
+                            <div class="module-activity-list panel">
+                                <div class="panel-header"><%= mp.title %>
+                                    <ul class="module-options">
+                                        <li class="module-options-project">Design Project: <input type="checkbox" name="selected_projects[]" value="<%= mp.id %>"></li>
+                                        <li class="module-options-sandbox">Sandbox: <input type="checkbox" name="selected_sandboxes[]" value="<%= mp.id %>"></li>
+                                    </ul>
+                                </div>
+                                <div class="panel-body">
                                     <ul class="list-group">
                                         <% mp.activity_pages.select{ |ap| ap.has_laplaya_tasks? }.each do |ap| %>
                                             <li class="list-group-item">
-                                                <div class="activity panel">
+                                                <div class="module-activity-task-list panel">
                                                     <div class="panel-header"><%= ap.title %></div>
                                                     <div class="panel-body" id="module-<%= mp.id %>-activity-<%= ap.id %>">
                                                         <ul class="list-group">
