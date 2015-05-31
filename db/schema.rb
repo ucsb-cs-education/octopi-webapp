@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528180429) do
+ActiveRecord::Schema.define(version: 20150531002749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(version: 20150528180429) do
   end
 
   add_index "laplaya_files", ["type", "parent_id"], name: "index_laplaya_files_on_type_and_parent_id", using: :btree
+  add_index "laplaya_files", ["type", "user_id", "parent_id"], name: "index_laplaya_files_on_type_and_user_id_and_parent_id", using: :btree
   add_index "laplaya_files", ["user_id"], name: "index_laplaya_files_on_user_id", using: :btree
 
   create_table "module_pages_school_classes", id: false, force: true do |t|
