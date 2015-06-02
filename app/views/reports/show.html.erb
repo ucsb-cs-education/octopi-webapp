@@ -28,15 +28,66 @@
     </div>
 </div>
 
-<div id="show_report_tasks" class="panel">
+<div id="show_report_modules" class="panel">
     <div class="panel-header"><strong>Tasks:</strong></div>
     <div class="panel-body">
         <ul class="list-group">
-            <% @report_tasks.each do |task| %>
-                <li class="list-group-item"><%= task.title %></li>
+            <% @report_modules.each do |mod| %>
+                <li class="list-group-item">
+		  <div class="module panel">
+		    <div class="panel-header"><%= mod.title %>
+		      <ul class="module-options">
+			<li class="module-options-project">Design Project:
+			  <% if @report.report_module_options.where(module_page: mod, include_project: true).length != 0 %>
+			  <span style="color:green">&#x2714;</span>
+			  <% else %>
+			  <span style="color:red">&#x2715;</span>
+			  <% end %>
+			</li>
+			<li class="module-options-sandbox">Sandbox:
+			  <% if @report.report_module_options.where(module_page: mod, include_sandbox: true).length != 0 %>
+			  <span style="color:green">&#x2714;</span>
+			  <% else %>
+			  <span style="color:red">&#x2715;</span>
+			  <% end %>
+			</li>
+		      </ul>
+		    </div>
+		    <div class="panel-body">
+		      <ul class="list-group">
+		      <% @report_activities.where(module_page: mod).order(:position).each do |ap| %>
+		      <li class="list-group-item">
+			<ul class="list-group">
+			  <% @report.tasks.where(page_id: ap.id).order(:position).each do |t| %>
+			  <li class="list-group-item">
+			    <%= t.title %>
+			  </li>
+			  <% end %>
+			</ul>
+		      </li>
+		      <% end %>
+		      </ul>
+		    </div>
+		</li>
             <% end %>
         </ul>
     </div>
+</div>
+
+<div class="panel" id="report-runs">
+  <div class="panel-header"><strong>Report Runs:</strong> <%= button_to "Create new run", [:create_run, @report] %></div>
+  <div class="panel-body">
+    <table>
+      <thead>
+	<tr><th>Files processed</th><th>Created</th></tr>
+      </thead>
+      <tbody>
+	<% @report.report_runs.each do |run| %>
+	<tr><td><%= run.report_run_results.count %></td><td><%= run.created_at %></td></tr>
+	<% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <%= link_to 'Clone', clone_report_path(@report) %> |

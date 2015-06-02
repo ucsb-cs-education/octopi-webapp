@@ -5,6 +5,7 @@ OctopiWebapp::Application.routes.draw do
 
   resources :reports, except: [:edit,:update]
   get 'reports/:report_id/clone', to: 'reports#clone', as: 'clone_report'
+  post 'reports/:id/create_run', to: 'reports#create_run', as: 'create_run_report'
 
   get 'teacher_portal/index'
   match 'teacher_portal', to: 'teacher_portal#index', via: 'get'

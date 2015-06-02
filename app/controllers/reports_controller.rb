@@ -1,5 +1,5 @@
 class ReportsController < ApplicationController
-  before_action :set_report, only: [:show, :destroy]
+  before_action :set_report, only: [:show, :destroy, :create_run]
   before_action :set_modules_and_schools, only: [:new, :create, :clone]
 
   # GET /reports
@@ -13,11 +13,29 @@ class ReportsController < ApplicationController
     end
   end
 
+  def create_run
+    @report.create_run
+    redirect_to @report
+  end
+
+  # GET /reports/1/runs/15
+  # GET /reports/1/runs/15.csv
+  # GET /reports/1/runs/15.json
+  def show_run 
+    @run_results = ReportRunResults.where(report_run_id: params[:run_id]).joins(:report_runs).joins(:laplaya_files).joins(:user)
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @report_runs }
+      format.csv  { }
+    end    
+  end
+
   # GET /reports/1
   # GET /reports/1.json
   def show
     @report_classes = SchoolClass.where(id: @report.students.joins(:school_classes).pluck('school_class_id'))
-    @report_tasks = LaplayaTask.where(id: @report.tasks.pluck(:id))
+    @report_modules = ModulePage.where(id: [].concat(ActivityPage.where(id: @report.tasks.pluck(:page_id)).pluck(:page_id)).concat(@report.report_module_options.pluck(:module_page_id))).order(:position)
+    @report_activities = ActivityPage.where(id: @report.tasks.pluck(:page_id)).joins(:module_page)
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @report }

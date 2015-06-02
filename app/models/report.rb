@@ -28,12 +28,12 @@ class Report < ActiveRecord::Base
     Report.transaction do
       jobs.each do |j|
         ts = Time.now
-        Report.connection.execute("INSERT INTO report_run_results  (\"created_at\", \"updated_at\", \"laplaya_file_id\", \"report_run_id\") VALUES ('#{ts}', '#{ts}', #{j}, #{run.id})")  
+        Report.connection.execute("INSERT INTO report_run_results  (\"created_at\", \"updated_at\", \"laplaya_file_id\", \"report_run_id\", \"json_results\") VALUES ('#{ts}', '#{ts}', #{j}, #{run.id}, '{}')")  
       end
     end
 
-    jobs.each do |j|
-      Resque.enqueue(ProcessReportRunById, run.id, self.id, j)
+    run.report_run_results.pluck(:id).each do |res_id|
+      #Resque.enqueue(ProcessReportRunById, self.id, res_id)
     end
   end
 end
