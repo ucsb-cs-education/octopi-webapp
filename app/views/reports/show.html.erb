@@ -79,11 +79,19 @@
   <div class="panel-body">
     <table>
       <thead>
-	<tr><th>Files processed</th><th>Created</th></tr>
+	<tr><th>Files processed</th><th>Created</th><th>Options</th></tr>
       </thead>
       <tbody>
 	<% @report.report_runs.each do |run| %>
-	<tr><td><%= run.report_run_results.count %></td><td><%= run.created_at %></td></tr>
+	<tr>
+            <td><%= run.report_run_results.count %></td>
+            <td><%= run.created_at %></td>
+            <td>
+                <%= link_to "View", report_run_path(@report, run) %>
+                |
+                <%= link_to "Download", report_run_path(@report, run, format: :csv) %>
+            </td>
+        </tr>
 	<% end %>
       </tbody>
     </table>

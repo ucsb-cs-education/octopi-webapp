@@ -1,3 +1,5 @@
+require 'json'
+
 class ReportsController < ApplicationController
   before_action :set_report, only: [:show, :destroy, :create_run]
   before_action :set_modules_and_schools, only: [:new, :create, :clone]
@@ -22,13 +24,16 @@ class ReportsController < ApplicationController
   # GET /reports/1/runs/15.csv
   # GET /reports/1/runs/15.json
   def show_run 
-    @run_results = ReportRunResults.where(report_run_id: params[:run_id]).joins(:report_runs).joins(:laplaya_files).joins(:user)
+    @report = Report.where(id: params[:report_id]).first
+    @report_run = ReportRun.where(report: @report, id: params[:report_run_id]).first
+    rows = @report_run.report_run_results.joins(:laplaya_file)
+    @report_run_results = {rows: rows, cols: JSON.parse(rows.first.json_results).keys}
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @report_runs }
-      format.csv  { }
+      format.html # show_run.html.erb
+      format.csv  { send_data render_run_as_csv(@report_run_results[:cols], rows) }
     end    
   end
+
 
   # GET /reports/1
   # GET /reports/1.json
@@ -149,5 +154,17 @@ class ReportsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def report_params
       params.require(:report).permit(:name, :description, :code)
+    end
+
+    def render_run_as_csv(cols, rows)
+      CSV.generate do |csv|
+        csv << ['Student ID', 'Classroom ID'].concat(cols)
+        rows.each do |r|
+          h = JSON.parse(r.json_results)
+          values = [r.laplaya_file.user_id, r.laplaya_file.user.school_classes[0].id]
+          values.concat(h.values_at(*cols))
+          csv << values
+        end
+      end
     end
 end

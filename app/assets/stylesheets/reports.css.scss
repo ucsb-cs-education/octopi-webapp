@@ -23,3 +23,10 @@
 #index_report_list > li > .badge > a {
                                         color: #fff;
                                      }                  
+
+table th,td { padding: 5px; border-left: 1px solid grey; }
+table th,td:first { padding: 5px; border-left: none; }
+table { border-style: solid;
+        border-color: grey;
+        border-width: 1px; }
+table th { border-bottom: 1px solid grey; }
