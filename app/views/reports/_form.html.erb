@@ -44,8 +44,8 @@
                             <div class="module-activity-list panel">
                                 <div class="panel-header"><%= mp.title %>
                                     <ul class="module-options">
-                                        <li class="module-options-project">Design Project: <input type="checkbox" name="selected_projects[]" value="<%= mp.id %>"></li>
-                                        <li class="module-options-sandbox">Sandbox: <input type="checkbox" name="selected_sandboxes[]" value="<%= mp.id %>"></li>
+                                        <li class="module-options-project">Design Project: <input type="checkbox" name="selected_projects[]" value="<%= mp.id %>" <%= 'checked' if @selected_projects.include? mp.id %>></li>
+                                        <li class="module-options-sandbox">Sandbox: <input type="checkbox" name="selected_sandboxes[]" value="<%= mp.id %>" <%= 'checked' if @selected_sandboxes.include? mp.id %>></li>
                                     </ul>
                                 </div>
                                 <div class="panel-body">

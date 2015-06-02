@@ -2,10 +2,9 @@ class Report < ActiveRecord::Base
   has_attached_file :code
   has_and_belongs_to_many :students, join_table: 'reports_students'
   has_and_belongs_to_many :tasks
-  has_many :report_module_options, class_name: ReportModuleOptions
 
-  
-  has_many :report_runs
+  has_many :report_module_options, class_name: ReportModuleOptions, dependent: :destroy  
+  has_many :report_runs, dependent: :destroy
 
 
   validates :name, presence: true

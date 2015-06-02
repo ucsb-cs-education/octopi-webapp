@@ -56,6 +56,8 @@ class ReportsController < ApplicationController
     @report.name = 'Clone of ' + @orig.name
     @selected_classes = @orig.students.joins(:school_classes).pluck('school_class_id').uniq
     @selected_tasks = @orig.tasks.pluck(:id)
+    @selected_sandboxes = @orig.report_module_options.where(include_sandbox: true).pluck(:module_page_id)
+    @selected_projects = @orig.report_module_options.where(include_project: true).pluck(:module_page_id)
   end
 
   # POST /reports
@@ -67,9 +69,35 @@ class ReportsController < ApplicationController
     @report.tasks = LaplayaTask.where(id: params[:selected_tasks])
     @selected_classes = params[:selected_school_classes]
     @selected_tasks = params[:selected_tasks]
+    @selected_sandboxes = params[:selected_sandboxes]
+    @selected_projects = params[:selected_projects]
 
     @selected_classes ||= []
     @selected_tasks ||= []
+    @selected_sandboxes ||= []
+    @selected_projects ||= []
+
+    @selected_sandboxes.each do |mid|
+      mo = @report.report_module_options.where(module_page_id: mid)[0]
+      if not mo
+        mo = ReportModuleOptions.new(module_page_id: mid)
+        @report.report_module_options << mo
+      end
+      mo.include_sandbox = true
+      mo.save
+    end
+
+
+    @selected_projects.each do |mid|
+      mo = @report.report_module_options.where(module_page_id: mid)[0]
+      if not mo
+        mo = ReportModuleOptions.new(module_page_id: mid)
+        @report.report_module_options << mo
+      end
+      mo.include_project = true
+      mo.save
+    end
+
 
     respond_to do |format|
       if @report.save
@@ -107,9 +135,13 @@ class ReportsController < ApplicationController
       if @report
         @selected_classes = @report.students.joins(:school_classes).pluck('school_class_id').uniq
         @selected_tasks = @report.tasks.pluck(:id)
+        @selected_sandboxes = @report.report_module_options.where(include_sandbox: true).pluck(:module_page_id)
+        @selected_projects = @report.report_module_options.where(include_project: true).pluck(:module_page_id)
       else
         @selected_classes = []
         @selected_tasks = []
+        @selected_sandboxes = []
+        @selected_projects = []
       end
       
     end
