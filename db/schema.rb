@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603071131) do
+ActiveRecord::Schema.define(version: 20150603200326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -163,9 +163,11 @@ ActiveRecord::Schema.define(version: 20150603071131) do
     t.text     "json_results"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_processed"
   end
 
   add_index "report_run_results", ["laplaya_file_id"], name: "index_report_run_results_on_laplaya_file_id", using: :btree
+  add_index "report_run_results", ["report_run_id", "is_processed"], name: "index_report_run_results_on_report_run_id_and_is_processed", using: :btree
   add_index "report_run_results", ["report_run_id"], name: "index_report_run_results_on_report_run_id", using: :btree
 
   create_table "report_runs", force: true do |t|

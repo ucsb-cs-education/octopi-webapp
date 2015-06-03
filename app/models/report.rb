@@ -27,7 +27,7 @@ class Report < ActiveRecord::Base
       jobs.each do |j, proj|
         if not proj.blank?
           ts = Time.now
-          Report.connection.execute("INSERT INTO report_run_results  (\"created_at\", \"updated_at\", \"laplaya_file_id\", \"report_run_id\", \"json_results\") VALUES ('#{ts}', '#{ts}', #{j}, #{run.id}, '{}')")  
+          Report.connection.execute("INSERT INTO report_run_results  (\"created_at\", \"updated_at\", \"laplaya_file_id\", \"report_run_id\", \"json_results\", \"is_processed\") VALUES ('#{ts}', '#{ts}', #{j}, #{run.id}, '{}', False )")  
         end
       end
     end

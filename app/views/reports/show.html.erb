@@ -84,7 +84,7 @@
       <tbody>
 	<% @report.report_runs.each do |run| %>
 	<tr>
-            <td><%= run.report_run_results.count %></td>
+            <td><%= run.report_run_results.where(is_processed: true).count %>/<%= run.report_run_results.count %></td>
             <td><%= run.created_at %></td>
             <td>
                 <%= link_to "View", report_run_path(@report, run) %>
