@@ -1,0 +1,46 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @report.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @report.description %>
+</p>
+
+<p>
+  <strong><a href="<%= @report.code.url %>">Download Code</a></strong>
+</p>
+
+<p>
+  <strong><%= link_to "Download Results", report_run_path(@report, @report_run, format: :csv)%></strong>
+</p>
+
+<p>
+  Run was created at <%= @report_run.created_at %>
+</p>
+<table>
+<thead>
+<tr>
+    <th>Student ID</th>
+    <th>Classroom ID</th>
+    <% @report_run_results[:cols].each do |col|%>
+        <th><%= col %></th>
+    <% end %>
+</tr>
+</thead>
+<tbody>
+    <% @report_run_results[:rows].each do |row| %>
+        <tr>
+            <td><%= row.laplaya_file.user_id %></td>
+            <td><%= row.laplaya_file.user.school_classes[0].id %></td>
+            <% conv_json_to_ary(@report_run_results[:cols], row.json_results).each do |v| %>
+                <td><%= v %></td>
+            <% end %>
+        </tr>
+    <% end %>
+</tbody>
+</table>
+<%= link_to 'Back', @report %>
