@@ -2,188 +2,164 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-ReportsController = Paloma.controller('Reports');
+addCompressExpand = (panel) ->
+   header = $(panel).find('.panel-header:first').get(0)
+   body = $(panel).find('.panel-body:first').get(0)
+   $(header).prepend('<a href="" class="expander">+</a><a href="" class="compressor">-</a> ')
+   $(body).slideUp()
+      
+   $(header).find('a.compressor:first').hide()
+   
+   $(header).find('a.expander:first').click( ->
+      $(body).slideDown()
+      $(this).hide()
+      $(header).find('a.compressor:first').show()
+      false
+   )
+   
+   $(header).find('a.compressor:first').click( ->
+      $(body).slideUp()
+      $(this).hide()
+      $(header).find('a.expander:first').show()
+      false
+   )
 
-ReportsController.prototype.index = () ->
-   setupUI = () ->
-      $('.panel.report > .panel-body').hide()
-      $('.panel.report > .panel-header').prepend('<a class="collapser">-</a>')
-      $('.panel.report > .panel-header').prepend('<a class="expander">+</a>')
-      $('.collapser').hide()
-      $('.expander').click(->
-         $(this).hide()
-         $(this.parentNode.parentNode).find('.panel-body').slideDown()
-         $(this.parentNode).find('.collapser').show()
-      )
-      $('.collapser').click(->
-         $(this).hide()
-         $(this.parentNode.parentNode).find('.panel-body').slideUp()
-         $(this.parentNode).find('.expander').show()
-      )
-   $(document).ready(setupUI)   
 
 setupFormUI = () ->
-   $('#school-list > .panel-header').append('<input type="checkbox" id="allschools-checkbox">')
-   $('#school-list > .panel-body > ul > li > .panel > .panel-header').each(->
-      $(this).append('<input type="checkbox" class="school-checkbox">')
-   )
-
-
-   $('#module-list > .panel-header').append('<input type="checkbox" id="allmodules-checkbox">')
-   $('.module.panel > .panel-header').each(->
-      $(this).append('<input type="checkbox" class="module-checkbox">')
-   )
-
-   $('.module.panel .activity.panel > .panel-header').each(->
-      $(this).append('<input type="checkbox" class="activity-checkbox">')
-   )
-
+   user_action = true
    
-
-   user_clicked = true
-
-   updateSchoolHeirarchy =  (e) ->
-      user_clicked = false
-      found = $(e.parentNode.parentNode).find('input[name="selected_school_classes[]"]:not(:checked)').length
-      if found != 0
-         e.checked = false
-      else
-         e.checked = true
-         
-      user_clicked = true
-
-   updateModuleHeirarchy =  (e) ->
-      user_clicked = false
-      found = $(e.parentNode.parentNode).find('input[name="selected_tasks[]"]:not(:checked)').length
-      if found != 0
-         e.checked = false
-      else
-         e.checked = true
-         
-      user_clicked = true
-
-         
-   $('#allschools-checkbox').change( ->
-      if user_clicked
-         state = this.checked
-         $('input[name="selected_school_classes[]"]').prop('checked', state)
-         $(this.parentNode.parentNode).find('.school-checkbox').each((i,e) -> updateSchoolHeirarchy(e))
+   $('#school-list > .panel-header').append('<input type="checkbox" id="select-all-schools-checkbox">')
+   
+   $('.school-class-list').each(->
+      $(this).find('.school-name.panel-header').append('<input type="checkbox" class="select-school-checkbox">')
    )
 
-   $('.school-checkbox').change( ->
+   updateClassAncestors = (box) ->
+      user_action = false
+
+      #update the all schools checkbox
+      all_school_checkbox = $('#select-all-schools-checkbox').get(0)
+      found = $('#school-list').find('input[name="selected_school_classes[]"]:not(:checked)').length
+      if found != 0
+         all_school_checkbox.checked = false
+      else
+         all_school_checkbox.checked = true
+
+      #update the school's checkbox
+      school_klass_list = $('.school-class-list').has(box).get(0)
+      school_checkbox = $(school_klass_list).find('.select-school-checkbox').get(0)
+      found = $(school_klass_list).find('input[name="selected_school_classes[]"]:not(:checked)').length
+      if found != 0
+         school_checkbox.checked = false
+      else
+         school_checkbox.checked = true
+         
+      user_action = true
+
+
+   $('#select-all-schools-checkbox').change(->
       state = this.checked
-      
-      if user_clicked
-         $(this.parentNode.parentNode).find('input[type="checkbox"]').prop('checked', state)
-
-      $('#allschools-checkbox').each((i,e) -> updateSchoolHeirarchy(e))
+      if user_action
+         $('#school-list').find('input[name="selected_school_classes[]"]').each(->
+            this.checked = state
+            updateClassAncestors(this)
+         )
    )
 
+   $('.select-school-checkbox').change(->
+      state = this.checked
+      if user_action
+         $('#school-list').find('.school-class-list').has(this).find('input[name="selected_school_classes[]"]').each(->
+            this.checked = state
+            updateClassAncestors(this)
+         )
+   )
+   
+   #specify the onChange and the initial values of ancestor checkboxes
    $('input[name="selected_school_classes[]"]').change( ->
-      $('.school-checkbox').each((i,e) -> updateSchoolHeirarchy(e))
-      $('#allschools-checkbox').each((i,e) -> updateSchoolHeirarchy(e))
+      updateClassAncestors(this)
    )
 
-   $('#allmodules-checkbox').change( ->
-      if user_clicked
+   $('input[name="selected_school_classes[]"]').each( ->
+      updateClassAncestors(this)
+   )
+
+   $('.school-class-list').each( ->
+      addCompressExpand(this)
+   )
+
+      
+   
+   $('.module-activity-list').each(->
+      $(this).find('.panel-header:first > .module-options').prepend('<li>All activities: <input type="checkbox" class="select-all-module-activities-checkbox">')
+      module_panel = this
+      $(this).find('.select-all-module-activities-checkbox').change(->
          state = this.checked
-         $('input[name="selected_tasks[]"]').prop('checked', state)
+         if user_action
+            $(module_panel).find('input[name="selected_tasks[]"]').each( ->
+               this.checked = state
+               updateTaskAncestors(this)
+            )
+      )
+
+      addCompressExpand(this)
+   )
+
+   $('.module-activity-task-list').each(->
+      $(this).find('.panel-header:first').append('<input type="checkbox" class="select-all-activity-tasks-checkbox">')
+      activity_panel = this
+      $(this).find('.select-all-activity-tasks-checkbox').change(->
+         state = this.checked
+         if user_action
+            $(activity_panel).find('input[name="selected_tasks[]"]').each( ->
+               this.checked = state
+               updateTaskAncestors(this)
+            )
+      )
+      addCompressExpand(this)
+   )
+
+   updateTaskAncestors = (box) ->
+      user_action = false
+      
+      #update the module's checkbox
+      module_activity_list = $('.module-activity-list').has(box).get(0)
+      module_checkbox = $(module_activity_list).find('.select-all-module-activities-checkbox').get(0)
+      found = $(module_activity_list).find('input[name="selected_tasks[]"]:not(:checked)').length
+      if found != 0
+         module_checkbox.checked = false
+      else
+         module_checkbox.checked = true
+      
+      #update the activitie's checkbox
+      activity_task_list = $('.module-activity-task-list').has(box).get(0)
+      activity_checkbox = $(activity_task_list).find('.select-all-activity-tasks-checkbox').get(0)
+      found = $(activity_task_list).find('input[name="selected_tasks[]"]:not(:checked)').length
+      if found != 0
+         activity_checkbox.checked = false
+      else
+         activity_checkbox.checked = true
          
-      $(this.parentNode.parentNode).find('.module-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-      $(this.parentNode.parentNode).find('.activity-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-   )
-
-   $('.module-checkbox').change(->
-      if user_clicked
-         state = this.checked
-         $(this.parentNode.parentNode).find('input[name="selected_tasks[]"]').prop('checked', state)
-         
-      $(this.parentNode.parentNode).find('.activity-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-      $('#allmodules-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-   )
-
-
-   $('.activity-checkbox').change(->
-      if user_clicked
-         state = this.checked
-         $(this.parentNode.parentNode).find('input[name="selected_tasks[]"]').prop('checked', state)
-
-      $('.module-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-      $('#allmodules-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-   )
+      user_action = true
 
 
    $('input[name="selected_tasks[]"]').change( ->
-      $('.activity-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-      $('.module-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-      $('#allmodules-checkbox').each((i,e) -> updateModuleHeirarchy(e))
+      updateTaskAncestors(this)
    )
 
-   # set default interface based on 'checked'
-   $('.school-checkbox').each((i,e) -> updateSchoolHeirarchy(e))
-   $('#allschools-checkbox').each((i,e) -> updateSchoolHeirarchy(e))      
-   $('.activity-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-   $('.module-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-   $('#allmodules-checkbox').each((i,e) -> updateModuleHeirarchy(e))
-
-
-   $('.school-classes > .panel-header').prepend('<a href="#" class="expander">+</a><a href="#" class="compressor">-</a> ')
-   $('.school-classes > .panel-body').slideUp()
-   
-   $('.school-classes > .panel-header > a.compressor').hide()
-   
-   $('.school-classes > .panel-header > a.expander').click( ->
-      $(this.parentNode.parentNode).find('.panel-body').slideDown()
-      $(this).hide()
-      $(this.parentNode).find('.compressor').show()
-   )
-
-   $('.school-classes > .panel-header > a.compressor').click( ->
-      $(this.parentNode.parentNode).find('.panel-body').slideUp()
-      $(this).hide()
-      $(this.parentNode).find('.expander').show()
-
+   $('input[name="selected_tasks[]"]').each( ->
+      updateTaskAncestors(this)
    )
 
 
-   $('.activity.panel > .panel-header').prepend('<a href="" class="expander">+</a><a href="" class="compressor">-</a> ')
-   $('.activity.panel > .panel-body').slideUp()
-   
-   $('.activity.panel > .panel-header > a.compressor').hide()
-   
-   $('.activity.panel > .panel-header > a.expander').click( ->
-      $(this.parentNode.parentNode).find('.panel-body').slideDown()
-      $(this).hide()
-      $(this.parentNode).find('.compressor').show()
-      false
-   )
+ReportsController = Paloma.controller('Reports');
 
-   $('.activity.panel > .panel-header > a.compressor').click( ->
-      $(this.parentNode.parentNode).find('.panel-body').slideUp()
-      $(this).hide()
-      $(this.parentNode).find('.expander').show()
-      false
+ReportsController.prototype.index = () ->
+   $(document).ready( ->   
+      $('.panel.report').each(->
+         addCompressExpand(this)
+      )
    )
-
-   $('.module.panel > .panel-header').prepend('<a href="" class="expander">+</a><a href="" class="compressor">-</a> ')
-   $('.module.panel > .panel-body').slideUp()
-   
-   $('.module.panel > .panel-header > a.compressor').hide()
-   
-   $('.module.panel > .panel-header > a.expander').click( ->
-      $(this.parentNode.parentNode).find('> .panel-body').slideDown()
-      $(this).hide()
-      $(this.parentNode).find('.compressor').show()
-      false
-   )
-
-   $('.module.panel > .panel-header > a.compressor').click( ->
-      $(this.parentNode.parentNode).find('> .panel-body').slideUp()
-      $(this).hide()
-      $(this.parentNode).find('.expander').show()
-      false
-   )
-
 
 ReportsController.prototype.new = () ->     
    $(document).ready(setupFormUI)

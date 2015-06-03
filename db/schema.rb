@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150527201723) do
+ActiveRecord::Schema.define(version: 20150603071131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(version: 20150527201723) do
   end
 
   add_index "laplaya_files", ["type", "parent_id"], name: "index_laplaya_files_on_type_and_parent_id", using: :btree
+  add_index "laplaya_files", ["type", "user_id", "parent_id"], name: "index_laplaya_files_on_type_and_user_id_and_parent_id", using: :btree
   add_index "laplaya_files", ["user_id"], name: "index_laplaya_files_on_user_id", using: :btree
 
   create_table "module_pages_school_classes", id: false, force: true do |t|
@@ -144,15 +145,44 @@ ActiveRecord::Schema.define(version: 20150527201723) do
 
   add_index "pages", ["position"], name: "index_pages_on_position", using: :btree
 
+  create_table "report_module_options", force: true do |t|
+    t.integer  "report_id"
+    t.integer  "module_page_id"
+    t.boolean  "include_sandbox"
+    t.boolean  "include_project"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "report_module_options", ["module_page_id"], name: "index_report_module_options_on_module_page_id", using: :btree
+  add_index "report_module_options", ["report_id"], name: "index_report_module_options_on_report_id", using: :btree
+
+  create_table "report_run_results", force: true do |t|
+    t.integer  "report_run_id"
+    t.integer  "laplaya_file_id"
+    t.text     "json_results"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "report_run_results", ["laplaya_file_id"], name: "index_report_run_results_on_laplaya_file_id", using: :btree
+  add_index "report_run_results", ["report_run_id"], name: "index_report_run_results_on_report_run_id", using: :btree
+
+  create_table "report_runs", force: true do |t|
+    t.integer  "report_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "report_runs", ["report_id"], name: "index_report_runs_on_report_id", using: :btree
+
   create_table "reports", force: true do |t|
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "code_file_name"
-    t.string   "code_content_type"
-    t.integer  "code_file_size"
-    t.datetime "code_updated_at"
+    t.text     "code_filename"
+    t.text     "code_contents"
   end
 
   create_table "reports_students", id: false, force: true do |t|

@@ -5,6 +5,9 @@ OctopiWebapp::Application.routes.draw do
 
   resources :reports, except: [:edit,:update]
   get 'reports/:report_id/clone', to: 'reports#clone', as: 'clone_report'
+  get 'reports/:report_id/code/:filename', to: 'reports#serve_code', constraints: {filename: /[\-a-zA-Z0-9_.]+/}, as: 'report_code'
+  get 'reports/:report_id/runs/:report_run_id', to: 'reports#show_run', as: 'report_run'
+  post 'reports/:id/create_run', to: 'reports#create_run', as: 'create_run_report'
 
   get 'teacher_portal/index'
   match 'teacher_portal', to: 'teacher_portal#index', via: 'get'
