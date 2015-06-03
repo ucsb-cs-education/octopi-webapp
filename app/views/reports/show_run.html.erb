@@ -11,7 +11,7 @@
 </p>
 
 <p>
-  <strong><a href="<%= @report.code.url %>">Download Code</a></strong>
+  <strong><%= link_to "Download Code", report_code_path(@report, @report.code_filename) %></strong>
 </p>
 
 <p>
