@@ -1,12 +1,12 @@
 <%= simple_form_for(@report, :html => { :multipart => true }) do |f| %>
     <%= f.error_notification %>
-    <% if @report.errors %>
+    <% if (not @report.errors[:code_filename].blank?) or (not @report.errors[:code_contents].blank?)%>
         <div class="alert alert-danger">
             <ul>
-                <% if @report.errors[:code_filename] %>
+                <% if not @report.errors[:code_filename].blank? %>
                     <li>Code file - <%=@report.errors[:code_filename][0] %></li>
                 <% end %>
-                <% if @report.errors[:code_contents] %>
+                <% if not @report.errors[:code_contents].blank? %>
                     <li>Code file - Cannot be empty</li>
                 <% end %>
             </ul>
