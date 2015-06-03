@@ -30,9 +30,9 @@ class Report < ActiveRecord::Base
       end
     end
 
-    run.report_run_results.pluck(:id).each do |res_id|
+    run.report_run_results.pluck(:id, :laplaya_file_id).each do |res_id, file_id|
       begin
-        Resque.enqueue(ProcessReportRunById, self.id, res_id)
+        Resque.enqueue(ProcessReportRunById, self.id, file_id, res_id)
       rescue Exception => e
           logger.error "Could not enque analysis job! #{e.to_s}"
       end
