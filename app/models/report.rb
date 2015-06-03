@@ -15,27 +15,31 @@ class Report < ActiveRecord::Base
   def create_run
     jobs = []
     responses = TaskResponse.where({task_id: self.tasks, student_id: self.students}).pluck(:id)
-    task_files = StudentResponse::TaskResponseLaplayaFile.where(parent_id: responses).pluck(:id)
-    project_files = StudentResponse::ProjectResponseLaplayaFile.where(parent_id: self.report_module_options.where(include_project: true).pluck(:module_page_id)).pluck(:id)
-    sandbox_files = StudentResponse::SandboxResponseLaplayaFile.where(parent_id: self.report_module_options.where(include_sandbox: true).pluck(:module_page_id)).pluck(:id)
+    task_files = StudentResponse::TaskResponseLaplayaFile.where(parent_id: responses).pluck(:id, :project)
+    project_files = StudentResponse::ProjectResponseLaplayaFile.where(parent_id: self.report_module_options.where(include_project: true).pluck(:module_page_id)).pluck(:id, :project)
+    sandbox_files = StudentResponse::SandboxResponseLaplayaFile.where(parent_id: self.report_module_options.where(include_sandbox: true).pluck(:module_page_id)).pluck(:id, :project)
     jobs.concat(task_files).concat(project_files).concat(sandbox_files)
     run = ReportRun.new
     self.report_runs << run
     run.save!
     self.save!
     Report.transaction do
-      jobs.each do |j|
-        ts = Time.now
-        Report.connection.execute("INSERT INTO report_run_results  (\"created_at\", \"updated_at\", \"laplaya_file_id\", \"report_run_id\", \"json_results\") VALUES ('#{ts}', '#{ts}', #{j}, #{run.id}, '{}')")  
+      jobs.each do |j, proj|
+        if not proj.blank?
+          ts = Time.now
+          Report.connection.execute("INSERT INTO report_run_results  (\"created_at\", \"updated_at\", \"laplaya_file_id\", \"report_run_id\", \"json_results\", \"is_processed\") VALUES ('#{ts}', '#{ts}', #{j}, #{run.id}, '{}', False )")  
+        end
       end
     end
 
-    run.report_run_results.pluck(:id, :laplaya_file_id).each do |res_id, file_id|
+    run.report_run_results.pluck(:laplaya_file_id, :id).each do | file_id, res_id |
       begin
         Resque.enqueue(ProcessReportRunById, self.id, file_id, res_id)
       rescue Exception => e
-          logger.error "Could not enque analysis job! #{e.to_s}"
+        logger.error "Could not enque analysis job! #{e.to_s}"
       end
     end
+
   end
 end
+

@@ -26,8 +26,12 @@ class ReportsController < ApplicationController
   def show_run 
     @report = Report.where(id: params[:report_id]).first
     @report_run = ReportRun.where(report: @report, id: params[:report_run_id]).first
-    rows = @report_run.report_run_results.joins(:laplaya_file)
-    @report_run_results = {rows: rows, cols: JSON.parse(rows.first.json_results).keys}
+    rows = @report_run.report_run_results.joins(:laplaya_file).where(is_processed: true)
+    if not rows.blank?
+      @report_run_results = {rows: rows, cols: JSON.parse(rows.first.json_results).keys}
+    else
+      @report_run_results = {rows: [], cols: [] }
+    end
     respond_to do |format|
       format.html # show_run.html.erb
       format.csv  { send_data render_run_as_csv(@report_run_results[:cols], rows) }
