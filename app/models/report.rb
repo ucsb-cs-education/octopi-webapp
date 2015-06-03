@@ -1,5 +1,4 @@
 class Report < ActiveRecord::Base
-  has_attached_file :code
   has_and_belongs_to_many :students, join_table: 'reports_students'
   has_and_belongs_to_many :tasks
 
@@ -9,9 +8,9 @@ class Report < ActiveRecord::Base
 
   validates :name, presence: true
   validates :description, presence: true
+  validates :code_contents, presence: true
+  validates :code_filename, format: { with: /\A[\-a-zA-Z0-9_.]+.js(.txt)?\Z/, message: "Must be a CommonJS program." }
   validates_uniqueness_of :name
-  validates :code, :attachment_presence => true
-  validates_attachment_content_type :code, :content_type => ["application/javascript", "text/plain"]
 
   def create_run
     jobs = []
@@ -32,7 +31,7 @@ class Report < ActiveRecord::Base
     end
 
     run.report_run_results.pluck(:id).each do |res_id|
-      #Resque.enqueue(ProcessReportRunById, self.id, res_id)
+      Resque.enqueue(ProcessReportRunById, self.id, res_id)
     end
   end
 end

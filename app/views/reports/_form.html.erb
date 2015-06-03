@@ -1,12 +1,22 @@
 <%= simple_form_for(@report, :html => { :multipart => true }) do |f| %>
     <%= f.error_notification %>
-
-    <div id="foo"></div>
+    <% if @report.errors %>
+        <div class="alert alert-danger">
+            <ul>
+                <% if @report.errors[:code_filename] %>
+                    <li>Code file - <%=@report.errors[:code_filename][0] %></li>
+                <% end %>
+                <% if @report.errors[:code_contents] %>
+                    <li>Code file - Cannot be empty</li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
 
     <div class="form-inputs">
 	<%= f.input :name %>
 	<%= f.input :description %>
-        <%= f.input :code, as: :file%>
+        <%= f.label :code_filename %> <%= f.file_field :code_file_data%>
 
 
 

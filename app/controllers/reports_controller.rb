@@ -1,7 +1,7 @@
 require 'json'
 
 class ReportsController < ApplicationController
-  before_action :set_report, only: [:show, :destroy, :create_run]
+  before_action :set_report, only: [:show, :destroy, :create_run, :serve_code]
   before_action :set_modules_and_schools, only: [:new, :create, :clone]
 
   # GET /reports
@@ -34,6 +34,16 @@ class ReportsController < ApplicationController
     end    
   end
 
+  # GET /reports/1/code.js
+  def serve_code 
+    if params[:filename] == @report.code_filename
+      send_data @report.code_contents
+    else
+      redirect_to @report
+    end
+    js false
+  end
+
 
   # GET /reports/1
   # GET /reports/1.json
@@ -56,7 +66,8 @@ class ReportsController < ApplicationController
   def clone
     @orig = Report.find(params[:report_id])
     @report = Report.new
-    @report.code = @orig.code
+    @report.code_filename = @orig.code_filename
+    @report.code_contents = @orig.code_contents
     @report.description = @orig.description
     @report.name = 'Clone of ' + @orig.name
     @selected_classes = @orig.students.joins(:school_classes).pluck('school_class_id').uniq
@@ -69,9 +80,14 @@ class ReportsController < ApplicationController
   # POST /reports.json
   def create
     
-    @report = Report.new(report_params)
-    @report.students = Student.where(id: SchoolClass.where(id: params[:selected_school_classes]).joins(:students).pluck(:student_id))
-    @report.tasks = LaplayaTask.where(id: params[:selected_tasks])
+    @report = Report.new(report_params) do |r|
+      r.students = Student.where(id: SchoolClass.where(id: params[:selected_school_classes]).joins(:students).pluck(:student_id))
+      r.tasks = LaplayaTask.where(id: params[:selected_tasks])
+      if params[:report][:code_file_data]
+        r.code_filename = params[:report][:code_file_data].original_filename
+        r.code_contents = params[:report][:code_file_data].read
+      end
+    end
     @selected_classes = params[:selected_school_classes]
     @selected_tasks = params[:selected_tasks]
     @selected_sandboxes = params[:selected_sandboxes]
@@ -119,8 +135,6 @@ class ReportsController < ApplicationController
   # DELETE /reports/1
   # DELETE /reports/1.json
   def destroy
-    @report.code = nil
-    @report.save
     @report.destroy
     respond_to do |format|
       format.html { redirect_to reports_url }
@@ -131,7 +145,11 @@ class ReportsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_report
-      @report = Report.find(params[:id])
+      if params[:report_id]
+        @report = Report.find(params[:report_id])
+      else
+        @report = Report.find(params[:id])
+      end
     end
 
     def set_modules_and_schools
@@ -153,7 +171,7 @@ class ReportsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def report_params
-      params.require(:report).permit(:name, :description, :code)
+      params.require(:report).permit(:name, :description)
     end
 
     def render_run_as_csv(cols, rows)
