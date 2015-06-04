@@ -1,6 +1,7 @@
 require 'json'
 
 class ReportsController < ApplicationController
+  before_action :authenticate_staff!
   before_action :set_report, only: [:show, :destroy, :create_run, :serve_code]
   before_action :set_modules_and_schools, only: [:new, :create, :clone]
 
