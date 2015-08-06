@@ -1,0 +1,13 @@
+./updatelaplaya
+git commit -a -m "Updated laplaya to latest master"
+# push changes to github
+git push
+# push latest master to heroku
+git checkout heroku
+git status
+# merge master into heroku branch
+git merge master
+# send changes to heroku branch in github
+git push
+# deploy changes to heroku
+git push heroku heroku:master
