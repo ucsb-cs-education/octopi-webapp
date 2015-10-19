@@ -1,0 +1,12 @@
+# from /Users/dianafranklin/OctopiWebsite/octopi-webapp!
+# see the status
+git status
+# get the latest copy
+git pull
+# log in
+heroku login
+# connect the two
+git remote -v
+# this deploys it
+git push heroku heroku:master
+
