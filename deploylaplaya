@@ -3,10 +3,18 @@
 git status
 # get the latest copy
 git pull
-# log in
-heroku login
-# connect the two
-git remote -v
+# commit the new changes
+git commit -a 
+# push the new changes to github
+git push
+# now push latest master to heroku
+git checkout heroku
+# check the status
+git status
+# now merge the two
+git merge master
+# push the changes to heroku
+git push
 # this deploys it
 git push heroku heroku:master
 
