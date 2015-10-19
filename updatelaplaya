@@ -1,4 +1,0 @@
-# update octopi
-git checkout master
-# pull in latest laplaya
-git submodule update --remote lib/assets/javascripts/laplaya/
