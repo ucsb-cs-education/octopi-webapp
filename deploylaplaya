@@ -1,20 +1,13 @@
-# from /Users/dianafranklin/OctopiWebsite/octopi-webapp!
-# see the status
-git status
-# get the latest copy
-git pull
-# commit the new changes
-git commit -a 
-# push the new changes to github
+./updatelaplaya
+git commit -a -m "Updated laplaya to latest master"
+# push changes to github
 git push
-# now push latest master to heroku
+# push latest master to heroku
 git checkout heroku
-# check the status
 git status
-# now merge the two
+# merge master into heroku branch
 git merge master
-# push the changes to heroku
+# send changes to heroku branch in github
 git push
-# this deploys it
+# deploy changes to heroku
 git push heroku heroku:master
-
